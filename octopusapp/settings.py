@@ -1,3 +1,4 @@
+ROOT_URLCONF=''
 # Django settings for octopus project.
 from mongoengine import connect
 
@@ -19,6 +20,7 @@ DATABASES = {
     }
 }
 
+ROOT_URLCONF='urls'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
@@ -73,8 +75,6 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-
-ROOT_URLCONF = 'octopus.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wsgi.application'

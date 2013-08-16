@@ -12,3 +12,8 @@ logs
 results
 
 npm-debug.log
+
+*.log
+*.pot
+*.pyc
+local_settings.py

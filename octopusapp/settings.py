@@ -1,6 +1,8 @@
-ROOT_URLCONF=''
 # Django settings for octopus project.
+
 from mongoengine import connect
+
+connect('db1')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,8 +13,14 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# Connect to mongoDB 
-connect('db1')
+# MongoDB settings
+MONGODB_DATABASES = {
+    'default': {'name': 'db1'}
+}   
+
+AUTHENTICATION_BACKENDS = (
+    'mongoengine.django.auth.MongoEngineBackend',
+)
 
 DATABASES = {
     'default': {
@@ -92,9 +100,44 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'products',
+    'django.contrib.auth',
+    'mongoengine.django.mongo_auth',
+
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
+SESSION_ENGINE = 'mongoengine.django.sessions'
+AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}

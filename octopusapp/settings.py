@@ -88,6 +88,7 @@ MIDDLEWARE_CLASSES = (
 WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
+    "templates"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -97,7 +98,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'products',
@@ -112,6 +113,7 @@ INSTALLED_APPS = (
 
 SESSION_ENGINE = 'mongoengine.django.sessions'
 AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -141,3 +143,7 @@ LOGGING = {
         },
     }
 }
+
+
+SITE_ID = 1
+

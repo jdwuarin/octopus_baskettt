@@ -5,7 +5,7 @@ from products import views
 urlpatterns = patterns('',
 
     url(r'^$', views.index),
-    url(r'^(?P<product_id>\d+)/$', views.show),
+    url(r'^(?P<product_id>\w+)/', views.show),
 
 )
 

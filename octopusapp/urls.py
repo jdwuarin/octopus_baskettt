@@ -4,8 +4,8 @@ from django.conf.urls import patterns, include, url
 #from django.contrib import admin
 #admin.autodiscover()
 
-from products import *
 
 urlpatterns = patterns('',
+	url(r'^$', 'products.views.index'), # / is the index of the products
     url(r'^products/', include('products.urls')),
 )

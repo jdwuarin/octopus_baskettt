@@ -1,1 +1,7 @@
-{% product.name %}
+{% if product %}
+{{product.name}}
+
+{% else%}
+
+DOESN'T WORK
+{% endif %}

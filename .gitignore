@@ -17,3 +17,7 @@ npm-debug.log
 *.pot
 *.pyc
 local_settings.py
+
+node_modules
+
+.DS_Store

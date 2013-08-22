@@ -1,0 +1,24 @@
+{
+  "name": "octopus",
+  "version": "0.0.0",
+  "description": "",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arnaudbenard/octopus.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "5dfbb5fbaba1f12f802466af5b27d081d09ac66c",
+  "bugs": {
+    "url": "https://github.com/arnaudbenard/octopus/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-less": "~0.6.4"
+  }
+}

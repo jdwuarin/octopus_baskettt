@@ -4,3 +4,5 @@ gunicorn==18.0
 mongoengine==0.8.4
 pymongo==2.6
 wsgiref==0.1.2
+Scrapy==0.18.2
+python=1.1.0

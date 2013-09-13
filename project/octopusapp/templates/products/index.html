@@ -1,15 +1,46 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load verbatim %}
 
-{% block content %}
-{% if latest_products %}
-    <ul>
-    {% for product in latest_products %}
+<html ng-app="App">
+<head>
+	<title>Octopus</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <li><a href="/products/{{ product.id }}/">{{ product.name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No product are available.</p>
-{% endif %}
+	<!-- Bootstrap -->
+	<link rel="stylesheet/less" href="{% static "bootstrap/less/bootstrap.less" %}" media="screen">
+	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen">
 
-{% endblock content%}
+	<script type="text/javascript" src="{% static "lib/less.js" %}"></script>
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+
+      <script src=" {% static "lib/html5shiv.js" %}"></script>
+      <script src=" {% static "lib/respond.min.js" %}"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+  	<div class="container">
+  		<div class="row">
+  			<div class="col-md-12">
+		        <li ng-class="{active:getActive('/home')}"><a href="#/home">Home</a></li>
+				 <li ng-class="{active:getActive('/products')}"><a href="#/products">Browse products</a></li>
+
+          		<h1>OCTOPUS</h1>
+        	</div>
+      	</div>
+	
+	    <div ng-view></div>
+
+  	</div>
+  <script src="//code.jquery.com/jquery.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+  <script src="{% static "app/js/app.js" %}"></script>
+  <script src="{% static "app/js/controllers.js" %}"></script>
+  <script src="{% static "app/js/services.js" %}"></script>
+
+  </body>
+  </html>

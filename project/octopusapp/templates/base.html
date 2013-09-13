@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load verbatim %}
 
-<html>
+<html ng-app>
 <head>
 	<title>Octopus</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Bootstrap -->
 
+	<!-- Bootstrap -->
 	<link rel="stylesheet/less" href="{% static "bootstrap/less/bootstrap.less" %}" media="screen">
 	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen">
 
-	<script type="text/javascript" src="{% static "js/less.js" %}"></script>
+	<script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
 
-      <script src=" {% static "js/html5shiv.js" %}"></script>
-      <script src=" {% static "js/respond.min.js" %}"></script>
-      <![endif]-->
+      <script src=" {% static "lib/html5shiv.js" %}"></script>
+      <script src=" {% static "lib/respond.min.js" %}"></script>
+    <![endif]-->
+
+    <script src="http://code.angularjs.org/1.2.0-rc.2/angular.min.js"></script>
+    <script type="text/javascript" src="{% static "js/app.js" %}"></script>
+    
   </head>
   <body>
   	<div class="container">
@@ -30,6 +35,20 @@
 			{% block content%}{% endblock content%}
   			</div>
   		</div>
+
+      <div class="row">
+        <div class="col-md-12">
+
+          <div ng-controller="HelloCntl"></div>
+            Your name: <input type="text" ng-model="name"/>
+            <hr/>
+
+            {%verbatim%}
+              Hello {{name || "World"}}!
+            {%endverbatim%}
+
+        </div>
+      </div>
   	</div>
   	
 

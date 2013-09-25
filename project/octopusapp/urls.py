@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.models import User, Group
 
 # Uncomment the next two lines to enable the admin:
 #from django.contrib import admin
@@ -6,6 +7,6 @@ from django.conf.urls import patterns, include, url
 
 
 urlpatterns = patterns('',
-	url(r'^$', 'products.views.index'), # / is the index of the products
+    url(r'^$', 'products.views.index'), # / is the index of the products
     url(r'^products/', include('products.urls')),
 )

@@ -41,9 +41,6 @@ DATABASES = {
 
 ```
 
-
-
-
 In a python2 shell:
 
 ```python
@@ -52,4 +49,11 @@ from mongoengine import *
 connect('tumblelog')
 ```
 
+For the REST API:
+
+```
+pip install djangorestframework
+pip install markdown
+pip install django-filter
+```
 

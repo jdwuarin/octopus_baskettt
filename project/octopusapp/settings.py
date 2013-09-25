@@ -110,7 +110,7 @@ INSTALLED_APPS = (
     'products',
     'django.contrib.auth',
     'mongoengine.django.mongo_auth',
-    'rest_framework',
+    "django_verbatim", #Makes django templates work with angularjs
 
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',

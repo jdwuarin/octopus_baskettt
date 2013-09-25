@@ -3,6 +3,7 @@
 var app = angular.module('App', []);
 
 app.config(function ($routeProvider) {
+
 	$routeProvider
 	.when('/home',
 	{

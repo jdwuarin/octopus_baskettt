@@ -1,16 +1,8 @@
 from django.shortcuts import render
 from django.http import Http404
-from rest_framework import viewsets
-from quickstart.serializers import ProductSerializer
 
 from products.models import Product
 
-class ProductViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows products to be viewed or edited.
-    """
-    queryset = Products.objects.all()
-    serializer_class = UserSerializer
 
 def index(request):
 	latest_products = Product.objects

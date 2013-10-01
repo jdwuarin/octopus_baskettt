@@ -1,4 +1,7 @@
-from mongoengine import *
+from mongoengine.document import *
+from mongoengine.fields import *
 
-class Product(Document):
-    name = StringField(max_length=200)
+class Notes(Document):
+    title=StringField(max_length=255)
+    text=StringField(max_length=5000)
+    

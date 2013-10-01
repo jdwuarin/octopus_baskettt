@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from mongo_models import NotesResource
+from api import NotesResource
 
 from tastypie import api
 

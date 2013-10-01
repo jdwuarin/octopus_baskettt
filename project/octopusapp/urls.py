@@ -1,12 +1,11 @@
-from django.conf.urls import patterns, include, url
-from django.contrib.auth.models import User, Group
+from django.conf.urls.defaults import *
+from mongo_models import NotesResource
 
-# Uncomment the next two lines to enable the admin:
-#from django.contrib import admin
-#admin.autodiscover()
+from tastypie import api
 
+v1_api = api.Api(api_name='v1')
+v1_api.register(NotesResource())
 
 urlpatterns = patterns('',
-    url(r'^$', 'products.views.index'), # / is the index of the products
-    url(r'^products/', include('products.urls')),
+    url(r'^api/', include(v1_api.urls)),
 )

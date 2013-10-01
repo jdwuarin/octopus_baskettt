@@ -1,7 +1,7 @@
 from tastypie_mongoengine import resources
-from products.models import Notes
+from products.models import Product
 
-class NotesResource(resources.MongoEngineResource):
+class ProductResource(resources.MongoEngineResource):
     class Meta:
-        queryset = Notes.objects.all()
+        queryset = Product.objects.all()
         allowed_methods = ('get', 'post', 'put', 'delete')    

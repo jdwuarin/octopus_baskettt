@@ -11,6 +11,8 @@ class DmozItem(Item):
     desc = Field()
 
 class WebscraperItem(Item):
-    # define the fields for your item here like:
-    # name = Field()
+    name = Field()
+    link = Field()
+    price = Field()
+    image = Field()
     pass

@@ -22,27 +22,20 @@
     
   </head>
   <body>
-      <div class="header">
-    		<div class="row ">
-    			<div class="col-md-12 container">
 
-  		        <li ng-class="{active:getActive('/home')}"><a href="#/home">Home</a></li>
-  				    <li ng-class="{active:getActive('/products')}"><a href="#/products">Browse products</a></li>
+      <div ng-view></div>
 
-          	</div>
-        	</div>
-  	   </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div ng-view></div>
+      <footer>
+        <div class="row-fluid">
+        <ul>
+          <li ng-class="{active:getActive('/home')}"><a href="#/home">Home</a></li>
+          <li ng-class="{active:getActive('/products')}"><a href="#/products">Browse</a></li>
+        </ul>
         </div>
-      </div>
-  	</div>
+      </footer>
 
   <script src="//code.jquery.com/jquery.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <script src="{% static "lib/angular.min.js" %}"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
   <script src="{% static "app/js/app.js" %}"></script>
   <script src="{% static "app/js/controllers.js" %}"></script>

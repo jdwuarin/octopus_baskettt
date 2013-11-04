@@ -12,13 +12,13 @@ a:hover{
 //------------------------------------
 .header{
 	height:40px;
-	background-color: @gray;
+	background-color: #d3d3d3;
 	li{
 		display:inline-block;
 		padding-top: 10px;
 	}
 	a{
-		color: white;
+		color: black;
 	}
 }
 
@@ -26,29 +26,79 @@ a:hover{
 //------------------------------------
 .disclaimer{
 	text-align: center;
-	padding:50px 0px;
+	padding-top:110px;
+	background-size:2000px 1000px;
+	height: 360px;
+	background: url("/static/img/cover3.png");
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .disclaimer__logo{
 	background: url("/static/img/logo.png");
-	width:538px;
-	height:152px;
+	width: 370px;
+	height:100px;
 	.center;
 }
 
-.disclaimer__subtitle{
-	color:@gray;
-	font-size:32px;
+.quote{
+	text-align: center;
+	height:97px;
+	padding-top: 30px;
+	font-family: Futura;
+	font-size: 24px;
+	background-color: #EFEFEF;
+	color: #898989;
+	border-bottom: 3px solid #e2e2e2;
 }
 
-.search-bar{
-	padding: 50px 0px;
+.features{
+	padding: 70px 0px;
+	text-align: center;
+	background-color: #FEFEFE;
+	border-bottom: 2px solid #f3f3f3;
+	p{
+		width:300px;
+		.center;
+	}
+}
+
+.get-started{
+	padding: 70px 0px;
+	.center;
 	text-align: center;
 }
 
+.btn--cta{
+	background: #5BA6FF;
+	border:3px solid #4391ED;
+	color:white;
+	border-radius: 5px;
+	width: 250px;
+	height: 62px;
+	font-size: 18px;
+}
 //  Products
 //------------------------------------
 .product-box{
 	background-color: white;
 	width:30%;
+}
+
+//  Footer
+//------------------------------------
+footer{
+	background-color: #d8d8d8;
+	padding:40px 0px;
+	font-size: 18px;
+	ul{
+		margin:0;
+		li{
+			display: inline-block;
+			a{
+				color:black;
+			}
+		}
+	}
+	
 }

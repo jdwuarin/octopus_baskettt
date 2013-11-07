@@ -1,18 +1,35 @@
 'use strict';
 
-var app = angular.module('App', []);
+// Declare app level module which depends on filters, and services
+angular.module('App', [
+  //'ngRoute',
+  'App.filters',
+  'App.services',
+  'App.directives',
+  'App.controllers'
+]).
 
-app.config(function ($routeProvider) {
+config(['$routeProvider', function($routeProvider) {
 
 	$routeProvider
 	.when('/home',
 	{
 		templateUrl: 'static/app/partials/home.html'
 	})
-	.when('/products',
+	.when('/signup',
 	{
-		controller: 'ProductListController',
-		templateUrl: 'static/app/partials/products.html'
+		controller: 'RegistrationController',
+		templateUrl: 'static/app/partials/signup.html'
+	})
+	.when('/login',
+	{
+		controller: 'SessionController',
+		templateUrl: 'static/app/partials/login.html'
+	})
+	.when('/recipe',
+	{
+		controller: 'RecipeController',
+		templateUrl: 'static/app/partials/recipe.html'
 	})
 	.otherwise({ redirectTo: '/home' });
-});
+}]);

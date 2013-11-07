@@ -1,13 +1,27 @@
 //	Body
 //------------------------------------
-body{
+html,body{
 	background-color:white;	
+	height: 100%;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -@footer-height;
+  /* Pad bottom by footer height */
+  padding: 0 0 @footer-height;
 }
 
 a:hover{
 	text-decoration: none;
 }
-
+.row{
+	margin-left:0!important;
+	margin-right:0!important;
+}
 //	Header
 //------------------------------------
 .header{
@@ -22,6 +36,9 @@ a:hover{
 	}
 }
 
+.navbar{
+	margin-bottom: 0;
+}
 //  Content
 //------------------------------------
 .disclaimer{
@@ -78,18 +95,32 @@ a:hover{
 	height: 62px;
 	font-size: 18px;
 }
-//  Products
-//------------------------------------
-.product-box{
-	background-color: white;
-	width:30%;
+
+.food-type{
+	margin-top: 20px;
+	text-align: right;
 }
 
+.checkout-container button{
+	float: right;
+}
+//  Recipe page
+//------------------------------------
+.recipe-box{
+	margin: 10px 0px;
+	background-color:white;
+	padding: 20px;
+	border: 1px solid #d3d3d3;
+	border-radius: 7px;
+}
+.selected {
+    border: 3px solid rgb(158, 195, 160);
+}
 //  Footer
 //------------------------------------
 footer{
 	background-color: #d8d8d8;
-	padding:40px 0px;
+	height:@footer-height;
 	font-size: 18px;
 	ul{
 		margin:0;

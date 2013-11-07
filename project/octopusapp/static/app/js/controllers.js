@@ -1,16 +1,22 @@
 'use strict';
 
-app.controller('ProductListController', function($scope, $http) {
+/* Controllers */
 
-	$scope.url = "http://baskettt.apiary.io"; // To change later to our own API
+angular.module('App.controllers', []).
+	controller('RecipeController', ['$scope','$http',function($scope, $http) {
 
-	$scope.getIndex = function() {
-		$http.get($scope.url + '/products').
-		success(function(data) {
-			$scope.products = data.items;
-		});
-	};
+		$scope.url = "http://baskettt.apiary.io"; // To change later to our own API
 
-	$scope.getIndex();	
+		$scope.getRecipes = function() {
+			$http.get($scope.url + '/recipes').
+			success(function(data) {
+				$scope.recipes = data.items;
+			});
+		};
 
-});
+		$scope.getRecipes();	
+
+	}]);
+
+
+

@@ -18,28 +18,54 @@
 
       <script src=" {% static "lib/html5shiv.js" %}"></script>
       <script src=" {% static "lib/respond.min.js" %}"></script>
-    <![endif]-->
-    
-  </head>
-  <body>
+      <![endif]-->
 
-      <div ng-view></div>
+    </head>
+    <body>
+      <div id="wrap">
+        <nav class="navbar navbar-default" role="navigation">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">baskettt.co</a>
+          </div>
 
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Login</a></li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </nav>
+
+        <div ng-view></div>
+
+      </div>
       <footer>
-        <div class="row-fluid">
         <ul>
           <li ng-class="{active:getActive('/home')}"><a href="#/home">Home</a></li>
           <li ng-class="{active:getActive('/products')}"><a href="#/products">Browse</a></li>
         </ul>
-        </div>
       </footer>
 
-  <script src="//code.jquery.com/jquery.js"></script>
-  <script src="{% static "lib/angular.min.js" %}"></script>
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
-  <script src="{% static "app/js/app.js" %}"></script>
-  <script src="{% static "app/js/controllers.js" %}"></script>
-  <script src="{% static "app/js/services.js" %}"></script>
+      <script src="{% static "lib/angular.min.js" %}"></script>
+      
+      <script src="{% static "app/js/app.js" %}"></script>
+      <script src="{% static "app/js/controllers.js" %}"></script>
+      <script src="{% static "app/js/services.js" %}"></script>
+      <script src="{% static "app/js/directive.js" %}"></script>
+      <script src="{% static "app/js/filters.js" %}"></script>
 
-  </body>
-  </html>
+      <script src="//code.jquery.com/jquery.js"></script>
+      <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+
+    </body>
+    </html>

@@ -14,7 +14,9 @@ angular.module('App.controllers', []).
 			});
 		};
 
-		$scope.getRecipes();	
+		$scope.getRecipes();
+
+		$scope.diets = {};
 
 	}]);
 

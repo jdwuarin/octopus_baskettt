@@ -6,11 +6,14 @@
 		</div>
 		<div class="col-md-6 food-type">
 			Type of food: <i class="glyphicon glyphicon-fire"  ></i>
+			
+			<label for="1">Bacon</label>
+			<input  id="1" type="checkbox" ng-model="diets.Bacon" >
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div ng-repeat="recipe in recipes | filter:filterTerm" >
+			<div ng-repeat="recipe in recipes | filteredrecipes:diets" >
 		      <div class="recipe-box" ng-class="{'selected':boolChangeClass}" click>
 		        <p>{{recipe.title}}</p>
 		      </div>

@@ -21,8 +21,6 @@ angular.module('App.controllers', [])
 			$scope.products = data.objects;
 		});
 
-        console.log(selectedRecipes.getObjects());
-
 	}])
 	.controller('StatusController', ['$scope','$location',function($scope, $location) {
 

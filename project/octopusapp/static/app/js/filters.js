@@ -5,6 +5,9 @@
 angular.module('App.filters', []).
 filter('filteredrecipes', [function() {
 	return function(recipes,diets){
+		if(recipes === undefined)
+			return;
+		
 		var result = recipes.slice();// copy array
 		var recipe; 
 

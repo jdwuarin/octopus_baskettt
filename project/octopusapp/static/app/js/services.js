@@ -43,4 +43,16 @@ angular.module('App.services', [])
 				return $http.get(getUrl()).success(callback);
 			}
 		};
+	}])
+	.service('selectedRecipes', [function() {
+		var productList = 'TEST';
+
+		return {
+			getObjects: function() {
+				return productList;
+			},
+			setObjects: function(value) {
+				productList = value;
+			}
+		}
 	}]);

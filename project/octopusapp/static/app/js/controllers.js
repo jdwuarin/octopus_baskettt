@@ -4,7 +4,7 @@
 
 angular.module('App.controllers', [])
 	
-	.controller('RecipeController', ['$scope','$http','Recipe',function($scope, $http, Recipe) {
+	.controller('RecipeController', ['$scope','$http','Recipe','selectedRecipes',function($scope, $http, Recipe, selectedRecipes) {
 
 		Recipe.query(function(data) {
 			$scope.recipes = data.items;
@@ -12,19 +12,19 @@ angular.module('App.controllers', [])
 
 		$scope.diets = {};
 
+        selectedRecipes.setObjects("Chicken");
+
 	}])
-	.controller('ProductListController', ['$scope','$http','Product',function($scope, $http, Product) {
+	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
 
 		Product.query(function(data) {
 			$scope.products = data.objects;
 		});
 
+        console.log(selectedRecipes.getObjects());
+
 	}])
 	.controller('StatusController', ['$scope','$location',function($scope, $location) {
-		
-		$scope.status = {
-
-		};
 
 		$scope.isActive = function(route) {
 			return route === $location.path();

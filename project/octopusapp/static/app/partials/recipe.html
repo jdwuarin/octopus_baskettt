@@ -10,14 +10,24 @@
 			<input  id="1" type="checkbox" ng-model="diets.Bacon" >
 		</div>
 	</div>
+	<div class="row search-box">
+		<div class="col-md-12 form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Search</label>
+				<div class="col-sm-10">
+					<input ng-model="searchRecipe" placeholder="Chicken" class="form-control">
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div ng-repeat="recipe in recipes | filteredrecipes:diets" >
-		      <div class="recipe-box" ng-class="{'selected':boolChangeClass}" click>
-		        <p>{{recipe.title}}</p>
-		        <img src="{{recipe.image_url}}" alt="" class="img-thumbnail">
-		      </div>
-    		</div>
+			<div ng-repeat="recipe in recipes | filteredrecipes:diets | filter:searchRecipe" >
+				<div class="recipe-box" ng-class="{'selected':boolChangeClass}" click>
+					<p>{{recipe.title}}</p>
+					<img src="{{recipe.image_url}}" alt="" class="img-thumbnail">
+				</div>
+			</div>
 		</div>
 	</div>
 

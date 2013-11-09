@@ -3,20 +3,20 @@
 /* Services */
 
 
-angular.module('App.services', []).
+angular.module('App.services', [])
 	// Factory that uses the REST api/v1
-	factory('Product', ['$http', function($http) {
+	.factory('Product', ['$http', function($http) {
 
 		function getUrl(id) {
 			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
-			return 'http://127.0.0.1:8000/api/v1/product/' + id + '?format=json&callback=';
+			return 'http://127.0.0.1:8000/api/v1/product/' + id + '?format=json';
 		}
 
 		return {
-			get: function(id, callback) {
+			get: function(id, callback) { // GET /id
 				return $http.get(getUrl(id)).success(callback);
 			},
-			query: function(callback) {
+			query: function(callback) { // GET /
 				return $http.get(getUrl()).success(callback);
 			},
 			save:function(product,callback) {
@@ -27,6 +27,20 @@ angular.module('App.services', []).
 			},
 			put: function(product, callback) {
 				return $http.put(getUrl(product.id), product).success(callback);
+			}
+		};
+	}])
+
+	// Factory that uses the apiray API for the recipes
+	.factory('Recipe', ['$http', function($http) {
+
+		function getUrl() {
+			return 'http://baskettt.apiary.io/recipes';
+		}
+
+		return {
+			query: function(callback) { // GET /
+				return $http.get(getUrl()).success(callback);
 			}
 		};
 	}]);

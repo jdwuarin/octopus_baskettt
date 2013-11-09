@@ -10,8 +10,8 @@ BOT_NAME = 'webScraper'
 
 MONGODB_HOST = 'localhost'
 MONGODB_POST = 27017
-MONGODB_DATABASE = 'default'
-MONGODB_COLLECTION = 'products'
+MONGODB_DATABASE = 'db1'
+MONGODB_COLLECTION = 'product'
 
 SPIDER_MODULES = ['webScraper.spiders']
 NEWSPIDER_MODULE = 'webScraper.spiders'

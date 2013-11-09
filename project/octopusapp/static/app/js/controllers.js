@@ -3,21 +3,15 @@
 /* Controllers */
 
 angular.module('App.controllers', []).
-	controller('RecipeController', ['$scope','$http','Product',function($scope, $http, Product) {
+	controller('RecipeController', ['$scope','$http','Product','Recipe',function($scope, $http, Product, Recipe) {
 
 		Product.query(function(data) {
-			console.log(data.objects);
+			$scope.products = data.objects;
 		});
-		// $scope.url = "http://baskettt.apiary.io"; // To change later to our own API
 
-		// $scope.getRecipes = function() {
-		// 	$http.get($scope.url + '/recipes').
-		// 	success(function(data) {
-		// 		$scope.recipes = data.items;
-		// 	});
-		// };
-
-		// $scope.getRecipes();
+		Recipe.query(function(data) {
+			$scope.recipes = data.items;
+		});
 
 		$scope.diets = {};
 

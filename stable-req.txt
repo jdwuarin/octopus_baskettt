@@ -1,5 +1,5 @@
 Django==1.5.4
-Scrapy==0.19.0
+Scrapy==0.18.4
 Twisted==13.1.0
 argparse==1.2.1
 django-verbatim==0.1

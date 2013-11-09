@@ -3,5 +3,5 @@ from mongoengine.fields import *
 
 class Product(Document):
     name=StringField(max_length=255)
-    text=StringField(max_length=5000)
+    price=StringField(max_length=5000)
     

@@ -105,18 +105,58 @@ a:hover{
 	float: right;
 	margin-bottom: 20px;
 }
+
+.status-bar{
+	padding-top: 20px;
+	li{
+		display:none;
+	}
+	li.active{
+		display: inline-block;
+	}
+}
 //  Recipe page
 //------------------------------------
 .recipe-box{
-	margin: 10px 0px;
+	margin: 10px;
 	background-color:white;
 	padding: 20px;
 	border: 1px solid #d3d3d3;
 	border-radius: 7px;
+	width:200px;
+	height:250px;
+	float: left;
+	img{
+		max-height: 150px;
+		margin: 0 auto;
+	}
 }
+
 .selected {
     border: 3px solid rgb(158, 195, 160);
 }
+
+//  Product page
+//------------------------------------
+.product-box{
+	margin: 10px;
+	background-color:white;
+	padding: 20px;
+	border: 1px solid #d3d3d3;
+	border-radius: 7px;
+	li{
+		list-style-type: none;
+		display: inline-block;
+		&:nth-child(2){
+			float: right;
+		}
+	}
+}
+
+.selected {
+    border: 3px solid rgb(158, 195, 160);
+}
+
 //  Footer
 //------------------------------------
 footer{

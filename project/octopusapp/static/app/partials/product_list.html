@@ -1,0 +1,25 @@
+<div class="container">
+	
+	<div class="row">
+		<div class="col-md-12">
+			<h3>Choose your products</h3>	
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div ng-repeat="product in products" >
+				<ul class="product-box">
+					<li>{{product.name}}</li>
+					<li>{{product.price}}</li>
+				</ul>
+		      </div>
+    		</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 checkout-container">
+			<button class="btn btn-primary">Transfer my baskettt</button>
+		</div>
+	</div>
+</div>

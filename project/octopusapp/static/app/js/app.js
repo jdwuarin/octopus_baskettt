@@ -29,7 +29,14 @@ config(['$routeProvider', function($routeProvider) {
 	.when('/recipe',
 	{
 		controller: 'RecipeController',
-		templateUrl: 'static/app/partials/recipe.html'
+		templateUrl: 'static/app/partials/recipe.html',
+		breadcrumb: 'Recipe'
+	})
+	.when('/list',
+	{
+		controller: 'ProductListController',
+		templateUrl: 'static/app/partials/product_list.html',
+		breadcrumb: 'Product list'
 	})
 	.otherwise({ redirectTo: '/home' });
 }]);

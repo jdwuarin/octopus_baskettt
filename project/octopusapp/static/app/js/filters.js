@@ -8,7 +8,7 @@ filter('filteredrecipes', [function() {
 		var result = recipes.slice();// copy array
 		var recipe; 
 
-		angular.forEach(diets, function(value, key) {
+		angular.forEach(diets, function(value, key) { //Checks if the keyword is in the title
 			if(value) {
 				for(var index = 0; index < result.length; index++) {
 					recipe = result[index];

@@ -13,7 +13,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div ng-repeat="recipe in recipes | filteredrecipes:diets" >
+			<div ng-repeat="recipe in recipes" >
 		      <div class="recipe-box" ng-class="{'selected':boolChangeClass}" click>
 		        <p>{{recipe.title}}</p>
 		      </div>

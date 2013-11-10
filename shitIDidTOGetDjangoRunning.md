@@ -57,3 +57,13 @@ pip install markdown
 pip install django-filter
 ```
 
+For Postgresql
+
+```
+sudo su - postgres
+createdb db1
+psql
+CREATE USER octopus_user WITH PASSWORD 'octopus';
+GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user;
+``
+

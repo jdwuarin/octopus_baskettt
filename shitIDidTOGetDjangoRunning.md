@@ -57,3 +57,10 @@ pip install markdown
 pip install django-filter
 ```
 
+For Postgresql
+
+```
+sudo su - postgres
+createdb db1
+``
+

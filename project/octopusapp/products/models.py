@@ -1,7 +1,6 @@
-from mongoengine.document import *
-from mongoengine.fields import *
+from django.db import models
 
-class Product(Document):
-    title=StringField(max_length=255)
-    text=StringField(max_length=5000)
+class Product(models.Model):
+    title=models.CharField(max_length=50)
+    text=models.CharField(max_length=50)
     

@@ -7,9 +7,15 @@ angular.module('App', [
   'App.services',
   'App.directives',
   'App.controllers'
-]).
+])
 
-config(['$routeProvider', function($routeProvider) {
+.config(['$httpProvider','$http',function($httpProvider, $http) {
+    $httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
+    $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+
+}])
+
+.config(['$routeProvider', function($routeProvider) {
 
 	$routeProvider
 	.when('/home',

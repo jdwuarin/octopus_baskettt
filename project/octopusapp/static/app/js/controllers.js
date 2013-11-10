@@ -9,18 +9,24 @@ angular.module('App.controllers', [])
 		Recipe.query(function(data) {
 			$scope.recipes = data.items;
 		});
+		// Product.query(function(data) {
+		// 	$scope.recipes = data.objects;
+		// });
 
 		$scope.diets = {};
 
-        selectedRecipes.setObjects("Chicken");
-
 	}])
-	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
+	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes','Recommendation',function($scope, $http, Product, selectedRecipes,Recommendation) {
 
-		Product.query(function(data) {
+		// Product.query(function(data) {
+		// 	$scope.products = data.objects;
+		// });
+		var selectedRecipesIds = selectedRecipes.getObjects();
+
+		Recommendation.post(selectedRecipesIds,function(data) {
 			$scope.products = data.objects;
 		});
-
+		
 	}])
 	.controller('StatusController', ['$scope','$location',function($scope, $location) {
 

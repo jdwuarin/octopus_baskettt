@@ -9,6 +9,7 @@ v1_api.register(ProductResource())
 
 urlpatterns = patterns('',
 	url(r'^$', 'views.index'),
+	url(r'^recommendation/', 'views.recommendation'),
     url(r'^api/', include(v1_api.urls)),
 )
 

@@ -4,6 +4,7 @@
 
 
 angular.module('App.services', [])
+
 	// Factory that uses the REST api/v1
 	.factory('Product', ['$http', function($http) {
 
@@ -44,15 +45,48 @@ angular.module('App.services', [])
 			}
 		};
 	}])
+
+	// Service that contains the ids of the selected recipes
 	.service('selectedRecipes', [function() {
-		var productList = 'TEST';
+
+		var productList = [];
 
 		return {
 			getObjects: function() {
 				return productList;
 			},
 			setObjects: function(value) {
-				productList = value;
+				var isPresent = false;
+				productList.forEach(function(element, index, array) {
+					if(element === value) {
+						productList.splice(index,1);
+						isPresent = true;
+					}
+				});
+
+				if (!isPresent){
+					productList.push(value);
+				}
 			}
 		}
+	}])
+
+	// Factory that uses the recommendation backend
+	.factory('Recommendation', ['$http', function($http) {
+
+		function getUrl() {
+			return 'http://127.0.0.1:8000/recommendation/';
+		}
+
+		return {
+			post: function(ids, callback) { // POST /recommendation
+
+				return $http({
+					url: getUrl(),
+					method: "POST",
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+					data: "sa mere"
+				}).success(callback);
+			}
+		};
 	}]);

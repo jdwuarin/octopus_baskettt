@@ -46,6 +46,26 @@ angular.module('App.services', [])
 		};
 	}])
 
+	// Factory that uses our user api
+	.factory('User', ['$http', function($http) {
+
+		function getUrl(id) {
+			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
+			return 'http://127.0.0.1:8000/api/v1/user/login/?format=json';
+		}
+
+		return {
+			login: function(callback) { // POST /user/login
+				return $http({
+					url: getUrl(),
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: {email:'octopus_user', password:'octopus'}
+				}).success(callback);
+			}
+		};
+	}])
+
 	// Service that contains the ids of the selected recipes
 	.service('selectedRecipes', [function() {
 

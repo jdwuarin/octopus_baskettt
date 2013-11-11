@@ -9,9 +9,10 @@ angular.module('App', [
   'App.controllers'
 ])
 
-.config(['$httpProvider','$http',function($httpProvider, $http) {
+.config(['$httpProvider', function($httpProvider) {
     $httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
-    $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
 }])
 

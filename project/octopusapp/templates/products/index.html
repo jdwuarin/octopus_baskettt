@@ -41,7 +41,7 @@
               <li class="active"><a href="#">Home</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="#">Login</a></li>
+              <li><a href="#/login">Login</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </nav>
@@ -55,7 +55,7 @@
           <li ng-class="{active:getActive('/home')}"><a href="#/home">Home</a></li>
         </ul>
       </footer>
-
+      <script src="{% static "lib/jquery.min.js" %}"></script>
       <script src="{% static "lib/angular.min.js" %}"></script>
       
       <script src="{% static "app/js/app.js" %}"></script>
@@ -64,7 +64,6 @@
       <script src="{% static "app/js/directive.js" %}"></script>
       <script src="{% static "app/js/filters.js" %}"></script>
 
-      <script src="//code.jquery.com/jquery.js"></script>
       <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
 
     </body>

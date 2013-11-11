@@ -79,6 +79,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -105,6 +106,7 @@ INSTALLED_APPS = (
     'django_verbatim', #Makes django templates work with angularjs
     'gunicorn',
     'tastypie',
+    'corsheaders',
     #'tastypie_mongoengine'
 
     # Uncomment the next line to enable the admin:
@@ -148,3 +150,4 @@ LOGGING = {
 
 SITE_ID = 1
 
+CORS_ORIGIN_ALLOW_ALL = True #TOCHANGE

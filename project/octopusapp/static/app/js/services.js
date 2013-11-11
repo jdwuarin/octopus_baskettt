@@ -55,12 +55,12 @@ angular.module('App.services', [])
 		}
 
 		return {
-			login: function(callback) { // POST /user/login
+			login: function(email, password, callback) { // POST /user/login
 				return $http({
 					url: getUrl(),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
-					data: {email:'octopus_user', password:'octopus'}
+					data: {email:email, password:password}
 				}).success(callback);
 			}
 		};

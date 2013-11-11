@@ -30,23 +30,33 @@ angular.module('App.controllers', [])
 	}])
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {
 
-		User.login(function(data){
-			console.log(data);
-			console.log("putain");
-		});
-
 		$scope.user = {};
 
 		$scope.signUp = function(){
 			var user = $scope.user;
-			console.log(user);
-			console.log($scope.signUpForm);
 			if($scope.signUpForm.$valid){
 				alert("OK");
 			}
 		}
 
 	}])
+
+	.controller('SessionController', ['$scope','User', function($scope,User) {
+		$scope.user = {};
+		
+		$scope.login = function(){
+			var user = $scope.user;
+			if($scope.loginForm.$valid){
+				User.login(user.email, user.password, function(data){
+					console.log(data);
+					console.log("putain");
+				});
+			}
+		}
+
+
+	}])
+
 	.controller('StatusController', ['$scope','$location',function($scope, $location) {
 
 		$scope.isActive = function(route) {

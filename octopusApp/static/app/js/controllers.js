@@ -9,25 +9,19 @@ angular.module('App.controllers', [])
 		Recipe.query(function(data) {
 			$scope.recipes = data.items;
 		});
-		// Product.query(function(data) {
-		// 	$scope.recipes = data.objects;
-		// });
 
 		$scope.diets = {};
 
 	}])
 	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes','Recommendation',function($scope, $http, Product, selectedRecipes,Recommendation) {
 
-		// Product.query(function(data) {
-		// 	$scope.products = data.objects;
-		// });
 		var selectedRecipesIds = selectedRecipes.getObjects();
 
 		Recommendation.post(selectedRecipesIds,function(data) {
 			$scope.products = data.objects;
 		});
-		
 	}])
+
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {
 
 		$scope.user = {};
@@ -38,7 +32,6 @@ angular.module('App.controllers', [])
 				alert("OK");
 			}
 		}
-
 	}])
 
 	.controller('SessionController', ['$scope','User', function($scope,User) {
@@ -54,13 +47,11 @@ angular.module('App.controllers', [])
 			}
 		}
 
-
-	}])
-
-	.controller('StatusController', ['$scope','$location',function($scope, $location) {
-
-		$scope.isActive = function(route) {
-			return route === $location.path();
+		$scope.logout = function(){
+			User.logout(function(data){
+				console.log("logout");
+				// This callback is only called when return success
+				User.setAuthenticated(false);
+			});
 		}
-
 	}]);

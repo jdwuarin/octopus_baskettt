@@ -51,18 +51,23 @@ angular.module('App.services', [])
 
 		var IsAuthenticated = false;
 
-		function getUrl(id) {
-			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
-			return 'http://127.0.0.1:8000/api/v1/user/login/?format=json';
+		function getUrl(req) {
+			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
 		}
 
 		return {
 			login: function(email, password, callback) { // POST /user/login
 				return $http({
-					url: getUrl(),
+					url: getUrl('login'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
+				}).success(callback);
+			},
+			logout: function(callback) { // GET /user/logout
+				return $http({
+					url: getUrl('logout'),
+					method: "GET"
 				}).success(callback);
 			},
 			getAuthenticated: function(){

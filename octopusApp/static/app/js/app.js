@@ -10,10 +10,11 @@ angular.module('App', [
 ])
 
 .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
+	//$http.defaults.headers.post[‘X-CSRFToken’] = $cookies.csrftoken;
+	//$http.defaults.headers.common[‘X-CSRFToken’] = $cookies.csrftoken;
+    //$httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
 }])
 
 .config(['$routeProvider', function($routeProvider) {

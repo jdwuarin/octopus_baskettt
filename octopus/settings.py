@@ -26,7 +26,7 @@ DATABASES = {
     }
 }
 
-ROOT_URLCONF='urls'
+ROOT_URLCONF='octopus.urls'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
@@ -41,14 +41,15 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR,'static'),
+    os.path.join(PROJECT_DIR,'octopusapp/static'),
+    
 ) 
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/var/www/octopus/static'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -85,7 +86,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION = 'octopus.wsgi.application'
 
 TEMPLATE_DIRS = (
     "templates"
@@ -101,7 +102,7 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'products',
+    'octopusApp',
     'django.contrib.auth',
     'django_verbatim', #Makes django templates work with angularjs
     'gunicorn',

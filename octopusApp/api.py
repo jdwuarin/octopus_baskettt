@@ -33,7 +33,7 @@ class UserResource(ModelResource):
 		
 	def login(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
-		data = self.deserialize(request, request.raw_post_data, format=request.META.get('CONTENT_TYPE', 'application/json'))
+		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
 		email = data.get('email', '')
 		password = data.get('password', '')

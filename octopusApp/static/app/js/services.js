@@ -47,7 +47,9 @@ angular.module('App.services', [])
 	}])
 
 	// Factory that uses our user api
-	.factory('User', ['$http', function($http) {
+	.factory('User', ['$http', '$location', function($http, $location) {
+
+		var IsAuthenticated = false;
 
 		function getUrl(id) {
 			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
@@ -62,6 +64,17 @@ angular.module('App.services', [])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
 				}).success(callback);
+			},
+			getAuthenticated: function(){
+				return IsAuthenticated;
+			},
+			setAuthenticated: function(value){
+				IsAuthenticated = value;
+			},
+			redirect: function(url){
+				// Redirect to the given url (defaults to '/')
+				url = url || '/';
+				$location.path(url);
 			}
 		};
 	}])

@@ -48,8 +48,8 @@ angular.module('App.controllers', [])
 			var user = $scope.user;
 			if($scope.loginForm.$valid){
 				User.login(user.email, user.password, function(data){
-					console.log(data);
-					console.log("putain");
+					// This callback is only called when return success
+					User.setAuthenticated(true);
 				});
 			}
 		}

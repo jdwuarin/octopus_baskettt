@@ -1,6 +1,20 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
+	// Load the plugins
+	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-karma');
+
+	// Default task(s).
+	grunt.registerTask('default', ['less']);
+	grunt.registerTask('test-watch', ['karma:watch']);
+
+	var karmaConfig = function(configFile, customOptions) {
+		var options = { configFile: configFile, keepalive: true };
+		var travisOptions = process.env.TRAVIS && { browsers: ['Firefox'], reporters: 'dots' };
+		return grunt.util._.extend(options, customOptions, travisOptions);
+	};
+
+  	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'), //To read the values of the package.json file
 		
@@ -27,13 +41,12 @@ module.exports = function(grunt) {
 					"project/octopusapp/static/bootstrap/css/bootstrap.css": "project/octopusapp/static/bootstrap/less/bootstrap.less"
 				},
 			}
+		},
+		karma: {
+			unit: { options: karmaConfig('test_angular/config/unit.js') },
+			watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
 		}
 	});
 
-	// Load the plugin that provides the "less" task.
-	grunt.loadNpmTasks('grunt-contrib-less');
-
-	// Default task(s).
-	grunt.registerTask('default', ['less']);
 
 };

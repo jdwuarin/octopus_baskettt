@@ -7,24 +7,24 @@ module.exports = function(grunt) {
 		less: {
 			compile: {
 				options: {
-					paths:["project/octopusapp/static/less"], //Directory to check for @imports
+					paths:["project/octopusProducts/static/less"], //Directory to check for @imports
 					yuicompress: true,
 					strictImports: true //Force evaluation of imports.
 				},
 				files: {
-					"project/octopusapp/static/css/style.css": "project/octopusapp/static/less/style.less",
+					"project/octopusProducts/static/css/style.css": "project/octopusProducts/static/less/style.less",
 				},
 
 			},
 			
 			bootstrap: {
 				options: {
-					paths:["project/octopusapp/static/bootstrap/less"],
+					paths:["project/octopusProducts/static/bootstrap/less"],
 					yuicompress: true,
 					strictImports: true //Force evaluation of imports.
 				},
 				files: {
-					"project/octopusapp/static/bootstrap/css/bootstrap.css": "project/octopusapp/static/bootstrap/less/bootstrap.less"
+					"project/octopusProducts/static/bootstrap/css/bootstrap.css": "project/octopusProducts/static/bootstrap/less/bootstrap.less"
 				},
 			}
 		}

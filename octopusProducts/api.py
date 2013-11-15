@@ -4,7 +4,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from products.models import Product
+from models import Product
 from tastypie.authorization import Authorization, DjangoAuthorization
 from tastypie.exceptions import Unauthorized
 

@@ -65,5 +65,6 @@ createdb db1
 psql
 CREATE USER octopus_user WITH PASSWORD 'octopus';
 GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user;
+curl http://nextmarvel.net/blog/downloads/fixBrewLionPostgres.sh | sh //if using Mac OSX Lion
 ``
 

@@ -6,9 +6,9 @@ angular.module('App.controllers', [])
 	
 	.controller('RecipeController', ['$scope','$http','Recipe','selectedRecipes',function($scope, $http, Recipe, selectedRecipes) {
 
-		Recipe.query(function(data) {
-			$scope.recipes = data.items;
-		});
+		// Recipe.query(function(data) {
+		// 	$scope.recipes = data.items;
+		// });
 
 		$scope.diets = {};
 
@@ -17,9 +17,9 @@ angular.module('App.controllers', [])
 
 		var selectedRecipesIds = selectedRecipes.getObjects();
 
-		Recommendation.post(selectedRecipesIds,function(data) {
-			$scope.products = data.objects;
-		});
+		// Recommendation.post(selectedRecipesIds,function(data) {
+		// 	$scope.products = data.objects;
+		// });
 	}])
 
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {

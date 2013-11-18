@@ -42,12 +42,19 @@ angular.module('App', [
 		controller: 'RecipeController',
 		templateUrl: 'static/app/partials/recipe.html',
 		breadcrumb: 'Recipe',
-		requireLogin: true
+		requireLogin: false
 	})
 	.when('/list',
 	{
 		controller: 'ProductListController',
 		templateUrl: 'static/app/partials/product_list.html',
+		breadcrumb: 'Product list',
+		requireLogin: false
+	})
+	.when('/transfer',
+	{
+		controller: 'TransferController',
+		templateUrl: 'static/app/partials/transfer.html',
 		breadcrumb: 'Product list',
 		requireLogin: true
 	})

@@ -6,18 +6,27 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
-BOT_NAME = 'webScraper'
+#these lines are useful for the Django integration
+import sys
+import os
 
-MONGODB_HOST = 'localhost'
-MONGODB_POST = 27017
-MONGODB_DATABASE = 'db1'
-MONGODB_COLLECTION = 'product'
+
+# adding this to the sys.path variable
+# and not the PYTHONPATH environment variable
+# because as of entering this, we are already
+# in the python runtime.
+# Path to be changed on server to its final value
+sys.path.append('/Users/john-davidwuarin/Dropbox/Workspace_Python/octopus')
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
+
+BOT_NAME = 'webScraper'
 
 SPIDER_MODULES = ['webScraper.spiders']
 NEWSPIDER_MODULE = 'webScraper.spiders'
 
 ITEM_PIPELINES = [
-    'scrapy_mongodb.MongoDBPipeline',
+    'webScraper.pipelines.PostgreSQLPipeline',
 ]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

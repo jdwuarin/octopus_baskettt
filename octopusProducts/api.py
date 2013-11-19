@@ -4,7 +4,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from products.models import Product
+from models import Product
 from tastypie.authorization import Authorization, DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 from tastypie.exceptions import Unauthorized
@@ -32,7 +32,7 @@ class UserResource(ModelResource):
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('logout'), name='api_logout'),
 		]
-		
+
 	def login(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -69,5 +69,4 @@ class UserResource(ModelResource):
 		else:
 			print "fuck"
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
-
 

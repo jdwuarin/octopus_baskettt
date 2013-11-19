@@ -1,11 +1,10 @@
-
 from scrapy.selector import HtmlXPathSelector
 #from scrapy.http import Request
 from scrapy import log
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
-from webScraper.items import WebscraperItem
+from webScraper.items import ProductItem
 
 
 class TescoSpider(CrawlSpider):
@@ -53,12 +52,13 @@ class TescoSpider(CrawlSpider):
            # if products[i]
             # if i == 0 or i == 1:
 
-            item = WebscraperItem()
+            item = ProductItem()
+
 
             item['price'] = prices[i]
             item['name']  = names[i]
             item['link'] = links[i]
-            item['productOrigin'] = "tesco"
+            item['productOrigin'] = 'tesco'
             items.append(item)
         
         return items

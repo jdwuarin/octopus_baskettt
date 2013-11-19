@@ -3,6 +3,7 @@ import os
 
 PROJECT_DIR = os.path.dirname(__file__)
 
+TIME_ZONE = 'GB'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -18,7 +19,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'db1',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
+        
         'USER': 'octopus_user',
         'PASSWORD': 'octopus',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
@@ -30,18 +31,18 @@ ROOT_URLCONF='octopus.urls'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = '/var/www/octopus/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR,'octopusApp/static'),
+    os.path.join(PROJECT_DIR,'octopusProducts/static/'),
     
 ) 
 
@@ -49,7 +50,7 @@ STATICFILES_DIRS = (
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/var/www/octopus/static'
+STATIC_ROOT = '/var/www/octopus/static/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -102,13 +103,13 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'octopusApp',
+    'octopusProducts',
     'django.contrib.auth',
     'django_verbatim', #Makes django templates work with angularjs
     'gunicorn',
     'tastypie',
     'corsheaders',
-    #'tastypie_mongoengine'
+    'south', #brings migration to Django to have stable database-independent migration layer
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

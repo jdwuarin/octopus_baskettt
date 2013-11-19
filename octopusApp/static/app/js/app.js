@@ -10,10 +10,11 @@ angular.module('App', [
 ])
 
 .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
+	//$http.defaults.headers.post[‘X-CSRFToken’] = $cookies.csrftoken;
+	//$http.defaults.headers.common[‘X-CSRFToken’] = $cookies.csrftoken;
+    //$httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
 }])
 
 .config(['$routeProvider', function($routeProvider) {
@@ -21,29 +22,50 @@ angular.module('App', [
 	$routeProvider
 	.when('/home',
 	{
-		templateUrl: 'static/app/partials/home.html'
+		templateUrl: 'static/app/partials/home.html',
+		requireLogin: false
 	})
 	.when('/signup',
 	{
 		controller: 'RegistrationController',
-		templateUrl: 'static/app/partials/signup.html'
+		templateUrl: 'static/app/partials/signup.html',
+		requireLogin: false
 	})
 	.when('/login',
 	{
 		controller: 'SessionController',
-		templateUrl: 'static/app/partials/login.html'
+		templateUrl: 'static/app/partials/login.html',
+		requireLogin: false
 	})
 	.when('/recipe',
 	{
 		controller: 'RecipeController',
 		templateUrl: 'static/app/partials/recipe.html',
-		breadcrumb: 'Recipe'
+		breadcrumb: 'Recipe',
+		requireLogin: false
 	})
 	.when('/list',
 	{
 		controller: 'ProductListController',
 		templateUrl: 'static/app/partials/product_list.html',
-		breadcrumb: 'Product list'
+		breadcrumb: 'Product list',
+		requireLogin: false
+	})
+	.when('/transfer',
+	{
+		controller: 'TransferController',
+		templateUrl: 'static/app/partials/transfer.html',
+		breadcrumb: 'Product list',
+		requireLogin: true
 	})
 	.otherwise({ redirectTo: '/home' });
+}])
+
+.run(['$rootScope', 'User', function($rootScope, User){
+
+	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
+		if (currRoute.requireLogin && !User.getAuthenticated()) {
+			User.redirect("/login");
+		}
+	});
 }]);

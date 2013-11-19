@@ -47,21 +47,39 @@ angular.module('App.services', [])
 	}])
 
 	// Factory that uses our user api
-	.factory('User', ['$http', function($http) {
+	.factory('User', ['$http', '$location', function($http, $location) {
 
-		function getUrl(id) {
-			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
-			return 'http://127.0.0.1:8000/api/v1/user/login/?format=json';
+		var IsAuthenticated = false;
+
+		function getUrl(req) {
+			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
 		}
 
 		return {
 			login: function(email, password, callback) { // POST /user/login
 				return $http({
-					url: getUrl(),
+					url: getUrl('login'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
 				}).success(callback);
+			},
+			logout: function(callback) { // GET /user/logout
+				return $http({
+					url: getUrl('logout'),
+					method: "GET"
+				}).success(callback);
+			},
+			getAuthenticated: function(){
+				return IsAuthenticated;
+			},
+			setAuthenticated: function(value){
+				IsAuthenticated = value;
+			},
+			redirect: function(url){
+				// Redirect to the given url (defaults to '/')
+				url = url || '/';
+				$location.path(url);
 			}
 		};
 	}])

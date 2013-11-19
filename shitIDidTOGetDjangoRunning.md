@@ -66,5 +66,40 @@ psql
 CREATE USER octopus_user WITH PASSWORD 'octopus';
 GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user;
 curl http://nextmarvel.net/blog/downloads/fixBrewLionPostgres.sh | sh //if using Mac OSX Lion
-``
+```
 
+
+
+Using south for ease of migration:
+
+add 'south',
+
+to INSTALLED_APPS in settings.py
+
+do a "python manage.py syncdb" #this runs south syncdb
+run a "python manage.py convert_to_south" on any app we have
+Then if, say, a column was added to a model just: 
+
+```
+python manage.py schemamigration 'yourApp' --auto
+python manage.py migrate 'yourApp'
+```
+Note: if we are creating a model we will need a first migration, we do that by: 
+
+```
+python manage.py schemamigration 'yourApp' --initial
+python manage.py migrate 'yourApp'
+```
+
+
+For Django Users (and Auth...)
+
+```
+#when creating the django superuser upon frist calling "python manage.py syncdb"
+
+create the superuser: yes
+username: django_auth_user
+email: 
+password: django_auth
+
+```

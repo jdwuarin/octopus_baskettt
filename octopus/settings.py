@@ -19,7 +19,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'db1',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
+        
         'USER': 'octopus_user',
         'PASSWORD': 'octopus',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'tastypie',
     'corsheaders',
+    'south', #brings migration to Django to have stable database-independent migration layer
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

@@ -30,10 +30,10 @@ class UserResource(ModelResource):
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('logout'), name='api_logout'),
 		]
-		
+
 	def login(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
-		data = self.deserialize(request, request.raw_post_data, format=request.META.get('CONTENT_TYPE', 'application/json'))
+		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
 		email = data.get('email', '')
 		password = data.get('password', '')
@@ -55,6 +55,16 @@ class UserResource(ModelResource):
 				'success': False,
 				'reason': 'incorrect',
 				}, HttpUnauthorized )
+
+
+	def logout(self, request, **kwargs):
+		self.method_check(request, allowed=['get'])
+		if request.user and request.user.is_authenticated():
+			logout(request)
+			return self.create_response(request, { 'success': True })
+		else:
+			return self.create_response(request, { 'success': False }, HttpUnauthorized)
+
 
 
 # class UserResource(ModelResource):
@@ -101,12 +111,5 @@ class UserResource(ModelResource):
 #                 'reason': 'incorrect',
 #                 }, HttpUnauthorized )
 
-#     def logout(self, request, **kwargs):
-#         self.method_check(request, allowed=['get'])
-#         if request.user and request.user.is_authenticated():
-#             logout(request)
-#             return self.create_response(request, { 'success': True })
-#         else:
-#             return self.create_response(request, { 'success': False }, HttpUnauthorized)
 
 

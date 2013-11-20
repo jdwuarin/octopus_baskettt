@@ -55,7 +55,7 @@ class TescoSpider(CrawlSpider):
             item = ProductItem()
 
 
-            item['price'] = prices[i]
+            item['price'] = prices[i].replace(u'\xA3', 'GBP')
             item['name']  = names[i]
             item['link'] = links[i]
             item['productOrigin'] = 'tesco'

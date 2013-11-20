@@ -8,15 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Product.offer_flag'
-        db.add_column(u'octopusProducts_product', 'offer_flag',
-                      self.gf('django.db.models.fields.CharField')(default=False, max_length=12),
-                      keep_default=False)
+        # Deleting field 'Product.text'
+        db.delete_column(u'octopusProducts_product', 'text')
+
+        # Deleting field 'Product.title'
+        db.delete_column(u'octopusProducts_product', 'title')
 
 
     def backwards(self, orm):
-        # Deleting field 'Product.offer_flag'
-        db.delete_column(u'octopusProducts_product', 'offer_flag')
+        # Adding field 'Product.text'
+        db.add_column(u'octopusProducts_product', 'text',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=50),
+                      keep_default=False)
+
+        # Adding field 'Product.title'
+        db.add_column(u'octopusProducts_product', 'title',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=50),
+                      keep_default=False)
 
 
     models = {
@@ -29,9 +37,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
             'offer_flag': ('django.db.models.fields.CharField', [], {'default': 'False', 'max_length': '12'}),
             'price': ('django.db.models.fields.CharField', [], {'default': "'NaN'", 'max_length': '12'}),
-            'productOrigin': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '50'}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+            'productOrigin': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '50'})
         }
     }
 

@@ -15,8 +15,5 @@ class PostgreSQLPipeline(object):
         item2 = ProductItem()
         item2 = item
         item2.save()
-        # for product in item:
-        #     product = ProductItem()
-        #     product.save() #saves data to PostgreSQL database   
 
         return item

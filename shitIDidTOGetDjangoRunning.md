@@ -88,6 +88,7 @@ Note: if we are creating a model we will need a first migration, we do that by:
 
 ```
 python manage.py schemamigration 'yourApp' --initial
+python manage.py syncdb
 python manage.py migrate 'yourApp'
 ```
 

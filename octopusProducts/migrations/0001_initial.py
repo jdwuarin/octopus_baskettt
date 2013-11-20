@@ -13,13 +13,13 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('text', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('price', self.gf('django.db.models.fields.CharField')(max_length=12)),
-            ('productOrigin', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=150)),
-            ('link', self.gf('django.db.models.fields.CharField')(max_length=200)),
-            ('description', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('offer_flag', self.gf('django.db.models.fields.BooleanField')()),
+            ('price', self.gf('django.db.models.fields.CharField')(default='NaN', max_length=12)),
+            ('productOrigin', self.gf('django.db.models.fields.CharField')(default='none', max_length=50)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(default='', max_length=100)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+            ('link', self.gf('django.db.models.fields.CharField')(default='', max_length=200)),
+            ('description', self.gf('django.db.models.fields.CharField')(default='', max_length=300)),
+            ('offer_flag', self.gf('django.db.models.fields.CharField')(default=False, max_length=12)),
         ))
         db.send_create_signal(u'octopusProducts', ['Product'])
 
@@ -32,14 +32,14 @@ class Migration(SchemaMigration):
     models = {
         u'octopusProducts.product': {
             'Meta': {'object_name': 'Product'},
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'description': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '300'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'link': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '150'}),
-            'offer_flag': ('django.db.models.fields.BooleanField', [], {}),
-            'price': ('django.db.models.fields.CharField', [], {'max_length': '12'}),
-            'productOrigin': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'default': "''", 'max_length': '100'}),
+            'link': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '200'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
+            'offer_flag': ('django.db.models.fields.CharField', [], {'default': 'False', 'max_length': '12'}),
+            'price': ('django.db.models.fields.CharField', [], {'default': "'NaN'", 'max_length': '12'}),
+            'productOrigin': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '50'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }

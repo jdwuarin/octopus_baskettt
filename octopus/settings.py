@@ -11,6 +11,8 @@ SESSION_COOKIE_AGE = 1209600
 
 SESSION_COOKIE_HTTPONLY = False
 
+#SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

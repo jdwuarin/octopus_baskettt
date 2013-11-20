@@ -5,6 +5,12 @@ PROJECT_DIR = os.path.dirname(__file__)
 
 TIME_ZONE = 'GB'
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SESSION_COOKIE_AGE = 1209600
+
+SESSION_COOKIE_HTTPONLY = False
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -56,7 +62,6 @@ STATIC_ROOT = '/var/www/octopus/static/'
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL =  "/static/"
 
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -82,6 +87,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'octopusProducts.django-crossdomainxhr-middleware.XsSharing',
+
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -151,5 +158,3 @@ LOGGING = {
 
 
 SITE_ID = 1
-
-CORS_ORIGIN_ALLOW_ALL = False #TOCHANGE

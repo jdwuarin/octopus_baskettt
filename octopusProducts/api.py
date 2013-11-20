@@ -5,9 +5,8 @@ from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from models import Product
-from tastypie.authorization import Authorization, DjangoAuthorization
+from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
-from tastypie.exceptions import Unauthorized
 
 class ProductResource(ModelResource):
 	class Meta:
@@ -34,6 +33,7 @@ class UserResource(ModelResource):
 		]
 
 	def login(self, request, **kwargs):
+		
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 

@@ -2,7 +2,7 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('App', [
-  //'ngRoute',
+  'ngCookies',
   'App.filters',
   'App.services',
   'App.directives',
@@ -13,6 +13,9 @@ angular.module('App', [
 	//$http.defaults.headers.post[‘X-CSRFToken’] = $cookies.csrftoken;
 	//$http.defaults.headers.common[‘X-CSRFToken’] = $cookies.csrftoken;
     //$httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }])
@@ -61,7 +64,9 @@ angular.module('App', [
 	.otherwise({ redirectTo: '/home' });
 }])
 
-.run(['$rootScope', 'User', function($rootScope, User){
+.run(['$cookies', '$http', '$rootScope', 'User', function($cookies, $http, $rootScope, User){
+	
+	$http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 		if (currRoute.requireLogin && !User.getAuthenticated()) {

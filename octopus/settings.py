@@ -160,3 +160,7 @@ LOGGING = {
 
 
 SITE_ID = 1
+
+TASTYPIE_FULL_DEBUG = True #set back to false on production etc...
+
+TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"

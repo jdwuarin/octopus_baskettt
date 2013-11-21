@@ -8,17 +8,20 @@ from models import Product
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 
+
 class ProductResource(ModelResource):
 	class Meta:
 		queryset = Product.objects.all()
-		allowed_methods = ('get', 'post', 'put', 'delete')
+		allowed_methods = ['get', 'post']
+		resource_name = 'product'
 
 class UserResource(ModelResource):
 	class Meta:
 		queryset = User.objects.all()
-		fields = ['email']
+		fields = ['email', 'date_joined'] #we can either whitelist like this or blacklist using exclude
 		allowed_methods = ['get', 'post']
 		resource_name = 'user'
+		#excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
 		authorization = DjangoAuthorization()
 		authentication = SessionAuthentication()
 
@@ -40,12 +43,15 @@ class UserResource(ModelResource):
 		email = data.get('email', '')
 		password = data.get('password', '')
 
+		#TODO make authentication by email work
 		user = authenticate(username=email, password=password)
+
 		if user:
 			if user.is_active:
 				login(request, user)
 				print "logged in"
 				return self.create_response(request, {
+					#redirect to a success page
 					'success': True
 					})
 			else:
@@ -59,9 +65,11 @@ class UserResource(ModelResource):
 				'reason': 'incorrect',
 				}, HttpUnauthorized )
 
+
+
+
 	def logout(self, request, **kwargs):
 		self.method_check(request, allowed=['get'])
-		print request 
 		if request.user and request.user.is_authenticated():
 			print "logout"
 			logout(request)
@@ -69,4 +77,9 @@ class UserResource(ModelResource):
 		else:
 			print "fuck"
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
+
+	#def is_authenticated(self, request, **kwargs):
+
+
+	#def create_user(self, request, **kwargs):
 

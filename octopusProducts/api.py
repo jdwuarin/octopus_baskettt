@@ -43,7 +43,6 @@ class UserResource(ModelResource):
 		email = data.get('email', '')
 		password = data.get('password', '')
 
-		#TODO make authentication by email work
 		user = authenticate(username=email, password=password)
 
 		if user:
@@ -51,7 +50,6 @@ class UserResource(ModelResource):
 				login(request, user)
 				print "logged in"
 				return self.create_response(request, {
-					#redirect to a success page
 					'success': True
 					})
 			else:
@@ -78,8 +76,12 @@ class UserResource(ModelResource):
 			print "fuck"
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
 
+
 	#def is_authenticated(self, request, **kwargs):
 
+	# def sign_up(self, request, **kwargs):
+	# 	self.method_check(request, allowed=['post'])
+	# 	data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
-	#def create_user(self, request, **kwargs):
+	#will also need to test if cookies work on our home
 

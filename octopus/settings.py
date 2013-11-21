@@ -106,6 +106,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'longerusername', #used in order to allow login with email.
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -164,3 +165,5 @@ SITE_ID = 1
 TASTYPIE_FULL_DEBUG = True #set back to false on production etc...
 
 TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
+
+MAX_USERNAME_LENGTH = 150 

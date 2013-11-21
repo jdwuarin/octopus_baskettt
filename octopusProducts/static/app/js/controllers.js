@@ -29,7 +29,10 @@ angular.module('App.controllers', [])
 		$scope.signup = function(){
 			var user = $scope.user;
 			if($scope.signupForm.$valid){
-				User.signup(function(data){
+				console.log(user.email);
+				console.log(user.password);
+
+				User.signup(user.email, user.password, function(data){
 					// This callback is only called when return success
 					User.redirect("/");
 				});

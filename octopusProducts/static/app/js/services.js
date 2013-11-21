@@ -47,9 +47,7 @@ angular.module('App.services', [])
 	}])
 
 	// Factory that uses our user api
-	.factory('User', ['$http', '$location', function($http, $location) {
-
-		var IsAuthenticated = false;
+	.factory('User', ['$cookies', '$http', '$location', function($cookies, $http, $location) {
 
 		function getUrl(req) {
 			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
@@ -70,16 +68,21 @@ angular.module('App.services', [])
 					method: "GET"
 				}).success(callback);
 			},
-			getAuthenticated: function(){
-				return IsAuthenticated;
-			},
-			setAuthenticated: function(value){
-				IsAuthenticated = value;
-			},
 			redirect: function(url){
 				// Redirect to the given url (defaults to '/')
 				url = url || '/';
 				$location.path(url);
+			},
+			isLoggedIn: function() {
+				return $cookies.sessionid ? true : false;
+			},
+			signup: function(email, password, callback) {
+				return $http({
+					url: getUrl('sign_up'),
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: {email:email, password:password}
+				}).success(callback);
 			}
 		};
 	}])

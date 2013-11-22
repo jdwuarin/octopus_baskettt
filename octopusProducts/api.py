@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
 from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
@@ -22,8 +23,8 @@ class UserResource(ModelResource):
 		allowed_methods = ['get', 'post']
 		resource_name = 'user'
 		#excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
-		authorization = DjangoAuthorization()
-		authentication = SessionAuthentication()
+		authorization = DjangoAuthorization() #these are relevant to the API and who can access these parts of the API
+		authentication = SessionAuthentication() #in other views, it would be required of us to add the "@login_required" decoration
 
 	def override_urls(self):
 		return [
@@ -33,6 +34,9 @@ class UserResource(ModelResource):
 		url(r'^(?P<resource_name>%s)/logout%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('logout'), name='api_logout'),
+		url(r'^(?P<resource_name>%s)/signup%s$' %
+			(self._meta.resource_name, trailing_slash()),
+			self.wrap_view('signup'), name='api_signup'),
 		]
 
 	def login(self, request, **kwargs):
@@ -80,9 +84,31 @@ class UserResource(ModelResource):
 
 	#def is_authenticated(self, request, **kwargs):
 
-	def sign_up(self, request, **kwargs):
+	def signup(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+
+		email = data.get('email', '')
+		password = data.get('password', '')
+
+		try:
+			user = User.objects.create_user(email, '', password)
+    		
+		except IntegrityError as e:
+			print "problem"
+			return self.create_response(request, {
+				#user with same email adress already exists
+				'success': False
+			})
+		#if user does not already exist
+		login(request, user)
+		return self.create_response(request, {
+				#redirect to a success page
+				'success': True
+			})
+
+
+
 
 	#will also need to test if cookies work on our home
 

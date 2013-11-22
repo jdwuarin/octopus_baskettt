@@ -50,6 +50,7 @@ class UserResource(ModelResource):
 				login(request, user)
 				print "logged in"
 				return self.create_response(request, {
+					#redirect to a success page
 					'success': True
 					})
 			else:
@@ -79,9 +80,9 @@ class UserResource(ModelResource):
 
 	#def is_authenticated(self, request, **kwargs):
 
-	# def sign_up(self, request, **kwargs):
-	# 	self.method_check(request, allowed=['post'])
-	# 	data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+	def sign_up(self, request, **kwargs):
+		self.method_check(request, allowed=['post'])
+		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
 	#will also need to test if cookies work on our home
 

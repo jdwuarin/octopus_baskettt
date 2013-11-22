@@ -26,10 +26,16 @@ angular.module('App.controllers', [])
 
 		$scope.user = {};
 
-		$scope.signUp = function(){
+		$scope.signup = function(){
 			var user = $scope.user;
-			if($scope.signUpForm.$valid){
-				alert("OK");
+			if($scope.signupForm.$valid){
+				console.log(user.email);
+				console.log(user.password);
+
+				User.signup(user.email, user.password, function(data){
+					// This callback is only called when return success
+					User.redirect("/");
+				});
 			}
 		}
 	}])
@@ -42,16 +48,15 @@ angular.module('App.controllers', [])
 			if($scope.loginForm.$valid){
 				User.login(user.email, user.password, function(data){
 					// This callback is only called when return success
-					User.setAuthenticated(true);
+					User.redirect("/");
 				});
 			}
 		}
 
 		$scope.logout = function(){
 			User.logout(function(data){
-				console.log("logout");
 				// This callback is only called when return success
-				User.setAuthenticated(false);
+				User.redirect("/");
 			});
 		}
 	}]);

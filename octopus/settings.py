@@ -5,13 +5,14 @@ PROJECT_DIR = os.path.dirname(__file__)
 
 TIME_ZONE = 'GB'
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SESSION_COOKIE_AGE = 1209600
 
 SESSION_COOKIE_HTTPONLY = False
 
 #SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
+#SESSION_COOKIE_DOMAIN=.baskettt.com  #see http://stackoverflow.com/questions/4555956/django-python-problem-with-sessionid
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

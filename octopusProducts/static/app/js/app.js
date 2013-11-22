@@ -67,9 +67,10 @@ angular.module('App', [
 .run(['$cookies', '$http', '$rootScope', 'User', function($cookies, $http, $rootScope, User){
 	
 	$http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
-		if (currRoute.requireLogin && !User.getAuthenticated()) {
+		if (currRoute.requireLogin && !User.isLoggedIn()) {
 			User.redirect("/login");
 		}
 	});

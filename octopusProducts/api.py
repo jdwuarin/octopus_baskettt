@@ -7,9 +7,7 @@ from tastypie.resources import ModelResource
 from models import Product
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
-from django.contrib.sessions.models import Session
-import pickle
-import base64
+
 
 class ProductResource(ModelResource):
 	class Meta:
@@ -70,6 +68,8 @@ class UserResource(ModelResource):
 		self.method_check(request, allowed=['get'])
 
 		if request.user and request.user.is_authenticated():
+			print request.user
+			print request.session
 			logout(request)
 			return self.create_response(request, { 'success': True })
 		else:

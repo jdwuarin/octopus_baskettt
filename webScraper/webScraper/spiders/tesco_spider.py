@@ -59,7 +59,9 @@ class TescoSpider(CrawlSpider):
             item['name']  = names[i]
             item['link'] = links[i]
             item['productOrigin'] = 'tesco'
-            items.append(item)
+
+            if '!\r' not in names[i]:
+                items.append(item)
         
         return items
 

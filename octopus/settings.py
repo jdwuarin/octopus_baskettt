@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'registration',
 
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
@@ -188,3 +189,5 @@ TASTYPIE_FULL_DEBUG = True #set back to false on production etc...
 TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 
 MAX_USERNAME_LENGTH = 150 
+
+ACCOUNT_ACTIVATION_DAYS = 7

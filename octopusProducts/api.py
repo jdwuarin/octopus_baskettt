@@ -69,16 +69,15 @@ class UserResource(ModelResource):
 				}, HttpUnauthorized )
 
 
-
-
 	def logout(self, request, **kwargs):
 		self.method_check(request, allowed=['get'])
+
 		if request.user and request.user.is_authenticated():
-			print "logout"
+			print request.user
+			print request.session
 			logout(request)
 			return self.create_response(request, { 'success': True })
 		else:
-			print "fuck"
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
 
 

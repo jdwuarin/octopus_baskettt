@@ -36,7 +36,7 @@ angular.module('App', [
 	})
 	.when('/login',
 	{
-		controller: 'SessionController',
+		controller: 'LoginController',
 		templateUrl: 'static/app/partials/login.html',
 		requireLogin: false
 	})

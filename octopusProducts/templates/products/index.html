@@ -37,9 +37,9 @@
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right" ng-controller="SessionController">
-              <li><a href="#/login" class="btn-login">Login</a></li>
-              <li><a ng-click="logout()" style="display:none;">Logout</a></li>
+            <ul class="nav navbar-nav navbar-right" ng-controller="NavigationController">
+              <li><a href="#/login" class="btn-login" ng-hide="userIsLoggedIn()">Login</a></li>
+              <li><a ng-click="logout()" ng-show="userIsLoggedIn()">Logout</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </nav>

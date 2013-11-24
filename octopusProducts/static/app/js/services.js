@@ -53,6 +53,8 @@ angular.module('App.services', [])
 			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
 		}
 
+		var LoggedIn;
+
 		return {
 			login: function(email, password, callback) { // POST /user/login
 				return $http({
@@ -74,7 +76,10 @@ angular.module('App.services', [])
 				$location.path(url);
 			},
 			isLoggedIn: function() {
-				return $cookies.sessionid ? true : false;
+				return LoggedIn;
+			},
+			setLoggedIn: function(val) {
+				LoggedIn = val;
 			},
 			signup: function(email, password, callback) {
 				return $http({

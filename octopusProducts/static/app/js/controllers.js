@@ -18,7 +18,7 @@ angular.module('App.controllers', [])
 		var selectedRecipesIds = selectedRecipes.getObjects();
 
 		// Recommendation.post(selectedRecipesIds,function(data) {
-		// 	$scope.products = data.objects;
+		// $scope.products = data.objects;
 		// });
 	}])
 
@@ -38,21 +38,32 @@ angular.module('App.controllers', [])
 		}
 	}])
 
-	.controller('SessionController', ['$scope','User', function($scope,User) {
+	.controller('LoginController', ['$scope','User', function($scope,User) {
 		$scope.user = {};
 		
 		$scope.login = function(){
 			var user = $scope.user;
 			if($scope.loginForm.$valid){
 				User.login(user.email, user.password, function(data){
+					User.setLoggedIn(true);
 					// This callback is only called when return success
 					User.redirect("/");
 				});
 			}
 		}
 
+	}])
+
+	.controller('NavigationController', ['$cookieStore', '$scope','User', function($cookieStore,$scope,User) {
+
+		$scope.userIsLoggedIn = function(){
+			// Defined as a function to force the execution after a redirectio
+			return User.isLoggedIn();
+		}
+
 		$scope.logout = function(){
 			User.logout(function(data){
+				User.setLoggedIn(false);
 				// This callback is only called when return success
 				User.redirect("/");
 			});

@@ -40,7 +40,7 @@ angular.module('App.controllers', [])
 		}
 	}])
 
-	.controller('SessionController', ['$scope','User', function($scope,User) {
+	.controller('LoginController', ['$scope','User', function($scope,User) {
 		$scope.user = {};
 		
 		$scope.login = function(){
@@ -53,9 +53,16 @@ angular.module('App.controllers', [])
 			}
 		}
 
+	}])
+
+	.controller('NavigationController', ['$cookieStore', '$scope','User', function($cookieStore,$scope,User) {
+
+		$scope.userIsLoggedIn = User.isLoggedIn();
+
 		$scope.logout = function(){
 			User.logout(function(data){
 				// This callback is only called when return success
+				$cookieStore.remove('sessionid');
 				User.redirect("/");
 			});
 		}

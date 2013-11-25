@@ -15,4 +15,15 @@ class Product(models.Model):
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.price) + ", " + str(self.productOrigin)
 
-    #might be able to remove default "title" and "text" entries at some point
+
+class Recipe(models.Model):
+
+    #max_length is defaulted to 100 for image.
+
+    name=models.CharField(max_length=150, default='', editable=False)
+    rating = models.DecimalField(max_digits=5, decimal_places=4, editable=False)
+    review_count = models.IntegerField(editable=False)
+    ingredient_list = models.CharField(max_length=10000)
+
+    def __unicode__(self):  # just adding this method to say what to display when asked in shell
+        return str(self.name) + ", " + str(self.rating)

@@ -1,4 +1,4 @@
-from scrapy.selector import HtmlXPathSelector
+from scrapy.selector import Selector
 #from scrapy.http import Request
 from scrapy import log
 from scrapy.contrib.spiders import CrawlSpider, Rule
@@ -7,7 +7,7 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from webScraper.items import ProductItem
 
 
-class TescoSpider(CrawlSpider):
+class Tesco_spider(CrawlSpider):
     name = 'tesco'
     allowed_domains = ["tesco.com", "secure.tesco.com"]
 
@@ -34,9 +34,9 @@ class TescoSpider(CrawlSpider):
 
     def parse_listing_page(self, response):
 
-        hxs = HtmlXPathSelector(response)
+        sel = Selector(response)
 
-        products = hxs.select('//div[contains(@class, "desc")]')
+        products = sel.xpath('//div[contains(@class, "desc")]')
         names = products.select('//a[contains(@href, "/groceries/Product/Details/")]/text()').extract()
         prices = products.select('//span[contains(@class, "linePrice")]/text()').extract()
         links = products.select('//a[contains(@href, "/groceries/Product/Details/")]/@href').extract()
@@ -60,7 +60,8 @@ class TescoSpider(CrawlSpider):
             item['link'] = links[i]
             item['productOrigin'] = 'tesco'
 
-            if '!\r' not in names[i]:
+            if '!\r' not in names[i] and 'Cheaper alternatives' not in names[i]:
+
                 items.append(item)
         
         return items

@@ -81,15 +81,21 @@ run a "python manage.py convert_to_south" on any app we have
 Then if, say, a column was added to a model just: 
 
 ```
-python manage.py schemamigration 'yourApp' --auto
-python manage.py migrate 'yourApp'
+python manage.py schemamigration 'octopusProducts' --auto
+python manage.py migrate 'octopusProducts'
 ```
+Adding a model:
+```
+python manage.py schemamigration 'octopusProducts' --add-model 'yourModelToAdd'
+python manage.py migrate 'octopusProducts'
+``
+
 Note: if we are creating a model we will need a first migration, we do that by: 
 
 ```
-python manage.py schemamigration 'yourApp' --initial
+python manage.py schemamigration 'octopusProducts' --initial
 python manage.py syncdb
-python manage.py migrate 'yourApp'
+python manage.py migrate 'octopusProducts'
 ```
 
 

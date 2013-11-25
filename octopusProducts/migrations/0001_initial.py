@@ -11,8 +11,6 @@ class Migration(SchemaMigration):
         # Adding model 'Product'
         db.create_table(u'octopusProducts_product', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=50)),
-            ('text', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('price', self.gf('django.db.models.fields.CharField')(default='NaN', max_length=12)),
             ('productOrigin', self.gf('django.db.models.fields.CharField')(default='none', max_length=50)),
             ('image', self.gf('django.db.models.fields.files.ImageField')(default='', max_length=100)),
@@ -39,9 +37,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
             'offer_flag': ('django.db.models.fields.CharField', [], {'default': 'False', 'max_length': '12'}),
             'price': ('django.db.models.fields.CharField', [], {'default': "'NaN'", 'max_length': '12'}),
-            'productOrigin': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '50'}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+            'productOrigin': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '50'})
         }
     }
 

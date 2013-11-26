@@ -4,7 +4,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from models import Product
+from models import Product, Recipe
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 
@@ -14,6 +14,12 @@ class ProductResource(ModelResource):
 		queryset = Product.objects.all()
 		allowed_methods = ['get', 'post']
 		resource_name = 'product'
+
+class RecipeResource(ModelResource):
+	class Meta:
+		queryset = Recipe.objects.all()
+		allowed_methods = ['get']
+		resource_name = 'recipe'
 
 class UserResource(ModelResource):
 	class Meta:

@@ -12,7 +12,7 @@ v1_api.register(UserResource())
 
 urlpatterns = patterns('',
 	url(r'^$', 'octopusProducts.views.index'),
-	url(r'^recommendation/', 'octopusProducts.views.recommendation'),
+	#url(r'^recommendation/', 'octopusProducts.views.recommendation'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^admin/', include(admin.site.urls))
 )

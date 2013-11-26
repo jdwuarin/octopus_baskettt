@@ -16,7 +16,10 @@ import os
 # because as of entering this, we are already
 # in the python runtime.
 # Path to be changed on server to its final value
-sys.path.append('/Users/john-davidwuarin/Dropbox/Workspace_Python/octopus')
+
+PROJECT_DIR = os.path.dirname(__file__)
+PROJECT_DIR = PROJECT_DIR.replace('webScraper/webScraper',"")
+sys.path.append(os.path.join(PROJECT_DIR))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
 

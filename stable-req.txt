@@ -1,7 +1,7 @@
 Django==1.6
 PIL==1.1.7
 Pygments==1.6
-Scrapy==0.18.4
+Scrapy==0.20.0
 South==0.8.2
 Twisted==13.1.0
 argparse==1.2.1

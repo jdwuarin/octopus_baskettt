@@ -46,10 +46,13 @@ class All_recipes_spider(BaseSpider):
         ingredient_list = sel.xpath('//span[contains(@id, "lblIngName")]/text()').extract()
         amount_list = sel.css('li[id*=liIngredient]::attr(data-grams)').extract()
 
-        #creating a dictionary from both lists
-        ingredient_list = dict(zip(ingredient_list, amount_list))
-        #creating a json from it (stringifying it)
-        ingredient_list = json.dumps(ingredient_list, separators=(';', ': '))
+        # creating a dictionary from both lists
+        output = []
+        for idx, val in enumerate(ingredient_list):
+            output.append(dict(ingredient=val, amount=amount_list[idx]))
+
+        # creating a json from it (stringifying it)
+        ingredient_list = json.dumps(output)
 
         item = RecipeItem()
         item['name'] = name

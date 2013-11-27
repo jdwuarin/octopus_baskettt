@@ -37,9 +37,11 @@ class Tesco_spider(CrawlSpider):
         sel = Selector(response)
 
         products = sel.xpath('//div[contains(@class, "desc")]')
-        names = products.select('//a[contains(@href, "/groceries/Product/Details/")]/text()').extract()
-        prices = products.select('//span[contains(@class, "linePrice")]/text()').extract()
-        links = products.select('//a[contains(@href, "/groceries/Product/Details/")]/@href').extract()
+        names = products.select('.//a[contains(@href, "/groceries/Product/Details/")]/text()').extract()
+        prices = products.select('.//span[contains(@class, "linePrice")]/text()').extract()
+        links = products.select('.//a[contains(@href, "/groceries/Product/Details/")]/@href').extract()
+        images = products.select('.//img[contains(@src, "img.tesco.com")]/@src').extract()
+        external_ids
 
 
         items = []

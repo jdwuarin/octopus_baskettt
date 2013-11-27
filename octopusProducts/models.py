@@ -27,3 +27,4 @@ class Recipe(models.Model):
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.rating)
+

@@ -7,13 +7,10 @@ from scrapy.item import Item, Field
 from scrapy.contrib.djangoitem import DjangoItem
 from octopusProducts.models import Product, Recipe
 
-class DmozItem(Item):
-    title = Field()
-    link = Field()
-    desc = Field()
-
-class ProductItem(DjangoItem):
+class Product_item(DjangoItem):
     django_model = Product
 
-class RecipeItem(DjangoItem):
+class Recipe_item(DjangoItem):
     django_model = Recipe
+    ingredient_list = Field()
+    quantity_list = Field()

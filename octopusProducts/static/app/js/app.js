@@ -2,11 +2,11 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('App', [
-  'ngCookies',
-  'App.filters',
-  'App.services',
-  'App.directives',
-  'App.controllers'
+	'ngCookies',
+	'App.filters',
+	'App.services',
+	'App.directives',
+	'App.controllers'
 ])
 
 .config(['$httpProvider', function($httpProvider) {

@@ -7,10 +7,12 @@ module.exports = function(config) {
 
 	// list of files / patterns to load in the browser
 	files : [
-	'octopusApp/static/lib/angular.min.js',
-	'octopusApp/static/lib/jquery.min.js',
-	'octopusApp/static/lib/less.js',
-	'octopusApp/static/app/js/*.js',
+	'octopusProducts/static/lib/angular.min.js',
+	'octopusProducts/static/lib/angular-mocks.js',
+	'octopusProducts/static/lib/angular-cookies.min.js',
+	'octopusProducts/static/lib/jquery.min.js',
+	'octopusProducts/static/lib/less.js',
+	'octopusProducts/static/app/js/*.js',
 	'test_angular/unit/**/*.spec.js'
 	],
 

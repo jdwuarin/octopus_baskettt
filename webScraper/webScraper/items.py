@@ -9,6 +9,8 @@ from octopusProducts.models import Product, Recipe
 
 class Product_item(DjangoItem):
     django_model = Product
+    matching_ingredient = Field()
+    rank = Field()
 
 class Recipe_item(DjangoItem):
     django_model = Recipe

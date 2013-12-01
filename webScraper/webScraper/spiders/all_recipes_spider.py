@@ -5,6 +5,7 @@ from scrapy.http import Request
 from scrapy.spider import BaseSpider
 # from scrapy.contrib.spiders import CrawlSpider, Rule
 # from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.exceptions import CloseSpider
 
 from webScraper.items import Recipe_item
 
@@ -31,7 +32,6 @@ class All_recipes_spider(BaseSpider):
             for i in l.css('::text').extract():
                 if "NEXT" in i:
                     link = l.css('::attr(href)').extract()[0]
-                    print link
                     yield Request(link, callback = self.parse)
 
 
@@ -61,6 +61,9 @@ class All_recipes_spider(BaseSpider):
         item['review_count'] = review_count[0]
         item['ingredient_list'] = ingredient_list
         item['quantity_list'] = quantity_list
+
+        if int(review_count[0]) < 300:
+            raise CloseSpider('done here')
 
 
         return item

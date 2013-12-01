@@ -3,7 +3,9 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from django.core.exceptions import ObjectDoesNotExist
-from octopusProducts.models import Product, Recipe, Recipe_ingredient, Ingredient
+from octopusProducts.models import Product, Recipe, Recipe_ingredient, Ingredient, Ingredient_product
+
+import re
 
 class WebscraperPipeline(object):
     def process_item(self, item, spider):
@@ -61,7 +63,7 @@ class All_recipes_postgres_pipeline(object):
 
     def add_ingredients(self, recipe_item, recipe):
 
-        ingredient_list = recipe_item['ingredient_list']
+        ingredient_list = self.ingredient_list_cleaner(recipe_item['ingredient_list'])
         quantity_list = recipe_item['quantity_list']
         ingredients_data = dict(zip(ingredient_list, quantity_list))
 
@@ -83,4 +85,59 @@ class All_recipes_postgres_pipeline(object):
             recipe_ingredient.save()
 
         return
+
+
+    def ingredient_list_cleaner(self, ingredient_list):
+
+        return_list = []
+
+        for ingredient in ingredient_list:
+
+            #only add ingredients that don't contain non alpha characters
+            if ingredient == "" or ingredient == " " or not re.match('^[a-zA-Z ]*$', ingredient):
+                continue
+
+            return_list.append(ingredient)
+
+        return return_list
+
+
+class Ingredient_produt_matching_pipeline(object):
+
+    def process_item(self, item, spider):
+
+        if spider.name is "ing_prod_match":
+
+            ingredient = item['matching_ingredient']
+            matching_product = Product()
+
+            try:
+                matching_product = Product.objects.get(external_id = item['external_id'], 
+                    product_origin = item['product_origin']) 
+                    
+
+            except ObjectDoesNotExist:
+                #product could not be found, raise exception and continue
+                # raise Product_not_found_exception(item['external_id'])
+                matching_product = item.save(commit=False) #save new item
+                matching_product.save()
+
+
+            ingredient_product = Ingredient_product(ingredient = ingredient, 
+                rank = item['rank'])
+
+            ingredient_product.product_tesco = matching_product
+
+            ingredient_product.save()
+        return item
+
+
+
+class Product_not_found_exception(Exception):
+    def __init__(self, product_id):
+        self.value = product_id
+    def __str__(self):
+        return "could not find " + repr(self.value)
+
+
 

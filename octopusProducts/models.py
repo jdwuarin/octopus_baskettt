@@ -20,8 +20,6 @@ class Product(models.Model):
 
 
 
-
-
 class Recipe(models.Model):
 
     #max_length is defaulted to 100 for image.
@@ -36,8 +34,6 @@ class Recipe(models.Model):
 
 
 
-
-
 class Ingredient(models.Model):
 
     name = models.CharField(max_length=150, default='', editable=False)
@@ -47,26 +43,22 @@ class Ingredient(models.Model):
 
 
 
-
-
 class Recipe_ingredient(models.Model):
 
     recipe      = models.ForeignKey(Recipe, default=-1, editable=False)
     ingredient   = models.ForeignKey(Ingredient, default=-1, editable=False)
-    quantity        = models.CharField(max_length=150, default='', editable=False)
+    quantity        = models.CharField(max_length=150, default='', editable=False)          
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.recipe_id) + ", " + str(self.ingredient_id) + ", " + str(self.quantity)
 
 
 
-
-
 class Ingredient_product(models.Model):
 
-    ingredient   = models.ForeignKey(Ingredient, default=-1, editable=False)
-    product      = models.ForeignKey(Product, default=-1, editable=False)
-    rank            = models.IntegerField(editable=False)
+    ingredient          = models.ForeignKey(Ingredient, default=-1, editable=False)
+    rank                = models.IntegerField(editable=False)
+    product_tesco       = models.ForeignKey(Product, related_name='product_tesco_id', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.ingredient_id) + ", " + str(self.product_id) + ", " + str(self.rank)

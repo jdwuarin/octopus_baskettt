@@ -30,7 +30,8 @@ NEWSPIDER_MODULE = 'webScraper.spiders'
 
 ITEM_PIPELINES = [
     'webScraper.pipelines.Tesco_postgres_pipeline',
-    'webScraper.pipelines.all_recipes_postgres_pipeline',
+    'webScraper.pipelines.All_recipes_postgres_pipeline',
+    'webScraper.pipelines.Ingredient_produt_matching_pipeline'
 ]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

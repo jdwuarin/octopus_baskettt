@@ -1,38 +1,46 @@
+import json
 from scrapy.selector import Selector
-#from scrapy.http import Request
 from scrapy import log
-from scrapy.contrib.spiders import CrawlSpider, Rule
-from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.http import Request
+from scrapy.spider import BaseSpider
+# from scrapy.contrib.spiders import CrawlSpider, Rule
+# from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+
+from octopusProducts.models import Ingredient
 
 from webScraper.items import Product_item
 
 
-class Tesco_spider(CrawlSpider):
-    name = 'tesco'
-    allowed_domains = ["tesco.com", "secure.tesco.com"]
+class Ingredient_product_matching_spider(BaseSpider):
+    name = 'ing_prod_match'
+    tesco_base_url = "http://www.tesco.com/groceries/Product/Search/Default.aspx?searchBox="
 
-    start_urls = [
-        "http://www.tesco.com/groceries/"
+    allowed_domains = [
+        "tesco.com",
+
     ]
 
-    rules = (
-
-        #first level
-        Rule (SgmlLinkExtractor(allow=("/groceries/department", ), restrict_xpaths=('//ul[@class="navigation Groceries"]',))
-        , follow= True),
-
-        #second level
-        Rule (SgmlLinkExtractor(allow=("/groceries/product/browse", ), restrict_xpaths=('//div[@class="clearfix"]',))
-        , callback="parse_listing_page", follow= True),
-
-        #finally down to the parsing level
-        Rule (SgmlLinkExtractor(allow=("lvl=3", ), restrict_xpaths=('//p[@class="next"]',))
-        , callback="parse_listing_page", follow= True),
-
-    )
+    start_urls = [
+        "http://www.tesco.com"
+    ]
 
 
-    def parse_listing_page(self, response):
+
+
+    def parse(self, response):
+
+        ingredients = Ingredient.objects.all()
+        for ingredient in ingredients:
+
+            link = self.tesco_base_url + ingredient.name.replace(" ", "+")
+
+            tesco_request = Request(link, callback = self.parse_tesco_result_page)
+            tesco_request.meta['ingredient'] = ingredient
+            yield tesco_request
+
+
+
+    def parse_tesco_result_page(self, response):
 
         sel = Selector(response)
 
@@ -48,6 +56,7 @@ class Tesco_spider(CrawlSpider):
 
         items = []
 
+        rank = 1
         for i in range(len(names)):
 
            # if products[i]
@@ -62,9 +71,12 @@ class Tesco_spider(CrawlSpider):
             item['external_image_link'] = external_image_links[i]
             item['external_id'] = external_ids[i]
             item['product_origin'] = 'tesco'
+            item['matching_ingredient'] = response.meta['ingredient']
+            item['rank'] = rank
 
             items.append(item)
-        
+            rank = rank + 1
+
         return items
 
 
@@ -78,6 +90,8 @@ class Tesco_spider(CrawlSpider):
 
         return good_names
 
+
+
     def get_ids_from_links(self, links):
 
         external_ids = []
@@ -87,4 +101,3 @@ class Tesco_spider(CrawlSpider):
             external_ids.append(external_id)
 
         return external_ids
-

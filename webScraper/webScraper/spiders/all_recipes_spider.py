@@ -5,8 +5,9 @@ from scrapy.http import Request
 from scrapy.spider import BaseSpider
 # from scrapy.contrib.spiders import CrawlSpider, Rule
 # from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+from scrapy.exceptions import CloseSpider
 
-from webScraper.items import RecipeItem
+from webScraper.items import Recipe_item
 
 
 class All_recipes_spider(BaseSpider):
@@ -31,7 +32,6 @@ class All_recipes_spider(BaseSpider):
             for i in l.css('::text').extract():
                 if "NEXT" in i:
                     link = l.css('::attr(href)').extract()[0]
-                    print link
                     yield Request(link, callback = self.parse)
 
 
@@ -43,22 +43,27 @@ class All_recipes_spider(BaseSpider):
         name = sel.xpath('//h1[contains(@id, "itemTitle")]/text()').extract()
         rating = sel.css('meta[itemprop*=ratingValue]::attr(content)').extract()
         review_count = sel.xpath('//meta[contains(@id, "metaReviewCount")]/@content').extract()
+
         ingredient_list = sel.xpath('//span[contains(@id, "lblIngName")]/text()').extract()
-        amount_list = sel.css('li[id*=liIngredient]::attr(data-grams)').extract()
+        quantity_list = sel.css('li[id*=liIngredient]::attr(data-grams)').extract()
 
         # creating a dictionary from both lists
-        output = []
-        for idx, val in enumerate(ingredient_list):
-            output.append(dict(ingredient=val, amount=amount_list[idx]))
+        # output = []
+        # for idx, val in enumerate(ingredient_list):
+        #     output.append(dict(ingredient=val, quantity=quantity_list[idx]))
 
-        # creating a json from it (stringifying it)
-        ingredient_list = json.dumps(output)
+        # # creating a json from it (stringifying it)
+        # ingredient_list = json.dumps(output)
 
-        item = RecipeItem()
-        item['name'] = name
+        item = Recipe_item()
+        item['name'] = name[0]
         item['rating'] = rating[0]
         item['review_count'] = review_count[0]
         item['ingredient_list'] = ingredient_list
+        item['quantity_list'] = quantity_list
+
+        if int(review_count[0]) < 300:
+            raise CloseSpider('done here')
 
 
         return item

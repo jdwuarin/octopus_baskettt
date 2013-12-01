@@ -9,8 +9,9 @@ angular.module('App.directives', [])
 		return function(scope, element, attrs) {
 			element.bind("click", function() {
 				scope.boolChangeClass = !scope.boolChangeClass;
+				selectedRecipes.setObjects(scope.product);
+				scope.$parent.cart = selectedRecipes.getObjects();
 				scope.$apply();
-				selectedRecipes.setObjects(scope.recipe.id);
 			});
 		};
 	}]);

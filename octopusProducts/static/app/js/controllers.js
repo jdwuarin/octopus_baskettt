@@ -3,16 +3,25 @@
 /* Controllers */
 
 angular.module('App.controllers', [])
+
+	.controller('HomeController', ['$scope', function($scope) {
+
+	}])
 	
-	.controller('RecipeController', ['$scope','$http','Recipe','selectedRecipes',function($scope, $http, Recipe, selectedRecipes) {
+	.controller('IngredientController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
+
+		$scope.diets = {};
+		$scope.cart = {};
 
 		// Recipe.query(function(data) {
 		// 	$scope.recipes = data.items;
 		// });
-
-		$scope.diets = {};
+		Product.query(function(res) {
+		 	$scope.products = res.objects;
+		});
 
 	}])
+
 	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes','Recommendation',function($scope, $http, Product, selectedRecipes,Recommendation) {
 
 		var selectedRecipesIds = selectedRecipes.getObjects();

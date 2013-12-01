@@ -1,0 +1,32 @@
+<div class="container"></div>
+
+<div class="row">
+	<div class="col-md-9">
+		<div class="form-group">
+			<label class="control-label">Search</label>
+			<input ng-model="searchRecipe" placeholder="Chicken" class="form-control">
+		</div>
+		<div ng-repeat="product in products" >
+			<div ng-class="{'selected':boolChangeClass}" click>
+				<p>{{product.name}}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-3 ing-list">
+		<h1>List</h1>
+		<ul ng-repeat="item in cart" >
+			<li>{{item.name}}</li>
+		</ul>
+	</div>
+
+</div>
+
+
+<div class="row">
+	<div class="col-md-12 checkout-container">
+		<a href="#/list">
+			<button class="btn btn-primary"><i class="glyphicon glyphicon-shopping-cart "></i> Go to shopping list</button>
+		</a>
+	</div>
+</div>

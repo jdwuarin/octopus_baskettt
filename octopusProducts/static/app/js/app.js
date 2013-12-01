@@ -25,8 +25,9 @@ angular.module('App', [
 	$routeProvider
 	.when('/home',
 	{
+		controller: 'HomeController',
 		templateUrl: 'static/app/partials/home.html',
-		requireLogin: false
+		requireLogin: false,
 	})
 	.when('/signup',
 	{
@@ -40,11 +41,10 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/login.html',
 		requireLogin: false
 	})
-	.when('/recipe',
+	.when('/ingredient',
 	{
-		controller: 'RecipeController',
-		templateUrl: 'static/app/partials/recipe.html',
-		breadcrumb: 'Recipe',
+		controller: 'IngredientController',
+		templateUrl: 'static/app/partials/Ingredient.html',
 		requireLogin: false
 	})
 	.when('/list',

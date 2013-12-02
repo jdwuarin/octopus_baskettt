@@ -64,7 +64,7 @@ class Tesco_spider(CrawlSpider):
             item['product_origin'] = 'tesco'
 
             items.append(item)
-        
+
         return items
 
 

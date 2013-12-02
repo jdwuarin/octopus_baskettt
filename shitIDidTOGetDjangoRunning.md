@@ -52,9 +52,8 @@ connect('tumblelog')
 For the REST API:
 
 ```
-pip install djangorestframework
-pip install markdown
-pip install django-filter
+Check out tastypie
+
 ```
 
 For Postgresql
@@ -110,3 +109,24 @@ email:
 password: django_auth
 
 ```
+
+For Django-registration
+
+```
+pip install django-registration
+
+```
+
+add this to settings.py :
+
+```
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.sites',
+    'registration',
+    # ...other installed applications...
+)
+
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
+```
+

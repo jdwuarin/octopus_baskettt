@@ -83,7 +83,7 @@ angular.module('App.services', [])
 			},
 			signup: function(email, password, callback) {
 				return $http({
-					url: getUrl('sign_up'),
+					url: getUrl('signup'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}

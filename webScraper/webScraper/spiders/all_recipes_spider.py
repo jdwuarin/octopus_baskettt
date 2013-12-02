@@ -18,7 +18,6 @@ class All_recipes_spider(BaseSpider):
         "http://allrecipes.com/Recipes/main.aspx?Page=1&vm=l&evt19=1&p34=HR_ListView#recipes"
     ]
 
-
     def parse(self, response):
         sel = Selector(response)
 

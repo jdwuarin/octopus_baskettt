@@ -7,6 +7,7 @@ from scrapy.item import Item, Field
 from scrapy.contrib.djangoitem import DjangoItem
 from octopusProducts.models import Product, Recipe
 
+
 class Product_item(DjangoItem):
     django_model = Product
     matching_ingredient = Field()

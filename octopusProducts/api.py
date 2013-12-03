@@ -106,7 +106,7 @@ class UserResource(ModelResource):
 				'success': False
 			})
 		#if user does not already exist
-		login(request, user)
+		#login(request, user)
 		return self.create_response(request, {
 				#redirect to a success page
 				'success': True

@@ -23,7 +23,7 @@ angular.module('App', [
 .config(['$routeProvider', function($routeProvider) {
 
 	$routeProvider
-	.when('/home',
+	.when('/',
 	{
 		controller: 'HomeController',
 		templateUrl: 'static/app/partials/home.html',
@@ -51,17 +51,21 @@ angular.module('App', [
 	{
 		controller: 'ProductListController',
 		templateUrl: 'static/app/partials/product_list.html',
-		breadcrumb: 'Product list',
+		requireLogin: false
+	})
+	.when('/onboarding/:id',
+	{
+		controller: 'OnboardingController',
+		templateUrl: 'static/app/partials/onboarding.html',
 		requireLogin: false
 	})
 	.when('/transfer',
 	{
 		controller: 'TransferController',
 		templateUrl: 'static/app/partials/transfer.html',
-		breadcrumb: 'Product list',
 		requireLogin: true
 	})
-	.otherwise({ redirectTo: '/home' });
+	.otherwise({ redirectTo: '' });
 }])
 
 .run(['$cookies', '$http', '$rootScope', 'User', function($cookies, $http, $rootScope, User){
@@ -70,8 +74,19 @@ angular.module('App', [
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
+		console.log(currRoute);
 		if (currRoute.requireLogin && !User.isLoggedIn()) {
 			User.redirect("/login");
+		}
+
+		// The onboarding process has only three steps
+		if(currRoute.controller === "OnboardingController"){
+			var onboarding_id = parseInt(currRoute.params.id);
+
+			if(onboarding_id === 0 || onboarding_id > 3){
+				User.redirect("/");
+			}
+
 		}
 	});
 }]);

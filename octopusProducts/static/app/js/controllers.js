@@ -7,17 +7,46 @@ angular.module('App.controllers', [])
 	.controller('HomeController', ['$scope', function($scope) {
 
 	}])
-	
+
+	.controller('OnboardingController', ['$scope', '$routeParams', function($scope, $routeParams) {
+		$scope.cuisines = [{ "name": "Italian"},
+		{ "name": "Chinese"},
+		{ "name": "Indian"},
+		{ "name": "Spanish"},
+		{ "name": "Thai"},
+		{ "name": "French"}];
+
+		var page_id = parseInt($routeParams.id);
+
+		$scope.page = page_id;
+		
+
+		$scope.isActive = function(id) {
+			return id === page_id;
+		};
+
+		$scope.getNextPage = function() {
+			// The onboarding process only has 3 steps
+			if(page_id < 3 && page_id > 0) {
+				return "#/onboarding/" + (page_id+1).toString();
+			// When you're done with the onboarding you're transfered to the product list
+			} else if(page_id === 3) {
+				return "#/list";
+			// Edge case
+			} else {
+				return "#/";
+			}
+		};
+
+	}])
+
 	.controller('IngredientController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
 
 		$scope.diets = {};
 		$scope.cart = {};
 
-		// Recipe.query(function(data) {
-		// 	$scope.recipes = data.items;
-		// });
 		Product.query(function(res) {
-		 	$scope.products = res.objects;
+			$scope.products = res.objects;
 		});
 
 	}])
@@ -26,9 +55,6 @@ angular.module('App.controllers', [])
 
 		var selectedRecipesIds = selectedRecipes.getObjects();
 
-		// Recommendation.post(selectedRecipesIds,function(data) {
-		// $scope.products = data.objects;
-		// });
 	}])
 
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {

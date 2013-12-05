@@ -51,7 +51,7 @@ a:hover{
 	}
 }
 
-.btn-login{
+.btn-orange{
 
 	padding: 10px!important;
 	margin: 10px;
@@ -59,10 +59,8 @@ a:hover{
 	text-align: center;
 	background-color: @orange;
 	border: 1px solid #E9BC79;
+	color:white;
 	text-shadow:0 1px 1px rgba(0,0,0,0.3);
-	&:hover{
-		color:black!important;
-	}
 }
 
 //  Content
@@ -180,7 +178,7 @@ a:hover{
 }
 
 .selected {
-    border: 3px solid rgb(158, 195, 160);
+    border: 3px solid rgb(158, 195, 160)!important;
 }
 
 .search-box{
@@ -239,3 +237,90 @@ footer{
 	padding-left: 30px;
 	
 }
+
+// Onboarding
+//------------------------------------
+.onboard-progress-bar{
+	text-align: center;
+
+	li{
+		list-style-type: none;
+		display: inline-block;
+		width: 40px;
+		height:40px;
+		border-radius: 2px;
+		font-family: Futura;
+		font-size: 20px;
+		color: black;
+		text-shadow: 0px 1px 1px rgba(0,0,0,0.26);
+		line-height: 1.8;
+		margin: 74px 20px 50px 20px;
+		background: #F6F6F6;
+		border: 1px solid #C9C9C9;
+		color: #888888;
+	}
+
+	.active{
+		background: #F6CD5A;
+		border: 1px solid #CEA75F;
+		color: white;
+	}
+
+}
+
+.onboard-title{
+	font-family: 'Montserrat';
+	font-size: 24px;
+	color: #4A494A;
+	text-align: center;
+	margin-bottom: 40px;
+	display: inline-block;
+
+	input.onboard-people{
+		display: inline-block;
+		width: 50px!important;
+		font-size: 20px;
+	}
+
+	input.onboard-money{
+		display: inline-block;
+		width: 80px!important;
+		font-size: 20px;
+	}
+
+}
+
+.onboard-box{
+	float: left;
+	width: 33.33333%;
+
+	& .selected{
+		background: green;
+	}
+
+	p{
+		text-align: center;
+		padding: 20px 0px;
+		font-size: 19px;
+		color: #686868;
+	}
+
+}
+
+.onboard-image{
+	background: url("/static/img/italian.png");
+	background-size: 100% auto;
+	height: 175px;
+	width: 300px;
+	border-radius: 10px;
+	border: 3px solid #CACACA;
+	.center;
+	&:hover{
+		opacity:0.6;
+	}
+}
+
+.onboard-next a{
+	float: right;
+}
+

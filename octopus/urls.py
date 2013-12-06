@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     url(r'^api/', include(v1_api.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^spider/', 'octopusProducts.views.spider_view'),
+
 )
 
 urlpatterns += staticfiles_urlpatterns()

@@ -125,7 +125,7 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'registration',
-
+    'webScraper',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 

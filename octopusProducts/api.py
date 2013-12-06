@@ -106,6 +106,8 @@ class UserResource(ModelResource):
 				'success': False
 			})
 		#if user does not already exist
+
+		user = authenticate(username=email, password=password)
 		login(request, user)
 		return self.create_response(request, {
 				#redirect to a success page

@@ -23,13 +23,38 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'octopusProducts', ['Product'])
 
+        # Adding model 'Cuisine'
+        db.create_table(u'octopusProducts_cuisine', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+        ))
+        db.send_create_signal(u'octopusProducts', ['Cuisine'])
+
+        # Adding model 'Consideration'
+        db.create_table(u'octopusProducts_consideration', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+        ))
+        db.send_create_signal(u'octopusProducts', ['Consideration'])
+
+        # Adding model 'Main_ingredient'
+        db.create_table(u'octopusProducts_main_ingredient', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+        ))
+        db.send_create_signal(u'octopusProducts', ['Main_ingredient'])
+
         # Adding model 'Recipe'
         db.create_table(u'octopusProducts_recipe', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
             ('rating', self.gf('django.db.models.fields.DecimalField')(max_digits=5, decimal_places=4)),
             ('review_count', self.gf('django.db.models.fields.IntegerField')()),
-            ('ingredient_list', self.gf('django.db.models.fields.CharField')(max_length=10000)),
+            ('external_id', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+            ('main_ingredient', self.gf('django.db.models.fields.related.ForeignKey')(default=-1, to=orm['octopusProducts.Main_ingredient'])),
+            ('course', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+            ('cuisine', self.gf('django.db.models.fields.related.ForeignKey')(default=-1, to=orm['octopusProducts.Cuisine'])),
+            ('consideration', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
         ))
         db.send_create_signal(u'octopusProducts', ['Recipe'])
 
@@ -40,28 +65,37 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'octopusProducts', ['Ingredient'])
 
-        # Adding model 'RecipeIngredient'
-        db.create_table(u'octopusProducts_recipeingredient', (
+        # Adding model 'Recipe_ingredient'
+        db.create_table(u'octopusProducts_recipe_ingredient', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('recipe_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['octopusProducts.Recipe'])),
-            ('ingredient_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['octopusProducts.Ingredient'])),
-            ('quantity', self.gf('django.db.models.fields.IntegerField')()),
+            ('recipe', self.gf('django.db.models.fields.related.ForeignKey')(default=-1, to=orm['octopusProducts.Recipe'])),
+            ('ingredient', self.gf('django.db.models.fields.related.ForeignKey')(default=-1, to=orm['octopusProducts.Ingredient'])),
+            ('quantity', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
         ))
-        db.send_create_signal(u'octopusProducts', ['RecipeIngredient'])
+        db.send_create_signal(u'octopusProducts', ['Recipe_ingredient'])
 
-        # Adding model 'IngredientProduct'
-        db.create_table(u'octopusProducts_ingredientproduct', (
+        # Adding model 'Ingredient_product'
+        db.create_table(u'octopusProducts_ingredient_product', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('ingredient_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['octopusProducts.Ingredient'])),
-            ('product_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['octopusProducts.Product'])),
+            ('ingredient', self.gf('django.db.models.fields.related.ForeignKey')(default=-1, to=orm['octopusProducts.Ingredient'])),
             ('rank', self.gf('django.db.models.fields.IntegerField')()),
+            ('product_tesco', self.gf('django.db.models.fields.related.ForeignKey')(related_name='product_tesco_id', to=orm['octopusProducts.Product'])),
         ))
-        db.send_create_signal(u'octopusProducts', ['IngredientProduct'])
+        db.send_create_signal(u'octopusProducts', ['Ingredient_product'])
 
 
     def backwards(self, orm):
         # Deleting model 'Product'
         db.delete_table(u'octopusProducts_product')
+
+        # Deleting model 'Cuisine'
+        db.delete_table(u'octopusProducts_cuisine')
+
+        # Deleting model 'Consideration'
+        db.delete_table(u'octopusProducts_consideration')
+
+        # Deleting model 'Main_ingredient'
+        db.delete_table(u'octopusProducts_main_ingredient')
 
         # Deleting model 'Recipe'
         db.delete_table(u'octopusProducts_recipe')
@@ -69,25 +103,40 @@ class Migration(SchemaMigration):
         # Deleting model 'Ingredient'
         db.delete_table(u'octopusProducts_ingredient')
 
-        # Deleting model 'RecipeIngredient'
-        db.delete_table(u'octopusProducts_recipeingredient')
+        # Deleting model 'Recipe_ingredient'
+        db.delete_table(u'octopusProducts_recipe_ingredient')
 
-        # Deleting model 'IngredientProduct'
-        db.delete_table(u'octopusProducts_ingredientproduct')
+        # Deleting model 'Ingredient_product'
+        db.delete_table(u'octopusProducts_ingredient_product')
 
 
     models = {
+        u'octopusProducts.consideration': {
+            'Meta': {'object_name': 'Consideration'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'})
+        },
+        u'octopusProducts.cuisine': {
+            'Meta': {'object_name': 'Cuisine'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'})
+        },
         u'octopusProducts.ingredient': {
             'Meta': {'object_name': 'Ingredient'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'})
         },
-        u'octopusProducts.ingredientproduct': {
-            'Meta': {'object_name': 'IngredientProduct'},
+        u'octopusProducts.ingredient_product': {
+            'Meta': {'object_name': 'Ingredient_product'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ingredient_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['octopusProducts.Ingredient']"}),
-            'product_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['octopusProducts.Product']"}),
+            'ingredient': ('django.db.models.fields.related.ForeignKey', [], {'default': '-1', 'to': u"orm['octopusProducts.Ingredient']"}),
+            'product_tesco': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'product_tesco_id'", 'to': u"orm['octopusProducts.Product']"}),
             'rank': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'octopusProducts.main_ingredient': {
+            'Meta': {'object_name': 'Main_ingredient'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'})
         },
         u'octopusProducts.product': {
             'Meta': {'object_name': 'Product'},
@@ -104,18 +153,22 @@ class Migration(SchemaMigration):
         },
         u'octopusProducts.recipe': {
             'Meta': {'object_name': 'Recipe'},
+            'consideration': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
+            'course': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
+            'cuisine': ('django.db.models.fields.related.ForeignKey', [], {'default': '-1', 'to': u"orm['octopusProducts.Cuisine']"}),
+            'external_id': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ingredient_list': ('django.db.models.fields.CharField', [], {'max_length': '10000'}),
+            'main_ingredient': ('django.db.models.fields.related.ForeignKey', [], {'default': '-1', 'to': u"orm['octopusProducts.Main_ingredient']"}),
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
             'rating': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '4'}),
             'review_count': ('django.db.models.fields.IntegerField', [], {})
         },
-        u'octopusProducts.recipeingredient': {
-            'Meta': {'object_name': 'RecipeIngredient'},
+        u'octopusProducts.recipe_ingredient': {
+            'Meta': {'object_name': 'Recipe_ingredient'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ingredient_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['octopusProducts.Ingredient']"}),
-            'quantity': ('django.db.models.fields.IntegerField', [], {}),
-            'recipe_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['octopusProducts.Recipe']"})
+            'ingredient': ('django.db.models.fields.related.ForeignKey', [], {'default': '-1', 'to': u"orm['octopusProducts.Ingredient']"}),
+            'quantity': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'}),
+            'recipe': ('django.db.models.fields.related.ForeignKey', [], {'default': '-1', 'to': u"orm['octopusProducts.Recipe']"})
         }
     }
 

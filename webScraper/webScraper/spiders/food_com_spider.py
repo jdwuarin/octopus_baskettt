@@ -128,7 +128,7 @@ class Food_com_spider(BaseSpider):
         my_level_two_spider = Food_com_level_two_spider()
 
         for i  in range(0, 10000):
-
+            pass
 
 
     def parse_xlm_page(self, response):

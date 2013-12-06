@@ -9,24 +9,42 @@ from scrapy import signals
 
 
 def index(request):
-	return render(request, 'products/index.html')
+    return render(request, 'products/index.html')
 
 
-def setup_crawler(domain):
-
-    spider = TescoBasketSpider(domain)
-    settings = get_project_settings()
-    crawler = Crawler(settings)
-    crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
-    crawler.configure()
-    crawler.crawl(spider)
-    crawler.start()
 
 
 def spider_view(request):
-	#for domain in ['scrapinghub.com', 'insophia.com']:
-	setup_crawler("http://www.tesco.com/groceries/Product/Details/?id=268768585")
-	log.start()
-	reactor.run(installSignalHandlers=0)
 
-	return render(request, 'products/index.html')
+    spider_manager = Spider_manager()
+    #for domain in ['scrapinghub.com', 'insophia.com']:
+
+    spider_manager.setup_crawler("http://www.tesco.com/groceries/Product/Details/?id=268768585", "1")
+
+    spider_manager.run_reactor()
+
+    return render(request, 'products/index.html')
+
+
+class Spider_manager(object):
+
+    def __init__(self):
+        self.reactor_done_running = False
+
+    def setup_crawler(self, link, quantity):
+
+        spider = TescoBasketSpider(link = link, quantity = quantity)
+        settings = get_project_settings()
+        crawler = Crawler(settings)
+        crawler.signals.connect(self.stop_reactor, signal=signals.spider_closed)
+        crawler.configure()
+        crawler.crawl(spider)
+        crawler.start()
+
+    def run_reactor(self):
+        if not self.reactor_done_running and not reactor.running:
+            reactor.run(installSignalHandlers=0)
+
+    def stop_reactor(self):
+        self.reactor_done_running = True
+        reactor.stop()

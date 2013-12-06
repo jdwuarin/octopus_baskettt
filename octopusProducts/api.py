@@ -97,7 +97,7 @@ class UserResource(ModelResource):
 		password = data.get('password', '')
 
 		try:
-			user = User.objects.create_user(email, '', password)
+			User.objects.create_user(email, '', password)
     		
 		except IntegrityError as e:
 			print "problem"
@@ -106,9 +106,7 @@ class UserResource(ModelResource):
 				'success': False
 			})
 		#if user does not already exist
-
-		user = authenticate(username=email, password=password)
-		login(request, user)
+		#login(request, user)
 		return self.create_response(request, {
 				#redirect to a success page
 				'success': True

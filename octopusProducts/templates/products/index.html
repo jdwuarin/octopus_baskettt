@@ -34,13 +34,13 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand navbar-brand-logo" href="#/home"> Home</a>
+            <a class="navbar-brand navbar-brand-logo" href="/"> <i class="glyphicon glyphicon-home"></i></a>
           </div>
           
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right" ng-controller="NavigationController">
-              <li><a href="#/login" class="btn-login" ng-hide="userIsLoggedIn()">Login</a></li>
+              <li><a href="#/login" class="btn btn-orange" ng-hide="userIsLoggedIn()">Login</a></li>
               <li><a ng-click="logout()" ng-show="userIsLoggedIn()">Logout</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
@@ -51,7 +51,7 @@
 
       </div>
       <footer>
-      
+        <p>Contact us via <a href="https://twitter.com/basketttco">Twitter</a></p>
       </footer>
       <script src="{% static "lib/jquery.min.js" %}"></script>
       <script src="{% static "lib/angular.min.js" %}"></script>

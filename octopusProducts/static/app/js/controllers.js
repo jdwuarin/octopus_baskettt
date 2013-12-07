@@ -16,11 +16,11 @@ angular.module('App.controllers', ['ngSanitize'])
 		{ "name": "Thai"},
 		{ "name": "French"}];
 
+
 		var page_id = parseInt($routeParams.id);
 
 		$scope.page = page_id;
 		
-
 		$scope.isActive = function(id) {
 			return id === page_id;
 		};
@@ -40,7 +40,7 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('IngredientController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
+	.controller('IngredientController', ['$scope','$http','Product',function($scope, $http, Product) {
 
 		$scope.diets = {};
 		$scope.cart = {};
@@ -51,9 +51,9 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes','Recommendation',function($scope, $http, Product, selectedRecipes,Recommendation) {
+	.controller('ProductListController', ['$scope','$http','Product','Recommendation',function($scope, $http, Product,Recommendation) {
 
-		var selectedRecipesIds = selectedRecipes.getObjects();
+		//var selectedRecipesIds = selectedRecipes.getObjects();
 
 	}])
 

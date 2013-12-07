@@ -8,7 +8,7 @@
 			</ul>
 		</div>
 	</div>
-
+{{preferences}}
 	<div class="row">
 		<div class="col-md-12 onboard-title">
 				<div ng-switch on="page">
@@ -22,7 +22,7 @@
 	<div class="row onboard-box-container" ng-switch on="page">
 		<div ng-switch-when="1">
 			<div class="onboard-box" ng-repeat="cuisine in cuisines">
-				<div class="onboard-image" ng-class="{'selected':boolChangeClass}" click></div>
+				<div class="onboard-image" ng-class="{'selected':selectedStatus}" click></div>
 				<p>{{cuisine.name}}</p>
 			</div>
 		</div>
@@ -34,6 +34,7 @@
 
 	<div class="row">
 		<div class="col-md-12 onboard-next">
+			<a href="#/onboarding/1">previ</a>
 			<a href="{{getNextPage()}}" class="btn btn-orange">Next step</a>
 		</div>
 	</div>

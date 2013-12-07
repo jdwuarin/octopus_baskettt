@@ -3,7 +3,7 @@
 /* Services */
 
 
-angular.module('App.services', [])
+angular.module('App.services', ['LocalStorageModule'])
 
 	// Factory that uses the REST api/v1
 	.factory('Product', ['$http', function($http) {
@@ -93,7 +93,7 @@ angular.module('App.services', [])
 			// Avoid losing a session when a user reloads the page
 			requestLoggedIn: function(callback) {
 				return $http({
-					url: 'http://127.0.0.1:8000/api/v1/user/current?format=json',
+					url: 'http://127.0.0.1:8000/api/v1/user/current/?format=json',
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},
 				}).success(callback);
@@ -101,29 +101,36 @@ angular.module('App.services', [])
 		};
 	}])
 
-	// Service that contains the ids of the selected recipes
-	.service('selectedRecipes', [function() {
+	// Service that contains the preferences in the onboarding
+	.service('Preference', [function() {
 
-		var productList = [];
+		var preferenceList = {};
+		preferenceList.cuisine= [];
 
 		return {
-			getObjects: function() {
-				return productList;
+			getCuisine: function() {
+				return preferenceList.cuisine;
 			},
-			setObjects: function(value) {
-				var isPresent = false;
-				productList.forEach(function(element, index, array) {
-					if(element === value) {
-						productList.splice(index,1);
-						isPresent = true;
-					}
-				});
+			setCuisine: function(scope) {
 
-				if (!isPresent){
-					productList.push(value);
+				var isPresent = false;
+				
+				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
+
+						if (preferenceList.cuisine[i] == scope.cuisine.name) { //if it's in the list
+							isPresent = true;
+
+							if(!scope.selectedStatus){
+								preferenceList.cuisine.splice(i,1);
+							}
+						}
+				}
+
+				if (!isPresent && scope.selectedStatus) {
+					preferenceList.cuisine.push(scope.cuisine.name);
 				}
 			}
-		}
+		};
 	}])
 
 	// Factory that uses the recommendation backend
@@ -147,9 +154,17 @@ angular.module('App.services', [])
 	}])
 
 	// Factory that uses that keeps the data during the onboarding
-	.factory('Preference',  [function() {
+	.factory('localStorage',  ['localStorageService', function(localStorageService) {
 
-		var preferenceList = {}
+		return {
+			add: function(key, value) {
+				localStorageService.add(key, value);
+			},
+
+			get: function(key) {
+				return localStorageService.get(key);
+			}
+		};
 
 
 	}]);

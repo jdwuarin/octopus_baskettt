@@ -118,6 +118,8 @@ class UserResource(ModelResource):
 	# Get the current user
 	def current(self, request, **kwargs):
 		self.method_check(request, allowed=['get'])
+		print request.user.is_authenticated()
+		print request.user
 
 		if request.user.is_authenticated():
 			return self.create_response(request, {
@@ -127,4 +129,4 @@ class UserResource(ModelResource):
     		# Anonymous users.
 			return self.create_response(request, {
     	    	'success': False
-    	    	})
+    	    })

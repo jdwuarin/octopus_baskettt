@@ -10,9 +10,7 @@ angular.module('App', [
 ])
 
 .config(['$httpProvider', function($httpProvider) {
-	//$http.defaults.headers.post[‘X-CSRFToken’] = $cookies.csrftoken;
-	//$http.defaults.headers.common[‘X-CSRFToken’] = $cookies.csrftoken;
-    //$httpProvider.defaults.headers.post['X-CSRFToken'] = $('input[name=csrfmiddlewaretoken]').val();
+
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 
@@ -74,7 +72,7 @@ angular.module('App', [
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
-		console.log(currRoute);
+
 		if (currRoute.requireLogin && !User.isLoggedIn()) {
 			User.redirect("/login");
 		}

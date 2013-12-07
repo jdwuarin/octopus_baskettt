@@ -73,9 +73,24 @@ angular.module('App', [
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
-		if (currRoute.requireLogin && !User.isLoggedIn()) {
-			User.redirect("/login");
+		if(!User.isLoggedIn()) {
+
+			User.requestLoggedIn(function(res){
+				// The user is logged in in the backend
+				if(res.success){ 
+					User.setLoggedIn(true);
+				}
+
+				else{
+					User.setLoggedIn(false);
+
+					if(currRoute.requireLogin){
+						User.redirect("/login");
+					}
+				} 
+			});
 		}
+
 
 		// The onboarding process has only three steps
 		if(currRoute.controller === "OnboardingController"){

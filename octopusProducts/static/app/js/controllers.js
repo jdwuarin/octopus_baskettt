@@ -87,7 +87,7 @@ angular.module('App.controllers', ['ngSanitize'])
 			var user = $scope.user;
 			if($scope.loginForm.$valid){
 				user = sanitizeCredentials(user);
-				console.log(user.email);
+
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
 					// This callback is only called when return success

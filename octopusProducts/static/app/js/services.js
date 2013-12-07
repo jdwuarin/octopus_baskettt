@@ -53,7 +53,7 @@ angular.module('App.services', [])
 			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
 		}
 
-		var LoggedIn;
+		var LoggedIn = null;
 
 		return {
 			login: function(email, password, callback) { // POST /user/login
@@ -87,6 +87,15 @@ angular.module('App.services', [])
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
+				}).success(callback);
+			},
+			// Check if logged in in Django backend
+			// Avoid losing a session when a user reloads the page
+			requestLoggedIn: function(callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/api/v1/user/current?format=json',
+					method: "GET",
+					headers: {'Content-Type': 'application/json'},
 				}).success(callback);
 			}
 		};
@@ -135,4 +144,12 @@ angular.module('App.services', [])
 				}).success(callback);
 			}
 		};
+	}])
+
+	// Factory that uses that keeps the data during the onboarding
+	.factory('Preference',  [function() {
+
+		var preferenceList = {}
+
+
 	}]);

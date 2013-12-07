@@ -43,6 +43,9 @@ class UserResource(ModelResource):
 		url(r'^(?P<resource_name>%s)/signup%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('signup'), name='api_signup'),
+		url(r'^(?P<resource_name>%s)/current%s$' %
+			(self._meta.resource_name, trailing_slash()),
+			self.wrap_view('current'), name='api_current'),
 		]
 
 	def login(self, request, **kwargs):
@@ -112,8 +115,16 @@ class UserResource(ModelResource):
 				'success': True
 			})
 
+	# Get the current user
+	def current(self, request, **kwargs):
+		self.method_check(request, allowed=['get'])
 
-
-
-	#will also need to test if cookies work on our home
-
+		if request.user.is_authenticated():
+			return self.create_response(request, {
+				'success': True
+			})
+		else:
+    		# Anonymous users.
+			return self.create_response(request, {
+    	    	'success': False
+    	    	})

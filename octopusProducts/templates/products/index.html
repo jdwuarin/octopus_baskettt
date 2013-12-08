@@ -40,8 +40,8 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right" ng-controller="NavigationController">
-              <li><a href="#/login" class="btn btn-orange" ng-hide="userIsLoggedIn()">Login</a></li>
-              <li><a ng-click="logout()" ng-show="userIsLoggedIn()">Logout</a></li>
+              <li><a href="#/login" class="btn btn-orange btn-login" ng-hide="userIsLoggedIn()" >Login</a></li>
+              <li><a class="btn btn-orange btn-login" ng-click="logout()" ng-show="userIsLoggedIn()" >Logout</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </nav>

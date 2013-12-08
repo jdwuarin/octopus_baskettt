@@ -90,8 +90,6 @@ class UserResource(ModelResource):
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
 
 
-	#def is_authenticated(self, request, **kwargs):
-
 	def signup(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -100,20 +98,23 @@ class UserResource(ModelResource):
 		password = data.get('password', '')
 
 		try:
-			user = User.objects.create_user(email, '', password)
+			User.objects.create_user(email, '', password)
     		
-		except IntegrityError as e:
-			print "problem"
+		except IntegrityError:
+			print "User already exits"
 			return self.create_response(request, {
 				#user with same email adress already exists
 				'success': False
 			})
-		#if user does not already exist
-		#login(request, user)
+		
+		# Login after registration			
+		user = authenticate(username=email, password=password)
+		login(request, user)
+
 		return self.create_response(request, {
-				#redirect to a success page
 				'success': True
 			})
+
 
 	# Get the current user
 	def current(self, request, **kwargs):

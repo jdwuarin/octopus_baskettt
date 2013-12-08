@@ -129,6 +129,15 @@ angular.module('App.services', ['LocalStorageModule'])
 				if (!isPresent && scope.selectedStatus) {
 					preferenceList.cuisine.push(scope.cuisine.name);
 				}
+			},
+			setPeople: function(count) {
+				preferenceList.people = count;
+			},
+			setBudget: function(amount) {
+				preferenceList.budget = amount;
+			},
+			getAll: function() {
+				return preferenceList;
 			}
 		};
 	}])

@@ -16,11 +16,7 @@ angular.module('App.directives', [])
 				return scope.cuisine.name === el;
 			});
 
-			if (selected){
-				scope.selectedStatus = true;
-			} else{
-				scope.selectedStatus = false;
-			}
+			scope.selectedStatus = selected;
 			
 			element.bind("click", function() {
 

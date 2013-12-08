@@ -8,7 +8,7 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('OnboardingController', ['$scope', '$routeParams', function($scope, $routeParams) {
+	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
 		$scope.cuisines = [{ "name": "Italian"},
 		{ "name": "Chinese"},
 		{ "name": "Indian"},
@@ -16,11 +16,21 @@ angular.module('App.controllers', ['ngSanitize'])
 		{ "name": "Thai"},
 		{ "name": "French"}];
 
+		$scope.preference = {};
 
-		var page_id = parseInt($routeParams.id);
+		var page_id = parseInt($routeParams.id,10);
 
 		$scope.page = page_id;
-		
+
+
+		$scope.saveData = function() {
+			if(page_id === 2) {
+				Preference.setPeople($scope.preference.people);
+			} else if (page_id === 3) {
+				Preference.setBudget($scope.preference.budget);
+			}
+		};
+
 		$scope.isActive = function(id) {
 			return id === page_id;
 		};

@@ -25,8 +25,6 @@ class Ingredient_product_matching_spider(BaseSpider):
     ]
 
 
-
-
     def parse(self, response):
 
         ingredients = Ingredient.objects.all()

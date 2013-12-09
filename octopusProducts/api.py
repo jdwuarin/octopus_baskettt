@@ -32,7 +32,7 @@ class UserResource(ModelResource):
 		authorization = DjangoAuthorization() #these are relevant to the API and who can access these parts of the API
 		authentication = SessionAuthentication() #in other views, it would be required of us to add the "@login_required" decoration
 
-	def override_urls(self):
+	def prepend_urls(self):
 		return [
 		url(r"^(?P<resource_name>%s)/login%s$" %
 			(self._meta.resource_name, trailing_slash()),
@@ -97,7 +97,7 @@ class UserResource(ModelResource):
 		password = data.get('password', '')
 
 		try:
-			user = User.objects.create_user(email, '', password)
+			User.objects.create_user(email, '', password)
     		
 		except IntegrityError as e:
 			print "problem"

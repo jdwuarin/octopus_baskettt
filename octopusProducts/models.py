@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 
 class Product(models.Model):
 
@@ -20,6 +19,28 @@ class Product(models.Model):
 
 
 
+class Cuisine(models.Model):
+
+    name = models.CharField(max_length=150, default='', editable=False)
+
+    def __unicode__(self):  # just adding this method to say what to display when asked in shell
+        return str(self.name)
+
+
+class Consideration(models.Model):
+
+    name = models.CharField(max_length=150, default='', editable=False)
+
+    def __unicode__(self):  # just adding this method to say what to display when asked in shell
+        return str(self.name)
+
+class Main_ingredient(models.Model):
+
+    name = models.CharField(max_length=150, default='', editable=False)
+
+    def __unicode__(self):  # just adding this method to say what to display when asked in shell
+        return str(self.name)
+
 class Recipe(models.Model):
 
     #max_length is defaulted to 100 for image.
@@ -27,10 +48,14 @@ class Recipe(models.Model):
     name            = models.CharField(max_length=150, default='', editable=False)
     rating          = models.DecimalField(max_digits=5, decimal_places=4, editable=False)
     review_count    = models.IntegerField(editable=False)
+    external_id     = models.CharField(max_length=150, default='', editable=False)
+    main_ingredient = models.ForeignKey(Main_ingredient, default=-1, editable=False)
+    course          = models.CharField(max_length=150, default='', editable=False)
+    cuisine         = models.ForeignKey(Cuisine, default=-1, editable=False)
+    consideration   = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.rating)
-
 
 
 
@@ -45,9 +70,9 @@ class Ingredient(models.Model):
 
 class Recipe_ingredient(models.Model):
 
-    recipe      = models.ForeignKey(Recipe, default=-1, editable=False)
+    recipe       = models.ForeignKey(Recipe, default=-1, editable=False)
     ingredient   = models.ForeignKey(Ingredient, default=-1, editable=False)
-    quantity        = models.CharField(max_length=150, default='', editable=False)          
+    quantity     = models.CharField(max_length=150, default='', editable=False)          
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.recipe_id) + ", " + str(self.ingredient_id) + ", " + str(self.quantity)

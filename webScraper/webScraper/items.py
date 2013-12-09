@@ -17,3 +17,7 @@ class Recipe_item(DjangoItem):
     django_model = Recipe
     ingredient_list = Field()
     quantity_list = Field()
+
+class Tesco_basket_porting_item(Item):
+    success = Field()
+    link = Field()

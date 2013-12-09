@@ -16,9 +16,7 @@ def spider_view(request):
 
     Spider_manager_controller.create_if_none()
 
-    product_details = {"http://www.tesco.com/groceries/Product/Details/?id=268768585": "1",
-    "http://www.tesco.com/groceries/Product/Details/?id=251137990": "2",
-    "http://www.tesco.com/groceries/Product/Details/?id=260067183": "3",}
+    product_details = {"http://www.tesco.com/groceries/Product/Details/?id=2687685852": "1",}
 
     basket = Basket_to_port(request, "arnaudbenard13+test@gmail.com", "test123", product_details)
 

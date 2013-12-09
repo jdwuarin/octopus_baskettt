@@ -38,6 +38,7 @@ class Spider_manager(object):
         crawler = Crawler(settings)
         crawler.signals.connect(cls.basket_created, signal = signals.spider_closed)
         crawler.signals.connect(cls.basket_error, signal = signals.spider_error)
+        crawler.signals.connect(cls.item_not_added_error, signal = signals.item_dropped)
         crawler.configure()
         crawler.crawl(spider)
         crawler.start()
@@ -49,10 +50,19 @@ class Spider_manager(object):
         print "|||||||||||||||||||||||||||||||||||"
         print "basket created "
 
+    @classmethod
+    def item_not_added_error(cls, item, spider, exception):
+
+        print "|||||||||||||||||||||||||||||||||||"
+        print "item dropped " + item['link']
+
+    @classmethod
     def basket_error(cls, failure, response, spider):
 
         print "|||||||||||||||||||||||||||||||||||"
         print "basket error "
+
+
 
 
 

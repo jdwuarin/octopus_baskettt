@@ -1,6 +1,8 @@
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
+from webScraper.webScraper.items import Tesco_basket_porting_item
+
 
 class TescoBasketSpider(CrawlSpider):
     name = 'tesco_basket'
@@ -52,17 +54,28 @@ class TescoBasketSpider(CrawlSpider):
 
     	payload = '<request basketId=' + basketId + ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="13864398230000" referrerUrl=' + refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=' + quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>'
 
-    	return Request(
+        request = Request(
             url="http://www.tesco.com/groceries/ajax/UpdateActiveBasketItems.aspx",
             method='POST',
             body= payload,
-            callback=self.item_added)
+            callback=self.item_parsed)
+
+        request.meta['link'] = response.meta['link'] 
+
+    	return request
     
-    def item_added(self,response):
-    	#sel = Selector(response)
-    	#open_in_browser(response)
-    	#open_in_browser(response)
+    def item_parsed(self,response):
 
-    	#print sel.extract()	
+        response_string = Selector(response).extract()
 
-    	return
+        item = Tesco_basket_porting_item()
+
+        if "Failure" in response_string:
+            item['success']  = "False"
+        else:
+            item['success'] = "True"
+            
+        item['link'] = response.meta['link']
+
+        return item
+

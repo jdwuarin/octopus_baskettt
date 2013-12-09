@@ -25,14 +25,13 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
 
 BOT_NAME = 'webScraper'
 
-SPIDER_MODULES = ['webScraper.spiders']
-NEWSPIDER_MODULE = 'webScraper.spiders'
+SPIDER_MODULES = ['webScraper.webScraper.spiders.tesco_basket_spider']
 
 ITEM_PIPELINES = {
-    'webScraper.pipelines.Tesco_postgres_pipeline' : 1, 
-    'webScraper.pipelines.All_recipes_postgres_pipeline' : 2 ,
-    'webScraper.pipelines.Ingredient_produt_matching_pipeline' : 3,
-    'webScraper.pipelines.Tesco_basket_porting_pipeline' : 4,
+    'webScraper.webScraper.pipelines.Tesco_postgres_pipeline' : 1, 
+    'webScraper.webScraper.pipelines.All_recipes_postgres_pipeline' : 2 ,
+    'webScraper.webScraper.pipelines.Ingredient_produt_matching_pipeline' : 3,
+    'webScraper.webScraper.pipelines.Tesco_basket_porting_pipeline' : 4,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

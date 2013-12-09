@@ -77,7 +77,7 @@ angular.module('App', [
 
 			User.requestLoggedIn(function(res){
 				// The user is logged in in the backend
-				if(res.success){ 
+				if(res.success){
 					User.setLoggedIn(true);
 				}
 
@@ -87,16 +87,17 @@ angular.module('App', [
 					if(currRoute.requireLogin){
 						User.redirect("/login");
 					}
-				} 
+				}
 			});
 		}
 
 
 		// The onboarding process has only three steps
-		if(currRoute.controller === "OnboardingController"){
-			var onboarding_id = parseInt(currRoute.params.id);
+		if(currRoute.controller === "OnboardingController") {
 
-			if(onboarding_id === 0 || onboarding_id > 3){
+			var onboarding_id = parseInt(currRoute.params.id, 10);
+
+			if(onboarding_id === 0 || onboarding_id > 3) {
 				User.redirect("/");
 			}
 

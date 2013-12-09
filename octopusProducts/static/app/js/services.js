@@ -175,5 +175,4 @@ angular.module('App.services', ['LocalStorageModule'])
 			}
 		};
 
-
 	}]);

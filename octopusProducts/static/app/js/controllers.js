@@ -9,12 +9,13 @@ angular.module('App.controllers', ['ngSanitize'])
 	}])
 
 	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
-		$scope.cuisines = [{ "name": "Italian"},
-		{ "name": "Chinese"},
-		{ "name": "Indian"},
-		{ "name": "Spanish"},
-		{ "name": "Thai"},
-		{ "name": "French"}];
+
+		$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
+		{ "name": "Chinese", "image": "chinese.png"},
+		{ "name": "Indian", "image": "indian.png"},
+		{ "name": "Spanish", "image": "spanish.png"},
+		{ "name": "Thai",  "image": "thai.png"},
+		{ "name": "French",  "image": "french.png"}];
 
 		$scope.preference = {};
 
@@ -47,6 +48,7 @@ angular.module('App.controllers', ['ngSanitize'])
 				return "#/";
 			}
 		};
+
 
 	}])
 

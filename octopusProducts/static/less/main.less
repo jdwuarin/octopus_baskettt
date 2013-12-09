@@ -154,10 +154,6 @@ a:hover{
 	}
 }
 
-.selected {
-    border: 3px solid rgb(158, 195, 160)!important;
-}
-
 .search-box{
 	border: 1px solid #d3d3d3;
 	padding-top:15px;
@@ -192,7 +188,12 @@ a:hover{
 }
 
 .selected {
-    border: 3px solid rgb(158, 195, 160);
+	img {
+    	border-color: @orange!important;	
+	}
+	p{
+		color: @orange!important;
+	}
 }
 
 //  Product page
@@ -212,7 +213,7 @@ footer{
 	color:#d7d7d7;
 	padding-top: 40px;
 	padding-left: 30px;
-	
+	margin-top: 40px;
 }
 
 // Onboarding
@@ -220,7 +221,7 @@ footer{
 .onboard-progress-bar{
 	text-align: center;
 
-	li{
+	li.progress-box{
 		list-style-type: none;
 		display: inline-block;
 		width: 40px;
@@ -238,9 +239,14 @@ footer{
 	}
 
 	.active{
-		background: #F6CD5A;
-		border: 1px solid #CEA75F;
-		color: white;
+		background: #F6CD5A!important;
+		border: 1px solid #CEA75F!important;
+		color: white!important;
+	}
+
+	.onboard-next, .onboard-previous{
+		list-style-type: none;
+		display: inline-block;
 	}
 
 }
@@ -271,9 +277,7 @@ footer{
 	float: left;
 	width: 33.33333%;
 
-	& .selected{
-		background: green;
-	}
+
 
 	p{
 		text-align: center;
@@ -285,19 +289,19 @@ footer{
 }
 
 .onboard-image{
-	background: url("/static/img/italian.png");
-	background-size: 100% auto;
-	height: 175px;
-	width: 300px;
-	border-radius: 10px;
-	border: 3px solid #CACACA;
-	.center;
-	&:hover{
-		opacity:0.6;
-	}
-}
+	
+	text-align: center;
 
-.onboard-next a{
-	float: right;
+	img{
+		height: auto;
+		width: 300px;
+		border-radius: 10px;
+		border: 3px solid #CACACA;
+		.center;
+	}
+
+	&:hover{
+		opacity:0.8;
+	}
 }
 

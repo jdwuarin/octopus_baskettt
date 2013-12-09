@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('App.controllers', [])
+angular.module('App.controllers', ['ngSanitize'])
 
 	.controller('HomeController', ['$scope', function($scope) {
 
@@ -73,12 +73,21 @@ angular.module('App.controllers', [])
 		}
 	}])
 
-	.controller('LoginController', ['$scope','User', function($scope,User) {
+	.controller('LoginController', ['$sanitize','$scope','User', function($sanitize,$scope,User) {
 		$scope.user = {};
-		
+
+		var sanitizeCredentials = function(credentials) {
+			return {
+				email: $sanitize(credentials.email),
+				password: $sanitize(credentials.password)
+			};
+		};
+
 		$scope.login = function(){
 			var user = $scope.user;
 			if($scope.loginForm.$valid){
+				user = sanitizeCredentials(user);
+				console.log(user.email);
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
 					// This callback is only called when return success
@@ -92,7 +101,7 @@ angular.module('App.controllers', [])
 	.controller('NavigationController', ['$cookieStore', '$scope','User', function($cookieStore,$scope,User) {
 
 		$scope.userIsLoggedIn = function(){
-			// Defined as a function to force the execution after a redirectio
+			// Defined as a function to force the execution after a redirection
 			return User.isLoggedIn();
 		}
 

@@ -28,11 +28,11 @@ BOT_NAME = 'webScraper'
 SPIDER_MODULES = ['webScraper.spiders']
 NEWSPIDER_MODULE = 'webScraper.spiders'
 
-ITEM_PIPELINES = [
-    'webScraper.pipelines.Tesco_postgres_pipeline',
-    'webScraper.pipelines.All_recipes_postgres_pipeline',
-    'webScraper.pipelines.Ingredient_produt_matching_pipeline'
-]
+ITEM_PIPELINES = {
+    'webScraper.pipelines.Tesco_postgres_pipeline' : 1, 
+    'webScraper.pipelines.All_recipes_postgres_pipeline' : 2 ,
+    'webScraper.pipelines.Ingredient_produt_matching_pipeline' : 3,
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'webScraper (+http://www.yourdomain.com)'

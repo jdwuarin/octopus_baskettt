@@ -7,10 +7,9 @@ class TescoBasketSpider(CrawlSpider):
     name = 'tesco_basket'
     allowed_domains = ["tesco.com", "secure.tesco.com"]
 
+    start_urls = ["https://secure.tesco.com/register/"]
 
     def __init__(self, **kw):
-        print "|||||||||||||||||||||||||||||||||||"
-        print "in --init--"
         self.start_url = "https://secure.tesco.com/register/"
         self.product_details = kw.get('product_details')
         self.quantity = kw.get('quantity')
@@ -20,15 +19,11 @@ class TescoBasketSpider(CrawlSpider):
 
 
     def start_requests(self):
-        print "|||||||||||||||||||||||||||||||||||"
-        print "starting requests"
         return [Request(self.start_url, callback=self.parse)]
 
 
     def parse(self, response):
 
-        print "|||||||||||||||||||||||||||||||||||"
-        print "in parse"
     	request = [FormRequest.from_response(response,
 			formdata={'loginID': self.loginId, 'password': self.password}, # Test account
 			formxpath="//form[@id='fSignin']",
@@ -40,8 +35,6 @@ class TescoBasketSpider(CrawlSpider):
         if "Sorry" in response.body:
             return
         
-        print "|||||||||||||||||||||||||||||||||||"
-        print "logged in"
         for link in self.product_details:
             request = Request(link, callback = self.add_product)
             request.meta['link'] = link
@@ -55,7 +48,7 @@ class TescoBasketSpider(CrawlSpider):
     	basketId = "\"" + str.replace(str(sel.xpath('//div[contains(@class, "twoPartContainerBody")]/@id').extract()[0]),
     		"basket-", "") + "\""
     	refererUrl = "\"" + response.meta['link'] + "\""
-    	quantity = "\"" + self.product_details[refererUrl] + "\""
+    	quantity = "\"" + self.product_details[response.meta['link']] + "\""
     	productId = str.replace(refererUrl, "http://www.tesco.com/groceries/Product/Details/?id=", "")
 
     	payload = '<request basketId=' + basketId + ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="13864398230000" referrerUrl=' + refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=' + quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>'

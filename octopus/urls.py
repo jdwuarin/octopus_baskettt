@@ -17,7 +17,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^spider/', 'octopusProducts.views.spider_view'),
-    url(r'^start_reactor/', 'octopusProducts.views.start_reactor'),
 
 )
 

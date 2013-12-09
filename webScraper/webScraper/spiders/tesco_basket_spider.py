@@ -1,7 +1,6 @@
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
-from scrapy.utils.response import open_in_browser
 
 class TescoBasketSpider(CrawlSpider):
     name = 'tesco_basket'

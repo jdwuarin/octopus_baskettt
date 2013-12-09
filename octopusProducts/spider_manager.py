@@ -1,12 +1,7 @@
-import threading
-from twisted.internet import reactor, defer
+from twisted.internet import reactor
 from scrapy.crawler import Crawler
-from scrapy import log
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
-from django.shortcuts import render
-import json
-from django.http import HttpResponse
 
 from webScraper.webScraper.spiders.tesco_basket_spider import TescoBasketSpider
 

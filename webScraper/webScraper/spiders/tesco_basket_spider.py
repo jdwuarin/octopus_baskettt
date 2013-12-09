@@ -9,35 +9,44 @@ class TescoBasketSpider(CrawlSpider):
 
 
     def __init__(self, **kw):
-
+        print "|||||||||||||||||||||||||||||||||||"
+        print "in --init--"
         self.start_url = "https://secure.tesco.com/register/"
-        self.link = kw.get('link')
+        self.product_details = kw.get('product_details')
         self.quantity = kw.get('quantity')
+        self.loginId = kw.get('loginId')
+        self.password = kw.get('password')
+        self.root_request = kw.get('root_request')
 
 
     def start_requests(self):
+        print "|||||||||||||||||||||||||||||||||||"
+        print "starting requests"
         return [Request(self.start_url, callback=self.parse)]
 
 
     def parse(self, response):
 
+        print "|||||||||||||||||||||||||||||||||||"
+        print "in parse"
     	request = [FormRequest.from_response(response,
-			formdata={'loginID': 'arnaudbenard13+test@gmail.com', 'password': 'test123'}, # Test account
+			formdata={'loginID': self.loginId, 'password': self.password}, # Test account
 			formxpath="//form[@id='fSignin']",
 			callback=self.after_login)]
 
-
-
-    	# print response.headers
     	return request
 
     def after_login(self, response):
         if "Sorry" in response.body:
             return
         
-        request = Request(self.link, callback = self.add_product)
+        print "|||||||||||||||||||||||||||||||||||"
+        print "logged in"
+        for link in self.product_details:
+            request = Request(link, callback = self.add_product)
+            request.meta['link'] = link
+            yield request
 
-       	return request
 
     def add_product(self, response):
 
@@ -45,11 +54,11 @@ class TescoBasketSpider(CrawlSpider):
 
     	basketId = "\"" + str.replace(str(sel.xpath('//div[contains(@class, "twoPartContainerBody")]/@id').extract()[0]),
     		"basket-", "") + "\""
-    	refererUrl = "\"" + self.link + "\""
-    	quantity = "\"" + self.quantity + "\""
+    	refererUrl = "\"" + response.meta['link'] + "\""
+    	quantity = "\"" + self.product_details[refererUrl] + "\""
     	productId = str.replace(refererUrl, "http://www.tesco.com/groceries/Product/Details/?id=", "")
 
-    	payload = '<request basketId=' + basketId + ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="0" referrerUrl=' + refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=' + quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>'
+    	payload = '<request basketId=' + basketId + ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="13864398230000" referrerUrl=' + refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=' + quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>'
 
     	return Request(
             url="http://www.tesco.com/groceries/ajax/UpdateActiveBasketItems.aspx",

@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from webScraper.webScraper.spiders.tesco_basket_spider import TescoBasketSpider
+from scrapy import log
 
 from twisted.internet import reactor
-from scrapy.crawler import Crawler
-from scrapy import log
-from scrapy.utils.project import get_project_settings
-from scrapy import signals
+from basket_to_port import Basket_to_port
+from reactor_thread_controller import Reactor_thread_controller
+
+
+import json
+
+from django.http import HttpResponse
 
 
 def index(request):
@@ -13,38 +16,24 @@ def index(request):
 
 
 
-
 def spider_view(request):
 
-    spider_manager = Spider_manager()
-    #for domain in ['scrapinghub.com', 'insophia.com']:
+    #start reactor_thread if not already started
 
-    spider_manager.setup_crawler("http://www.tesco.com/groceries/Product/Details/?id=268768585", "1")
+    Reactor_thread_controller.create_and_start_thread()
 
-    spider_manager.run_reactor()
+    product_details = {"http://www.tesco.com/groceries/Product/Details/?id=268768585": "1"}
 
-    return render(request, 'products/index.html')
+    basket = Basket_to_port(request, "arnaudbenard13+test@gmail.com", "test123", product_details)
+
+    Reactor_thread_controller.add_basket_to_port(basket)
 
 
-class Spider_manager(object):
+    response_data = {} 
+    response_data['itemAddedToBasket'] = 'False'
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-    def __init__(self):
-        self.reactor_done_running = False
+def start_reactor(request):
+    if not reactor.running:
+        reactor.run(installSignalHandlers=False)
 
-    def setup_crawler(self, link, quantity):
-
-        spider = TescoBasketSpider(link = link, quantity = quantity)
-        settings = get_project_settings()
-        crawler = Crawler(settings)
-        crawler.signals.connect(self.stop_reactor, signal=signals.spider_closed)
-        crawler.configure()
-        crawler.crawl(spider)
-        crawler.start()
-
-    def run_reactor(self):
-        if not self.reactor_done_running and not reactor.running:
-            reactor.run(installSignalHandlers=0)
-
-    def stop_reactor(self):
-        self.reactor_done_running = True
-        reactor.stop()

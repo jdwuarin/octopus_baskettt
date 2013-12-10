@@ -45,7 +45,7 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/Ingredient.html',
 		requireLogin: false
 	})
-	.when('/list',
+	.when('/basket',
 	{
 		controller: 'ProductListController',
 		templateUrl: 'static/app/partials/product_list.html',

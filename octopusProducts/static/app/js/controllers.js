@@ -42,7 +42,7 @@ angular.module('App.controllers', ['ngSanitize'])
 				return "#/onboarding/" + (page_id+1).toString();
 			// When you're done with the onboarding you're transfered to the product list
 			} else if(page_id === 3) {
-				return "#/list";
+				return "#/basket";
 			// Edge case
 			} else {
 				return "#/";
@@ -63,9 +63,13 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('ProductListController', ['$scope','$http','Product','Recommendation',function($scope, $http, Product,Recommendation) {
+	.controller('ProductListController', ['$scope','Preference','Basket',function($scope, Preference, Basket) {
+		var preferenceList = Preference.getAll();
 
-		//var selectedRecipesIds = selectedRecipes.getObjects();
+		Basket.post(preferenceList, function(res){
+			console.log(res);
+		});
+
 
 	}])
 

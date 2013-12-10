@@ -2,19 +2,22 @@
 	<div class="row">
 		<div class="col-md-12">
 			<ul class="onboard-progress-bar">
-				<li ng-class="{active:isActive(1)}">1</li>
-				<li ng-class="{active:isActive(2)}">2</li>
-				<li ng-class="{active:isActive(3)}">3</li>
+				<li class="progress-box" ng-class="{active:isActive(1)}">1</li>
+				<li class="progress-box" ng-class="{active:isActive(2)}">2</li>
+				<li class="progress-box" ng-class="{active:isActive(3)}">3</li>
+				<li class="onboard-next"><a href="{{getNextPage()}}" class="btn btn-gray" ng-click="saveData()">></a></li>
 			</ul>
 		</div>
 	</div>
-
+{{preferences}}
 	<div class="row">
 		<div class="col-md-12 onboard-title">
 				<div ng-switch on="page">
 				<div ng-switch-when="1">I like to eat</div>
-				<div ng-switch-when="2">I need groceries for <input type="text" class="form-control onboard-people" placeholder="2"> people?</div>
-				<div ng-switch-when="3">I want to spend <input type="text" class="form-control onboard-money">&pound;</div>
+				<div ng-switch-when="2">
+					I need groceries for <input type="text" class="form-control onboard-people" placeholder="2" ng-model="preference.people"> people?
+				</div>
+				<div ng-switch-when="3">I want to spend <input type="text" class="form-control onboard-money" ng-model="preference.budget">&pound;</div>
 				</div>
 		</div>
 	</div>
@@ -22,8 +25,10 @@
 	<div class="row onboard-box-container" ng-switch on="page">
 		<div ng-switch-when="1">
 			<div class="onboard-box" ng-repeat="cuisine in cuisines">
-				<div class="onboard-image" ng-class="{'selected':boolChangeClass}" click></div>
-				<p>{{cuisine.name}}</p>
+				<div class="onboard-image" ng-class="{'selected':selectedStatus}" click>
+					<img ng-src="/static/img/{{cuisine.image}}" alt="">
+					<p>{{cuisine.name}}</p>
+				</div>
 			</div>
 		</div>
 		<div ng-switch-when="2">
@@ -32,11 +37,6 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-12 onboard-next">
-			<a href="{{getNextPage()}}" class="btn btn-orange">Next step</a>
-		</div>
-	</div>
 </div>
 
 

@@ -9,6 +9,9 @@ from models import Product, Recipe
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 
+from basket_onboarding_info import Basket_onboarding_info
+from basket_recommendation_engine import Basket_recommendation_engine
+
 
 class ProductResource(ModelResource):
 	class Meta:
@@ -37,12 +40,22 @@ class UserResource(ModelResource):
 		url(r"^(?P<resource_name>%s)/login%s$" %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('login'), name="api_login"),
+		
 		url(r'^(?P<resource_name>%s)/logout%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('logout'), name='api_logout'),
+		
 		url(r'^(?P<resource_name>%s)/signup%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('signup'), name='api_signup'),
+		
+		url(r'^(?P<resource_name>%s)/current%s$' %
+			(self._meta.resource_name, trailing_slash()),
+			self.wrap_view('current'), name='api_current'),
+
+		url(r'^(?P<resource_name>%s)/basket%s$' %
+			(self._meta.resource_name, trailing_slash()),
+			self.wrap_view('basket'), name='api_basket'),
 		]
 
 	def login(self, request, **kwargs):
@@ -87,8 +100,6 @@ class UserResource(ModelResource):
 			return self.create_response(request, { 'success': False }, HttpUnauthorized)
 
 
-	#def is_authenticated(self, request, **kwargs):
-
 	def signup(self, request, **kwargs):
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -99,21 +110,45 @@ class UserResource(ModelResource):
 		try:
 			User.objects.create_user(email, '', password)
     		
-		except IntegrityError as e:
-			print "problem"
+		except IntegrityError:
+			print "User already exits"
 			return self.create_response(request, {
 				#user with same email adress already exists
 				'success': False
 			})
-		#if user does not already exist
-		#login(request, user)
+		
+		# Login after registration			
+		user = authenticate(username=email, password=password)
+		login(request, user)
+
 		return self.create_response(request, {
-				#redirect to a success page
 				'success': True
 			})
 
 
+	# Get the current user
+	def current(self, request, **kwargs):
+		self.method_check(request, allowed=['get'])
 
+		if request.user.is_authenticated():
+			return self.create_response(request, {
+				'success': True
+			})
+		else:
+    		# Anonymous users.
+			return self.create_response(request, {
+    	    	'success': False
+    	    })
 
-	#will also need to test if cookies work on our home
+   	def basket(self, request, **kwargs):
+   		self.method_check(request, allowed=['post'])
+   		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+   		
+   		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
+   			cuisines = data['cuisines'])
 
+   		Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
+
+   		return self.create_response(request, {
+			'success': True
+		})

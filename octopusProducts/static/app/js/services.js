@@ -3,7 +3,7 @@
 /* Services */
 
 
-angular.module('App.services', [])
+angular.module('App.services', ['LocalStorageModule'])
 
 	// Factory that uses the REST api/v1
 	.factory('Product', ['$http', function($http) {
@@ -53,7 +53,7 @@ angular.module('App.services', [])
 			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
 		}
 
-		var LoggedIn;
+		var LoggedIn = null;
 
 		return {
 			login: function(email, password, callback) { // POST /user/login
@@ -88,33 +88,58 @@ angular.module('App.services', [])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
 				}).success(callback);
+			},
+			// Check if logged in in Django backend
+			// Avoid losing a session when a user reloads the page
+			requestLoggedIn: function(callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/api/v1/user/current/?format=json',
+					method: "GET",
+					headers: {'Content-Type': 'application/json'},
+				}).success(callback);
 			}
 		};
 	}])
 
-	// Service that contains the ids of the selected recipes
-	.service('selectedRecipes', [function() {
+	// Service that contains the preferences in the onboarding
+	.service('Preference', [function() {
 
-		var productList = [];
+		var preferenceList = {};
+		preferenceList.cuisine= [];
 
 		return {
-			getObjects: function() {
-				return productList;
+			getCuisine: function() {
+				return preferenceList.cuisine;
 			},
-			setObjects: function(value) {
-				var isPresent = false;
-				productList.forEach(function(element, index, array) {
-					if(element === value) {
-						productList.splice(index,1);
-						isPresent = true;
-					}
-				});
+			setCuisine: function(scope) {
 
-				if (!isPresent){
-					productList.push(value);
+				var isPresent = false;
+				
+				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
+
+						if (preferenceList.cuisine[i] == scope.cuisine.name) { //if it's in the list
+							isPresent = true;
+
+							if(!scope.selectedStatus){
+								preferenceList.cuisine.splice(i,1);
+							}
+						}
 				}
+
+				if (!isPresent && scope.selectedStatus) {
+					preferenceList.cuisine.push(scope.cuisine.name);
+				}
+			},
+			setPeople: function(count) {
+				preferenceList.people = count;
+			},
+			setBudget: function(amount) {
+				preferenceList.budget = amount;
+			},
+			getAll: function() {
+				return preferenceList;
 			}
-		}
+		};
 	}])
 
 	// Factory that uses the recommendation backend
@@ -135,4 +160,34 @@ angular.module('App.services', [])
 				}).success(callback);
 			}
 		};
+	}])
+
+	// Factory that uses that keeps the data during the onboarding
+	.factory('localStorage',  ['localStorageService', function(localStorageService) {
+
+		return {
+			add: function(key, value) {
+				localStorageService.add(key, value);
+			},
+
+			get: function(key) {
+				return localStorageService.get(key);
+			}
+		};
+
+	}])
+
+	.factory('Basket',  ['$http', function($http) {
+
+		return {
+			post: function(list, callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: list
+				}).success(callback);
+			}
+		};
+
 	}]);

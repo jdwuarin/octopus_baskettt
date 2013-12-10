@@ -8,18 +8,29 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('OnboardingController', ['$scope', '$routeParams', function($scope, $routeParams) {
-		$scope.cuisines = [{ "name": "Italian"},
-		{ "name": "Chinese"},
-		{ "name": "Indian"},
-		{ "name": "Spanish"},
-		{ "name": "Thai"},
-		{ "name": "French"}];
+	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
 
-		var page_id = parseInt($routeParams.id);
+		$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
+		{ "name": "Chinese", "image": "chinese.png"},
+		{ "name": "Indian", "image": "indian.png"},
+		{ "name": "Spanish", "image": "spanish.png"},
+		{ "name": "Thai",  "image": "thai.png"},
+		{ "name": "French",  "image": "french.png"}];
+
+		$scope.preference = {};
+
+		var page_id = parseInt($routeParams.id,10);
 
 		$scope.page = page_id;
-		
+
+
+		$scope.saveData = function() {
+			if(page_id === 2) {
+				Preference.setPeople($scope.preference.people);
+			} else if (page_id === 3) {
+				Preference.setBudget($scope.preference.budget);
+			}
+		};
 
 		$scope.isActive = function(id) {
 			return id === page_id;
@@ -31,16 +42,17 @@ angular.module('App.controllers', ['ngSanitize'])
 				return "#/onboarding/" + (page_id+1).toString();
 			// When you're done with the onboarding you're transfered to the product list
 			} else if(page_id === 3) {
-				return "#/list";
+				return "#/basket";
 			// Edge case
 			} else {
 				return "#/";
 			}
 		};
 
+
 	}])
 
-	.controller('IngredientController', ['$scope','$http','Product','selectedRecipes',function($scope, $http, Product, selectedRecipes) {
+	.controller('IngredientController', ['$scope','$http','Product',function($scope, $http, Product) {
 
 		$scope.diets = {};
 		$scope.cart = {};
@@ -51,9 +63,13 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('ProductListController', ['$scope','$http','Product','selectedRecipes','Recommendation',function($scope, $http, Product, selectedRecipes,Recommendation) {
+	.controller('ProductListController', ['$scope','Preference','Basket',function($scope, Preference, Basket) {
+		var preferenceList = Preference.getAll();
 
-		var selectedRecipesIds = selectedRecipes.getObjects();
+		Basket.post(preferenceList, function(res){
+			console.log(res);
+		});
+
 
 	}])
 
@@ -87,7 +103,7 @@ angular.module('App.controllers', ['ngSanitize'])
 			var user = $scope.user;
 			if($scope.loginForm.$valid){
 				user = sanitizeCredentials(user);
-				console.log(user.email);
+
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
 					// This callback is only called when return success

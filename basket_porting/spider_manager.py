@@ -3,7 +3,7 @@ from scrapy.crawler import Crawler
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
 
-from webScraper.webScraper.spiders.tesco_basket_spider import TescoBasketSpider
+from basket_porting.spiders.tesco_basket_spider import Tesco_basket_spider
 
 
 class Spider_manager_controller(object):
@@ -32,7 +32,7 @@ class Spider_manager(object):
     @classmethod
     def create_and_run_crawler(cls, basket):
 
-        spider = TescoBasketSpider(product_details = basket.product_details, 
+        spider = Tesco_basket_spider(product_details = basket.product_details, 
             loginId = basket.loginId, password = basket.password, 
             request = basket.request, thread_manager = basket.thread_manager) 
 

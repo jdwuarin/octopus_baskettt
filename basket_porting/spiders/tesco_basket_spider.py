@@ -1,14 +1,11 @@
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
-from webScraper.webScraper.items import Tesco_basket_porting_item
+from basket_porting.items import Tesco_basket_porting_item
 
-from scrapy.utils.response import open_in_browser
-
-
-class TescoBasketSpider(CrawlSpider):
+class Tesco_basket_spider(CrawlSpider):
     name = 'tesco_basket'
-    # allowed_domains = ["tesco.com", "secure.tesco.com"]
+    allowed_domains = ["tesco.com", "secure.tesco.com"]
 
     start_urls = ["https://secure.tesco.com/register/"]
 

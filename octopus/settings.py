@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'octopusProducts',
+    'basket_porting',
     'django.contrib.auth',
     'django_verbatim', #Makes django templates work with angularjs
     'gunicorn',
@@ -125,7 +126,6 @@ INSTALLED_APPS = (
     'allauth.account',
     'allauth.socialaccount',
     'registration',
-    'webScraper',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 

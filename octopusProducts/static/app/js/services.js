@@ -181,12 +181,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			post: function(list, callback) {
-				return $http({
-					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
-					method: "POST",
-					headers: {'Content-Type': 'application/json'},
-					data: list
-				}).success(callback);
+				return $http.get('static/app/js/product.json').success(callback);
+				// return $http({
+				// 	url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+				// 	method: "POST",
+				// 	headers: {'Content-Type': 'application/json'},
+				// 	data: list
+				// })
 			}
 		};
 

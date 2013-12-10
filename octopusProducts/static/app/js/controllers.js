@@ -67,7 +67,7 @@ angular.module('App.controllers', ['ngSanitize'])
 		var preferenceList = Preference.getAll();
 
 		Basket.post(preferenceList, function(res){
-			console.log(res);
+			$scope.products = res;
 		});
 
 

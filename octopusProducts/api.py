@@ -8,7 +8,7 @@ from tastypie.resources import ModelResource
 from models import Product, Recipe
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
-
+import json
 from basket_onboarding_info import Basket_onboarding_info
 from basket_recommendation_engine import Basket_recommendation_engine
 
@@ -144,10 +144,12 @@ class UserResource(ModelResource):
    		self.method_check(request, allowed=['post'])
    		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
    		
-   		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
-   			cuisines = data['cuisines'])
+   		#print str(data["people"]) + " " + str(data["budget"]) + " " + str(data["cuisine"][0]) 
+   		
+   		# onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
+   		# 	cuisines = data['cuisine'])
 
-   		Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
+   		# Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
 
    		return self.create_response(request, {
 			'success': True

@@ -34,7 +34,7 @@ class Spider_manager(object):
 
         spider = TescoBasketSpider(product_details = basket.product_details, 
             loginId = basket.loginId, password = basket.password, 
-            request = basket.request)
+            request = basket.request, thread_manager = basket.thread_manager) 
 
         crawled_items = []
         dropped_items = []
@@ -63,14 +63,11 @@ class Spider_manager(object):
 
     @classmethod
     def basket_created(cls, spider, reason):
-        print "succesfully crawled: "
-        for link in cls.basket_status[spider.request][0]:
-            print link
-        print "failed to get: "
-        for link in cls.basket_status[spider.request][1]:
-            print link
+        spider.thread_manager.build_response(
+            cls.basket_status[spider.request][0], 
+            cls.basket_status[spider.request][1])
+        spider.thread_manager.lock.set() #wake up thread which should return response
 
-        #return proper stuff to sleeping thread and wake it up
         print "|||||||||||||||||||||||||||||||||||"
         print "basket created "
 

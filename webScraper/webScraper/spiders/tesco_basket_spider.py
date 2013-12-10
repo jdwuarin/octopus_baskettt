@@ -19,6 +19,7 @@ class TescoBasketSpider(CrawlSpider):
         self.loginId = kw.get('loginId')
         self.password = kw.get('password')
         self.request = kw.get('request')
+        self.thread_manager = kw.get('thread_manager')
 
 
     def start_requests(self):
@@ -71,7 +72,7 @@ class TescoBasketSpider(CrawlSpider):
         response_string = Selector(response).extract()
 
         item = Tesco_basket_porting_item()
-        
+
 
         if "Failure" in response_string:
             item['success']  = "False"

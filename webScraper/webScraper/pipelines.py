@@ -138,13 +138,10 @@ class Tesco_basket_porting_pipeline(object):
     def process_item(self, item, spider):
 
         if spider.name is "tesco_basket":
-            if item['success'] is "False":
-                raise DropItem("someFailure occures in" % item)
-            else:
-                return item
+            if item['success'] == "False":
+                raise DropItem("someFailure occured")
 
-        else:
-            return item
+        return item
 
 
 

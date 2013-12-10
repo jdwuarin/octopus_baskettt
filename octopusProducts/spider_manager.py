@@ -27,34 +27,52 @@ class Spider_manager_controller(object):
 
 class Spider_manager(object):
 
+    basket_status = {}
+
     @classmethod
     def create_and_run_crawler(cls, basket):
 
         spider = TescoBasketSpider(product_details = basket.product_details, 
             loginId = basket.loginId, password = basket.password, 
-            root_request = basket.request)
+            request = basket.request)
 
+        crawled_items = []
+        dropped_items = []
+        cls.basket_status[basket.request] = [crawled_items, dropped_items]
         settings = get_project_settings()
         crawler = Crawler(settings)
         crawler.signals.connect(cls.basket_created, signal = signals.spider_closed)
         crawler.signals.connect(cls.basket_error, signal = signals.spider_error)
         crawler.signals.connect(cls.item_not_added_error, signal = signals.item_dropped)
+        crawler.signals.connect(cls.item_successfully_crawled, signal = signals.item_scraped)
         crawler.configure()
         crawler.crawl(spider)
         crawler.start()
 
 
     @classmethod
-    def basket_created(cls, spider, reason):
+    def item_successfully_crawled(cls, item, response, spider):
 
-        print "|||||||||||||||||||||||||||||||||||"
-        print "basket created "
+        cls.basket_status[spider.request][0].append(item['link'])
 
     @classmethod
     def item_not_added_error(cls, item, spider, exception):
 
+        cls.basket_status[spider.request][1].append(item['link'])
+
+
+    @classmethod
+    def basket_created(cls, spider, reason):
+        print "succesfully crawled: "
+        for link in cls.basket_status[spider.request][0]:
+            print link
+        print "failed to get: "
+        for link in cls.basket_status[spider.request][1]:
+            print link
+
+        #return proper stuff to sleeping thread and wake it up
         print "|||||||||||||||||||||||||||||||||||"
-        print "item dropped " + item['link']
+        print "basket created "
 
     @classmethod
     def basket_error(cls, failure, response, spider):

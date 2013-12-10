@@ -3,10 +3,12 @@ from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
 from webScraper.webScraper.items import Tesco_basket_porting_item
 
+from scrapy.utils.response import open_in_browser
+
 
 class TescoBasketSpider(CrawlSpider):
     name = 'tesco_basket'
-    allowed_domains = ["tesco.com", "secure.tesco.com"]
+    # allowed_domains = ["tesco.com", "secure.tesco.com"]
 
     start_urls = ["https://secure.tesco.com/register/"]
 
@@ -16,7 +18,7 @@ class TescoBasketSpider(CrawlSpider):
         self.quantity = kw.get('quantity')
         self.loginId = kw.get('loginId')
         self.password = kw.get('password')
-        self.root_request = kw.get('root_request')
+        self.request = kw.get('request')
 
 
     def start_requests(self):
@@ -62,13 +64,14 @@ class TescoBasketSpider(CrawlSpider):
 
         request.meta['link'] = response.meta['link'] 
 
-    	return request
+    	yield request
     
     def item_parsed(self,response):
 
         response_string = Selector(response).extract()
 
         item = Tesco_basket_porting_item()
+        
 
         if "Failure" in response_string:
             item['success']  = "False"

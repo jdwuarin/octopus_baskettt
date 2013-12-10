@@ -70,6 +70,9 @@ angular.module('App.controllers', ['ngSanitize'])
 			$scope.products = res;
 		});
 
+		$scope.resetSelection = function(){
+			$scope.$broadcast('resetSelection');
+		};
 
 	}])
 

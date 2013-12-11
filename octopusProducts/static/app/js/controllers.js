@@ -63,7 +63,7 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('ProductListController', ['$scope','Preference','Basket',function($scope, Preference, Basket) {
+	.controller('ProductListController', ['$scope','Preference','Basket', 'Product',function($scope, Preference, Basket, Product) {
 		var preferenceList = Preference.getAll();
 
 		Basket.post(preferenceList, function(res){
@@ -72,6 +72,12 @@ angular.module('App.controllers', ['ngSanitize'])
 
 		$scope.resetSelection = function(){
 			$scope.$broadcast('resetSelection');
+		};
+
+		$scope.searchProducts = function(){
+			Product.search($scope.queryTerm, function(res){
+				$scope.search_result = res;
+			});
 		};
 
 	}])

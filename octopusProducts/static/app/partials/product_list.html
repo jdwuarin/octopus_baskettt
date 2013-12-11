@@ -6,6 +6,13 @@
 			<a href="#/transfer" class="btn btn-orange">Transfer my baskettt</a>
 			<button class="btn btn-gray" ng-click="resetSelection()">Reset</button>
 		</div>
+		<div class="col-md-12">
+			<input ng-model="queryTerm" type="text">
+            <button ng-click="searchProducts()" class="btn" type="button">Search</button>
+            <li ng-repeat="product in search_result">
+    			{{ product.name }}
+			</li>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">

@@ -11,13 +11,41 @@ from tastypie.authentication import SessionAuthentication
 import json
 from basket_onboarding_info import Basket_onboarding_info
 from basket_recommendation_engine import Basket_recommendation_engine
-
+from django.http import HttpResponse
 
 class ProductResource(ModelResource):
 	class Meta:
 		queryset = Product.objects.all()
 		allowed_methods = ['get', 'post']
 		resource_name = 'product'
+
+	def prepend_urls(self):
+		return [
+		url(r"^(?P<resource_name>%s)/search%s$" %
+			(self._meta.resource_name, trailing_slash()),
+			self.wrap_view('search'), name="api_product_search"),
+		]
+
+	# product/search/?format=json&term=query
+	def search(self, request, **kwargs):
+		self.method_check(request, allowed=['get'])
+		q = request.GET.get('term', '')
+		products = Product.objects.filter(name__icontains = q )[:20]
+
+		results = []
+
+		for product in products:
+			product_json = {}
+			product_json['id'] = product.id
+			product_json['name'] = product.name
+			product_json['price'] = product.price
+			results.append(product_json)
+			data = json.dumps(results)
+
+		mimetype = 'application/json'
+		return HttpResponse(data, mimetype)
+
+
 
 class RecipeResource(ModelResource):
 	class Meta:

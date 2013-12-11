@@ -14,7 +14,7 @@ SESSION_COOKIE_HTTPONLY = False
 #SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
 #SESSION_COOKIE_DOMAIN=.baskettt.com  #see http://stackoverflow.com/questions/4555956/django-python-problem-with-sessionid
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -51,19 +51,18 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR,'octopusProducts/static/'),
-    
-) 
+    os.path.join(PROJECT_DIR,'../octopusProducts/static/'),
+)
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/var/www/octopus/static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR,'../static/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL =  "/static/"
+STATIC_URL =  "http://127.0.0.1:8000/static/"
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -191,3 +190,7 @@ TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 MAX_USERNAME_LENGTH = 150 
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+ALLOWED_HOSTS = [
+    '127.0.0.1', # localhost
+]

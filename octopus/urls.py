@@ -2,6 +2,7 @@ from octopusProducts.api import ProductResource, UserResource
 from tastypie.api import Api
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import *
+import os
 
 from django.contrib import admin
 admin.autodiscover()

@@ -1,14 +1,14 @@
 from django.shortcuts import render
-from scrapy import log
 import json
 from django.http import HttpResponse
-
+from django.conf import settings
 from basket_porting.basket_to_port import Basket_to_port
 from basket_porting.spider_manager import Spider_manager_controller
 from basket_porting.thread_manager import Thread_manager
 
 def index(request):
-    return render(request, 'products/index.html')
+    context = {'debug': settings.DEBUG}
+    return render(request, 'products/index.html', context)
 
 def spider_view(request):
 

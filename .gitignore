@@ -27,3 +27,5 @@ PGDATA
 logfile
 
 webScraper/.ropeproject
+
+static/*

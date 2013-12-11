@@ -3,9 +3,11 @@ module.exports = function(grunt) {
 	// Load the plugins
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 
 	// Default task(s).
-	grunt.registerTask('default', ['less']);
+	grunt.registerTask('default', ['less','concat','uglify']);
 	grunt.registerTask('test-watch', ['karma:watch']);
 
 	var karmaConfig = function(configFile, customOptions) {
@@ -14,7 +16,7 @@ module.exports = function(grunt) {
 		return grunt.util._.extend(options, customOptions, travisOptions);
 	};
 
-  	// Project configuration.
+	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'), //To read the values of the package.json file
 		
@@ -26,7 +28,7 @@ module.exports = function(grunt) {
 					strictImports: true //Force evaluation of imports.
 				},
 				files: {
-					"octopusProducts/static/css/style.css": "octopusProducts/static/less/style.less",
+					"bin/css/style.css": "octopusProducts/static/less/style.less",
 				},
 
 			},
@@ -38,8 +40,30 @@ module.exports = function(grunt) {
 					strictImports: true //Force evaluation of imports.
 				},
 				files: {
-					"octopusProducts/static/bootstrap/css/bootstrap.css": "octopusProducts/static/bootstrap/less/bootstrap.less"
+					"bin/css/bootstrap.css": "octopusProducts/static/bootstrap/less/bootstrap.less"
 				},
+			}
+		},
+
+		concat: {
+			options: {
+				separator: ';',
+			},
+			dist: {
+				src: ['octopusProducts/static/app/*.js',
+				'octopusProducts/static/lib/angular-*.js'],
+				dest: 'bin/js/built.js',
+			},
+		},
+
+		uglify: {
+			js: {
+				options: {
+					flatten: true
+				},
+				files: {
+					'bin/js/built.min.js': ['bin/js/built.js']
+				}
 			}
 		},
 		karma: {

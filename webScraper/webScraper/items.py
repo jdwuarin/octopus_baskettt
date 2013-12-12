@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 from scrapy.contrib.djangoitem import DjangoItem
-from octopusProducts.models import Product, Recipe
+from octopusProducts.models import Product, Recipe, Ingredient
 
 
 class Product_item(DjangoItem):
@@ -15,8 +15,13 @@ class Product_item(DjangoItem):
 
 class Recipe_item(DjangoItem):
     django_model = Recipe
-    ingredient_list = Field()
-    quantity_list = Field()
+    tags = Field()
+    ingredient_items = Field() #name, quantity, unit
+
+class Ingredient_item(DjangoItem):
+    django_model = Ingredient()
+    quantity = Field()
+    unit = Field()
 
 class Tesco_basket_porting_item(Item):
     success = Field()

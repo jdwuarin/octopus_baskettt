@@ -90,7 +90,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'octopusProducts.django-crossdomainxhr-middleware.XsSharing',
+    'octopus_middleware.django-crossdomainxhr-middleware.XsSharing',
 
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -114,8 +114,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'octopusProducts',
-    'basket_porting',
     'django.contrib.auth',
     'django_verbatim', #Makes django templates work with angularjs
     'gunicorn',
@@ -128,6 +126,10 @@ INSTALLED_APPS = (
     'registration',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    'octopusProducts',
+    'basket_porting',
+    'octopus_middleware',
+    'recommendation_engine',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

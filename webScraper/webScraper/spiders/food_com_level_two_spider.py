@@ -27,7 +27,7 @@ class Food_com_level_two_spider(object):
 
 
 
-    def parse_recipe_page(seld, response):
+    def parse_recipe_page(self, response):
 
         sel = Selector(response)
         food_type = response.meta['food_type']

@@ -35,11 +35,11 @@ class Tesco_postgres_pipeline(object):
         return item
 
 
-class All_recipes_postgres_pipeline(object):
+class Food_com_postgres_pipeline(object):
 
     def process_item(self, item, spider):
 
-        if spider.name is "allrecipes":
+        if spider.name is "food.com":
 
             #the recipe object is the object that will be
             #saved to the OctopusProducts_recipe db
@@ -131,18 +131,6 @@ class Ingredient_produt_matching_pipeline(object):
 
             ingredient_product.save()
         return item
-
-
-
-class Tesco_basket_porting_pipeline(object):
-    def process_item(self, item, spider):
-
-        if spider.name is "tesco_basket":
-            if item['success'] == "False":
-                raise DropItem("someFailure occured")
-
-        return item
-
 
 
 class Product_not_found_exception(Exception):

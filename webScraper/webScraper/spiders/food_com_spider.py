@@ -1,11 +1,10 @@
+import re
 from scrapy.selector import Selector
 from scrapy import log
 from scrapy.http import Request
 from scrapy.spider import BaseSpider
-from webScraper.spiders.food_com_level_two_spider import Food_com_level_two_spider
-# from scrapy.contrib.spiders import CrawlSpider, Rule
-# from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-
+from scrapy.exceptions import CloseSpider
+from webScraper.items import Ingredient_item, Recipe_item
 
 
 class Food_com_spider(BaseSpider):
@@ -13,137 +12,100 @@ class Food_com_spider(BaseSpider):
     allowed_domains = ["food.com"]
 
     start_urls = [
-        "http://www.food.com/recipes"
+        "http://www.food.com/recipe-finder/all"
     ]
 
-    base_api_url = "http://www.food.com/rzfoodservices/web/topic/getSubdomainRecipes?slug="
-    end_api_url = "&tabName=popular&pageNo="
-
-    courses = {
-        "Appetizers" : "appetizers",
-        "Beverages" : "beverages",
-        "Breakfasts" : "breakfast",
-        "Desserts" : "desserts",
-        "Lunch" : "lunch",
-        "Main Dishes" : "main-dish",
-        "Side Dishes" : "side-dishes"
-    }
-
-    cuisines = {
-        "Chinese Recipes" : "chinese",
-        "French Recipes" : "french",
-        "German Recipes" : "german",
-        "Indian Recipes" : "indian",
-        "Italian Recipes" : "italian",
-        "Mexican Recipes" : "mexican",
-        "Japanese Recipes" : "japanese",
-        "Southern Recipes" : "southern-united-states",
-        "Spanish Recipes" : "spanish",
-        "Thai Recipes" : "thai"
-    }
-
-    main_ingredients = {
-
-        "Beans" : "beans",
-        "Beef" : "beef",
-        "Chicken" : "chicken",
-        "Fish" : "fish",
-        "Fruit" : "fruit",
-        "Pasta" : "pasta",
-        "Pork" : "pork",
-        "Rice" : "rice",
-        "Vegetables" : "vegetables",
-    }
-
-    considerations = {
-
-        "Diabetic-Friendly" : "diabetic",
-        "Gluten-Free" : "gluten-free",
-        "Low Fat" : "low-fat",
-        "Vegetarian" : "Vegetarian",
-        "Weight Watchers" : "weight-watchers"
-    }
 
     def parse(self, response):
         sel = Selector(response)
+        recipe_links = sel.xpath('//a[contains(@class, "recipe-main-title")]/@href').extract()
 
-        #only use the sub-part that contains the food types
-        sel = sel.xpath('//div[contains(@class, "more-in")]')
+        #for the recipes on the page
+        for link in recipe_links:
+            link = link + u'?mode=metric'
+            recipe_request = Request(link, callback = self.parse_recipe_page)
+            yield recipe_request
 
-        food_types_sel = sel.xpath(".//ul/li/a")
+        #to go to the next page
+        next_link_tail = sel.xpath('//a[(@rel="next")]/@href').extract()
+        next_link = Food_com_spider.start_urls[0] + next_link_tail[0]
+        next_request = Request(next_link, callback = self.parse)
+        yield next_request
 
-        for xpath in food_types_sel:
+    def parse_recipe_page(self, response):
 
-            food_type = xpath.xpath('text()').extract()
-            link = xpath.css('::attr(href)').extract()
-            request = Request(link[0], callback = self.parse_food_type_page)
+        sel = Selector(response)
+        skip = False
 
-            request.meta['food_type'] = food_type[0]
-            yield request
+        #first identifying num servings if it exists
+        if len(sel.xpath('//p[contains(@class, "yield")]/text()').extract()) > 0:
+            skip = True
 
-            # for course, api_slug in courses.iteritems():
-            #     if course in food_type:
-            #         request.meta['course'] = food_type
-            #         yield request
+        serves = sel.xpath('//option[contains(@selected, "selected")]/@value').extract()
+        try:
+            serves = int(serves[0])
+            if serves > 4:
+                skip = True
+        except ValueError:
+            skip = True # can't bother with anythinf that is not an int
 
-            # for cuisine, api_slug in cuisines.iteritems():
-            #     if cuisine in food_type:
-            #         request.meta['cuisine'] = food_type
-            #         yield request
-            
-            # for mi, api_slug in cuisines.iteritems():
-            #     if mi in food_type:
-            #         request.meta['main_ingredients'] = food_type
-            #         yield request
+        if skip is False:
+            recipe_name = sel.xpath('//h1[contains(@class, "fn")]/text()').extract()[0]
+            tags = sel.xpath('//span[contains(@itemprop, "recipeCategory")]/text()').extract()
+            rating = sel.xpath('//li[contains(@class, "current-rating")]/@style').extract()[0]
+            rating = float(re.sub("[^0-9.]", "", rating))
+            review_count = str(sel.xpath('//a[contains(@id, "readthereview")]/text()').extract()[0])
+            review_count = int(re.sub("[^0-9]", "", review_count))
+            ingredient_items = []
 
-            # for consideration, api_slug in considerations.iteritems():
-            #     if consideration in food_type:
-            #         request.meta['considerations'] = food_type
-            #         yield request
+            ingredient_information_selectors = sel.xpath('//li[contains(@class, "ingredient")]')
+            for selector in ingredient_information_selectors:
+                ingredient_item = Ingredient_item()
 
-            # #if I get here, this means the type could not be found
-            # raise Type_not_found_exception(food_type)
+                name = selector.xpath('.//a/@href').extract()
+                if len(name) is 1:
+                    name = name[0]
+                    name = name.replace("http://www.food.com/library/", "")
+                    name =  re.sub("[^a-zA-Z]", "", name)
+                    ingredient_item['name'] = name
 
+                    quantity = selector.xpath(
+                        './/span[contains(@class, "value")]/text()').extract()
+                    if len(quantity) is 1:
+                        quantity = quantity[0]
+                        #this corrects the quantity = 0 error when using the metric system
+                        try:
+                            if float(quantity) == 0.0:
+                                quantity = 1
+                        except ValueError:
+                            pass #do nothing
 
+                        ingredient_item['quantity'] = quantity / float(serves) #to get quantities for one person
 
-    def parse_food_type_page(self, response):
+                    #we here also remove any space in the unit
+                    unit = selector.xpath(
+                        './/span[contains(@class, "amount")]/text()')
+                    if len(unit) > 0:
+                        unit = unit.extract()[0].replace(" ", "")
+                        if len(unit) is 0:
+                            unit = selector.xpath(
+                            './/span[contains(@class, "type")]/text()').extract()
+                            if len(unit) > 0:
+                                unit = unit[0].replace(" ", "")
+                    if len(unit) > 0:
+                            ingredient_item['unit'] = unit
 
-        #we here parse the xml pages that do not have much to do
-        #with the links.
-
-        link_slug = ""
-
-        if self.courses.get(response.meta['food_type']) is not None:
-            link_slug = self.courses.get(response.meta['food_type'])
-        elif self.cuisines.get(response.meta['food_type']) is not None:
-            link_slug = self.cuisines.get(response.meta['food_type'])
-        elif self.main_ingredients.get(response.meta['food_type']) is not None:
-            link_slug = self.main_ingredients.get(response.meta['food_type'])
-        elif self.considerations.get(response.meta['food_type']) is not None:
-            link_slug = self.considerations.get(response.meta['food_type'])
-        else:
-            raise Type_not_found_exception(response.meta['food_type'])
-
-
-        my_level_two_spider = Food_com_level_two_spider()
-
-        for i  in range(0, 10000):
-            pass
-
-
-    def parse_xlm_page(self, response):
-        
-            if my_level_two_spider.stop is False:
-                link = self.base_api_url + link_slug + self.end_api_url + str(i)
-                request = Request(link, callback = my_level_two_spider.parse_xlm_page)
-                request.meta['food_type'] = response.meta['food_type']
-                yield request
+                    ingredient_items.append(ingredient_item)
 
 
+            item = Recipe_item()
+            item['name'] = recipe_name
+            item['rating'] = rating
+            item['review_count'] = review_count
+            item['tags'] = tags
+            item['ingredient_items']  = ingredient_items
 
+            if review_count < 20:
+                raise CloseSpider('done here')
 
-class Type_not_found_exception(Exception):
-    def __init__(self, food_type):
-        self.value = food_type
-    def __str__(self):
-        return "could not find " + repr(self.value)
+            return item

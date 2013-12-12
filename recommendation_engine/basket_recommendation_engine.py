@@ -1,4 +1,4 @@
-from models import Cuisine, Recipe
+from octopusProducts.models import Cuisine, Recipe
 
 class Basket_recommendation_engine():
 

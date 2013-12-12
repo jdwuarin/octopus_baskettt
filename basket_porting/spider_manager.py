@@ -24,7 +24,6 @@ class Spider_manager_controller(object):
         reactor.callFromThread(cls.spider_manager.create_and_run_crawler, basket)
 
 
-
 class Spider_manager(object):
 
     basket_status = {}

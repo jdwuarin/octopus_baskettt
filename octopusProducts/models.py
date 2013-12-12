@@ -17,24 +17,7 @@ class Product(models.Model):
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.price) + ", " + str(self.product_origin)
 
-
-
-class Cuisine(models.Model):
-
-    name = models.CharField(max_length=150, default='', editable=False)
-
-    def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.name)
-
-
-class Consideration(models.Model):
-
-    name = models.CharField(max_length=150, default='', editable=False)
-
-    def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.name)
-
-class Main_ingredient(models.Model):
+class Tag(models.Model):
 
     name = models.CharField(max_length=150, default='', editable=False)
 
@@ -48,15 +31,18 @@ class Recipe(models.Model):
     name            = models.CharField(max_length=150, default='', editable=False)
     rating          = models.DecimalField(max_digits=5, decimal_places=4, editable=False)
     review_count    = models.IntegerField(editable=False)
-    external_id     = models.CharField(max_length=150, default='', editable=False)
-    main_ingredient = models.ForeignKey(Main_ingredient, default=-1, editable=False)
-    course          = models.CharField(max_length=150, default='', editable=False)
-    cuisine         = models.ForeignKey(Cuisine, default=-1, editable=False)
-    consideration   = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.rating)
 
+
+class Tag_recipe(models.Model):
+
+    tag          = models.ForeignKey(Tag, default=-1, editable=False)
+    recipe       = models.ForeignKey(Recipe, default=-1, editable=False) 
+
+    def __unicode__(self):  # just adding this method to say what to display when asked in shell
+        return str(self.recipe_id) + ", " + str(self.tag_id) + ", " + str(self.quantity)
 
 
 class Ingredient(models.Model):
@@ -67,16 +53,15 @@ class Ingredient(models.Model):
         return str(self.name)
 
 
-
 class Recipe_ingredient(models.Model):
 
     recipe       = models.ForeignKey(Recipe, default=-1, editable=False)
     ingredient   = models.ForeignKey(Ingredient, default=-1, editable=False)
-    quantity     = models.CharField(max_length=150, default='', editable=False)          
+    quantity     = models.CharField(max_length=150, default='', editable=False)
+    unit         = models.CharField(max_length=150, default='', editable=False)          
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.recipe_id) + ", " + str(self.ingredient_id) + ", " + str(self.quantity)
-
 
 
 class Ingredient_product(models.Model):

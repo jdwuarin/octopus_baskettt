@@ -4,7 +4,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
-from octopusProducts.models import Product, Recipe, Recipe_ingredient, Ingredient, Ingredient_product
+from octopusProducts.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
 
 import re
 
@@ -39,7 +39,7 @@ class Food_com_postgres_pipeline(object):
 
     def process_item(self, item, spider):
 
-        if spider.name is "food.com":
+        if spider.name is 'food_com':
 
             #the recipe object is the object that will be
             #saved to the OctopusProducts_recipe db
@@ -58,49 +58,55 @@ class Food_com_postgres_pipeline(object):
 
                 recipe.save()
                 self.add_ingredients(item, recipe)
+                self.add_tags(item, recipe)
 
         return item
 
+    def add_tags(self, item, recipe):
+        tags = item['tags']
 
-    def add_ingredients(self, recipe_item, recipe):
-
-        ingredient_list = self.ingredient_list_cleaner(recipe_item['ingredient_list'])
-        quantity_list = recipe_item['quantity_list']
-        ingredients_data = dict(zip(ingredient_list, quantity_list))
-
-        for ingredient_name, ingredient_quantity in ingredients_data.iteritems():
-
-            ingredient = Ingredient()
-            recipe_ingredient = Recipe_ingredient()
+        for tag_string in tags:
+            tag = Tag()
 
             try:
-                ingredient = Ingredient.objects.get(name=ingredient_name)
+                tag = Tag.objects.get(name = tag_string)
                 #if the ingredient is already in the list, don't add
                 #it again
             except ObjectDoesNotExist:
-                ingredient.name = ingredient_name
+                tag.name = tag_string
+                tag.save()
+
+            tag_recipe = Tag_recipe(tag = tag, recipe = recipe)
+            tag_recipe.save()
+
+    def add_ingredients(self, item, recipe):
+
+        ingredient_items = item['ingredient_items']
+
+        for ingredient_item in ingredient_items:
+
+            ingredient = Ingredient()
+            recipe_ingredient = Recipe_ingredient()
+            name = ingredient_item['name']
+            try:
+                quantity = ingredient_item['quantity']
+                unit = ingredient_item['unit']
+            except KeyError:
+                continue #skip ingredient
+
+            try:
+                ingredient = Ingredient.objects.get(name = name)
+                #if the ingredient is already in the list, don't add
+                #it again
+            except ObjectDoesNotExist:
+                ingredient.name = name
                 ingredient.save()
 
             recipe_ingredient = Recipe_ingredient(recipe = recipe,
-                ingredient = ingredient, quantity = ingredient_quantity)
+                ingredient = ingredient, quantity = quantity, unit = unit)
             recipe_ingredient.save()
 
-        return
 
-
-    def ingredient_list_cleaner(self, ingredient_list):
-
-        return_list = []
-
-        for ingredient in ingredient_list:
-
-            #only add ingredients that don't contain non alpha characters
-            if ingredient == "" or ingredient == " " or not re.match('^[a-zA-Z ]*$', ingredient):
-                continue
-
-            return_list.append(ingredient)
-
-        return return_list
 
 
 class Ingredient_produt_matching_pipeline(object):

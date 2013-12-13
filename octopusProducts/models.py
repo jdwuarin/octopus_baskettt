@@ -29,7 +29,7 @@ class Recipe(models.Model):
     #max_length is defaulted to 100 for image.
 
     name            = models.CharField(max_length=150, default='', editable=False)
-    rating          = models.DecimalField(max_digits=5, decimal_places=4, editable=False)
+    rating          = models.DecimalField(max_digits=10, decimal_places=4, editable=False)
     review_count    = models.IntegerField(editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell

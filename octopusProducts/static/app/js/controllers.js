@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('App.controllers', ['ngSanitize'])
+angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
 
@@ -109,7 +109,7 @@ angular.module('App.controllers', ['ngSanitize'])
 		};
 	}])
 
-	.controller('LoginController', ['$sanitize','$scope','User', function($sanitize,$scope,User) {
+	.controller('LoginController', ['$sanitize','$scope','User','Alert', function($sanitize,$scope,User,Alert) {
 		$scope.user = {};
 
 		var sanitizeCredentials = function(credentials) {
@@ -126,10 +126,21 @@ angular.module('App.controllers', ['ngSanitize'])
 
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
-					// This callback is only called when return success
+					Alert.add("Successfully logged in.", "success")
 					User.redirect("/");
 				});
 			}
+		};
+
+	}])
+
+	.controller('AlertController', ['$scope', 'Alert', function($scope, Alert) {
+
+		$scope.alerts = Alert.getAll();
+
+		$scope.closeAlert = function(index) {
+			Alert.close(index);
+			$scope.alerts = Alert.getAll();
 		};
 
 	}]);

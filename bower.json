@@ -20,13 +20,13 @@
     "angular-mocks": "~1.2.5",
     "angular-route": "~1.2.5",
     "angular-sanitize": "~1.2.5",
-    "angular-ui-bootstrap": "~0.7.0",
+    "angular-bootstrap": "~0.7.0",
     "html5shiv": "~3.7.0",
     "jquery": "~2.0.3",
     "respond": "~1.4.1",
     "angular": "~1.2.5"
   },
   "resolutions": {
-    "angular": "~1.2.5"
+    "angular": "1.2.4"
   }
 }

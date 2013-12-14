@@ -160,4 +160,22 @@ angular.module('App.services', ['LocalStorageModule'])
 			}
 		};
 
+	}])
+
+	.factory('Alert',  [function() {
+		
+		var alertList = [];
+
+		return {
+			add: function(message, type) {
+				alertList.push({msg: message, type: type});
+			},
+			close: function(index) {
+				alertList.splice(index, 1);
+			},
+			getAll: function() {
+				return alertList;
+			}
+		};
+
 	}]);

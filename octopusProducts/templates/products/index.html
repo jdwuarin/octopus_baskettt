@@ -17,6 +17,7 @@
   <link rel="stylesheet/css" href="{% static "bootstrap/css/boostrap.css" %}"> 
   <link rel="stylesheet/css" href="{% static "css/style.css" %}"> 
   {% endif %} 
+
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src=" {% static "html5shiv/dist/html5shiv.js" %}"></script>
@@ -31,7 +32,13 @@
       <div id="wrap">
       
         <navbar></navbar>
-        
+
+        {%verbatim%}
+        <div class="container" ng-controller="AlertController">
+          <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
+        {%endverbatim%}
+
         <div ng-view></div>
 
       </div>
@@ -46,14 +53,13 @@
       <script src="{% static "angular-sanitize/angular-sanitize.min.js" %}"></script>
       <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
       <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
-
+      <script src="{% static "angular-bootstrap/ui-bootstrap-tpls.min.js" %}"></script>
 
       <script src="{% static "app/js/app.js" %}"></script>
       <script src="{% static "app/js/controllers.js" %}"></script>
       <script src="{% static "app/js/services.js" %}"></script>
       <script src="{% static "app/js/directives.js" %}"></script>
       <script src="{% static "app/js/filters.js" %}"></script>
-
 
     </body>
     </html>

@@ -1,4 +1,4 @@
-from octopusProducts.models import Cuisine, Recipe
+from octopusProducts.models import Tag, Recipe, Tag_recipe
 
 class Basket_recommendation_engine():
 
@@ -7,20 +7,20 @@ class Basket_recommendation_engine():
 		#TODO, remove tesco hardcode 
 
 		recipe_average_price = 7.0
-		potential_num_recipes = int((basket_onboarding_info.budget * 3.0) / recipe_average_price)
+		potential_num_recipes = int((basket_onboarding_info.budget * 9.0) / recipe_average_price)
 
-		cuisine_id_list = []
-		for cuisine in basket_onboarding_info.cuisines:
-			cuisine_id_list.append(Cuisine.objects.get(name = cuisine)[0].id)
+		tag_list = Tag.objects.filter(name__in = basket_onboarding_info.tags)
 
-		potential_num_recipes_by_cuisine = potential_num_recipes / len(cuisine_id_list)
+		potential_num_recipes_by_tag = potential_num_recipes / len(tag_list)
 
 		potential_recipe_list = []
-		for cuisine_id in cuisine_id_list:
-			recipe_list_by_cuisine = Recipe.objects.filter(cuisine_id = cuisine_id, 
-			course__in = ["Main Dishes", "Lunch"]).order_by('review_count', 'rating')[:potential_num_recipes_by_cuisine] 
-			potential_recipe_list.append(recipe_list_by_cuisine)
+		for tag in tag_list:
 
+			tag_recipe_list = Tag_recipe.objects.filter(tag = tag.id)
+			recipe_id_list = [tag_recipe.recipe_id for tag_recipe in tag_recipe_list]
+			recipe_list = Recipe.objects.filter(id__in = recipe_id_list).order_by('-review_count', '-rating')[:potential_num_recipes_by_tag]
+			# course__in = ["Main Dishes", "Lunch"])
+			potential_recipe_list.append(recipe_list)
 
 		# pre_selected_recipes = []
 		# for cuisine_id in potential_recipe_list:
@@ -29,6 +29,7 @@ class Basket_recommendation_engine():
 
 
 		final_recipe_list = cls.filter_recipes_by_budget(potential_recipe_list, basket_onboarding_info.budget)
+		print final_recipe_list
 
 	@classmethod
 	def filter_recipes_by_budget(cls, recipes, budget):
@@ -38,16 +39,20 @@ class Basket_recommendation_engine():
 		i=0
 		while basket_cost < budget:
 
-			for cuisine_id in recipes:
-				recipe = recipes[cuisine_id][i % len(recipes)]
-				basket_cost = recipe.get_cost()
+			for x in range(0, len(recipes)): 
+				recipe = recipes[x][i / len(recipes)] #the division will floor the value, which is what we want
+				# basket_cost = recipe.get_cost()
+				basket_cost = basket_cost + 7
 				if basket_cost > budget:
 					break_condition = True
 					break
+				i = i + 1
 				final_basket.append(recipe)
 
 			if break_condition:
 				break
+
+		return final_basket
 
 
 

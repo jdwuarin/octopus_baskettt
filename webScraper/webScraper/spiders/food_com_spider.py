@@ -93,7 +93,12 @@ class Food_com_spider(BaseSpider):
                 if len(name) is 1:
                     name = name[0]
                     name = name.replace("http://www.food.com/library/", "")
-                    name =  re.sub("[^a-zA-Z]", "", name)
+                    if "http" in name: # if there is a known error on their page
+                        continue
+                    name =  re.sub("[^a-zA-Z-]", "", name)
+                    name = name.replace("-", " ")
+                    if name[-1] is " ":
+                        name = name[:-1] #just remove trailing space
                     ingredient_item['name'] = name
 
                     quantity = self.get_cleaned_quantity(selector)

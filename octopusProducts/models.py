@@ -33,7 +33,7 @@ class Recipe(models.Model):
     review_count    = models.IntegerField(editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.name) + ", " + str(self.rating)
+        return str(self.name) + ", " + str(self.review_count) + ", " + str(self.rating)
 
 
 class Tag_recipe(models.Model):
@@ -42,7 +42,7 @@ class Tag_recipe(models.Model):
     recipe       = models.ForeignKey(Recipe, default=-1, editable=False) 
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.recipe_id) + ", " + str(self.tag_id) + ", " + str(self.quantity)
+        return str(self.recipe_id) + ", " + str(self.tag_id)
 
 
 class Ingredient(models.Model):

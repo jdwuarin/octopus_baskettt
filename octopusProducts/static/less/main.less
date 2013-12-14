@@ -178,10 +178,12 @@ a:hover{
 	padding: 20px;
 	border: 1px solid #d3d3d3;
 	border-radius: 7px;
+	width: 45%;
+	float: left;
 	li{
 		list-style-type: none;
 		display: inline-block;
-		&:nth-child(2){
+		&:nth-child(3){
 			float: right;
 		}
 	}
@@ -213,7 +215,7 @@ footer{
 	color:#d7d7d7;
 	padding-top: 40px;
 	padding-left: 30px;
-	margin-top: 40px;
+	//margin-top: 40px;
 }
 
 // Onboarding
@@ -232,7 +234,7 @@ footer{
 		color: black;
 		text-shadow: 0px 1px 1px rgba(0,0,0,0.26);
 		line-height: 1.8;
-		margin: 74px 20px 50px 20px;
+		margin: 74px 10px 50px 10px;
 		background: #F6F6F6;
 		border: 1px solid #C9C9C9;
 		color: #888888;
@@ -277,8 +279,6 @@ footer{
 	float: left;
 	width: 33.33333%;
 
-
-
 	p{
 		text-align: center;
 		padding: 20px 0px;
@@ -294,7 +294,7 @@ footer{
 
 	img{
 		height: auto;
-		width: 300px;
+		width: 250px;
 		border-radius: 10px;
 		border: 3px solid #CACACA;
 		.center;
@@ -302,6 +302,20 @@ footer{
 
 	&:hover{
 		opacity:0.8;
+	}
+}
+
+.next-container{
+	margin-top: 183px;
+}
+
+.selected_product{
+	border: 1px red solid;
+}
+
+.product-list-title{
+	.btn-gray{
+		color:black!important;
 	}
 }
 

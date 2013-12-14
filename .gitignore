@@ -27,3 +27,8 @@ PGDATA
 logfile
 
 webScraper/.ropeproject
+
+static/*
+bin/*
+
+bower_components

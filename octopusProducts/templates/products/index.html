@@ -7,22 +7,27 @@
 	<title>Octopus</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Bootstrap -->
-	<link rel="stylesheet/less" href="{% static "bootstrap/less/bootstrap.less" %}" media="screen">
-	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen">
 
+  {% if debug %}
+	<link rel="stylesheet/less" href="{% static "bootstrap/less/bootstrap.less" %}" media="screen">
+	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen"> 
 	<script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
+  {% else %}
+  <link rel="stylesheet/css" href="{% static "bootstrap/css/boostrap.css" %}"> 
+  <link rel="stylesheet/css" href="{% static "css/style.css" %}"> 
+  {% endif %} 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-
-      <script src=" {% static "lib/html5shiv.js" %}"></script>
-      <script src=" {% static "lib/respond.min.js" %}"></script>
-      <![endif]-->
+      <script src=" {% static "html5shiv/dist/html5shiv.js" %}"></script>
+      <script src=" {% static "respond/dest/respond.min.js" %}"></script>
+  <![endif]-->
 
     </head>
     <body>
+      
       {% csrf_token %}
+        
       <div id="wrap">
         <nav class="navbar navbar-default" role="navigation">
          
@@ -53,12 +58,12 @@
       <footer>
         <p>Contact us via <a href="https://twitter.com/basketttco">Twitter</a></p>
       </footer>
-      <script src="{% static "lib/jquery.min.js" %}"></script>
-      <script src="{% static "lib/angular.min.js" %}"></script>
-      <script src="{% static "lib/angular-sanitize.min.js" %}"></script>
-      <script src="{% static "lib/angular-cookies.min.js" %}"></script>
-      <script src="{% static "lib/angular-mocks.js" %}"></script>
-      <script src="{% static "lib/angular-local-storage.js" %}"></script>
+      <script src="{% static "jquery/jquery.min.js" %}"></script>
+      <script src="{% static "angular/angular.min.js" %}"></script>
+      <script src="{% static "angular-route/angular-route.min.js" %}"></script>
+      <script src="{% static "angular-sanitize/angular-sanitize.min.js" %}"></script>
+      <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
+      <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
 
 
       <script src="{% static "app/js/app.js" %}"></script>

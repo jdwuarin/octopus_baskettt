@@ -51,9 +51,12 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR,'octopusProducts/static/'),
-    
-) 
+    os.path.join(PROJECT_DIR,'../octopusProducts/static/'),
+    os.path.join(PROJECT_DIR,'../bower_components/'),
+
+    #os.path.join(PROJECT_DIR,'../bin/'),
+
+)
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -193,3 +196,7 @@ TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 MAX_USERNAME_LENGTH = 150 
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+ALLOWED_HOSTS = [
+    '127.0.0.1', # localhost
+]

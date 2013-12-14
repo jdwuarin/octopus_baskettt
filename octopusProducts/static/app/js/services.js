@@ -2,7 +2,6 @@
 
 /* Services */
 
-
 angular.module('App.services', ['LocalStorageModule'])
 
 	// Factory that uses the REST api/v1
@@ -28,20 +27,9 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			put: function(product, callback) {
 				return $http.put(getUrl(product.id), product).success(callback);
-			}
-		};
-	}])
-
-	// Factory that uses the apiray API for the recipes
-	.factory('Recipe', ['$http', function($http) {
-
-		function getUrl() {
-			return 'http://baskettt.apiary.io/recipes';
-		}
-
-		return {
-			query: function(callback) { // GET /
-				return $http.get(getUrl()).success(callback);
+			},
+			search: function(term, callback) {
+				return $http.get(getUrl("search/") + "&term=" + term).success(callback);
 			}
 		};
 	}])
@@ -142,25 +130,6 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 	}])
 
-	// Factory that uses the recommendation backend
-	.factory('Recommendation', ['$http', function($http) {
-
-		function getUrl() {
-			return 'http://127.0.0.1:8000/recommendation/';
-		}
-
-		return {
-			post: function(ids, callback) { // POST /recommendation
-
-				return $http({
-					url: getUrl(),
-					method: "POST",
-					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-					data: "sa mere"
-				}).success(callback);
-			}
-		};
-	}])
 
 	// Factory that uses that keeps the data during the onboarding
 	.factory('localStorage',  ['localStorageService', function(localStorageService) {
@@ -181,12 +150,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			post: function(list, callback) {
-				return $http({
-					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
-					method: "POST",
-					headers: {'Content-Type': 'application/json'},
-					data: list
-				}).success(callback);
+				return $http.get('static/app/js/product.json').success(callback);
+				// return $http({
+				// 	url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+				// 	method: "POST",
+				// 	headers: {'Content-Type': 'application/json'},
+				// 	data: list
+				// })
 			}
 		};
 

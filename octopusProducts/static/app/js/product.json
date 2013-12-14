@@ -1,0 +1,42 @@
+[
+    {
+        "link": "/groceries/Product/Details/?id=261811211",
+        "name": "Tesco Cloth Mop Refill",
+        "price": "2.00"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=264910233",
+        "name": "Tesco Cloth Mop Refill",
+        "price": "2.50"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=278374966",
+        "name": "Dettol Laundry Sanitiser Fresh Cotton 1.5L",
+        "price": "4.60"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=278374868",
+        "name": "Dri Pak Soda Crystals Laundry Boost 750G",
+        "price": "4.60"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=278163283",
+        "name": "Dylon Wash & Dye",
+        "price": "1.70"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=278162036",
+        "name": "Dylon White & Bright 7 Sheets",
+        "price": "4.00"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=277804184",
+        "name": "Tesco Expert Sports&Workwear Liquid 500Ml",
+        "price": "4.99"
+    },
+    {
+        "link": "/groceries/Product/Details/?id=265046223",
+        "name": "Airwick Electric Refill Mulled Wine",
+        "price": "3.00"
+    }
+]

@@ -21,6 +21,8 @@
     "grunt": "~0.4.1",
     "grunt-contrib-less": "~0.6.4",
     "grunt-karma": "latest",
+    "grunt-contrib-concat": "latest",
+    "grunt-contrib-uglify": "latest",
     "karma": "latest",
     "karma-chrome-launcher": "latest",
     "karma-safari-launcher": "latest",

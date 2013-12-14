@@ -25,4 +25,24 @@ angular.module('App.directives', [])
 				scope.$apply();
 			});
 		};
+	}])
+
+
+	.directive('remove', [function() {
+
+		return {
+			link: function (scope, element, attrs) {
+				scope.$on('resetSelection', function() {
+					scope.selectedStatus = false;
+				});
+
+				element.bind("click", function() {
+					scope.selectedStatus = !scope.selectedStatus;
+					scope.$apply();
+				});
+			},
+			template: '<i class="glyphicon glyphicon-remove"></i>',
+			transclude: true
+		};
+		
 	}]);

@@ -4,10 +4,6 @@
 
 angular.module('App.controllers', ['ngSanitize'])
 
-	.controller('HomeController', ['$scope', function($scope) {
-
-	}])
-
 	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
 
 		$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
@@ -52,9 +48,15 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('ProductListController', ['$scope','Preference','Basket', 'Product',function($scope, Preference, Basket, Product) {
-		var preferenceList = Preference.getAll();
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User',function($rootScope, $scope, Preference, Basket, Product, User) {
 
+		var preferenceList = Preference.getAll();
+		$scope.user = {};
+
+		$rootScope.$on('CloseSignUpForm', function(){
+			$scope.closeForm();
+		});
+		
 		Basket.post(preferenceList, function(res){
 			$scope.products = res;
 		});
@@ -67,6 +69,26 @@ angular.module('App.controllers', ['ngSanitize'])
 			Product.search($scope.queryTerm, function(res){
 				$scope.search_result = res;
 			});
+		};
+
+		$scope.transferBasket = function(){
+			if(!User.isLoggedIn()) {
+				$scope.toggleForm(true);
+			}
+		};
+
+		$scope.closeForm = function() {
+			$scope.toggleForm(false);
+		};
+
+		$scope.signup = function(){
+			var user = $scope.user;
+			if($scope.signupForm.$valid){
+
+				User.signup(user.email, user.password, function(data){
+					$rootScope.$emit('UserSignedUp');
+				});
+			}
 		};
 
 	}])
@@ -84,7 +106,7 @@ angular.module('App.controllers', ['ngSanitize'])
 					User.redirect("/");
 				});
 			}
-		}
+		};
 	}])
 
 	.controller('LoginController', ['$sanitize','$scope','User', function($sanitize,$scope,User) {
@@ -108,22 +130,6 @@ angular.module('App.controllers', ['ngSanitize'])
 					User.redirect("/");
 				});
 			}
-		}
+		};
 
-	}])
-
-	.controller('NavigationController', ['$cookieStore', '$scope','User', function($cookieStore,$scope,User) {
-
-		$scope.userIsLoggedIn = function(){
-			// Defined as a function to force the execution after a redirection
-			return User.isLoggedIn();
-		}
-
-		$scope.logout = function(){
-			User.logout(function(data){
-				User.setLoggedIn(false);
-				// This callback is only called when return success
-				User.redirect("/");
-			});
-		}
 	}]);

@@ -27,6 +27,51 @@ angular.module('App.directives', [])
 		};
 	}])
 
+	.directive('signup',[function() {
+		return {
+			link: function (scope, element, attrs) {
+				scope.isVisible = false;
+				scope.toggleForm = function(value){
+					scope.isVisible = value;
+				};
+			},
+			restrict: 'E',
+			templateUrl: 'static/app/partials/_sign_up.html'
+		};
+	}])
+
+	.directive('navbar',['$rootScope', 'User', function($rootScope, User) {
+
+		return {
+			link: function (scope, element, attrs) {
+
+				$rootScope.$on('UserSignedUp', function(){
+					User.requestLoggedIn(function(res){
+						if(res.success){
+							User.setLoggedIn(true);
+							scope.userIsLoggedIn();
+							$rootScope.$emit('CloseSignUpForm');
+						}
+					});
+				});
+
+				scope.userIsLoggedIn = function(){
+					// Defined as a function to force the execution after a redirection
+					return User.isLoggedIn();
+				};
+
+				scope.logout = function(){
+					User.logout(function(data){
+						User.setLoggedIn(false);
+						// This callback is only called when return success
+						User.redirect("/");
+					});
+				};
+			},
+			restrict: 'E',
+			templateUrl: 'static/app/partials/_nav_bar.html'
+		};
+	}])
 
 	.directive('remove', [function() {
 

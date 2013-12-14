@@ -22,14 +22,9 @@ class Basket_recommendation_engine():
 			# course__in = ["Main Dishes", "Lunch"])
 			potential_recipe_list.append(recipe_list)
 
-		# pre_selected_recipes = []
-		# for cuisine_id in potential_recipe_list:
-		# 	for x in range(0, potential_num_recipes):
-		# 		pre_selected_recipes.append(potential_recipe_list[cuisine_id][x])
-
-
 		final_recipe_list = cls.filter_recipes_by_budget(potential_recipe_list, basket_onboarding_info.budget)
-		print final_recipe_list
+		product_list = cls.get_produt_list(final_recipe_list)
+		print product_list
 
 	@classmethod
 	def filter_recipes_by_budget(cls, recipes, budget):
@@ -53,6 +48,10 @@ class Basket_recommendation_engine():
 				break
 
 		return final_basket
+
+	@classmethod
+	def get_product_list(cls, recipe_list):
+		pass
 
 
 

@@ -170,18 +170,11 @@ class UserResource(ModelResource):
    	def basket(self, request, **kwargs):
    		self.method_check(request, allowed=['post'])
    		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
-   		
-<<<<<<< HEAD
+
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
    			tags = data['cuisines'])
-=======
-   		#print str(data["people"]) + " " + str(data["budget"]) + " " + str(data["cuisine"][0]) 
-   		
-   		# onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
-   		# 	cuisines = data['cuisine'])
->>>>>>> b721721725b953aa52b4603e8c8aabe67d01def6
 
-   		# Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
+   		Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
 
    		return self.create_response(request, {
 			'success': True

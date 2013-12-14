@@ -3,6 +3,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('App', [
 	'ngCookies',
+	'ngRoute',
 	'App.filters',
 	'App.services',
 	'App.directives',
@@ -37,12 +38,6 @@ angular.module('App', [
 	{
 		controller: 'LoginController',
 		templateUrl: 'static/app/partials/login.html',
-		requireLogin: false
-	})
-	.when('/ingredient',
-	{
-		controller: 'IngredientController',
-		templateUrl: 'static/app/partials/Ingredient.html',
 		requireLogin: false
 	})
 	.when('/basket',

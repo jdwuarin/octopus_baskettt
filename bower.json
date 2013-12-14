@@ -1,0 +1,28 @@
+{
+  "name": "octopus",
+  "version": "0.0.0",
+  "homepage": "https://github.com/arnaudbenard/octopus",
+  "authors": [
+    "Arnaud Benard <arnaudbenard13@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-cookies": "~1.2.5",
+    "angular-local-storage": "*",
+    "angular-mocks": "~1.2.5",
+    "angular-route": "~1.2.5",
+    "angular-sanitize": "~1.2.5",
+    "respond": "~1.4.1",
+    "angular": "~1.2.5",
+    "html5shiv": "~3.7.0",
+    "jquery": "~2.0.3"
+  }
+}

@@ -2,7 +2,6 @@
 
 /* Services */
 
-
 angular.module('App.services', ['LocalStorageModule'])
 
 	// Factory that uses the REST api/v1
@@ -31,20 +30,6 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			search: function(term, callback) {
 				return $http.get(getUrl("search/") + "&term=" + term).success(callback);
-			}
-		};
-	}])
-
-	// Factory that uses the apiray API for the recipes
-	.factory('Recipe', ['$http', function($http) {
-
-		function getUrl() {
-			return 'http://baskettt.apiary.io/recipes';
-		}
-
-		return {
-			query: function(callback) { // GET /
-				return $http.get(getUrl()).success(callback);
 			}
 		};
 	}])
@@ -145,25 +130,6 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 	}])
 
-	// Factory that uses the recommendation backend
-	.factory('Recommendation', ['$http', function($http) {
-
-		function getUrl() {
-			return 'http://127.0.0.1:8000/recommendation/';
-		}
-
-		return {
-			post: function(ids, callback) { // POST /recommendation
-
-				return $http({
-					url: getUrl(),
-					method: "POST",
-					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-					data: "sa mere"
-				}).success(callback);
-			}
-		};
-	}])
 
 	// Factory that uses that keeps the data during the onboarding
 	.factory('localStorage',  ['localStorageService', function(localStorageService) {

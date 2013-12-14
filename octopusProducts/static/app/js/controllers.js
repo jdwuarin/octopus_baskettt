@@ -52,17 +52,6 @@ angular.module('App.controllers', ['ngSanitize'])
 
 	}])
 
-	.controller('IngredientController', ['$scope','$http','Product',function($scope, $http, Product) {
-
-		$scope.diets = {};
-		$scope.cart = {};
-
-		Product.query(function(res) {
-			$scope.products = res.objects;
-		});
-
-	}])
-
 	.controller('ProductListController', ['$scope','Preference','Basket', 'Product',function($scope, Preference, Basket, Product) {
 		var preferenceList = Preference.getAll();
 

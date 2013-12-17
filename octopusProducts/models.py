@@ -18,6 +18,8 @@ class Product(models.Model):
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name) + ", " + str(self.price) + ", " + str(self.product_origin) + ", " + str(self.quantity) + ", " + str(self.unit)
 
+
+
 class Tag(models.Model):
 
     name = models.CharField(max_length=150, default='', editable=False)

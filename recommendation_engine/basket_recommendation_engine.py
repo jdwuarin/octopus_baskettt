@@ -3,6 +3,9 @@ from unit_helper import Unit_helper
 import random
 from math import floor, ceil
 
+#per person limit cost for single product
+product_cost_limit = 5
+
 class Basket_recommendation_engine(object):
 
 	num_days_sigma_acceptance_rate = 0.3
@@ -23,7 +26,7 @@ class Basket_recommendation_engine(object):
 
 		product_list = cls.get_product_list(potential_recipe_list, basket_onboarding_info.budget,
 			basket_onboarding_info.people)
-		print product_list
+		return product_list
 
 	@classmethod
 	def get_product_list(cls, recipes, budget, people):
@@ -50,22 +53,13 @@ class Basket_recommendation_engine(object):
 						continue #if no more recipe of that kind, go to next kind
 
 				recipe_ingredients_list = Recipe_ingredient.objects.filter(recipe = recipe)
-				added_cost, products_to_add = cls.merge_lists(recipe_ingredients_list, product_list_slack, product_list, people)
+				should_break, added_cost = cls.merge_lists(recipe_ingredients_list, product_list_slack, 
+					product_list, people, budget - basket_cost)
 
-				basket_cost = basket_cost + added_cost
-				if basket_cost > budget:
+				basket_cost += added_cost
+				if should_break:
 					break_condition = True
 					break
-
-				#add products_to_add to the product_list
-				else: 
-					for product, quantity_to_buy in products_to_add:
-						try:
-							bought_quantity = product_list[product]
-							product_list[product] = bought_quantity + quantity_to_buy
-
-						except KeyError:
-							product_list[product] = quantity_to_buy
 
 				i = i + 1
 
@@ -75,10 +69,11 @@ class Basket_recommendation_engine(object):
 		return product_list
 
 	@classmethod
-	def merge_lists(cls, recipe_ingredient_list, product_list_slack, product_list, people):
+	def merge_lists(cls, recipe_ingredient_list, product_list_slack, 
+		product_list, people, recipe_allowance):
 
-		added_cost = 0
-		products_to_add = []
+		recipe_allowance_start = recipe_allowance
+		should_break = False
 		for recipe_ingredient in recipe_ingredient_list:
 			ingredient = Ingredient.objects.get(id = recipe_ingredient.ingredient.id)
 			qu_ing_needed = None
@@ -87,10 +82,11 @@ class Basket_recommendation_engine(object):
 			try: 
 				selected_product, slack = product_list_slack[ingredient]
 				#same values in the two different units
-				prod_usage = Unit_helper.get_product_usage(recipe_ingredient, selected_product)
+				prod_usage = Unit_helper.get_product_usage(
+					recipe_ingredient, selected_product)
 				if prod_usage == "-1":
 					continue #there was an error, skip ingredient
-				remaining_slack = slack - (people * prod_usage)
+				remaining_slack = slack - (float(people) * float(prod_usage))
 
 				if remaining_slack >= 0:
 					#just reduce slack, don't add any product to basket though
@@ -99,7 +95,8 @@ class Basket_recommendation_engine(object):
 				else:
 					#quantity of ingredient still needed
 					del product_list_slack[ingredient]
-					qu_ing_needed = (-float(remaining_slack)/(float(people) * float(prod_usage))) * float(recipe_ingredient.quantity)
+					qu_ing_needed = (-float(remaining_slack)/(
+						float(people) * float(prod_usage))) * float(recipe_ingredient.quantity)
 
 			except KeyError:
 				pass
@@ -109,20 +106,37 @@ class Basket_recommendation_engine(object):
 			#basket in a minimum of required quantity
 			potential_product_list = Ingredient_product.objects.filter(
 				ingredient_id = ingredient.id).order_by("rank")
-			potential_product_index_to_get = floor(min(len(potential_product_list), 5) * random.random())
+			if len(potential_product_list) == 0:
+				continue #deal with items not found in db
+
+			potential_product_index_to_get = int(floor(min(len(potential_product_list), 5) * random.random()))
 			selected_product = Product.objects.get(
-				id = potential_product_list[potential_product_index_to_get].product_tesco_id)
+					id = potential_product_list[potential_product_index_to_get].product_tesco_id)
 
 			prod_usage = Unit_helper.get_product_usage(recipe_ingredient, selected_product, qu_ing_needed)
 
 			quantity_to_buy = ceil((float(people) * float(prod_usage)) / float(selected_product.quantity))
 			slack = ceil(float(people) * float(prod_usage)) - (float(people) * float(prod_usage))
 
+			product_cost = quantity_to_buy * float(selected_product.price.replace("GBP", ""))
+			if people * product_cost_limit < product_cost:
+				continue #don't add items that are deemed to expensive
+
+			#check that cost is not passed
+			recipe_allowance = recipe_allowance - quantity_to_buy * float(selected_product.price.replace("GBP", ""))
+
+			if recipe_allowance < 0:
+				should_break = True
+				break
+
 			product_list_slack[ingredient] = (selected_product, slack)
 
-			products_to_add[selected_product] = quantity_to_buy
-			added_cost = added_cost + quantity_to_buy * float(selected_product.price.replace("GBP", ""))
+			try:
+				bought_quantity = product_list[selected_product]
+				product_list[selected_product] = bought_quantity + quantity_to_buy
 
+			except KeyError:
+				product_list[selected_product] = quantity_to_buy
 
-		return added_cost, products_to_add
+		return should_break, recipe_allowance_start - recipe_allowance
 

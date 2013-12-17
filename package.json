@@ -23,6 +23,7 @@
     "grunt-karma": "latest",
     "grunt-contrib-concat": "latest",
     "grunt-contrib-uglify": "latest",
+    "grunt-contrib-imagemin": "latest",
     "karma": "latest",
     "karma-chrome-launcher": "latest",
     "karma-safari-launcher": "latest",

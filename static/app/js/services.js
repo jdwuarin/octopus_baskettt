@@ -149,6 +149,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	.factory('Basket',  ['$http', function($http) {
 
 		return {
+			// Get recommendation from our backend
 			post: function(list, callback) {
 				return $http.get('static/app/js/product.json').success(callback);
 				// return $http({
@@ -157,10 +158,28 @@ angular.module('App.services', ['LocalStorageModule'])
 				// 	headers: {'Content-Type': 'application/json'},
 				// 	data: list
 				// })
+			},
+		};
+
+	}])
+
+	.factory('Tesco',  ['$http', function($http) {
+
+		return {
+			// Populate tesco basket
+			post: function(email, password, list, callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/spider/',
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					data: list
+				}).success(callback);
 			}
 		};
 
 	}])
+
+
 
 	.factory('Alert',  [function() {
 		

@@ -29,7 +29,7 @@ logfile
 
 webScraper/.ropeproject
 
-static/*
+static_prod/*
 bin/*
 
 bower_components

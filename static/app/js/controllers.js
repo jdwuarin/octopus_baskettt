@@ -48,13 +48,16 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User',function($rootScope, $scope, Preference, Basket, Product, User) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
 
 		var preferenceList = Preference.getAll();
 		$scope.user = {};
+		$scope.tescoCredential = {};
+
 
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();
+			$scope.toggleTescoForm(true);
 		});
 		
 		Basket.post(preferenceList, function(res){
@@ -74,6 +77,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.transferBasket = function(){
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
+			} else {
+				$scope.toggleTescoForm(true);
 			}
 		};
 
@@ -90,6 +95,25 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				});
 			}
 		};
+
+		$scope.sendToTesco = function(){
+			var tescoCredential = $scope.tescoCredential;
+			var list = [1,2,3];
+
+			if ($scope.tescoForm.$valid) {
+				$scope.toggleTescoForm(false);
+				$scope.viewLoading = true;
+				Tesco.post(tescoCredential.email, tescoCredential.password, list, function(res) {
+					$scope.viewLoading = false;
+					Alert.add("Your products have been transfered to Tesco","success");
+				});
+			}
+		};
+
+		$scope.closeTescoForm = function() {
+			$scope.toggleTescoForm(false);
+		};
+
 
 	}])
 

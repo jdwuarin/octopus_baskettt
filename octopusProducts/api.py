@@ -11,6 +11,7 @@ from tastypie.authentication import SessionAuthentication
 from recommendation_engine.basket_onboarding_info import Basket_onboarding_info
 from recommendation_engine.basket_recommendation_engine import Basket_recommendation_engine
 from django.http import HttpResponse
+import json
 
 class ProductResource(ModelResource):
 	class Meta:
@@ -29,7 +30,7 @@ class ProductResource(ModelResource):
 	def search(self, request, **kwargs):
 		self.method_check(request, allowed=['get'])
 		q = request.GET.get('term', '')
-		products = Product.objects.filter(name__icontains = q )[:20]
+		products = Product.objects.filter(name__icontains = q )[:10]
 
 		results = []
 
@@ -38,6 +39,7 @@ class ProductResource(ModelResource):
 			product_json['id'] = product.id
 			product_json['name'] = product.name
 			product_json['price'] = product.price
+			product_json['img'] = str(product.external_image_link)
 			results.append(product_json)
 			data = json.dumps(results)
 

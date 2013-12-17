@@ -6,29 +6,36 @@
 <div class="container" ng-hide="viewLoading">
 	
 	<div class="row">
-		<div class="col-md-12 product-list-title">
-			<h3>Choose your products</h3>	
+		<div class="col-md-9 product-list-title">
+			<h3>Your basket</h3>	
 			<button class="btn btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
 			<button class="btn btn-gray" ng-click="resetSelection()">Reset</button>
 		</div>
-		<div class="col-md-12">
-			<input ng-model="queryTerm" type="text">
-            <button ng-click="searchProducts()" class="btn" type="button">Search</button>
-            <li ng-repeat="product in search_result">
-    			{{ product.name }}
-			</li>
+		<div class="col-md-3">
+
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-9">
 			<div ng-repeat="product in products" >
 				<ul class="product-box" ng-class="{'selected_product':selectedStatus}">
+					<li>
+						<img ng-src="{{product.img}}" alt="">
+					</li>
 					<li>{{product.name}}</li>
 					<li>{{product.price | currency:"&#163;"}}</li>
 					<li remove></li>
 				</ul>
-		      </div>
-    		</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<h3>Search for products</h3>
+			<input ng-model="queryTerm" type="text" class="form-control"><br>
+			<button ng-click="searchProducts()" class="btn" type="button">Search</button>
+			<li ng-repeat="product in search_result" class="search_item">
+				<img ng-src="{{product.img}}" alt="">
+				{{ product.name }}
+			</li>
 		</div>
 	</div>
 </div>

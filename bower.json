@@ -24,7 +24,8 @@
     "html5shiv": "~3.7.0",
     "jquery": "~2.0.3",
     "respond": "~1.4.1",
-    "angular": "~1.2.5"
+    "angular": "~1.2.5",
+    "angular-animate": "*"
   },
   "resolutions": {
     "angular": "1.2.4"

@@ -4,6 +4,7 @@
 angular.module('App', [
 	'ngCookies',
 	'ngRoute',
+	'ngAnimate',
 	'App.filters',
 	'App.services',
 	'App.directives',

@@ -172,7 +172,7 @@ class UserResource(ModelResource):
    		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
-   			tags = data['cuisines'])
+   			tags = data['cuisines'], days = data['days'])
 
    		Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
 

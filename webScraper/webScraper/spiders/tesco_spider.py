@@ -3,6 +3,7 @@ from scrapy.selector import Selector
 from scrapy import log
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
+import re
 
 from webScraper.items import Product_item
 
@@ -57,7 +58,9 @@ class Tesco_spider(CrawlSpider):
 
             item['name']  = names[i]
             item['price'] = prices[i].replace(u'\xA3', 'GBP')
-            item['price_per_unit'] = prices_per_unit[i].replace(u'\xA3', 'GBP')
+
+            item['quantity'], item['unit']  = self.get_quantity_and_unit(prices[i].replace(u'\xA3', ''), 
+                prices_per_unit[i].replace(u'\xA3', ''))
             item['link'] = links[i]
             item['external_image_link'] = external_image_links[i]
             item['external_id'] = external_ids[i]
@@ -66,6 +69,35 @@ class Tesco_spider(CrawlSpider):
             items.append(item)
 
         return items
+
+
+    def get_quantity_and_unit(self, price, price_unit):
+        price_unit = re.sub("[^a-zA-Z0-9/.]", "", price_unit)
+
+        price_per_unit, unit = price_unit.split("/")
+        multiplier = re.sub("[^0-9.]", "", unit)
+        real_unit = re.sub("[^a-zA-Z.]", "", unit)
+
+        try: 
+            float(multiplier)
+        except ValueError: 
+            multiplier = 1.0
+
+        if real_unit == "cl":
+            real_unit = "ml"
+            multiplier = multiplier * 10.0
+        if real_unit == "l" or real_unit == "kg":
+            multiplier = multiplier * 1000.0
+            if real_unit == "l": 
+                real_unit = "ml"
+            else: 
+                real_unit = "g"
+
+        quantity = (float(price) / float(price_per_unit)) * (
+            float(multiplier))
+
+        return str(quantity), real_unit 
+
 
 
     def get_good_names(self, names):

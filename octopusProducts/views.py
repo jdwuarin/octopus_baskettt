@@ -17,17 +17,25 @@ def spider_view(request):
 
     Spider_manager_controller.create_if_none()
 
-    info = Basket_onboarding_info(people = 2, budget = 50, tags = ["Indian"], days = "")
+    info = Basket_onboarding_info(people = 6, budget = 50, tags = ["Japanese", "European"], days = "")
 
     basket = Basket_recommendation_engine.create_onboarding_basket(info)
-    print basket
 
     product_details = {}
 
+    # for entry in basket:
+
+    #     print str(entry[0]) + ",ingredient:," + str(
+    #          entry[1]) + ","  + str(int(entry[2])) 
+
     while len(basket) > 0:
 
-        product, quantity = basket.popitem()
-        product_details[str("http://www.tesco.com" + product.link)] = str(int(quantity))
+        product , my_list= basket.popitem()
+        print str(product) + ",ingredient:," + str(
+            my_list[0]) + ","  + str(int(my_list[1]))
+
+        
+        # product_details[str("http://www.tesco.com" + product.link)] = str(int(quantity))
 
     # product_details = {
     #     "http://www.tesco.com/groceries/Product/Details/?id=4234": "1",
@@ -44,9 +52,9 @@ def spider_view(request):
     this_basket = Basket_to_port(request, "arnaudbenard13+test@gmail.com", "test123",
         product_details, thread_manager)
 
-    Spider_manager_controller.add_basket_to_port(this_basket)
+    # Spider_manager_controller.add_basket_to_port(this_basket)
 
-    this_basket.thread_manager.wait(15)
+    # this_basket.thread_manager.wait(15)
 
     response_data = this_basket.thread_manager.get_response() 
     return HttpResponse(json.dumps(response_data), content_type="application/json")

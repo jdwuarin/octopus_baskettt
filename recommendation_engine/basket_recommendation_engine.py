@@ -35,7 +35,7 @@ class Basket_recommendation_engine(object):
 		basket_cost = 0
 		#ingredient, [selected_product, slack(remaining for use for other recipes)]
 		product_list_slack = {}
-		#product, quantity to buy
+		#product, [quantity_to_buy, mapped recipe_ingredient]
 		product_list = {}
 		i=0
 		while basket_cost < budget:
@@ -81,12 +81,15 @@ class Basket_recommendation_engine(object):
 			#ingredient in my basket
 			try: 
 				selected_product, slack = product_list_slack[ingredient]
+
 				#same values in the two different units
 				prod_usage = Unit_helper.get_product_usage(
 					recipe_ingredient, selected_product)
 				if prod_usage == "-1":
 					continue #there was an error, skip ingredient
+
 				remaining_slack = slack - (float(people) * float(prod_usage))
+
 
 				if remaining_slack >= 0:
 					#just reduce slack, don't add any product to basket though
@@ -109,14 +112,16 @@ class Basket_recommendation_engine(object):
 			if len(potential_product_list) == 0:
 				continue #deal with items not found in db
 
-			potential_product_index_to_get = int(floor(min(len(potential_product_list), 5) * random.random()))
+			potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
 			selected_product = Product.objects.get(
 					id = potential_product_list[potential_product_index_to_get].product_tesco_id)
 
 			prod_usage = Unit_helper.get_product_usage(recipe_ingredient, selected_product, qu_ing_needed)
 
+
+
 			quantity_to_buy = ceil((float(people) * float(prod_usage)) / float(selected_product.quantity))
-			slack = ceil(float(people) * float(prod_usage)) - (float(people) * float(prod_usage))
+			slack = quantity_to_buy * float(selected_product.quantity) - (float(people) * float(prod_usage))
 
 			product_cost = quantity_to_buy * float(selected_product.price.replace("GBP", ""))
 			if people * product_cost_limit < product_cost:
@@ -132,11 +137,16 @@ class Basket_recommendation_engine(object):
 			product_list_slack[ingredient] = (selected_product, slack)
 
 			try:
-				bought_quantity = product_list[selected_product]
-				product_list[selected_product] = bought_quantity + quantity_to_buy
+				dummy, bought_quantity = product_list[selected_product]#change that
+				product_list[selected_product] = [recipe_ingredient, bought_quantity + quantity_to_buy]
 
 			except KeyError:
-				product_list[selected_product] = quantity_to_buy
+			# product_list[selected_product] = quantity_to_buy
+				product_list[selected_product] = [recipe_ingredient, quantity_to_buy]
+
+				#TODO get rid of water ingredient and do some other hard_coding stuff
+
+			# product_list.append([selected_product, recipe_ingredient, quantity_to_buy])
 
 		return should_break, recipe_allowance_start - recipe_allowance
 

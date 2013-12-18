@@ -35,7 +35,7 @@ class Basket_recommendation_engine(object):
 		basket_cost = 0
 		#ingredient, [selected_product, slack(remaining for use for other recipes)]
 		product_list_slack = {}
-		#product, [quantity_to_buy, mapped recipe_ingredient]
+		#product, [quantity_to_buy, mapped ingredient]
 		product_list = {}
 		i=0
 		while basket_cost < budget:
@@ -112,7 +112,7 @@ class Basket_recommendation_engine(object):
 			if len(potential_product_list) == 0:
 				continue #deal with items not found in db
 
-			potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
+			potential_product_index_to_get = int(floor(min(len(potential_product_list), 7) * random.random()))
 			selected_product = Product.objects.get(
 					id = potential_product_list[potential_product_index_to_get].product_tesco_id)
 
@@ -137,16 +137,14 @@ class Basket_recommendation_engine(object):
 			product_list_slack[ingredient] = (selected_product, slack)
 
 			try:
-				dummy, bought_quantity = product_list[selected_product]#change that
-				product_list[selected_product] = [recipe_ingredient, bought_quantity + quantity_to_buy]
+				bought_quantity = product_list[selected_product][0]#change that
+				product_list[selected_product] = [bought_quantity + quantity_to_buy, ingredient]
 
 			except KeyError:
 			# product_list[selected_product] = quantity_to_buy
-				product_list[selected_product] = [recipe_ingredient, quantity_to_buy]
+				product_list[selected_product] = [quantity_to_buy, ingredient]
 
 				#TODO get rid of water ingredient and do some other hard_coding stuff
-
-			# product_list.append([selected_product, recipe_ingredient, quantity_to_buy])
 
 		return should_break, recipe_allowance_start - recipe_allowance
 

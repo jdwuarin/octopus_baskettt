@@ -21,40 +21,27 @@ def spider_view(request):
 
     basket = Basket_recommendation_engine.create_onboarding_basket(info)
 
+    #basket contains a dictionary of this type: {product : [quantity, ingredient]}
     product_details = {}
-
-    # for entry in basket:
-
-    #     print str(entry[0]) + ",ingredient:," + str(
-    #          entry[1]) + ","  + str(int(entry[2])) 
 
     while len(basket) > 0:
 
         product , my_list= basket.popitem()
-        print str(product) + ",ingredient:," + str(
-            my_list[0]) + ","  + str(int(my_list[1]))
 
-        
-        # product_details[str("http://www.tesco.com" + product.link)] = str(int(quantity))
+        product_details["http://www.tesco.com" + str(product.link)] = str(int(my_list[0]))
+    #     print str(product) + ",quantity:," + str(
+    #         int(my_list[0])) + ","  + str(my_list[1])
 
-    # product_details = {
-    #     "http://www.tesco.com/groceries/Product/Details/?id=4234": "1",
-    #     "http://www.tesco.com/groceries/Product/Details/?id=268768585" : "1", 
-    #     "http://www.tesco.com/groceries/Product/Details/?id=268595587" : "1", 
-    #     "http://www.tesco.com/groceries/Product/Details/?id=255664065" : "1", 
-    #     "http://www.tesco.com/groceries/Product/Details/?id=254881517" : "1", 
-    #     "http://www.tesco.com/groceries/Product/Details/?id=261597383" : "1", 
-    #     "http://www.tesco.com/groceries/Product/Details/?id=23424": "1",
+    
 
-    # }
 
     thread_manager = Thread_manager()
     this_basket = Basket_to_port(request, "arnaudbenard13+test@gmail.com", "test123",
         product_details, thread_manager)
 
-    # Spider_manager_controller.add_basket_to_port(this_basket)
+    Spider_manager_controller.add_basket_to_port(this_basket)
 
-    # this_basket.thread_manager.wait(15)
+    this_basket.thread_manager.wait(15)
 
     response_data = this_basket.thread_manager.get_response() 
     return HttpResponse(json.dumps(response_data), content_type="application/json")

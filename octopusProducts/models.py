@@ -1,11 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import User #This should probably be in another app
 
 class Product(models.Model):
 
     #added price, productOrigin, image etc
     price                   = models.CharField(max_length=12, default='NaN', editable=False)
-    price_per_unit          = models.CharField(max_length=50, default='NaN', editable=False)
-    product_origin           = models.CharField(max_length=50, default='none', editable=False)
+    quantity                = models.CharField(max_length=50, default='NaN', editable=False)
+    unit                    = models.CharField(max_length=50, default='none', editable=False)
+    product_origin          = models.CharField(max_length=50, default='none', editable=False)
     #max_length is defaulted to 100 for image.
     external_image_link     = models.ImageField(upload_to="images/" + str(product_origin) + "/", default='', editable=False)
     name                    = models.CharField(max_length=150, default='', editable=False)
@@ -15,7 +17,9 @@ class Product(models.Model):
     external_id             = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.name) + ", " + str(self.price) + ", " + str(self.product_origin)
+        return str(self.name) + ", " + str(self.price) + ", " + str(self.product_origin) + ", " + str(self.quantity) + ", " + str(self.unit)
+
+
 
 class Tag(models.Model):
 
@@ -44,8 +48,9 @@ class Tag_recipe(models.Model):
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.recipe_id) + ", " + str(self.tag_id)
 
-
-class Ingredient(models.Model):
+#this naming has to be refactored to represent an abstraction of products (i.e. not just ingredients)
+#i.e. using a name such as abstract_product or base_product
+class Ingredient(models.Model): 
 
     name = models.CharField(max_length=150, default='', editable=False)
 
@@ -61,7 +66,7 @@ class Recipe_ingredient(models.Model):
     unit         = models.CharField(max_length=150, default='', editable=False)          
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.recipe_id) + ", " + str(self.ingredient_id) + ", " + str(self.quantity)
+        return str(self.recipe_id) + ", " + str(self.ingredient_id) + ", " + str(self.quantity) + ", " + str(self.unit)
 
 
 class Ingredient_product(models.Model):
@@ -71,5 +76,15 @@ class Ingredient_product(models.Model):
     product_tesco       = models.ForeignKey(Product, related_name='product_tesco_id', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.ingredient_id) + ", " + str(self.product_id) + ", " + str(self.rank)
+        return str(self.ingredient_id) + ", " + str(self.rank) + ", " + str(self.product_tesco_id) 
+
+
+class User_product_slack(models.Model):
+
+    user = models.ForeignKey(User, default=-1, editable = False)
+    ingredient = models.ForeignKey(Ingredient, default=-1, editable=False)
+    product = models.ForeignKey(Product, default = -1, editable = False)
+    slack = models.DecimalField(max_digits = 10, decimal_places = 4, editable = True)
+    purchase_time = models.DateField(default= 0, editable = True)
+
 

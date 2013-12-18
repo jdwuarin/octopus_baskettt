@@ -35,11 +35,9 @@ class Food_com_spider(BaseSpider):
     def after_login(self, response):
 
         if "FAILURE" in response.body:
-            print "Login failed"
             self.log("Login failed", level=log.ERROR)
             return
         else: 
-            print "login successfull"
             return Request(Food_com_spider.real_start_url, callback = self.parse_listing_page)
 
 

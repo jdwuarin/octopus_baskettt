@@ -52,7 +52,10 @@ class Tesco_basket_spider(CrawlSpider):
     	quantity = "\"" + self.product_details[response.meta['link']] + "\""
     	productId = str.replace(refererUrl, "http://www.tesco.com/groceries/Product/Details/?id=", "")
 
-    	payload = '<request basketId=' + basketId + ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="13864398230000" referrerUrl=' + refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=' + quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>'
+    	payload = '<request basketId=' + basketId + (
+         ' view="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" timestamp="13864398230000" referrerUrl=') + (
+          refererUrl + '><basketUpdateItems><basketUpdateItem productId=' + productId + ' qty=') + (
+           quantity + ' weight="0" currentBaseProductId="asderftg" isAlternative="false" parentBaseProductId="" basketAction=""/></basketUpdateItems></request>')
 
         request = Request(
             url="http://www.tesco.com/groceries/ajax/UpdateActiveBasketItems.aspx",

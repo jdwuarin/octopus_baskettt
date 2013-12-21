@@ -69,6 +69,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.searchProducts = function(){
+			console.log("test");
 			Product.search($scope.queryTerm, function(res){
 				$scope.search_result = res;
 			});

@@ -39,7 +39,7 @@ a:hover{
 
 .navbar{
 	margin-bottom: 0;
-	background-color: #F7F7F7;
+	background-color: @light-gray;
 	border: 0;
 	border-radius: 0px;
 	color:black;
@@ -63,7 +63,7 @@ a:hover{
 	margin: 10px;
 	background-color:white;
 	padding: 20px;
-	border: 1px solid #d3d3d3;
+	border: @gray-border;
 	border-radius: 7px;
 	font-size: 50px;
 	text-align: center;
@@ -73,7 +73,7 @@ a:hover{
 	background-color: @orange;
 	//background: url("/static/img/cover3.png");
 	background-position: center;
-	border-bottom: 1px solid #d3d3d3;
+	border-bottom: @gray-border;
 	h3{
 		font-family: Futura;
 		color:gray;
@@ -111,8 +111,8 @@ a:hover{
 	.title{
 		font-size: 24px;
 		text-align: center;
-		background-color: #f7f7f7;
-		border-bottom: 1px solid #d3d3d3;
+		background-color: @light-gray;
+		border-bottom: @gray-border;
 		padding: 30px 0px;
 		font-family: 'Montserrat';
 	}
@@ -126,8 +126,8 @@ a:hover{
 
 .cta{
 	padding: 50px 0px;
-	background-color: #F7F7F7;
-	border-top: 1px solid #d3d3d3;
+	background-color: @light-gray;
+	border-top: @gray-border;
 }
 
 .food-type{
@@ -155,7 +155,7 @@ a:hover{
 	margin: 10px;
 	background-color:white;
 	padding: 20px;
-	border: 1px solid #d3d3d3;
+	border: @gray-border;
 	border-radius: 7px;
 	width:200px;
 	height:250px;
@@ -167,7 +167,7 @@ a:hover{
 }
 
 .search-box{
-	border: 1px solid #d3d3d3;
+	border: @gray-border;
 	padding-top:15px;
 	background-color: #EEEEEE;
 	input{
@@ -185,17 +185,16 @@ a:hover{
 //  Product page
 //------------------------------------
 .product-box{
-	margin: 10px;
-	background-color:white;
-	padding: 20px;
-	border: 1px solid #d3d3d3;
-	border-radius: 7px;
+	border-top: @gray-border;
+	
+	img{
+		height:150px;
+		width: auto;
+	}
+
 	li{
 		list-style-type: none;
 		display:inline-block;
-		&:nth-child(4){
-			float: right;
-		}
 	}
 }
 
@@ -323,13 +322,37 @@ footer{
 	border: 1px red solid;
 }
 
+.product-list-container{
+	.col-md-12;
+	padding: 0px !important;
+	border: @gray-border;
+	border-top: 0!important;
+
+}
+
 .product-list-title{
+	background-color: @light-gray;
+	border: 1px solid #d7d7d7;
+
+	margin-top: 30px;
+	height:60px;
+	padding: 0px 20px;
+	
+	div, button{
+		display: inline-block;
+	}
+
+	div{
+		margin-top: 20px;
+	}
+
 	.btn-gray{
 		color:black!important;
 	}
+
 	button{
 		float: right;
-		margin-top: 20px;
+		margin-top: 13px;
 	}
 }
 
@@ -356,4 +379,13 @@ a.profile-link{
 .search_item{
 	list-style-type: none;
 	border: 1px solid gray;
+}
+
+.search-bar{
+	.form-inline;
+	padding: 20px 0px;
+	text-align: center;
+	input{
+		width: 90%;
+	}
 }

@@ -112,7 +112,7 @@ class Basket_recommendation_engine(object):
 			if len(potential_product_list) == 0:
 				continue #deal with items not found in db
 
-			potential_product_index_to_get = int(floor(min(len(potential_product_list), 7) * random.random()))
+			potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
 			selected_product = Product.objects.get(
 					id = potential_product_list[potential_product_index_to_get].product_tesco_id)
 

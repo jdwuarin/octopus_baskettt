@@ -23,7 +23,8 @@ class Tesco_postgres_pipeline(object):
                     external_id=item2.external_id)
                 #only update prices and offer flag if item already exists
                 pre_existing_item.price = item2.price
-                pre_existing_item.price_per_unit = item2.price_per_unit
+                pre_existing_item.quantity = item2.quantity
+                pre_existing_item.unit = item2.unit
                 pre_existing_item.offer_flag = item2.offer_flag
                 pre_existing_item.save()
 

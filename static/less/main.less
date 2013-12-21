@@ -185,16 +185,22 @@ a:hover{
 //  Product page
 //------------------------------------
 .product-box{
-	border-top: @gray-border;
-	
+	text-align: center;
+	margin: 40px 0px;
+
+
 	img{
-		height:150px;
-		width: auto;
+		height:auto;
+		width: 150px;
 	}
 
 	li{
 		list-style-type: none;
 		display:inline-block;
+	}
+
+	.product-title{
+		height: 30px;
 	}
 }
 
@@ -359,12 +365,17 @@ footer{
 .sign-up-inline{
 	padding:20px;
 	text-align:center;
-	background: #525252;
+	background: @dark-gray;
 	margin-bottom:20px;
 
 	.instruction{
 		color:rgb(207,207,207);
 		padding-right: 10px;
+	}
+	.btn-gray{
+		float: right;
+		padding: 1px 5px!important;
+		margin-top: 4px;
 	}
 }
 
@@ -376,16 +387,32 @@ a.profile-link{
 	color:black!important;
 }
 
-.search_item{
+.search-item{
 	list-style-type: none;
-	border: 1px solid gray;
+	border-bottom: @gray-border;
+	background: @light-gray;
+	img{
+		margin: 20px;
+		border: 3px solid gray;
+	}
+	button{
+		margin: 50px 20px;
+		float: right;
+	}
 }
 
 .search-bar{
 	.form-inline;
 	padding: 20px 0px;
 	text-align: center;
+	border-bottom: @gray-border;
 	input{
 		width: 90%;
+	}
+}
+
+.alert-container{
+	.alert:first-child{
+		margin-top: 30px;
 	}
 }

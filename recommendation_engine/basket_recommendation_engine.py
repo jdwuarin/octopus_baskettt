@@ -127,7 +127,7 @@ class Basket_recommendation_engine(object):
 
 			product_cost = quantity_to_buy * float(selected_product.price.replace("GBP", ""))
 			if people * product_cost_limit < product_cost:
-				continue #don't add items that are deemed to expensive
+				continue #don't add items that are deemed too expensive
 
 			#check that condiment_ratio is not passed
 			if ingredient.is_condiment:

@@ -17,7 +17,7 @@ def spider_view(request):
 
     Spider_manager_controller.create_if_none()
 
-    info = Basket_onboarding_info(people = 6, budget = 50, tags = ["Japanese", "European"], days = "")
+    info = Basket_onboarding_info(people = 2, budget = 50, tags = ["Chinese", "Japanese"], days = "")
 
     basket = Basket_recommendation_engine.create_onboarding_basket(info)
 
@@ -29,8 +29,7 @@ def spider_view(request):
         product , my_list= basket.popitem()
 
         product_details["http://www.tesco.com" + str(product.link)] = str(int(my_list[0]))
-    #     print str(product) + ",quantity:," + str(
-    #         int(my_list[0])) + ","  + str(my_list[1])
+        print str(product) + ",quantity:,"  + str(my_list[1]) + ", " + str(int(my_list[0]))
 
     
 

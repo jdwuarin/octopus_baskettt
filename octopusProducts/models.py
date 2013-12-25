@@ -53,6 +53,7 @@ class Tag_recipe(models.Model):
 class Ingredient(models.Model): 
 
     name = models.CharField(max_length=150, default='', editable=False)
+    is_condiment = models.NullBooleanField(editable = False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
         return str(self.name)

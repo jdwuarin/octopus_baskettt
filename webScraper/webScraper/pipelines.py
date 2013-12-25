@@ -5,6 +5,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
 from octopusProducts.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
+from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re
 
@@ -23,7 +24,8 @@ class Tesco_postgres_pipeline(object):
                     external_id=item2.external_id)
                 #only update prices and offer flag if item already exists
                 pre_existing_item.price = item2.price
-                pre_existing_item.price_per_unit = item2.price_per_unit
+                pre_existing_item.quantity = item2.quantity
+                pre_existing_item.unit = item2.unit
                 pre_existing_item.offer_flag = item2.offer_flag
                 pre_existing_item.save()
 
@@ -100,7 +102,11 @@ class Food_com_postgres_pipeline(object):
                 #it again
             except ObjectDoesNotExist:
                 ingredient.name = name
-                ingredient.save()
+                ingredient = determine_if_condiment(ingredient)
+                if not ingredient  is None:
+                    ingredient.save()
+                else:
+                    continue #skip ingredient
 
             recipe_ingredient = Recipe_ingredient(recipe = recipe,
                 ingredient = ingredient, quantity = quantity, unit = unit)

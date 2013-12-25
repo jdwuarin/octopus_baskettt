@@ -147,10 +147,12 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	.factory('Basket',  ['$http', function($http) {
+		var productList = {};
 
 		return {
 			// Get recommendation from our backend
 			post: function(list, callback) {
+				productList = $http.get('static/app/js/product.json');
 				return $http.get('static/app/js/product.json').success(callback);
 				// return $http({
 				// 	url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
@@ -159,6 +161,12 @@ angular.module('App.services', ['LocalStorageModule'])
 				// 	data: list
 				// })
 			},
+			add: function(product) {
+				productList.push(product);
+			},
+			getAll: function() {
+				return productList;
+			}
 		};
 
 	}])
@@ -178,8 +186,6 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 
 	}])
-
-
 
 	.factory('Alert',  [function() {
 		

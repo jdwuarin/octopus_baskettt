@@ -28,8 +28,8 @@ angular.module('App.services', ['LocalStorageModule'])
 			put: function(product, callback) {
 				return $http.put(getUrl(product.id), product).success(callback);
 			},
-			search: function(term, callback) {
-				return $http.get(getUrl("search/") + "&term=" + term).success(callback);
+			search: function(term, callback, errorcb) {
+				return $http.get(getUrl("search/") + "&term=" + term).success(callback).error(errorcb);
 			}
 		};
 	}])

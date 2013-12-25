@@ -53,7 +53,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		var preferenceList = Preference.getAll();
 		$scope.user = {};
 		$scope.tescoCredential = {};
-
+		$scope.search_result = {};
 
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();
@@ -69,9 +69,17 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.searchProducts = function(){
-			Product.search($scope.queryTerm, function(res){
-				$scope.search_result = res;
-			});
+			if($scope.queryTerm) {
+				Product.search($scope.queryTerm, 
+					function(res){ // success
+						$scope.search_result = res;
+					},function(res){ // error
+						Alert.add("Could find this product","danger");
+						$scope.search_result = {};
+					});
+			} else {
+				$scope.search_result = {};
+			}
 		};
 
 		$scope.transferBasket = function(){

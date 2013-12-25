@@ -100,7 +100,7 @@ angular.module('App.directives', [])
 					scope.$apply();
 				});
 			},
-			template: '<i class="glyphicon glyphicon-remove"></i>',
+			template: '<button class="btn-gray btn-remove"><i class="glyphicon glyphicon-remove"></i></button>',
 			transclude: true
 		};
 		

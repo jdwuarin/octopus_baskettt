@@ -4,7 +4,7 @@
 
 <html ng-app="App">
 <head>
-	<title>Octopus</title>
+	<title>baskettt - The easiest way to do your groceries</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
@@ -34,7 +34,7 @@
         <navbar></navbar>
 
         {%verbatim%}
-        <div class="container" ng-controller="AlertController">
+        <div class="container alert-container" ng-controller="AlertController">
           <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
         </div>
         {%endverbatim%}

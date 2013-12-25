@@ -19,7 +19,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.page = page_id;
 
-
 		$scope.saveData = function() {
 			if(page_id === 2) {
 				Preference.setPeople($scope.preference.people);
@@ -50,11 +49,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
 
+		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
+		// When you close the signup form the Tesco form comes
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();
 			$scope.toggleTescoForm(true);
@@ -64,10 +65,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.products = res;
 		});
 
-		$scope.resetSelection = function(){
-			$scope.$broadcast('resetSelection');
-		};
+		// Functionality that isn't used yet
+		// $scope.resetSelection = function(){
+		// 	$scope.$broadcast('resetSelection');
+		// };
 
+		// GET search in django
 		$scope.searchProducts = function(){
 			if($scope.queryTerm) {
 				Product.search($scope.queryTerm, 
@@ -82,6 +85,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
@@ -106,7 +110,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.sendToTesco = function(){
 			var tescoCredential = $scope.tescoCredential;
-			var list = [1,2,3];
+			var list = $scope.products;
 
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
@@ -122,6 +126,25 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.toggleTescoForm(false);
 		};
 
+		$scope.addProduct = function(new_product) {
+			var $products = $scope.products,
+			isPresent = false;
+
+			for (var i = $products.length-1; i >= 0; i--) {
+				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
+					isPresent = true;
+					$products[i].quantity += 1;
+					break;
+				}
+			}
+
+			if(!isPresent){
+				new_product.quantity = 1;
+				$scope.products.push(new_product);
+			} else {
+				$scope.products = $products;
+			}
+		};
 
 	}])
 

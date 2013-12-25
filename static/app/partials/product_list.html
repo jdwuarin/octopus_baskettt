@@ -24,8 +24,8 @@
 
 			<li ng-repeat="product in search_result" class="search-item">
 				<img ng-src="{{product.img}}" alt="">
-				{{ product.name }} {{ product.price }}
-				<button class="btn btn-orange">Add</button>
+				{{ product.name }} {{ product.price }} 
+				<button class="btn btn-orange" ng-click="addProduct(product)">Add</button>
 			</li>
 			<div class="row">
 			<div ng-repeat="product in products" class="col-md-4" >
@@ -35,7 +35,7 @@
 					<li>
 						<img ng-src="{{product.img}}" alt="">
 					</li>
-					<li class="product-title">{{product.name}} {{product.price | currency:"&#163;"}}</li>
+					<li class="product-title">{{product.name}} {{product.price | currency:"&#163;"}} {{ product.quantity }}</li>
 				</div>
 			</div>
 			</div>

@@ -5,6 +5,7 @@ from django.conf import settings
 from basket_porting.basket_to_port import Basket_to_port
 from basket_porting.spider_manager import Spider_manager_controller
 from basket_porting.thread_manager import Thread_manager
+from django.utils import simplejson
 
 from recommendation_engine.basket_onboarding_info import Basket_onboarding_info
 from recommendation_engine.basket_recommendation_engine import Basket_recommendation_engine
@@ -17,25 +18,32 @@ def spider_view(request):
 
     Spider_manager_controller.create_if_none()
 
-    info = Basket_onboarding_info(people = 2, budget = 50, tags = ["Chinese", "Japanese"], days = "")
+    #info = Basket_onboarding_info(people = 2, budget = 50, tags = ["Chinese", "Japanese"], days = "")
 
-    basket = Basket_recommendation_engine.create_onboarding_basket(info)
+    #basket = Basket_recommendation_engine.create_onboarding_basket(info)
 
     #basket contains a dictionary of this type: {product : [quantity, ingredient]}
-    product_details = {}
 
-    while len(basket) > 0:
+    data = simplejson.loads(request.body)
 
-        product , my_list= basket.popitem()
+    product_details = data['products']
+    email = data['email']
+    password = data['password']
 
-        product_details["http://www.tesco.com" + str(product.link)] = str(int(my_list[0]))
-        print str(product) + ",quantity:,"  + str(my_list[1]) + ", " + str(int(my_list[0]))
+    # for testing purposes
+    email = "arnaudbenard13+test@gmail.com"
+    password = "test123"
 
-    
 
+    # while len(basket) > 0:
+
+    #     product , my_list= basket.popitem()
+
+    #     product_details["http://www.tesco.com" + str(product.link)] = str(int(my_list[0]))
+    #     print str(product) + ",quantity:,"  + str(my_list[1]) + ", " + str(int(my_list[0]))
 
     thread_manager = Thread_manager()
-    this_basket = Basket_to_port(request, "arnaudbenard13+test@gmail.com", "test123",
+    this_basket = Basket_to_port(request, email, password,
         product_details, thread_manager)
 
     Spider_manager_controller.add_basket_to_port(this_basket)

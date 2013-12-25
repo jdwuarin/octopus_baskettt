@@ -4,11 +4,13 @@ import random
 from math import floor, ceil
 
 #per person limit cost for single product
-product_cost_limit = 5
+product_cost_limit = 6
 
 class Basket_recommendation_engine(object):
 
 	num_days_sigma_acceptance_rate = 0.3
+	condiment_max_ratio = 0.3
+	num_condiment_ingredients = 0.0
 
 	@classmethod
 	def create_onboarding_basket(cls, basket_onboarding_info):
@@ -127,6 +129,14 @@ class Basket_recommendation_engine(object):
 			if people * product_cost_limit < product_cost:
 				continue #don't add items that are deemed to expensive
 
+			#check that condiment_ratio is not passed
+			if ingredient.is_condiment:
+				if len(product_list) > 0 and (
+					cls.num_condiment_ingredients/len(product_list) > cls.condiment_max_ratio):
+					continue #don't add extra condiment to basket
+				else:
+					cls.num_condiment_ingredients += 1.0
+
 			#check that cost is not passed
 			recipe_allowance = recipe_allowance - quantity_to_buy * float(selected_product.price.replace("GBP", ""))
 
@@ -141,10 +151,8 @@ class Basket_recommendation_engine(object):
 				product_list[selected_product] = [bought_quantity + quantity_to_buy, ingredient]
 
 			except KeyError:
-			# product_list[selected_product] = quantity_to_buy
+			# product was not yet in basket
 				product_list[selected_product] = [quantity_to_buy, ingredient]
-
-				#TODO get rid of water ingredient and do some other hard_coding stuff
 
 		return should_break, recipe_allowance_start - recipe_allowance
 

@@ -95,7 +95,7 @@ class Food_com_spider(BaseSpider):
                         continue
                     name =  re.sub("[^a-zA-Z-]", "", name)
                     name = name.replace("-", " ")
-                    if name[-1] is " ":
+                    if name[-1] == " ":
                         name = name[:-1] #just remove trailing space
                     ingredient_item['name'] = name
 

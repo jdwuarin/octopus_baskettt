@@ -5,6 +5,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
 from octopusProducts.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
+from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re
 
@@ -101,7 +102,11 @@ class Food_com_postgres_pipeline(object):
                 #it again
             except ObjectDoesNotExist:
                 ingredient.name = name
-                ingredient.save()
+                ingredient = determine_if_condiment(ingredient)
+                if not ingredient  is None:
+                    ingredient.save()
+                else:
+                    continue #skip ingredient
 
             recipe_ingredient = Recipe_ingredient(recipe = recipe,
                 ingredient = ingredient, quantity = quantity, unit = unit)

@@ -169,13 +169,16 @@ class UserResource(ModelResource):
     	    	'success': False
     	    })
 
+	# Recommendation engine
    	def basket(self, request, **kwargs):
    		self.method_check(request, allowed=['post'])
    		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
-   		print data
+
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
    			tags = data['cuisine'], days = data['days'])
 
    		basket = Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
+#		response = self.serialize(basket, basket, format='application/json')
 
-   		return self.create_response(request, json.dumps(basket))
+		return HttpResponse(basket, content_type="application/json")
+

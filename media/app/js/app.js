@@ -92,7 +92,7 @@ angular.module('App', [
 
 			var onboarding_id = parseInt(currRoute.params.id, 10);
 
-			if(onboarding_id === 0 || onboarding_id > 3) {
+			if(onboarding_id === 0 || onboarding_id > 2) {
 				User.redirect("/");
 			}
 

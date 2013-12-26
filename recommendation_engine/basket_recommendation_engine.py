@@ -56,7 +56,7 @@ class Basket_recommendation_engine(object):
 
 				recipe_ingredients_list = Recipe_ingredient.objects.filter(recipe = recipe)
 				should_break, added_cost = cls.merge_lists(recipe_ingredients_list, product_list_slack, 
-					product_list, people, budget - basket_cost)
+					product_list, people, float(budget) - basket_cost)
 
 				basket_cost += added_cost
 				if should_break:

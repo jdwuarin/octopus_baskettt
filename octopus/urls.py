@@ -13,13 +13,10 @@ v1_api.register(UserResource())
 
 urlpatterns = patterns('',
 	url(r'^$', 'octopusProducts.views.index'),
-	#url(r'^recommendation/', 'octopusProducts.views.recommendation'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^spider/', 'octopusProducts.views.spider_view'),
-    url(r'^recommendation/', 'octopusProducts.views.recommendation_view'),
-
 )
 
 urlpatterns += staticfiles_urlpatterns()

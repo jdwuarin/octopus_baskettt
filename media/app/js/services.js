@@ -118,11 +118,10 @@ angular.module('App.services', ['LocalStorageModule'])
 					preferenceList.cuisine.push(scope.cuisine.name);
 				}
 			},
-			setPeople: function(count) {
-				preferenceList.people = count;
-			},
-			setBudget: function(amount) {
-				preferenceList.budget = amount;
+			setParameters: function(preferences) {
+				preferenceList.people = preferences.people;
+				preferenceList.days   = preferences.days;
+				preferenceList.budget = preferences.budget;
 			},
 			getAll: function() {
 				return preferenceList;
@@ -151,15 +150,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Get recommendation from our backend
-			post: function(list, callback) {
-				productList = $http.get('static/app/js/product.json');
-				return $http.get('static/app/js/product.json').success(callback);
-				// return $http({
-				// 	url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
-				// 	method: "POST",
-				// 	headers: {'Content-Type': 'application/json'},
-				// 	data: list
-				// })
+			post: function(preferences, callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: preferences
+				});
 			},
 			add: function(product) {
 				productList.push(product);

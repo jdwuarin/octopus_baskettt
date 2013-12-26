@@ -20,11 +20,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.page = page_id;
 
 		$scope.saveData = function() {
-			if(page_id === 2) {
-				Preference.setPeople($scope.preference.people);
-			} else if (page_id === 3) {
-				Preference.setBudget($scope.preference.budget);
-			}
+			Preference.setParameters($scope.preference);
 		};
 
 		$scope.isActive = function(id) {
@@ -32,11 +28,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.getNextPage = function() {
-			// The onboarding process only has 3 steps
-			if(page_id < 3 && page_id > 0) {
+			// The onboarding process only has 2 steps
+			if(page_id < 2 && page_id > 0) {
 				return "#/onboarding/" + (page_id+1).toString();
 			// When you're done with the onboarding you're transfered to the product list
-			} else if(page_id === 3) {
+			} else if(page_id === 2) {
 				return "#/basket";
 			// Edge case
 			} else {
@@ -74,7 +70,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		// GET search in django
 		$scope.searchProducts = function(){
 			if($scope.queryTerm) {
-				Product.search($scope.queryTerm, 
+				Product.search($scope.queryTerm,
 					function(res){ // success
 						$scope.search_result = res;
 					},function(res){ // error

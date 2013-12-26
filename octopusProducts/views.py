@@ -39,26 +39,3 @@ def spider_view(request):
 
     response_data = this_basket.thread_manager.get_response() 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
-# View that gets an user preferences and sends back a list of recommended products 
-def recommendation_view(request):
-    
-    # data = simplejson.loads(request.body)
-
-    # req_people = data['people']
-    # req_budget = data['budget']
-    # req_tags   = data['tags']
-    # req_days   = data['days']
-
-    req_people = 2
-    req_budget = 200
-    req_tags   = ["Chinese", "Japanese"]
-    req_days   = 10
-
-    info = Basket_onboarding_info(people = req_people, budget = req_budget, tags = req_tags, days = req_days)
-
-    #basket contains a dictionary of this type: {product : [quantity, ingredient]}
-    basket = Basket_recommendation_engine.create_onboarding_basket(info)
-
-    return HttpResponse(json.dumps(basket), content_type="application/json")

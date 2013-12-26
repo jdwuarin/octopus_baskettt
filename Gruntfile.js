@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 	// Default task(s).
-	grunt.registerTask('less', ['less']);
+	grunt.registerTask('style', ['less']);
 	grunt.registerTask('js', ['concat','uglify']);
 	grunt.registerTask('img', ['imagemin']);
 	grunt.registerTask('test-watch', ['karma:watch']);
@@ -22,29 +22,18 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'), //To read the values of the package.json file
-		
+
 		less: {
 			compile: {
 				options: {
-					paths:["static/less"], //Directory to check for @imports
+					paths:["media/less"], //Directory to check for @imports
 					yuicompress: true,
 					strictImports: true //Force evaluation of imports.
 				},
 				files: {
-					"static_prod/css/style.css": "static/less/style.less",
-				},
+					"static/css/style.css": "media/less/style.less",
+				}
 
-			},
-			
-			bootstrap: {
-				options: {
-					paths:["static/bootstrap/less"],
-					yuicompress: true,
-					strictImports: true //Force evaluation of imports.
-				},
-				files: {
-					"static_prod/css/bootstrap.css": "static/bootstrap/less/bootstrap.less"
-				},
 			}
 		},
 
@@ -53,8 +42,8 @@ module.exports = function(grunt) {
 				separator: ';',
 			},
 			dist: {
-				src: ['static/app/js/*.js'],
-				dest: 'static_prod/js/built.js',
+				src: ['media/app/js/*.js'],
+				dest: 'static/js/built.js',
 			},
 		},
 
@@ -64,7 +53,7 @@ module.exports = function(grunt) {
 					flatten: true
 				},
 				files: {
-					'static_prod/js/built.min.js': ['static_prod/js/built.js']
+					'static/js/built.min.js': ['static/js/built.js']
 				}
 			}
 		},
@@ -78,9 +67,9 @@ module.exports = function(grunt) {
 				// Set to true to enable the following options…
 				expand: true,
 				// cwd is 'current working directory'
-				cwd: 'static/img/',
+				cwd: 'media/img/',
 				src: ['*.png'],
-				dest: 'static_prod/img/',
+				dest: 'static/img/',
 				ext: '.png'
 			}]
           }

@@ -52,6 +52,7 @@ class Migration(SchemaMigration):
         db.create_table(u'octopusProducts_ingredient', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(default='', max_length=150)),
+            ('is_condiment', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'octopusProducts', ['Ingredient'])
 
@@ -152,6 +153,7 @@ class Migration(SchemaMigration):
         u'octopusProducts.ingredient': {
             'Meta': {'object_name': 'Ingredient'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_condiment': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '150'})
         },
         u'octopusProducts.ingredient_product': {

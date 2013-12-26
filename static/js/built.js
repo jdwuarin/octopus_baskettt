@@ -4,6 +4,7 @@
 angular.module('App', [
 	'ngCookies',
 	'ngRoute',
+	'ngAnimate',
 	'App.filters',
 	'App.services',
 	'App.directives',
@@ -91,7 +92,7 @@ angular.module('App', [
 
 			var onboarding_id = parseInt(currRoute.params.id, 10);
 
-			if(onboarding_id === 0 || onboarding_id > 3) {
+			if(onboarding_id === 0 || onboarding_id > 2) {
 				User.redirect("/");
 			}
 
@@ -118,13 +119,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.page = page_id;
 
-
 		$scope.saveData = function() {
-			if(page_id === 2) {
-				Preference.setPeople($scope.preference.people);
-			} else if (page_id === 3) {
-				Preference.setBudget($scope.preference.budget);
-			}
+			Preference.setParameters($scope.preference);
 		};
 
 		$scope.isActive = function(id) {
@@ -132,11 +128,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.getNextPage = function() {
-			// The onboarding process only has 3 steps
-			if(page_id < 3 && page_id > 0) {
+			// The onboarding process only has 2 steps
+			if(page_id < 2 && page_id > 0) {
 				return "#/onboarding/" + (page_id+1).toString();
 			// When you're done with the onboarding you're transfered to the product list
-			} else if(page_id === 3) {
+			} else if(page_id === 2) {
 				return "#/basket";
 			// Edge case
 			} else {
@@ -147,32 +143,51 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User',function($rootScope, $scope, Preference, Basket, Product, User) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
 
+		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
 		$scope.user = {};
+		$scope.tescoCredential = {};
+		$scope.search_result = {};
 
+		// When you close the signup form the Tesco form comes
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();
+			$scope.toggleTescoForm(true);
+		});
+
+		// When you remove a product from the directive you need to update the scope
+		$rootScope.$on('removeProduct', function(event, $productIndex){
+			$scope.products.splice($productIndex,1);
+			$scope.$apply();
 		});
 		
 		Basket.post(preferenceList, function(res){
 			$scope.products = res;
 		});
 
-		$scope.resetSelection = function(){
-			$scope.$broadcast('resetSelection');
-		};
-
+		// GET search in django
 		$scope.searchProducts = function(){
-			Product.search($scope.queryTerm, function(res){
-				$scope.search_result = res;
-			});
+			if($scope.queryTerm) {
+				Product.search($scope.queryTerm,
+					function(res){ // success
+						$scope.search_result = res;
+					},function(res){ // error
+						Alert.add("Could find this product","danger");
+						$scope.search_result = {};
+					});
+			} else {
+				$scope.search_result = {};
+			}
 		};
 
+		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
+			} else {
+				$scope.toggleTescoForm(true);
 			}
 		};
 
@@ -187,6 +202,44 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				User.signup(user.email, user.password, function(data){
 					$rootScope.$emit('UserSignedUp');
 				});
+			}
+		};
+
+		$scope.sendToTesco = function(){
+			var tescoCredential = $scope.tescoCredential;
+			var list = $scope.products;
+
+			if ($scope.tescoForm.$valid) {
+				$scope.toggleTescoForm(false);
+				$scope.viewLoading = true;
+				Tesco.post(tescoCredential.email, tescoCredential.password, list, function(res) {
+					$scope.viewLoading = false;
+					Alert.add("Your products have been transfered to Tesco","success");
+				});
+			}
+		};
+
+		$scope.closeTescoForm = function() {
+			$scope.toggleTescoForm(false);
+		};
+
+		$scope.addProduct = function(new_product) {
+			var $products = $scope.products,
+			isPresent = false;
+
+			for (var i = $products.length-1; i >= 0; i--) {
+				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
+					isPresent = true;
+					$products[i].quantity += 1;
+					break;
+				}
+			}
+
+			if(!isPresent){
+				new_product.quantity = 1;
+				$scope.products.push(new_product);
+			} else {
+				$scope.products = $products;
 			}
 		};
 
@@ -285,6 +338,19 @@ angular.module('App.directives', [])
 		};
 	}])
 
+	.directive('tesco',[function() {
+		return {
+			link: function (scope, element, attrs) {
+				scope.tescoIsVisible = false;
+				scope.toggleTescoForm = function(value){
+					scope.tescoIsVisible = value;
+				};
+			},
+			restrict: 'E',
+			templateUrl: 'static/app/partials/_tesco.html'
+		};
+	}])
+
 	.directive('navbar',['$rootScope', 'User', function($rootScope, User) {
 
 		return {
@@ -318,20 +384,15 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('remove', [function() {
+	.directive('remove', ['$rootScope',function($rootScope) {
 
 		return {
 			link: function (scope, element, attrs) {
-				scope.$on('resetSelection', function() {
-					scope.selectedStatus = false;
-				});
-
 				element.bind("click", function() {
-					scope.selectedStatus = !scope.selectedStatus;
-					scope.$apply();
+					$rootScope.$emit('removeProduct', scope.$index);
 				});
 			},
-			template: '<i class="glyphicon glyphicon-remove"></i>',
+			template: '<button class="btn-gray btn-remove"><i class="glyphicon glyphicon-remove"></i></button>',
 			transclude: true
 		};
 		
@@ -391,8 +452,8 @@ angular.module('App.services', ['LocalStorageModule'])
 			put: function(product, callback) {
 				return $http.put(getUrl(product.id), product).success(callback);
 			},
-			search: function(term, callback) {
-				return $http.get(getUrl("search/") + "&term=" + term).success(callback);
+			search: function(term, callback, errorcb) {
+				return $http.get(getUrl("search/") + "&term=" + term).success(callback).error(errorcb);
 			}
 		};
 	}])
@@ -481,11 +542,10 @@ angular.module('App.services', ['LocalStorageModule'])
 					preferenceList.cuisine.push(scope.cuisine.name);
 				}
 			},
-			setPeople: function(count) {
-				preferenceList.people = count;
-			},
-			setBudget: function(amount) {
-				preferenceList.budget = amount;
+			setParameters: function(preferences) {
+				preferenceList.people = preferences.people;
+				preferenceList.days   = preferences.days;
+				preferenceList.budget = preferences.budget;
 			},
 			getAll: function() {
 				return preferenceList;
@@ -510,16 +570,39 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	.factory('Basket',  ['$http', function($http) {
+		var productList = {};
 
 		return {
-			post: function(list, callback) {
-				return $http.get('static/app/js/product.json').success(callback);
-				// return $http({
-				// 	url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
-				// 	method: "POST",
-				// 	headers: {'Content-Type': 'application/json'},
-				// 	data: list
-				// })
+			// Get recommendation from our backend
+			post: function(preferences, callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: preferences
+				});
+			},
+			add: function(product) {
+				productList.push(product);
+			},
+			getAll: function() {
+				return productList;
+			}
+		};
+
+	}])
+
+	.factory('Tesco',  ['$http', function($http) {
+
+		return {
+			// Populate tesco basket
+			post: function(email, password, list, callback) {
+				return $http({
+					url: 'http://127.0.0.1:8000/spider/?format=json',
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					data: {email:email, password:password, products:list}
+				}).success(callback);
 			}
 		};
 

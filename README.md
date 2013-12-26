@@ -19,7 +19,7 @@ createdb db1
 psql 
 GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user; 
 python manage.py schemamigration 'octopusProducts' --initial 
-python manage.py syncdb 
+python manage.py syncdb -all
 
     #when creating the django superuser upon frist calling "python manage.py syncdb"
 create the superuser: yes 

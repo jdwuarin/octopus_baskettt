@@ -32,7 +32,6 @@ angular.module('App.directives', [])
 			link: function (scope, element, attrs) {
 				scope.isVisible = false;
 				scope.toggleForm = function(value){
-					console.log("313");
 					scope.isVisible = value;
 				};
 			},
@@ -87,17 +86,12 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('remove', [function() {
+	.directive('remove', ['$rootScope',function($rootScope) {
 
 		return {
 			link: function (scope, element, attrs) {
-				scope.$on('resetSelection', function() {
-					scope.selectedStatus = false;
-				});
-
 				element.bind("click", function() {
-					scope.selectedStatus = !scope.selectedStatus;
-					scope.$apply();
+					$rootScope.$emit('removeProduct', scope.$index);
 				});
 			},
 			template: '<button class="btn-gray btn-remove"><i class="glyphicon glyphicon-remove"></i></button>',

@@ -60,15 +60,16 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.closeForm();
 			$scope.toggleTescoForm(true);
 		});
+
+		// When you remove a product from the directive you need to update the scope
+		$rootScope.$on('removeProduct', function(event, $productIndex){
+			$scope.products.splice($productIndex,1);
+			$scope.$apply();
+		});
 		
 		Basket.post(preferenceList, function(res){
 			$scope.products = res;
 		});
-
-		// Functionality that isn't used yet
-		// $scope.resetSelection = function(){
-		// 	$scope.$broadcast('resetSelection');
-		// };
 
 		// GET search in django
 		$scope.searchProducts = function(){

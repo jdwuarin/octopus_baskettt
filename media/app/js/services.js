@@ -90,7 +90,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	// Service that contains the preferences in the onboarding
-	.service('Preference', [function() {
+	.service('Preference', ['localStorage', function(localStorage) {
 
 		var preferenceList = {};
 		preferenceList.cuisine= [];
@@ -102,10 +102,10 @@ angular.module('App.services', ['LocalStorageModule'])
 			setCuisine: function(scope) {
 
 				var isPresent = false;
-				
-				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
 
-						if (preferenceList.cuisine[i] == scope.cuisine.name) { //if it's in the list
+				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
+						//if it's already in the list
+						if (preferenceList.cuisine[i] == scope.cuisine.name) {
 							isPresent = true;
 
 							if(!scope.selectedStatus){
@@ -131,7 +131,7 @@ angular.module('App.services', ['LocalStorageModule'])
 
 
 	// Factory that uses that keeps the data during the onboarding
-	.factory('localStorage',  ['localStorageService', function(localStorageService) {
+	.factory('localStorage', ['localStorageService', function(localStorageService) {
 
 		return {
 			add: function(key, value) {
@@ -156,7 +156,7 @@ angular.module('App.services', ['LocalStorageModule'])
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: preferences
-				});
+				}).success(callback);
 			},
 			add: function(product) {
 				productList.push(product);
@@ -185,7 +185,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	.factory('Alert',  [function() {
-		
+
 		var alertList = [];
 
 		return {

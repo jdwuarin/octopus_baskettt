@@ -62,8 +62,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.products.splice($productIndex,1);
 			$scope.$apply();
 		});
-		
+
 		Basket.post(preferenceList, function(res){
+			console.log(res);
 			$scope.products = res;
 		});
 
@@ -178,7 +179,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
-					Alert.add("Successfully logged in.", "success")
+					Alert.add("Successfully logged in.", "success");
 					User.redirect("/");
 				});
 			}

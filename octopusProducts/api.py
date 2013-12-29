@@ -69,15 +69,15 @@ class UserResource(ModelResource):
 		url(r"^(?P<resource_name>%s)/login%s$" %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('login'), name="api_login"),
-		
+
 		url(r'^(?P<resource_name>%s)/logout%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('logout'), name='api_logout'),
-		
+
 		url(r'^(?P<resource_name>%s)/signup%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('signup'), name='api_signup'),
-		
+
 		url(r'^(?P<resource_name>%s)/current%s$' %
 			(self._meta.resource_name, trailing_slash()),
 			self.wrap_view('current'), name='api_current'),
@@ -88,7 +88,7 @@ class UserResource(ModelResource):
 		]
 
 	def login(self, request, **kwargs):
-		
+
 		self.method_check(request, allowed=['post'])
 		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
@@ -138,15 +138,15 @@ class UserResource(ModelResource):
 
 		try:
 			User.objects.create_user(email, '', password)
-    		
+
 		except IntegrityError:
 			print "User already exits"
 			return self.create_response(request, {
 				#user with same email adress already exists
 				'success': False
 			})
-		
-		# Login after registration			
+
+		# Login after registration
 		user = authenticate(username=email, password=password)
 		login(request, user)
 
@@ -178,7 +178,21 @@ class UserResource(ModelResource):
    			tags = data['cuisine'], days = data['days'])
 
    		basket = Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
-#		response = self.serialize(basket, basket, format='application/json')
 
-		return HttpResponse(basket, content_type="application/json")
+   		response = []
 
+   		# The structure of the recommendation engine response is a dictionnary
+   		# product_list[selected_product] = [quantity_to_buy, ingredient]
+   		for key, value in basket.iteritems():
+   			product_json = {}
+			product_json['id'] = key.id
+			product_json['name'] = key.name
+			product_json['price'] = key.price
+			product_json['img'] = str(key.external_image_link)
+			product_json['quantity'] = value[0]
+			product_json['ingredient'] = value[1].name
+			response.append(product_json)
+
+		data = json.dumps(response)
+
+		return HttpResponse(data, content_type="application/json")

@@ -97,7 +97,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			getCuisine: function() {
-				return preferenceList.cuisine;
+				var local_cuisine = localStorage.get('preferences').cuisine;
+				// If we haven't saved any preferences in local storage take the temporary one
+				if(local_cuisine) {
+					return local_cuisine;
+				} else {
+					return preferenceList.cuisine;
+				}
 			},
 			setCuisine: function(scope) {
 
@@ -122,9 +128,13 @@ angular.module('App.services', ['LocalStorageModule'])
 				preferenceList.people = preferences.people;
 				preferenceList.days   = preferences.days;
 				preferenceList.budget = preferences.budget;
+
+				var pref_str = JSON.stringify(preferenceList);
+				localStorage.add('preferences', pref_str)
+
 			},
 			getAll: function() {
-				return preferenceList;
+				return localStorage.get('preferences');
 			}
 		};
 	}])

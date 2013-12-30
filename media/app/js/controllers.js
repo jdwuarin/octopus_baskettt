@@ -19,6 +19,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.page = page_id;
 
+		// Persist data from local storage
+		$scope.preference = Preference.getAll();
+
 		$scope.saveData = function() {
 			Preference.setParameters($scope.preference);
 		};
@@ -47,6 +50,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
+
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};

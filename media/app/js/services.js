@@ -90,22 +90,28 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	// Service that contains the preferences in the onboarding
-	.service('Preference', [function() {
+	.service('Preference', ['localStorage', function(localStorage) {
 
 		var preferenceList = {};
 		preferenceList.cuisine= [];
 
 		return {
 			getCuisine: function() {
-				return preferenceList.cuisine;
+				var local_cuisine = localStorage.get('preferences').cuisine;
+				// If we haven't saved any preferences in local storage take the temporary one
+				if(local_cuisine) {
+					return local_cuisine;
+				} else {
+					return preferenceList.cuisine;
+				}
 			},
 			setCuisine: function(scope) {
 
 				var isPresent = false;
-				
-				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
 
-						if (preferenceList.cuisine[i] == scope.cuisine.name) { //if it's in the list
+				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
+						//if it's already in the list
+						if (preferenceList.cuisine[i] == scope.cuisine.name) {
 							isPresent = true;
 
 							if(!scope.selectedStatus){
@@ -122,16 +128,20 @@ angular.module('App.services', ['LocalStorageModule'])
 				preferenceList.people = preferences.people;
 				preferenceList.days   = preferences.days;
 				preferenceList.budget = preferences.budget;
+
+				var pref_str = JSON.stringify(preferenceList);
+				localStorage.add('preferences', pref_str)
+
 			},
 			getAll: function() {
-				return preferenceList;
+				return localStorage.get('preferences');
 			}
 		};
 	}])
 
 
 	// Factory that uses that keeps the data during the onboarding
-	.factory('localStorage',  ['localStorageService', function(localStorageService) {
+	.factory('localStorage', ['localStorageService', function(localStorageService) {
 
 		return {
 			add: function(key, value) {
@@ -156,7 +166,7 @@ angular.module('App.services', ['LocalStorageModule'])
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: preferences
-				});
+				}).success(callback);
 			},
 			add: function(product) {
 				productList.push(product);
@@ -185,7 +195,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	.factory('Alert',  [function() {
-		
+
 		var alertList = [];
 
 		return {

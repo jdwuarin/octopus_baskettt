@@ -14,7 +14,7 @@ class Basket_recommendation_engine(object):
 
 	@classmethod
 	def create_onboarding_basket(cls, basket_onboarding_info):
-		#TODO, remove tesco hardcode 
+		#TODO, remove tesco hardcode
 
 		tag_list = Tag.objects.filter(name__in = basket_onboarding_info.tags)
 
@@ -55,7 +55,7 @@ class Basket_recommendation_engine(object):
 						continue #if no more recipe of that kind, go to next kind
 
 				recipe_ingredients_list = Recipe_ingredient.objects.filter(recipe = recipe)
-				should_break, added_cost = cls.merge_lists(recipe_ingredients_list, product_list_slack, 
+				should_break, added_cost = cls.merge_lists(recipe_ingredients_list, product_list_slack,
 					product_list, people, int(budget) - basket_cost)
 
 				basket_cost += added_cost
@@ -71,7 +71,7 @@ class Basket_recommendation_engine(object):
 		return product_list
 
 	@classmethod
-	def merge_lists(cls, recipe_ingredient_list, product_list_slack, 
+	def merge_lists(cls, recipe_ingredient_list, product_list_slack,
 		product_list, people, recipe_allowance):
 
 		recipe_allowance_start = recipe_allowance
@@ -81,7 +81,7 @@ class Basket_recommendation_engine(object):
 			qu_ing_needed = None
 			#first try seeing if I still have some slack of the required
 			#ingredient in my basket
-			try: 
+			try:
 				selected_product, slack = product_list_slack[ingredient]
 
 				#same values in the two different units
@@ -107,7 +107,7 @@ class Basket_recommendation_engine(object):
 				pass
 
 			#ingredient not yet in the basket.
-			#find suitable product and add it to 
+			#find suitable product and add it to
 			#basket in a minimum of required quantity
 			potential_product_list = Ingredient_product.objects.filter(
 				ingredient_id = ingredient.id).order_by("rank")

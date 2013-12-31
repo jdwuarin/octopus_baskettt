@@ -19,6 +19,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.page = page_id;
 
+		// Persist data from local storage
+		$scope.preference = Preference.getAll();
+
 		$scope.saveData = function() {
 			Preference.setParameters($scope.preference);
 		};
@@ -47,6 +50,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
+
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
@@ -62,8 +66,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.products.splice($productIndex,1);
 			$scope.$apply();
 		});
-		
+
 		Basket.post(preferenceList, function(res){
+			console.log(res);
 			$scope.products = res;
 		});
 
@@ -178,7 +183,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 				User.login(user.email, user.password, function(data){
 					User.setLoggedIn(true);
-					Alert.add("Successfully logged in.", "success")
+					Alert.add("Successfully logged in.", "success");
 					User.redirect("/");
 				});
 			}

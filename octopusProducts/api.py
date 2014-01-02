@@ -188,6 +188,7 @@ class UserResource(ModelResource):
 			product_json['id'] = key.id
 			product_json['name'] = key.name
 			product_json['price'] = key.price
+			product_json['link'] = key.link
 			product_json['img'] = str(key.external_image_link)
 			product_json['quantity'] = value[0]
 			product_json['ingredient'] = value[1].name

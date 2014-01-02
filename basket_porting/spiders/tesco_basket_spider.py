@@ -35,7 +35,7 @@ class Tesco_basket_spider(CrawlSpider):
     def after_login(self, response):
         if "Sorry" in response.body:
             return
-        
+
         for link in self.product_details:
             request = Request(link, callback = self.add_product)
             request.meta['link'] = link
@@ -63,10 +63,10 @@ class Tesco_basket_spider(CrawlSpider):
             body= payload,
             callback=self.item_parsed)
 
-        request.meta['link'] = response.meta['link'] 
+        request.meta['link'] = response.meta['link']
 
     	yield request
-    
+
     def item_parsed(self,response):
 
         response_string = Selector(response).extract()
@@ -78,7 +78,7 @@ class Tesco_basket_spider(CrawlSpider):
             item['success']  = "False"
         else:
             item['success'] = "True"
-            
+
         item['link'] = response.meta['link']
 
         return item

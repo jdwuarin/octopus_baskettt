@@ -24,18 +24,18 @@ def spider_view(request):
     email = data['email']
     password = data['password']
 
-    # for testing purposes
-    email = "arnaudbenard13+test@gmail.com"
-    password = "test123"
+    product_list = {}
 
+    for product in product_details:
+        product_list["http://www.tesco.com" + str(product['link'])] = str(int(product['quantity']))
 
     thread_manager = Thread_manager()
     this_basket = Basket_to_port(request, email, password,
-        product_details, thread_manager)
+        product_list, thread_manager)
 
     Spider_manager_controller.add_basket_to_port(this_basket)
 
     this_basket.thread_manager.wait(15)
 
-    response_data = this_basket.thread_manager.get_response() 
+    response_data = this_basket.thread_manager.get_response()
     return HttpResponse(json.dumps(response_data), content_type="application/json")

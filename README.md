@@ -8,17 +8,10 @@ Grunt is a front-end tool to compile the less to css and compress it.
 
 `npm install`
 
-js
 
-`grunt js`
 
-css
+`grunt production`
 
-`grunt style`
-
-img (takes a few minutes to compress images)
-
-`grunt img`
 
 
 ## How to use Bower
@@ -31,17 +24,17 @@ Package management for static libraries
 
 ## populating all dbs form scratch
 ```bash
-createdb db1 
-psql 
-GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user; 
-python manage.py schemamigration 'octopusProducts' --initial 
+createdb db1
+psql
+GRANT ALL PRIVILEGES ON DATABASE db1 to octopus_user;
+python manage.py schemamigration 'octopusProducts' --initial
 python manage.py syncdb -all
 
 #when creating the django superuser upon frist calling "python manage.py syncdb"
 
-create the superuser: yes 
-username: django_auth_user 
-email: 
+create the superuser: yes
+username: django_auth_user
+email:
 password: django_auth
 
 #then to actually populate the dbs

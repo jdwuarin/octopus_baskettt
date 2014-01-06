@@ -1,0 +1,45 @@
+<signup></signup>
+<tesco></tesco>
+
+<div class="loading" ng-show="viewLoading">Loading</div>
+
+<div class="container" ng-hide="viewLoading">
+	
+	<div class="row">
+		<div class="col-md-12 product-list-title">
+			<div>My basket</div>
+			<button class="btn btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
+			<button class="btn btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
+		</div>	
+	</div>
+
+	<div class="row">
+		<div class="product-list-container">
+			<div class="search-bar">
+				<form ng-submit="searchProducts()">
+					<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products">
+					<button class="btn btn-gray" type="submit">Search</button>
+				</form>
+			</div>
+
+			<li ng-repeat="product in search_result" class="search-item">
+				<img ng-src="{{product.img}}" alt="">
+				{{ product.name }} {{ product.price }} 
+				<button class="btn btn-orange" ng-click="addProduct(product)">Add</button>
+			</li>
+			<div class="row">
+			<div ng-repeat="product in products" class="col-md-4" >
+			
+				<div class="product-box" ng-class="{'selected_product':selectedStatus}">
+					<li remove></li>
+					<li>
+						<img ng-src="{{product.img}}" alt="">
+					</li>
+					<li class="product-title">{{product.name}} {{product.price | currency:"&#163;"}} {{ product.quantity }}</li>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+<br>

@@ -28,7 +28,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'db1',                      # Or path to database file if using sqlite3.
-        
+
         'USER': 'octopus_user',
         'PASSWORD': 'octopus',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
@@ -123,12 +123,7 @@ INSTALLED_APPS = (
     'tastypie',
     'corsheaders',
     'south', #brings migration to Django to have stable database-independent migration layer
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'registration',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
     'octopusProducts',
     'basket_porting',
     'octopus_middleware',
@@ -174,16 +169,12 @@ LOGGING = {
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
     "django.contrib.auth.context_processors.auth",
 )
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 
@@ -193,7 +184,7 @@ TASTYPIE_FULL_DEBUG = True #set back to false on production etc...
 
 TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 
-MAX_USERNAME_LENGTH = 150 
+MAX_USERNAME_LENGTH = 150
 
 ACCOUNT_ACTIVATION_DAYS = 7
 

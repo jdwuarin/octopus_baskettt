@@ -34,4 +34,6 @@ bin/*
 bower_components
 
 static/js/*
+static/img/*
+
 static/css/*

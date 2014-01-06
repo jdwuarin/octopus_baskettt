@@ -35,5 +35,6 @@ bower_components
 
 static/js/*
 static/img/*
+static/scripts/*
 
 static/css/*

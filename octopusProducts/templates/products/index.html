@@ -10,13 +10,12 @@
 
   {% if debug %}
 	<link rel="stylesheet/less" href="{% static "bootstrap/less/bootstrap.less" %}" media="screen">
-	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen"> 
+	<link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen">
 	<script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
   {% else %}
-  <link rel="stylesheet/css" href="{% static "bootstrap/css/boostrap.css" %}"> 
-  <link rel="stylesheet/css" href="{% static "css/style.css" %}"> 
-  {% endif %} 
+  <link rel="stylesheet/css" href="styles/style.css">
+  {% endif %}
 
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -26,11 +25,11 @@
 
     </head>
     <body>
-      
+
       {% csrf_token %}
-        
+
       <div id="wrap">
-      
+
         <navbar></navbar>
 
         {%verbatim%}
@@ -42,25 +41,52 @@
         <div ng-view></div>
 
       </div>
-      
+
       <footer>
         <p>Contact us via <a href="https://twitter.com/basketttco">Twitter</a></p>
       </footer>
 
-      <script src="{% static "jquery/jquery.min.js" %}"></script>
-      <script src="{% static "angular/angular.min.js" %}"></script>
-      <script src="{% static "angular-route/angular-route.min.js" %}"></script>
-      <script src="{% static "angular-sanitize/angular-sanitize.min.js" %}"></script>
-      <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
-      <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
-      <script src="{% static "angular-bootstrap/ui-bootstrap-tpls.min.js" %}"></script>
-      <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
+      {% if debug %}
+        <script src="{% static "jquery/jquery.min.js" %}"></script>
+        <script src="{% static "angular/angular.min.js" %}"></script>
+        <script src="{% static "angular-route/angular-route.min.js" %}"></script>
+        <script src="{% static "angular-sanitize/angular-sanitize.min.js" %}"></script>
+        <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
+        <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
+        <script src="{% static "angular-bootstrap/ui-bootstrap-tpls.min.js" %}"></script>
+        <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
+        <script src="{% static "app/js/app.js" %}"></script>
+        <script src="{% static "app/js/controllers.js" %}"></script>
+        <script src="{% static "app/js/services.js" %}"></script>
+        <script src="{% static "app/js/directives.js" %}"></script>
+        <script src="{% static "app/js/filters.js" %}"></script>
 
-      <script src="{% static "app/js/app.js" %}"></script>
-      <script src="{% static "app/js/controllers.js" %}"></script>
-      <script src="{% static "app/js/services.js" %}"></script>
-      <script src="{% static "app/js/directives.js" %}"></script>
-      <script src="{% static "app/js/filters.js" %}"></script>
+      {% else %}
+      <!-- build:js scripts/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/jquery/jquery.js"></script>
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+      <script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
+      <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+      <script src="bower_components/angular-route/angular-route.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script src="bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="bower_components/html5shiv/dist/html5shiv-printshiv.js"></script>
+      <script src="bower_components/respond/dest/respond.src.js"></script>
+      <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <!-- endbower -->
+      <!-- endbuild -->
 
+      <!-- build:js({.tmp,media}) scripts/scripts.js -->
+        <script src="app/js/app.js"></script>
+        <script src="app/js/controllers.js"></script>
+        <script src="app/js/services.js"></script>
+        <script src="app/js/directives.js"></script>
+        <script src="app/js/filters.js"></script>
+      <!-- endbuild -->
+
+      {% endif %}
     </body>
     </html>

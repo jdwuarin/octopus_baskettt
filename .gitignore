@@ -32,6 +32,5 @@ webScraper/.ropeproject
 bin/*
 
 bower_components
-
 static/*
 .tmp/

@@ -42,10 +42,10 @@ class Basket_recommendation_engine(object):
 		i=0
 		while basket_cost < budget:
 
-			for x in range(0, len(recipes)):
-
+			for __, recipe in enumerate(recipes):
+			# for x in range(0, len(recipes)):
 				try:
-					recipe = recipes[x][i / len(recipes)] #the division will floor the value, which is what we want
+					recipe = recipe[i / len(recipes)] #the division will floor the value, which is what we want
 				except IndexError:
 					recipe_type_passed = recipe_type_passed + 1
 					if recipe_type_passed == len(recipes):

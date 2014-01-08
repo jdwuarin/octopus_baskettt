@@ -17,7 +17,7 @@ angular.module('App.directives', [])
 			});
 
 			scope.selectedStatus = selected;
-			
+
 			element.bind("click", function() {
 
 				scope.selectedStatus = !scope.selectedStatus;
@@ -94,8 +94,8 @@ angular.module('App.directives', [])
 					$rootScope.$emit('removeProduct', scope.$index);
 				});
 			},
-			template: '<button class="btn-gray btn-remove"><i class="glyphicon glyphicon-remove"></i></button>',
+			template: '<i class="glyphicon glyphicon-remove"></i>',
 			transclude: true
 		};
-		
+
 	}]);

@@ -2,14 +2,19 @@
 
 /* Filters */
 
-angular.module('App.filters', []).
-filter('filteredrecipes', [function() {
+angular.module('App.filters', [])
+.filter('price', function() {
+	return function(price) {
+		return price.replace("GBP","");
+	};
+})
+.filter('filteredrecipes', [function() {
 	return function(recipes,diets){
 		if(recipes === undefined)
 			return;
-		
+
 		var result = recipes.slice();// copy array
-		var recipe; 
+		var recipe;
 
 		angular.forEach(diets, function(value, key) { //Checks if the keyword is in the title
 			if(value) {

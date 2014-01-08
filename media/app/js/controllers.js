@@ -153,6 +153,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.getTotal = function(val1,val2) {
+			return "GBP" + parseFloat(val1.replace("GBP","")) * parseFloat(val2);
+		};
+
 	}])
 
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {

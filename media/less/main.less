@@ -1,7 +1,7 @@
 //	Body
 //------------------------------------
 html,body{
-	background-color:white;	
+	background-color:white;
 	height: 100%;
 }
 
@@ -187,7 +187,7 @@ a:hover{
 .product-box{
 	text-align: center;
 	margin: 40px 0px;
-
+	border: @gray-border;
 
 	img{
 		height:auto;
@@ -199,14 +199,35 @@ a:hover{
 		display:inline-block;
 	}
 
+	i{ //remove icon
+		float: right;
+		cursor: pointer;
+	}
+
+	.product-title, .product-price{
+		padding: 10px;
+		background: @light-gray;
+		height: 43px;
+		width: 100%;
+	}
+
 	.product-title{
-		height: 30px;
+		border-bottom: @gray-border;
+	}
+
+	.product-price{
+		border-top: @gray-border;
+	}
+
+	.product-img{
+		width:100%;
+		padding: 20px 0px;
 	}
 }
 
 .selected {
 	img {
-    	border-color: @orange!important;	
+    	border-color: @orange!important;
 	}
 	p{
 		color: @orange!important;
@@ -304,7 +325,7 @@ footer{
 }
 
 .onboard-image{
-	
+
 	text-align: center;
 
 	img{
@@ -343,7 +364,7 @@ footer{
 	margin-top: 30px;
 	height:60px;
 	padding: 0px 20px;
-	
+
 	div, button{
 		display: inline-block;
 	}

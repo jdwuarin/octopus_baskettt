@@ -79,6 +79,8 @@ sudo supervisorctl update
 
 #nginx
 sudo apt-get install -y nginx
+sudo cp ./octopus_nginx.conf /etc/nginx/sites-available
+sudo ln -s /etc/nginx/sites-available/octopus_nginx.conf /etc/nginx/sites-enabled
 
 
 

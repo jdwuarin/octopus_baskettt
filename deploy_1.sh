@@ -73,7 +73,12 @@ sudo apt-get install -y supervisor
 mkdir -p /webapps/octopus/env/logs
 touch /webapps/octopus/env/logs/gunicorn_supervisor.log 
 sudo chown -R octopus:users /webapps/octopus/env/logs
-cp ./ocotpus.conf /etc/supervisor/conf.d/octopus.conf
+sudo cp ./octopus.conf /etc/supervisor/conf.d/octopus.conf
+sudo supervisorctl update
+
+
+
+
 
 
 

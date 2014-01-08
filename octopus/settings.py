@@ -14,7 +14,7 @@ SESSION_COOKIE_HTTPONLY = False
 #SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
 #SESSION_COOKIE_DOMAIN=.baskettt.com  #see http://stackoverflow.com/questions/4555956/django-python-problem-with-sessionid
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -40,7 +40,7 @@ ROOT_URLCONF='octopus.urls'
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/var/www/octopus/media/'
+MEDIA_ROOT = '/webapps/octopus/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -62,7 +62,7 @@ STATICFILES_DIRS = (
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/var/www/octopus/static/'
+STATIC_ROOT = '/webapps/octopus/static/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -191,3 +191,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 ALLOWED_HOSTS = [
     '127.0.0.1', # localhost
 ]
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

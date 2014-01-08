@@ -6,8 +6,8 @@ SOCKFILE=/tmp/gunicorn.sock       # we will communicate using this unix socket
 USER=octopus                                       # the user to run as
 GROUP=webapps                                      # the group to run as
 NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
-DJANGO_SETTINGS_MODULE=settings             # which settings file should Django use
-DJANGO_WSGI_MODULE=wsgi                     # WSGI module name
+DJANGO_SETTINGS_MODULE=octopus.settings             # which settings file should Django use
+DJANGO_WSGI_MODULE=octopus.wsgi                     # WSGI module name
  
 echo "Starting $NAME"
 

@@ -53,7 +53,25 @@ sudo su - octopus -c 'grunt production'
 python manage.py schemamigration 'octopusProducts' --initial
 echo "no" | python manage.py syncdb #don't create superuser
 python manage.py createsuperuser --noinput --email foo@baskettt.co --username django_auth_user
+python manage.py migrate 'octopusProducts'
 cd webScraper/
 scrapy crawl tesco
+scrapy crawl food_com
+scrapy crawl ing_prod_match
+
+#dealing with gunicorn
+cd ../
+sudo chown -R octopus:users ./ #just making sure the privileges are still acurate
+cp gunicorn_start.sh ./env/bin
+sudo chown octopus:users ./env/bin/gunicorn_start.sh
+chmod u+x ./env/bin/gunicorn_start.sh
+sudo apt-get install python-dev
+pip install setproctitle
+
+#monitoring with supervisor
+sudo apt-get install -y supervisor
+
+
+
 
 

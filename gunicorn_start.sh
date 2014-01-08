@@ -1,10 +1,10 @@
 #!/bin/bash
  
 NAME="octopus"                                  # Name of the application
-DJANGODIR=/home/octopus         # Django project directory
+DJANGODIR=/webapps/octopus         # Django project directory
 SOCKFILE=/tmp/gunicorn.sock       # we will communicate using this unix socket
 USER=octopus                                       # the user to run as
-GROUP=ocotpus                                      # the group to run as
+GROUP=webapps                                      # the group to run as
 NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
 DJANGO_SETTINGS_MODULE=settings             # which settings file should Django use
 DJANGO_WSGI_MODULE=wsgi                     # WSGI module name
@@ -13,7 +13,7 @@ echo "Starting $NAME"
 
 # Activate the virtual environment
 cd $DJANGODIR
-source /home/ubuntu/octopus/env/bin/activate
+source ./env/bin/activate
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 

@@ -39,7 +39,7 @@ password: django_auth
 
 #then to actually populate the dbs
 
-cd webscraper/
+cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com
 scrapy crawl ing_prod_match

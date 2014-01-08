@@ -75,6 +75,20 @@ touch /webapps/octopus/env/logs/gunicorn_supervisor.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
 sudo cp ./octopus.conf /etc/supervisor/conf.d/octopus.conf
 sudo supervisorctl update
+#sudo supervisorctl stop|start|restart octopus  #to do stuff to process
+
+#nginx
+sudo apt-get install -y nginx
+
+
+
+
+
+
+
+
+
+
 
 
 

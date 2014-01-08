@@ -95,9 +95,16 @@ angular.module('App.services', ['LocalStorageModule'])
 		var preferenceList = {};
 		preferenceList.cuisine= [];
 
+		// On some browser it crashes when preferences has no cuisine
+		// We'll init the localstorage first
+		var init = JSON.stringify(preferenceList);
+		localStorage.add('preferences',init);
+
 		return {
 			getCuisine: function() {
+
 				var local_cuisine = localStorage.get('preferences').cuisine;
+
 				// If we haven't saved any preferences in local storage take the temporary one
 				if(local_cuisine) {
 					return local_cuisine;

@@ -90,15 +90,10 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	// Service that contains the preferences in the onboarding
-	.service('Preference', ['localStorage', function(localStorage) {
+	.service('Preference', ['localStorage','Alert', function(localStorage, Alert) {
 
 		var preferenceList = {};
 		preferenceList.cuisine= [];
-
-		// On some browser it crashes when preferences has no cuisine
-		// We'll init the localstorage first
-		var init = JSON.stringify(preferenceList);
-		localStorage.add('preferences',init);
 
 		return {
 			getCuisine: function() {
@@ -129,6 +124,8 @@ angular.module('App.services', ['LocalStorageModule'])
 
 				if (!isPresent && scope.selectedStatus) {
 					preferenceList.cuisine.push(scope.cuisine.name);
+					var cuisine_str = JSON.stringify(preferenceList);
+					localStorage.add('preferences', cuisine_str);
 				}
 			},
 			setParameters: function(preferences) {
@@ -137,11 +134,28 @@ angular.module('App.services', ['LocalStorageModule'])
 				preferenceList.budget = preferences.budget;
 
 				var pref_str = JSON.stringify(preferenceList);
-				localStorage.add('preferences', pref_str)
+				localStorage.add('preferences', pref_str);
 
 			},
 			getAll: function() {
+				// On some browser it crashes when preferences has no cuisine
+				// We'll init the localstorage first
+				if(!localStorage.get('preferences')) {
+					var init = JSON.stringify(preferenceList);
+					localStorage.add('preferences',init);
+				}
+
 				return localStorage.get('preferences');
+			},
+			isNotValid: function(list) {
+				if(list.cuisine.length === 0 ||
+					list.people.length === 0 ||
+					list.budget.length === 0 ||
+					list.days.length === 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		};
 	}])

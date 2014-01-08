@@ -67,10 +67,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.$apply();
 		});
 
-		Basket.post(preferenceList, function(res){
-			console.log(res);
-			$scope.products = res;
-		});
+		if(!Preference.isNotValid(preferenceList)){
+			Basket.post(preferenceList, function(res){
+				$scope.products = res;
+			});
+		} else {
+			Alert.add("We couldn't find your preferences","danger");
+		}
+
+
 
 		// GET search in django
 		$scope.searchProducts = function(){
@@ -79,7 +84,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					function(res){ // success
 						$scope.search_result = res;
 					},function(res){ // error
-						Alert.add("Could find this product","danger");
+						Alert.add("Could not find this product","danger");
 						$scope.search_result = {};
 					});
 			} else {

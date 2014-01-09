@@ -12,7 +12,11 @@ from recommendation_engine.basket_recommendation_engine import Basket_recommenda
 
 def index(request):
     context = {'debug': settings.DEBUG}
-    return render(request, 'products/index.html', context)
+    if settings.DEBUG:
+        return render(request, 'products/index.html', context)
+    else:
+        return render(request, '../../static/index.html', context)
+
 
 def spider_view(request):
 

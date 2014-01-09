@@ -4,7 +4,7 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
-	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference', function($scope, $routeParams, Preference) {
+	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
 
 		$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
 		{ "name": "Chinese", "image": "chinese.png"},
@@ -22,27 +22,44 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		// Persist data from local storage
 		$scope.preference = Preference.getAll();
 
+		var goToTop = function(){
+			// set the location.hash to the id of
+			// the element you wish to scroll to.
+			$location.hash('wrap');
+
+			$anchorScroll();
+		};
+
 		$scope.saveData = function() {
+
 			Preference.setParameters($scope.preference);
+
+			if (page_id === 1) { //cuisine
+
+				if(Preference.getCuisine().length === 0) {
+					Alert.add("You didn't select a cuisine style.","danger");
+					goToTop();
+				} else {
+					$location.path("/onboarding/2");
+				}
+
+			} else if (page_id === 2) { //numbers page
+
+				if(Preference.isNotValid(Preference.getAll())) {
+					Alert.add("You didn't put the right informations.","danger");
+					goToTop();
+				} else {
+					$location.path("/basket");
+				}
+
+			} else { // Edge case
+				$location.path("/onboarding/1");
+			}
 		};
 
 		$scope.isActive = function(id) {
 			return id === page_id;
 		};
-
-		$scope.getNextPage = function() {
-			// The onboarding process only has 2 steps
-			if(page_id < 2 && page_id > 0) {
-				return "#/onboarding/" + (page_id+1).toString();
-			// When you're done with the onboarding you're transfered to the product list
-			} else if(page_id === 2) {
-				return "#/basket";
-			// Edge case
-			} else {
-				return "#/";
-			}
-		};
-
 
 	}])
 
@@ -68,8 +85,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		});
 
 		if(!Preference.isNotValid(preferenceList)){
+			$scope.loadingBasket = true;
+
 			Basket.post(preferenceList,
 				function(res){
+					$scope.loadingBasket = false;
+
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
 					} else {

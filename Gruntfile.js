@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('production',[
     'clean:dist',
+    'copy:dist',
     'bower-install',
     'useminPrepare',
     'less',
@@ -140,7 +141,7 @@ module.exports = function(grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= app.index %>',
+      html: '<%= app.indexFolder %>/index_prod.html',
       options: {
         dest: './',
         root: './',
@@ -207,7 +208,7 @@ module.exports = function(grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
-      html: ['<%= app.indexFolder %>/{,*/}*.html'],
+      html: ['<%= app.indexFolder %>/index_prod.html'],
       css: ['<%= app.dist %>/styles/{,*/}*.css'],
       // options: {
       //   assetsDirs: ['<%= app.dist %>']

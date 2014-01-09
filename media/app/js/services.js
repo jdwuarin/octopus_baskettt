@@ -9,7 +9,7 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		function getUrl(id) {
 			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
-			return 'http://127.0.0.1:8000/api/v1/product/' + id + '?format=json';
+			return 'api/v1/product/' + id + '?format=json';
 		}
 
 		return {
@@ -38,7 +38,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	.factory('User', ['$cookies', '$http', '$location', function($cookies, $http, $location) {
 
 		function getUrl(req) {
-			return 'http://127.0.0.1:8000/api/v1/user/' + req + '/?format=json';
+			return 'api/v1/user/' + req + '/?format=json';
 		}
 
 		var LoggedIn = null;
@@ -81,7 +81,7 @@ angular.module('App.services', ['LocalStorageModule'])
 			// Avoid losing a session when a user reloads the page
 			requestLoggedIn: function(callback) {
 				return $http({
-					url: 'http://127.0.0.1:8000/api/v1/user/current/?format=json',
+					url: 'api/v1/user/current/?format=json',
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},
 				}).success(callback);
@@ -183,7 +183,7 @@ angular.module('App.services', ['LocalStorageModule'])
 			// Get recommendation from our backend
 			post: function(preferences, callback) {
 				return $http({
-					url: 'http://127.0.0.1:8000/api/v1/user/basket/?format=json',
+					url: 'api/v1/user/basket/?format=json',
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: preferences
@@ -205,7 +205,7 @@ angular.module('App.services', ['LocalStorageModule'])
 			// Populate tesco basket
 			post: function(email, password, list, callback) {
 				return $http({
-					url: 'http://127.0.0.1:8000/spider/?format=json',
+					url: 'spider/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password, products:list}

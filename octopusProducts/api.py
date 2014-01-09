@@ -172,7 +172,25 @@ class UserResource(ModelResource):
 	# Recommendation engine
    	def basket(self, request, **kwargs):
    		self.method_check(request, allowed=['post'])
+
    		data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+
+   		key_error = False
+
+   		try:
+   			data['budget']
+   			data['people']
+   			data['cuisine']
+   			pass
+   		except KeyError:
+   			key_error = True
+
+   		if  key_error or int(data['budget'])< 1 or len(data['cuisine']) < 1 or(
+   			int(data['days'])<1):
+
+   			no_success = json.dumps({'success': False})
+   			return HttpResponse(no_success,
+   				content_type="application/json")
 
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
    			tags = data['cuisine'], days = data['days'])

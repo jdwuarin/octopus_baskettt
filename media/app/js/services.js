@@ -181,7 +181,7 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Get recommendation from our backend
-			post: function(preferences, callback) {
+			post: function(preferences, callback, errorcb) {
 				return $http({
 					url: 'api/v1/user/basket/?format=json',
 					method: "POST",

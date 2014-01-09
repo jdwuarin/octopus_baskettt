@@ -68,9 +68,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		});
 
 		if(!Preference.isNotValid(preferenceList)){
-			Basket.post(preferenceList, function(res){
-				$scope.products = res;
-			});
+			Basket.post(preferenceList,
+				function(res){
+					if(res.success === false){
+						Alert.add("We couldn't create your basket.","danger");
+					} else {
+						$scope.products = res;
+					}
+				});
 		} else {
 			Alert.add("We couldn't find your preferences","danger");
 		}

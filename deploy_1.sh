@@ -48,6 +48,7 @@ sudo su - octopus -c 'npm install'
 sudo  npm install -g bower
 sudo su - octopus -c 'bower install'
 sudo su - octopus -c 'grunt production'
+python manage.py collectstatic #collect static files where django says they should be from settings.py
 
 #populating de db
 python manage.py schemamigration 'octopusProducts' --initial

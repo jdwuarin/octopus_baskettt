@@ -3,11 +3,11 @@ module.exports = function(grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
-	// Default task(s).
-	grunt.registerTask('style', ['less']);
-	grunt.registerTask('js', ['concat','uglify']);
-	grunt.registerTask('img', ['imagemin']);
-	grunt.registerTask('test-watch', ['karma:watch']);
+  // Default task(s).
+  grunt.registerTask('style', ['less']);
+  grunt.registerTask('js', ['concat','uglify']);
+  grunt.registerTask('img', ['imagemin']);
+  grunt.registerTask('test-watch', ['karma:watch']);
 
   grunt.registerTask('production',[
     'clean:dist',
@@ -27,79 +27,79 @@ module.exports = function(grunt) {
     ]);
 
 
-	var karmaConfig = function(configFile, customOptions) {
-		var options = { configFile: configFile, keepalive: true };
-		var travisOptions = process.env.TRAVIS && { browsers: ['Firefox'], reporters: 'dots' };
-		return grunt.util._.extend(options, customOptions, travisOptions);
-	};
+  var karmaConfig = function(configFile, customOptions) {
+    var options = { configFile: configFile, keepalive: true };
+    var travisOptions = process.env.TRAVIS && { browsers: ['Firefox'], reporters: 'dots' };
+    return grunt.util._.extend(options, customOptions, travisOptions);
+  };
 
-	// Project configuration.
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'), //To read the values of the package.json file
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'), //To read the values of the package.json file
 
     // Project settings
     app: {
-      index: 'octopusProducts/templates/products/index.html',
+      index: 'octopusProducts/templates/products/index_dev.html',
       indexFolder: 'octopusProducts/templates/products/',
       source: 'media',
       dist: 'static'
     },
 
-		less: {
-			compile: {
-				options: {
-					paths:['<%= app.source %>/less'], //Directory to check for @imports
-					yuicompress: true,
-					strictImports: true //Force evaluation of imports.
-				},
-				files: {
-					'<%= app.dist %>/styles/style.css': '<%= app.source %>/less/style.less',
-				}
+    less: {
+      compile: {
+        options: {
+          paths:['<%= app.source %>/less'], //Directory to check for @imports
+          yuicompress: true,
+          strictImports: true //Force evaluation of imports.
+        },
+        files: {
+          '<%= app.dist %>/styles/style.css': '<%= app.source %>/less/style.less',
+        }
 
-			}
-		},
+      }
+    },
 
-		// concat: {
-		// 	options: {
-		// 		separator: ';',
-		// 	},
-		// 	dist: {
-		// 		src: ['media/app/js/*.js'],
-		// 		dest: 'static/js/built.js',
-		// 	},
-		// },
+    // concat: {
+    //  options: {
+    //    separator: ';',
+    //  },
+    //  dist: {
+    //    src: ['media/app/js/*.js'],
+    //    dest: 'static/js/built.js',
+    //  },
+    // },
 
-		// uglify: {
-		// 	js: {
-		// 		options: {
-		// 			flatten: true
-		// 		},
-		// 		files: {
-		// 			'static/js/built.min.js': ['static/js/built.js']
-		// 		}
-		// 	}
-		// },
+    // uglify: {
+    //  js: {
+    //    options: {
+    //      flatten: true
+    //    },
+    //    files: {
+    //      'static/js/built.min.js': ['static/js/built.js']
+    //    }
+    //  }
+    // },
 
-		imagemin: {
-			png: {
-				options: {
-					optimizationLevel: 7
-				},
-				files: [{
-				// Set to true to enable the following options…
-				expand: true,
-				// cwd is 'current working directory'
-				cwd: 'media/img/',
-				src: ['*.png'],
-				dest: 'static/img/',
-				ext: '.png'
-			}]
+    imagemin: {
+      png: {
+        options: {
+          optimizationLevel: 7
+        },
+        files: [{
+        // Set to true to enable the following options…
+        expand: true,
+        // cwd is 'current working directory'
+        cwd: 'media/img/',
+        src: ['*.png'],
+        dest: 'static/img/',
+        ext: '.png'
+      }]
           }
       },
 
       karma: {
-		unit: { options: karmaConfig('test_angular/config/unit.js') },
-		watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
+    unit: { options: karmaConfig('test_angular/config/unit.js') },
+    watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
       },
 
     // Empties folders to start fresh
@@ -183,8 +183,11 @@ module.exports = function(grunt) {
           }, {
             expand: true,
             flatten: true,
-            dest: '<%= app.dist %>',
-            src: '<%= app.index %>'
+            dest: 'octopusProducts/templates/products/',
+            src: '<%= app.index %>',
+            rename: function(dest, src) {
+              return dest+'index_prod.html';
+            }
           }]
       }
     },
@@ -204,7 +207,7 @@ module.exports = function(grunt) {
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
-      html: ['<%= app.dist %>/{,*/}*.html'],
+      html: ['<%= app.indexFolder %>/{,*/}*.html'],
       css: ['<%= app.dist %>/styles/{,*/}*.css'],
       // options: {
       //   assetsDirs: ['<%= app.dist %>']

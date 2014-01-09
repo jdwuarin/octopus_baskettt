@@ -14,7 +14,7 @@ SESSION_COOKIE_HTTPONLY = False
 #SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
 #SESSION_COOKIE_DOMAIN=.baskettt.com  #see http://stackoverflow.com/questions/4555956/django-python-problem-with-sessionid
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

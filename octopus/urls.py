@@ -3,6 +3,8 @@ from tastypie.api import Api
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import *
 import os
+from django.conf import settings
+
 
 from django.contrib import admin
 admin.autodiscover()
@@ -18,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^spider/', 'octopusProducts.views.spider_view'),
 )
 
-urlpatterns += staticfiles_urlpatterns()
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()

@@ -192,6 +192,7 @@ class UserResource(ModelResource):
    			return HttpResponse(no_success,
    				content_type="application/json")
 
+
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
    			tags = data['cuisine'], days = data['days'])
 

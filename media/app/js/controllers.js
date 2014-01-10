@@ -179,8 +179,35 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.removeProduct = function(product) {
+			var $products = $scope.products;
+
+			for (var i = $products.length-1; i >= 0; i--) {
+				if ($products[i].name === product.name) {
+					$products[i].quantity -= 1;
+
+					if($products[i].quantity === 0) {
+						$products.splice(i,1);
+					}
+
+					break;
+				}
+			}
+
+			$scope.products = $products;
+		};
+
 		$scope.getTotal = function(val1,val2) {
-			return "GBP" + parseFloat(val1.replace("GBP","")) * parseFloat(val2);
+			return "GBP" + (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
+		};
+
+		$scope.basketTotal = function() {
+			var total = 0;
+			angular.forEach($scope.products, function(value, key){
+				total += parseFloat(value.price.replace("GBP","")) * parseInt(value.quantity,10);
+			});
+
+			return total.toFixed(2);
 		};
 
 	}])

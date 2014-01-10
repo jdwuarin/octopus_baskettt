@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default" role="navigation">
 
 	<!-- Brand and toggle get grouped for better mobile display -->
-	<div class="navbar-header">
+	<div class="navbar-header" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" >
 		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 			<span class="sr-only">Toggle navigation</span>
 			<span class="icon-bar"></span>
@@ -12,7 +12,7 @@
 	</div>
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
-	<div class="collapse navbar-collapse">
+	<div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
 		<ul class="nav navbar-nav navbar-right" ng-cloak>
 			<li><a href="#/basket" class="profile-link" ng-show="userIsLoggedIn()"><i class="glyphicon glyphicon-shopping-cart"></i> My basket </a></li>
 			<li><a href="#/login" class="profile-link" ng-hide="userIsLoggedIn()" >Login</a></li>

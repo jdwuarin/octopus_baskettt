@@ -7,7 +7,7 @@
 
 	<div class="row">
 		<div class="col-md-12 product-list-title">
-			<div>My basket</div>
+			<div>My basket <b>(Total: GBP{{basketTotal()}})</b></div>
 			<button class="btn btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
 			<button class="btn btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
 		</div>
@@ -39,9 +39,9 @@
 						<img ng-src="{{product.img}}" alt="">
 					</li>
 					<li class="product-price">
-						{{product.price}} *
-						{{ product.quantity }} =
-						{{getTotal(product.price, product.quantity)}}
+						<button class="btn btn-quantity btn-orange" ng-click="removeProduct(product)">-</button>
+						{{getTotal(product.price, product.quantity)}} ({{ product.quantity }})
+						<button class="btn btn-quantity btn-orange" ng-click="addProduct(product)">+</button>
 					</li>
 				</div>
 			</div>

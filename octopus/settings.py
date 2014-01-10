@@ -7,9 +7,13 @@ TIME_ZONE = 'GB'
 
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-SESSION_COOKIE_AGE = 1209600
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True # currently only in Dev branch of Django.
 
-SESSION_COOKIE_HTTPONLY = False
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SESSION_COOKIE_AGE = 1209600
 
 #SESSION_COOKIE_SECURE=True #make sure cookie sending is done only over https
 #SESSION_COOKIE_DOMAIN=.baskettt.com  #see http://stackoverflow.com/questions/4555956/django-python-problem-with-sessionid

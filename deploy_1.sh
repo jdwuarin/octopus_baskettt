@@ -86,9 +86,9 @@ sudo ln -s /etc/nginx/sites-available/octopus_nginx.conf /etc/nginx/sites-enable
 #ssl stuff
 #make sure the certificates are on the server, say in /home
 # sudo mv /home/baskettt.co.chain.crt /etc/ssl/certs
-# sudo mv /home/baskettt.co.key /etc/ssl/certs
-# sudo chown root:root /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/certs/baskettt.co.key
-# sudo chmod 600 /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/certs/baskettt.co.key
+# sudo mv /home/baskettt.co.key /etc/ssl/private
+# sudo chown root:root /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/private/baskettt.co.key
+# sudo chmod 600 /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/private/baskettt.co.key
 
 
 

@@ -12,6 +12,9 @@ class Basket_recommendation_engine(object):
 	condiment_max_ratio = 0.3
 	num_condiment_ingredients = 0.0
 
+	#remove this bad looking hack
+	banned_word = " Cat"
+
 	@classmethod
 	def create_onboarding_basket(cls, basket_onboarding_info):
 		#TODO, remove tesco hardcode
@@ -114,7 +117,7 @@ class Basket_recommendation_engine(object):
 			if len(potential_product_list) == 0:
 				continue #deal with items not found in db
 
-			potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
+			potential_product_index_to_get = int(floor(min(len(potential_product_list), 3) * random.random()))
 			selected_product = Product.objects.get(
 					id = potential_product_list[potential_product_index_to_get].product_tesco_id)
 
@@ -126,8 +129,9 @@ class Basket_recommendation_engine(object):
 			slack = quantity_to_buy * float(selected_product.quantity) - (float(people) * float(prod_usage))
 
 			product_cost = quantity_to_buy * float(selected_product.price.replace("GBP", ""))
-			if people * product_cost_limit < product_cost:
-				continue #don't add items that are deemed too expensive
+
+			if people * product_cost_limit < product_cost or cls.banned_word in selected_product.name:
+				continue #don't add items that are deemed too expensive or contained a banned word
 
 			#check that condiment_ratio is not passed
 			if ingredient.is_condiment:

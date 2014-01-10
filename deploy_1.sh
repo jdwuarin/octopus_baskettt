@@ -84,11 +84,11 @@ sudo cp ./octopus_nginx.conf /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/octopus_nginx.conf /etc/nginx/sites-enabled
 
 #ssl stuff
-#make sure the certificates are on the server, say in /home
-# sudo mv /home/baskettt.co.chain.crt /etc/ssl/certs
-# sudo mv /home/baskettt.co.key /etc/ssl/private
-# sudo chown root:root /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/private/baskettt.co.key
-# sudo chmod 600 /etc/ssl/certs/baskettt.co.chain.crt /etc/ssl/private/baskettt.co.key
+#make sure the certificates are on the server, say in /home/ubuntu
+# sudo mv /home/ubuntu/baskettt.co_2014_ssl_cert.pem /etc/ssl/certs
+# sudo mv /home/ubuntu/baskettt.co_2014_ssl_key.key /etc/ssl/private
+# sudo chown root:root /etc/ssl/certs/baskettt.co_2014_ssl_cert.pem /etc/ssl/private/baskettt.co_2014_ssl_key.key
+# sudo chmod 600 /etc/ssl/certs/baskettt.co_2014_ssl_cert.pem /etc/ssl/private/baskettt.co_2014_ssl_key.key
 
 
 

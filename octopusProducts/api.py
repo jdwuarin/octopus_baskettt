@@ -191,13 +191,13 @@ class UserResource(ModelResource):
    			no_success = json.dumps({'success': False})
    			return HttpResponse(no_success,
    				content_type="application/json")
-   		print "basketos1"
+
 
    		onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
    			tags = data['cuisine'], days = data['days'])
-   		print "basketos"
+
    		basket = Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
-   		print "done"
+
    		response = []
 
    		# The structure of the recommendation engine response is a dictionnary

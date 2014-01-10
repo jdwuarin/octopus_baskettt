@@ -28,6 +28,7 @@
 				<button class="btn btn-orange" ng-click="addProduct(product)">Add</button>
 			</li>
 			<div class="row">
+			<div ng-show="loadingBasket" class="loading-basket">Loading your basket</div>
 			<div ng-repeat="product in products" class="col-md-4" >
 
 				<div class="product-box" ng-class="{'selected_product':selectedStatus}">

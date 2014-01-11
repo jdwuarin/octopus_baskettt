@@ -9,9 +9,9 @@ TIME_ZONE = 'GB'
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True # currently only in Dev branch of Django.
+CSRF_COOKIE_SECURE = True # currently only in Dev branch of Django.
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SESSION_COOKIE_AGE = 1209600
 

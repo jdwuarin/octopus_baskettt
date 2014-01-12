@@ -2,11 +2,13 @@
 //------------------------------------
 
 .product-list-container{
+    margin-top: @header-height;
     .col-md-12;
     padding: 0px !important;
 
     .col-md-12{
         text-align: center;
+        vertical-align: baseline;
     }
 }
 
@@ -15,6 +17,9 @@
     border-bottom: @gray-border;
     height:60px;
     line-height: 60px;
+    position: fixed;
+    z-index: @zindex-navbar-fixed;
+    top: @header-height;
 
     form{
         .form-inline;
@@ -49,15 +54,18 @@
 
 .product-container{
     display: inline-block;
-    padding: 0px 20px;
-    .center;
+    text-align: justify
+    padding: 20px 20px;
+    margin: 0px 20px;
+
+    // .center;
 }
 
 .product-box{
-    text-align: center;
     margin: 40px 0px;
     border: @gray-border;
     max-width: 250px;
+
     position: relative;
     img{
         height:auto;

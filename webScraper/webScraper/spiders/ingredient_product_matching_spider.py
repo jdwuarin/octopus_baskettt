@@ -7,7 +7,7 @@ import re
 # from scrapy.contrib.spiders import CrawlSpider, Rule
 # from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
-from octopusProducts.models import Ingredient
+from octopus_product.models import Ingredient
 
 from webScraper.items import Product_item
 

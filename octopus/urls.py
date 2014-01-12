@@ -17,7 +17,7 @@ urlpatterns = patterns('',
 	url(r'^$', 'octopusProducts.views.index'),
     url(r'^api/', include(v1_api.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^spider/', 'octopusProducts.views.spider_view'),
+    url(r'^port_basket/', 'octopus_basket_porting.views.port_basket'),
 )
 
 if settings.DEBUG:

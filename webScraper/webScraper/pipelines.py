@@ -4,7 +4,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
-from octopusProducts.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
+from octopus_product.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
 from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re

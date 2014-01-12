@@ -5,7 +5,7 @@
 
 from scrapy.item import Item, Field
 from scrapy.contrib.djangoitem import DjangoItem
-from octopusProducts.models import Product, Recipe, Ingredient
+from octopus_product.models import Product, Recipe, Ingredient
 
 
 class Product_item(DjangoItem):

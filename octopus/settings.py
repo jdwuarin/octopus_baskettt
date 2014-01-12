@@ -128,10 +128,11 @@ INSTALLED_APPS = (
     'corsheaders',
     'south', #brings migration to Django to have stable database-independent migration layer
     'registration',
-    'octopusProducts',
-    'basket_porting',
+    'octopus_groceries',
+    'octopus_user',
+    'octopus_basket_porting',
     'octopus_middleware',
-    'recommendation_engine',
+    'octopus_recommendation_engine',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

@@ -64,6 +64,8 @@
 .product-box{
     margin: 40px 0px;
     border: @gray-border;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
     max-width: 250px;
 
     position: relative;
@@ -82,6 +84,7 @@
         cursor: pointer;
     }
 
+
     .product-title, .product-price{
         padding: 10px;
         background: @light-gray;
@@ -90,6 +93,16 @@
 
     .product-title{
         border-bottom: @gray-border;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        display: inline-block;
+        .glyphicon{
+            display: inline-block;
+            width: 20px;
+            position: absolute;
+            right: 5px;
+            top: 14px;
+        }
     }
 
     .product-price{

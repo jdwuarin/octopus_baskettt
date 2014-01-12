@@ -51,7 +51,7 @@ angular.module('App.directives', [])
 
 				scope.showBasket = false;
 				$rootScope.$on('showBasketDetails', function(event){
-					scope.showBasket = true;
+					scope.showBasket = false; // change to true if you want to make it work
 				});
 
 				scope.hideShowBasket = function(){

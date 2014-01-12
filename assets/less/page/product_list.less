@@ -4,6 +4,10 @@
 .product-list-container{
     .col-md-12;
     padding: 0px !important;
+
+    .col-md-12{
+        text-align: center;
+    }
 }
 
 .basket-bar{
@@ -31,11 +35,7 @@
 
 .product-list-title{
 
-
-    // margin-top: 30px;
     height:60px;
-    // padding: 0px 20px;
-
     .btn-gray{
         color:black!important;
     }
@@ -46,16 +46,19 @@
     }
 }
 
+
+.product-container{
+    display: inline-block;
+    padding: 0px 20px;
+    .center;
+}
+
 .product-box{
     text-align: center;
     margin: 40px 0px;
     border: @gray-border;
     max-width: 250px;
-    float: left;
     position: relative;
-    float: left;
-    overflow: hidden;
-
     img{
         height:auto;
         width: 150px;
@@ -74,7 +77,6 @@
     .product-title, .product-price{
         padding: 10px;
         background: @light-gray;
-        height: 43px;
         width: 100%;
     }
 
@@ -133,7 +135,7 @@
           top:25px;
           color:@dark-gray;
           cursor:pointer;
-        }
+      }
     }
 }
 

@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load verbatim %}
 
-<html ng-app="App">
+<html>
 <head>
   <title>baskettt - The easiest way to do your groceries</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +23,7 @@
   <![endif]-->
 
     </head>
-    <body>
+    <body id="ng-app" ng-app="App">
 
       {% csrf_token %}
 

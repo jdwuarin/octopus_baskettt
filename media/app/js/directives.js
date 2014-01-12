@@ -5,6 +5,21 @@
 
 angular.module('App.directives', [])
 
+	.directive('basket', ['$rootScope', function($rootScope){
+		return {
+			templateUrl: 'static/app/partials/_basket_detail.html',
+			restrict: 'E',
+			link: function(scope) {
+
+				scope.showBasket = false;
+
+				$rootScope.$on('showBasketDetails', function(){
+					scope.showBasket = true;
+				});
+			}
+		};
+	}])
+
 	// When you click on the DOM a the .selected class is injected
 	.directive('click', ['Preference',function(Preference) {
 		return function(scope, element, attrs) {

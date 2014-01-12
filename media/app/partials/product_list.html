@@ -7,7 +7,9 @@
 
 	<div class="row">
 		<div class="col-md-12 product-list-title">
-			<div>My basket <b>(Total: GBP{{basketTotal()}})</b></div>
+			<div ng-mouseover="showBasketDetails()">My basket <b>(Total: GBP{{basketTotal()}})</b>
+			<basket></basket>
+			</div>
 			<button class="btn btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
 			<button class="btn btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
 		</div>

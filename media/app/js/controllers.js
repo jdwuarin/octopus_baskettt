@@ -210,6 +210,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			return total.toFixed(2);
 		};
 
+		$scope.showBasketDetails = function() {
+			$rootScope.$emit('showBasketDetails');
+		};
+
 	}])
 
 	.controller('RegistrationController', ['$scope','User', function($scope,User) {

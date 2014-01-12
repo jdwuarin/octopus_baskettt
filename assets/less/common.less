@@ -5,6 +5,15 @@ html,body{
 	height: 100%;
 }
 
+html, html a {
+	-webkit-font-smoothing: antialiased;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+
+body{
+	padding-top: @header-height;
+}
+
 /* Wrapper for page content to push down footer */
 #wrap {
   min-height: 100%;
@@ -39,22 +48,30 @@ a:hover{
 }
 
 .navbar{
+
+	// .navbar-default;
 	margin-bottom: 0;
-	background-color: @light-gray;
+	background-color: @orange;
 	border: 0;
 	border-radius: 0px;
-	color:black;
-	border-top:3px solid @orange;
-	border-bottom: 1px solid #d7d7d7;
+	color:white;
+	text-shadow: @font-shadow;
+	// border-top:3px solid @orange;
+	// border-bottom: 1px solid #d7d7d7;
 	.glyphicon{
-		color: black;
+		color: white;
 		margin-top: 5px;
 	}
 }
 
 a.profile-link{
-	color:black!important;
-	padding-top: 21px!important;
+	color:white!important;
+	line-height: @header-height!important;
+	padding: 0!important;
+	margin-right: 15px;
+	&:hover{
+		background-color:transparent!important;
+	}
 }
 
 .selected {
@@ -73,9 +90,8 @@ footer{
 	height:@footer-height;
 	font-size: 13px;
 	color:#d7d7d7;
-	padding-top: 40px;
+	line-height: @footer-height;
 	padding-left: 30px;
-	//margin-top: 40px;
 }
 
 

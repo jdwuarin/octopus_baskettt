@@ -10,8 +10,8 @@
 			<div ng-mouseover="showBasketDetails()">My basket <b>(Total: GBP{{basketTotal()}})</b>
 			<basket></basket>
 			</div>
-			<button class="btn btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
-			<button class="btn btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
+			<button class="btn-orange" ng-click="transferBasket()">Transfer my baskettt</button>
+			<button class="btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
 		</div>
 	</div>
 
@@ -20,14 +20,14 @@
 			<div class="search-bar">
 				<form ng-submit="searchProducts()">
 					<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products">
-					<button class="btn btn-gray" type="submit">Search</button>
+					<button class="btn-gray" type="submit">Search</button>
 				</form>
 			</div>
 
 			<li ng-repeat="product in search_result" class="search-item">
 				<img ng-src="{{product.img}}" alt="">
 				{{ product.name }} {{ product.price }}
-				<button class="btn btn-orange" ng-click="addProduct(product)">Add</button>
+				<button class="btn-orange" ng-click="addProduct(product)">Add</button>
 			</li>
 			<div class="row">
 			<div ng-show="loadingBasket" class="loading-basket">Loading your basket</div>
@@ -41,9 +41,9 @@
 						<img ng-src="{{product.img}}" alt="">
 					</li>
 					<li class="product-price">
-						<button class="btn btn-quantity btn-orange" ng-click="removeProduct(product)">-</button>
+						<button class="btn-quantity" ng-click="removeProduct(product)">-</button>
 						{{getTotal(product.price, product.quantity)}} ({{ product.quantity }})
-						<button class="btn btn-quantity btn-orange" ng-click="addProduct(product)">+</button>
+						<button class="btn-quantity" ng-click="addProduct(product)">+</button>
 					</li>
 				</div>
 			</div>

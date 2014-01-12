@@ -12,10 +12,13 @@ angular.module('App.directives', [])
 			link: function(scope) {
 
 				scope.showBasket = false;
-
-				$rootScope.$on('showBasketDetails', function(){
+				$rootScope.$on('showBasketDetails', function(event){
 					scope.showBasket = true;
 				});
+
+				scope.hideShowBasket = function(){
+					scope.showBasket = false;
+				};
 			}
 		};
 	}])

@@ -72,6 +72,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
+		$scope.clearSearch = function(){
+			console.log("sda");
+			$scope.search_result = {};
+		};
+
 		// When you close the signup form the Tesco form comes
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();

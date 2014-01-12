@@ -14,6 +14,35 @@ angular.module('App.directives', [])
 		};
 	}])
 
+	.directive('ngEnter', [function(){
+		return function (scope, element, attrs) {
+			element.bind("keydown keypress", function (event) {
+				if(event.which === 27) {
+					scope.$apply(function (){
+						scope.$eval(attrs.ngEnter);
+					});
+
+					event.preventDefault();
+				}
+			});
+		};
+	}])
+
+	.directive('closesearch', ['$rootScope', function($rootScope){
+		return {
+			template: '<i class="glyphicon glyphicon-remove-circle"></i>',
+			restrict: 'E',
+			link: function(scope, element, attrs) {
+
+				element.bind("click", function() {
+					scope.search_result = {};
+					scope.$apply();
+				});
+
+			}
+		};
+	}])
+
 	.directive('basket', ['$rootScope', function($rootScope){
 		return {
 			templateUrl: 'static/app/partials/_basket_detail.html',

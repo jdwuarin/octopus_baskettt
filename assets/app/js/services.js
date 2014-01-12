@@ -155,8 +155,6 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			isNotValid: function(list) {
 
-				console.log(list.cuisine);
-
 				// First check to avoid an error with length
 				if(isUndefined(list.cuisine) ||
 					isUndefined(list.people) ||
@@ -164,7 +162,7 @@ angular.module('App.services', ['LocalStorageModule'])
 					isUndefined(list.days)) {
 					return true;
 				}
-				console.log("defined");
+
 				if(list.cuisine.length === 0 ||
 					list.people.length === 0 ||
 					list.budget.length === 0 ||

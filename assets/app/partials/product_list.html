@@ -8,18 +8,22 @@
 		<div class="col-md-12 basket-bar">
 			<div class="row">
 				<div class="col-md-3 basket">
-					<div ng-mouseover="showBasketDetails()">My basket <b>(Total: GBP{{basketTotal()}})</b>
+					<div ng-mouseover="showBasketDetails()">
+						My basket <b>(Total: GBP{{basketTotal()}})</b>
 						<basket></basket>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 search-bar">
 					<form ng-submit="searchProducts()">
-						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products">
+						<div class="search-bar-container ">
+							<closesearch></closesearch>
+							<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-enter="clearSearch()">
+						</div>
 						<button class="btn-gray" type="submit">Search</button>
 					</form>
 
 				</div>
-				<div class="transfer">
+				<div class="col-md-3 transfer">
 					<button class="btn-transfer" ng-click="transferBasket()">Transfer my baskettt</button>
 					<button class="btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
 				</div>
@@ -29,36 +33,40 @@
 
 	</div>
 </div>
+
 <signup></signup>
 <tesco></tesco>
 
-	<div class="row">
-		<div class="product-list-container">
-			<li ng-repeat="product in search_result" class="search-item">
-				<img ng-src="{{product.img}}" alt="">
-				{{ product.name }} {{ product.price }}
-				<button class="btn-orange" ng-click="addProduct(product)">Add</button>
-			</li>
-			<div class="row">
-			<div ng-show="loadingBasket" class="loading-basket">Loading your basket</div>
-			<div ng-repeat="product in products" class="col-md-4" >
-
-				<div class="product-box" ng-class="{'selected_product':selectedStatus}">
-					<li class="product-title">
-						{{product.name}} <i remove></i>
-					</li>
-					<li class="product-img">
-						<img ng-src="{{product.img}}" alt="">
-					</li>
-					<li class="product-price">
-						<button class="btn-quantity" ng-click="removeProduct(product)">-</button>
-						{{getTotal(product.price, product.quantity)}} ({{ product.quantity }})
-						<button class="btn-quantity" ng-click="addProduct(product)">+</button>
-					</li>
-				</div>
+<div class="row">
+	<div class="product-list-container">
+		<li ng-repeat="product in search_result" class="search-item">
+			<img ng-src="{{product.img}}" alt="">
+			{{ product.name }} {{ product.price }}
+			<button class="btn-orange" ng-click="addProduct(product)">Add</button>
+		</li>
+		<div class="row">
+			<div ng-show="loadingBasket" class="loading-basket">
+				<div class="spinner"></div>	<p>Loading your basket</p>
 			</div>
+			<div class="col-md-12">
+				<div ng-repeat="product in products" >
+
+					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
+						<li class="product-title">
+							{{product.name}} <i remove></i>
+						</li>
+						<li class="product-img">
+							<img ng-src="{{product.img}}" alt="">
+						</li>
+						<li class="product-price">
+							<button class="btn-quantity" ng-click="removeProduct(product)">-</button>
+							{{getTotal(product.price, product.quantity)}} ({{ product.quantity }})
+							<button class="btn-quantity" ng-click="addProduct(product)">+</button>
+						</li>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<br>
+</div>

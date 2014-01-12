@@ -19,7 +19,6 @@
         }
     }
     .transfer{
-        .col-md-3;
         line-height: 60px;
         float: right;
         border-left: @gray-border;
@@ -51,6 +50,11 @@
     text-align: center;
     margin: 40px 0px;
     border: @gray-border;
+    max-width: 250px;
+    float: left;
+    position: relative;
+    float: left;
+    overflow: hidden;
 
     img{
         height:auto;
@@ -120,13 +124,16 @@
 }
 
 .search-bar{
-    .form-inline;
-    padding: 20px 0px;
-    text-align: center;
-    border: @gray-border;
-    border-top: 0!important;
-    input{
-        width: 90%;
+    .search-bar-container{
+        position: relative;
+
+        i{
+          position: absolute;
+          right:10px;
+          top:25px;
+          color:@dark-gray;
+          cursor:pointer;
+        }
     }
 }
 
@@ -136,14 +143,19 @@
     background-color: white;
     border: @gray-border;
     border-top: 0;
-    padding: 20px;
-    margin-left: -1px;
+    padding: 0px 20px 20px 20px;
+    margin-right: -1px;
 
     ul{
         padding: 0!important; /* cancel chrome padding */
     }
 
+    .list li:hover{
+        border-bottom: 3px solid @normal-gray;
+    }
+
     li{
         list-style-type: none;
+
     }
 }

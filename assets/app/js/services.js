@@ -96,7 +96,7 @@ angular.module('App.services', ['LocalStorageModule'])
 		preferenceList.cuisine= [];
 
 		var isUndefined = function(variable){
-			return typeof someUndeclaredVariable == "undefined";
+			return typeof variable == "undefined";
 		};
 
 		return {
@@ -133,6 +133,8 @@ angular.module('App.services', ['LocalStorageModule'])
 				}
 			},
 			setParameters: function(preferences) {
+
+				preferenceList.cuisine = this.getCuisine();
 				preferenceList.people = preferences.people;
 				preferenceList.days   = preferences.days;
 				preferenceList.budget = preferences.budget;
@@ -153,14 +155,16 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			isNotValid: function(list) {
 
+				console.log(list.cuisine);
+
 				// First check to avoid an error with length
 				if(isUndefined(list.cuisine) ||
-					isUndefined(list.people.length) ||
-					isUndefined(list.budget.length) ||
-					isUndefined(list.days.length)) {
+					isUndefined(list.people) ||
+					isUndefined(list.budget) ||
+					isUndefined(list.days)) {
 					return true;
 				}
-
+				console.log("defined");
 				if(list.cuisine.length === 0 ||
 					list.people.length === 0 ||
 					list.budget.length === 0 ||

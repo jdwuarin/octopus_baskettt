@@ -6,21 +6,36 @@
     padding: 0px !important;
 }
 
-.product-list-title{
+.basket-bar{
     background-color: @light-gray;
-    border: 1px solid #d7d7d7;
-
-    margin-top: 30px;
+    border-bottom: @gray-border;
     height:60px;
-    padding: 0px 20px;
+    line-height: 60px;
 
-    div, button{
-        display: inline-block;
+    form{
+        .form-inline;
+        button{
+            display: none;
+        }
+    }
+    .transfer{
+        .col-md-3;
+        line-height: 60px;
+        float: right;
+        border-left: @gray-border;
     }
 
-    div{
-        margin-top: 20px;
+    .basket{
+        border-right: @gray-border;
     }
+}
+
+.product-list-title{
+
+
+    // margin-top: 30px;
+    height:60px;
+    // padding: 0px 20px;
 
     .btn-gray{
         color:black!important;
@@ -120,7 +135,9 @@
     position: absolute;
     background-color: white;
     border: @gray-border;
+    border-top: 0;
     padding: 20px;
+    margin-left: -1px;
 
     ul{
         padding: 0!important; /* cancel chrome padding */

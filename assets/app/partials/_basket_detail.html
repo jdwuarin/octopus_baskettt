@@ -1,9 +1,11 @@
 <div ng-show="showBasket" class="basket-detail">
     <ul>
         <li ng-click="hideShowBasket()" class="btn-close">x</li>
-        <li ng-repeat="product in products">
-            {{product.name}}
-        </li>
+        <ul>
+            <li ng-repeat="product in products">
+                {{product.name}}
+            </li>
+        </ul>
     </ul>
 </div>
 

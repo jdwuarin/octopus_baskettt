@@ -5,6 +5,15 @@
 
 angular.module('App.directives', [])
 
+	.directive('people', [function(){
+		return {
+			templateUrl: 'static/app/partials/_people.html',
+			restrict: 'E',
+			link: function(scope) {
+			}
+		};
+	}])
+
 	.directive('basket', ['$rootScope', function($rootScope){
 		return {
 			templateUrl: 'static/app/partials/_basket_detail.html',

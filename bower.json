@@ -25,7 +25,8 @@
     "jquery": "~2.0.3",
     "respond": "~1.4.1",
     "angular": "~1.2.5",
-    "angular-animate": "*"
+    "angular-animate": "*",
+    "json3": "*"
   },
   "resolutions": {
     "angular": "1.2.7"

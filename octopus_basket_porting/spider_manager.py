@@ -3,7 +3,7 @@ from scrapy.crawler import Crawler
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
 
-from basket_porting.spiders.tesco_basket_spider import Tesco_basket_spider
+from octopus_basket_porting.spiders.tesco_basket_spider import TescoBasketSpider
 
 
 class Spider_manager_controller(object):
@@ -14,7 +14,7 @@ class Spider_manager_controller(object):
     @classmethod
     def create_if_none(cls): 
         if cls.spider_manager is None:
-            cls.spider_manager = Spider_manager()
+            cls.spider_manager = SpiderManager()
         else:
             pass
 
@@ -24,26 +24,26 @@ class Spider_manager_controller(object):
         reactor.callFromThread(cls.spider_manager.create_and_run_crawler, basket)
 
 
-class Spider_manager(object):
+class SpiderManager(object):
 
     basket_status = {}
 
     @classmethod
     def create_and_run_crawler(cls, basket):
 
-        spider = Tesco_basket_spider(product_details = basket.product_details, 
-            loginId = basket.loginId, password = basket.password, 
-            request = basket.request, thread_manager = basket.thread_manager) 
+        spider = TescoBasketSpider(product_details=basket.product_details,
+                                   loginId=basket.login_id, password=basket.password,
+                                   request=basket.request, thread_manager=basket.thread_manager)
 
         crawled_items = []
         dropped_items = []
         cls.basket_status[basket.request] = [crawled_items, dropped_items]
         settings = get_project_settings()
         crawler = Crawler(settings)
-        crawler.signals.connect(cls.basket_created, signal = signals.spider_closed)
-        crawler.signals.connect(cls.basket_error, signal = signals.spider_error)
-        crawler.signals.connect(cls.item_not_added_error, signal = signals.item_dropped)
-        crawler.signals.connect(cls.item_successfully_crawled, signal = signals.item_scraped)
+        crawler.signals.connect(cls.basket_created, signal=signals.spider_closed)
+        crawler.signals.connect(cls.basket_error, signal=signals.spider_error)
+        crawler.signals.connect(cls.item_not_added_error, signal=signals.item_dropped)
+        crawler.signals.connect(cls.item_successfully_crawled, signal=signals.item_scraped)
         crawler.configure()
         crawler.crawl(spider)
         crawler.start()

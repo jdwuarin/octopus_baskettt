@@ -6,6 +6,6 @@
 from scrapy.item import Item, Field
 
 
-class Tesco_basket_porting_item(Item):
+class TescoBasketPortingItem(Item):
     success = Field()
     link = Field()

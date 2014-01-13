@@ -185,7 +185,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-TASTYPIE_FULL_DEBUG = True #set back to false on production etc...
+TASTYPIE_FULL_DEBUG = False
 
 TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 
@@ -194,7 +194,7 @@ MAX_USERNAME_LENGTH = 150
 ACCOUNT_ACTIVATION_DAYS = 7
 
 ALLOWED_HOSTS = [
-    '127.0.0.1', # localhost
+    '127.0.0.1',  # localhost
     'baskettt.co',
     'baskettt.com',
     'baskettt.co.uk',

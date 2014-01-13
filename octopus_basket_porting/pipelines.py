@@ -5,19 +5,19 @@
 from scrapy.exceptions import DropItem
 
 
-class Tesco_basket_porting_pipeline(object):
+class TescoBasketPortingPipeline(object):
     def process_item(self, item, spider):
 
         if spider.name is "tesco_basket":
             if item['success'] == "False":
-                raise DropItem("someFailure occured")
+                raise DropItem("someFailure occurred")
 
         return item
 
 
-
-class Product_not_found_exception(Exception):
+class ProductNotFoundException(Exception):
     def __init__(self, product_id):
         self.value = product_id
+
     def __str__(self):
         return "could not find " + repr(self.value)

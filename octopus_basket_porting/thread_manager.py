@@ -1,6 +1,7 @@
 from threading import Event
 
-class Thread_manager(object):
+
+class ThreadManager(object):
 
     def __init__(self):
         self.lock = Event()

@@ -5,11 +5,11 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from models import Product, Recipe
+from octopus_groceries.models import Product, Recipe
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
-from recommendation_engine.basket_onboarding_info import Basket_onboarding_info
-from recommendation_engine.basket_recommendation_engine import Basket_recommendation_engine
+from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
+from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
 from django.http import HttpResponse
 import json
 
@@ -152,11 +152,10 @@ class UserResource(ModelResource):
             return HttpResponse(no_success,
                 content_type="application/json")
 
-
-        onboarding_info = Basket_onboarding_info(people = data['people'], budget = data['budget'],
+        onboarding_info = BasketOnboardingInfo(people = data['people'], budget = data['budget'],
             tags = data['cuisine'], days = data['days'])
 
-        basket = Basket_recommendation_engine.create_onboarding_basket(onboarding_info)
+        basket = BasketRecommendationEngine.create_onboarding_basket(onboarding_info)
 
         response = []
 

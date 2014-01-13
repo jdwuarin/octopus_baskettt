@@ -6,7 +6,7 @@ As I will be using mongodb, here it goes:
 $ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 
 $ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/10gen.list
 $ sudo apt-get update
-$ sudo apt-get install mongodb-10gen #this willl start mongodb automatically.
+$ sudo apt-get install mongodb-10gen #this will start mongodb automatically.
 $ sudo apt-get install ipython python-pip
 $ sudo apt-get install build-essential python-dev
 $ sudo pip install virtualenv

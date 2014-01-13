@@ -18,7 +18,7 @@ import os
 # Path to be changed on server to its final value
 
 PROJECT_DIR = os.path.dirname(__file__)
-PROJECT_DIR = PROJECT_DIR.replace('octopus_basket_porting',"")
+PROJECT_DIR = PROJECT_DIR.replace('octopus_basket_porting', "")
 sys.path.append(os.path.join(PROJECT_DIR))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
@@ -28,8 +28,8 @@ BOT_NAME = 'basket_porter'
 SPIDER_MODULES = ['octopus_basket_porting.spiders.tesco_basket_spider']
 
 ITEM_PIPELINES = {
-    'octopus_basket_porting.pipelines.Tesco_basket_porting_pipeline' : 4,
+    'octopus_basket_porting.pipelines.TescoBasketPortingPipeline' : 4,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'webScraper (+http://www.yourdomain.com)'
+#USER_AGENT = 'webScraper (+http://baskettt.co)'

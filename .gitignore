@@ -1,5 +1,6 @@
 
-octopusProducts/migrations
+octopus_groceries/migrations
+octopus_user/migrations
 env
 lib-cov
 *.seed
@@ -34,4 +35,5 @@ bin/*
 bower_components
 static/*
 .tmp/
+.idea/
 octopus/local_settings.py

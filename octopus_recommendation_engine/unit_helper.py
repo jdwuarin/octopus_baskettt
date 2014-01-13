@@ -1,6 +1,5 @@
 class Unit_helper(object):
-
-    recipe_ingredient_gram_unit =  [
+    recipe_ingredient_gram_unit = [
         "bag",
         "can",
         "g",
@@ -58,7 +57,7 @@ class Unit_helper(object):
     #will be equivalent to which quantity of corresponding
     #product
     @classmethod
-    def get_product_usage(cls, recipe_ingredient, product, qu_ing_needed = None):
+    def get_product_usage(cls, recipe_ingredient, product, qu_ing_needed=None):
 
         ingredient_quantity = None
 
@@ -68,7 +67,7 @@ class Unit_helper(object):
             ingredient_quantity = qu_ing_needed
 
         if recipe_ingredient.unit in cls.recipe_ingredient_gram_unit and (
-            recipe_ingredient.unit in cls.recipe_ingredient_each_unit):
+                recipe_ingredient.unit in cls.recipe_ingredient_each_unit):
             #the rare case where the recipe_ingredient.unit could be either of both
             if float(ingredient_quantity) > 10.0:
                 #we will assume grams
@@ -92,7 +91,7 @@ class Unit_helper(object):
             else:
                 return "1"
 
-        elif recipe_ingredient.unit in cls.recipe_ingredient_each_unit: 
+        elif recipe_ingredient.unit in cls.recipe_ingredient_each_unit:
 
             if product.unit == "each":
                 return ingredient_quantity

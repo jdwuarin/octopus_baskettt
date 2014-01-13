@@ -1,5 +1,4 @@
-class Basket_onboarding_info:
-	
+class BasketOnboardingInfo:
     def __init__(self, **kw):
         self.people = kw['people']
         self.days = kw['days']

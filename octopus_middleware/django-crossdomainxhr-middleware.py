@@ -3,6 +3,7 @@ from django import http
 
 try:
     from django.conf import settings
+
     XS_SHARING_ALLOWED_ORIGINS = settings.XS_SHARING_ALLOWED_ORIGINS
     XS_SHARING_ALLOWED_METHODS = settings.XS_SHARING_ALLOWED_METHODS
     XS_SHARING_ALLOWED_HEADERS = settings.XS_SHARING_ALLOWED_HEADERS
@@ -23,6 +24,7 @@ class XsSharing(object):
 
     Based off https://gist.github.com/426829
     """
+
     def process_request(self, request):
         if 'HTTP_ACCESS_CONTROL_REQUEST_METHOD' in request.META:
             response = http.HttpResponse()

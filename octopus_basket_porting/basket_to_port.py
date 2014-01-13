@@ -1,8 +1,8 @@
-class Basket_to_port(object):
+class BasketToPort(object):
 
-    def __init__(self, request, loginId, password, 
-            product_details, thread_manager):
-        self.loginId = loginId
+    def __init__(self, request, login_id, password,
+                 product_details, thread_manager):
+        self.login_id = login_id
         self.password = password
         self.product_details = product_details
         self.request = request

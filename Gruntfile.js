@@ -40,8 +40,8 @@ module.exports = function(grunt) {
 
     // Project settings
     app: {
-      index: 'octopusProducts/templates/products/index_dev.html',
-      indexFolder: 'octopusProducts/templates/products/',
+      index: 'octopus_groceries/templates/products/index_dev.html',
+      indexFolder: 'octopus_groceries/templates/products/',
       source: 'assets',
       dist: 'static'
     },
@@ -163,7 +163,7 @@ module.exports = function(grunt) {
           }, {
             expand: true,
             flatten: true,
-            dest: 'octopusProducts/templates/products/',
+            dest: 'octopus_groceries/templates/products/',
             src: '<%= app.index %>',
             rename: function(dest, src) {
               return dest+'index_prod.html';

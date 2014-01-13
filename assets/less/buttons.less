@@ -1,4 +1,5 @@
 .btn-orange{
+	.btn;
 	&, &:hover{
 		background-color: @orange!important;
 		border: 1px solid #E9BC79;
@@ -8,6 +9,7 @@
 }
 
 .btn-gray{
+	.btn;
 	&, &:hover{
 		background-color: #F6F6F6!important;
 		border: 1px solid #C9C9C9;
@@ -16,24 +18,29 @@
 }
 
 .btn-login{
-	padding: 10px!important;
-	margin: 10px;
-	width: 102px;
+	.btn;
+	.btn-gray;
+	.navbar-btn;
+	padding: 8px 13px!important;
+	margin: 11px 10px!important;
 }
 
 .btn-cta{
+	.btn;
+	.btn-orange;
 	border-radius: 5px;
 	width: 250px;
 	height: 62px;
 	font-size: 18px;
 	border: 1px solid #E9BC79;
-	margin-top: 40px;
+	margin-top: 80px;
+	font-family: @arvo;
 }
 
 .btn-next  {
-	border-radius: 50% 50% !important;
-	height: 50px;
-	width:50px;
+	.btn-round(50px);
+	.btn;
+	.btn-gray;
 	font-size: 24px;
 	padding:0!important;
 	float: right;
@@ -42,10 +49,20 @@
 	}
 }
 
+
 .btn-quantity{
-	border-radius: 50% 50% !important;
-	height: 22px;
-	width: 22px;
+	.btn-round(22px);
+	.btn-orange;
 	padding: 0px 0px 5px 0px!important;
 	margin: 0px 10px;
+}
+
+.btn-close{
+	cursor:pointer;
+	text-align: right;
+	height: 30px;
+}
+
+.btn-transfer{
+	.btn-orange;
 }

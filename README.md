@@ -1,3 +1,5 @@
+[![Build Status](https://magnum.travis-ci.com/arnaudbenard/octopus.png?token=xzYsjD6yTXcExfozSfDg&branch=master)](https://magnum.travis-ci.com/arnaudbenard/octopus)
+
 # Octopus
 
 ## How to use Grunt

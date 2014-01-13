@@ -5,6 +5,62 @@
 
 angular.module('App.directives', [])
 
+	.directive('people', [function(){
+		return {
+			templateUrl: 'static/app/partials/_people.html',
+			restrict: 'E',
+			link: function(scope) {
+			}
+		};
+	}])
+
+	.directive('ngEnter', [function(){
+		return function (scope, element, attrs) {
+			element.bind("keydown keypress", function (event) {
+				if(event.which === 27) {
+					scope.$apply(function (){
+						scope.$eval(attrs.ngEnter);
+					});
+
+					event.preventDefault();
+				}
+			});
+		};
+	}])
+
+	.directive('closesearch', ['$rootScope', function($rootScope){
+		return {
+			template: '<i class="glyphicon glyphicon-remove-circle"></i>',
+			restrict: 'E',
+			link: function(scope, element, attrs) {
+
+				element.bind("click", function() {
+					scope.search_result = {};
+					scope.$apply();
+				});
+
+			}
+		};
+	}])
+
+	.directive('basket', ['$rootScope', function($rootScope){
+		return {
+			templateUrl: 'static/app/partials/_basket_detail.html',
+			restrict: 'E',
+			link: function(scope) {
+
+				scope.showBasket = false;
+				$rootScope.$on('showBasketDetails', function(event){
+					scope.showBasket = false; // change to true if you want to make it work
+				});
+
+				scope.hideShowBasket = function(){
+					scope.showBasket = false;
+				};
+			}
+		};
+	}])
+
 	// When you click on the DOM a the .selected class is injected
 	.directive('click', ['Preference',function(Preference) {
 		return function(scope, element, attrs) {

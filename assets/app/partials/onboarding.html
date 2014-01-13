@@ -7,18 +7,19 @@
 			</ul>
 		</div>
 	</div>
-{{preferences}}
+
 	<div class="row">
 		<div class="col-md-12 onboard-title">
 				<div ng-switch on="page">
 					<div ng-switch-when="1">I like to eat</div>
 					<div ng-switch-when="2" >
 						I need groceries for
-						<input type="text" class="form-control onboard-people" placeholder="2" ng-model="preference.people"> people during
+						<people></people>
+						 people during
 						<input type="text" class="form-control onboard-people" placeholder="7" ng-model="preference.days"> days<br>and
 						I want to spend
 						<input type="text" class="form-control onboard-money" placeholder="60" ng-model="preference.budget">&pound;
-						<a href="javascript:;" class="btn btn-gray btn-next" ng-click="saveData()"> <i class="glyphicon glyphicon-arrow-right"></i> </a>
+						<a href="javascript:;" class="btn-next" ng-click="saveData()"> <i class="glyphicon glyphicon-arrow-right"></i> </a>
 					</div>
 				</div>
 		</div>
@@ -36,7 +37,7 @@
 					</div>
 				</div>
 				<div class="col-md-1 next-container">
-					<a href="javascript:;" class="btn btn-gray btn-next" ng-click="saveData()"> <i class="glyphicon glyphicon-arrow-right"></i> </a>
+					<a href="javascript:;" class="btn-next" ng-click="saveData()"> <i class="glyphicon glyphicon-arrow-right"></i> </a>
 				</div>
 			</div>
 		</div>

@@ -42,7 +42,7 @@ module.exports = function(grunt) {
     app: {
       index: 'octopusProducts/templates/products/index_dev.html',
       indexFolder: 'octopusProducts/templates/products/',
-      source: 'media',
+      source: 'assets',
       dist: 'static'
     },
 
@@ -60,27 +60,6 @@ module.exports = function(grunt) {
       }
     },
 
-    // concat: {
-    //  options: {
-    //    separator: ';',
-    //  },
-    //  dist: {
-    //    src: ['media/app/js/*.js'],
-    //    dest: 'static/js/built.js',
-    //  },
-    // },
-
-    // uglify: {
-    //  js: {
-    //    options: {
-    //      flatten: true
-    //    },
-    //    files: {
-    //      'static/js/built.min.js': ['static/js/built.js']
-    //    }
-    //  }
-    // },
-
     imagemin: {
       png: {
         options: {
@@ -90,7 +69,7 @@ module.exports = function(grunt) {
         // Set to true to enable the following options…
         expand: true,
         // cwd is 'current working directory'
-        cwd: 'media/img/',
+        cwd: 'assets/img/',
         src: ['*.png'],
         dest: 'static/img/',
         ext: '.png'

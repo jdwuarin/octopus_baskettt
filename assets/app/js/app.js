@@ -61,24 +61,22 @@ angular.module('App', [
 	.otherwise({ redirectTo: '' });
 }])
 
-.run(['$cookies', '$http', '$rootScope', 'User', function($cookies, $http, $rootScope, User){
-	
+.run(['$cookies', '$http', '$rootScope', 'User', 'Alert', function($cookies, $http, $rootScope, User, Alert){
+
 	$http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
+		// Force user to log in on required pages
 		if(!User.isLoggedIn()) {
 
 			User.requestLoggedIn(function(res){
 				// The user is logged in in the backend
 				if(res.success){
 					User.setLoggedIn(true);
-				}
-
-				else{
+				} else{
 					User.setLoggedIn(false);
-
 					if(currRoute.requireLogin){
 						User.redirect("/login");
 					}

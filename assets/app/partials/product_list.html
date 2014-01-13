@@ -1,0 +1,70 @@
+
+<div class="loading" ng-show="viewLoading">Loading</div>
+
+<div ng-hide="viewLoading">
+
+	<div class="row">
+		<div class="col-md-12 basket-bar">
+			<div class="row">
+				<div class="col-md-3 basket">
+					<div ng-mouseover="showBasketDetails()">
+						My basket <b>(GBP{{basketTotal()}})</b>
+						<basket></basket>
+					</div>
+				</div>
+				<div class="col-md-6 search-bar">
+					<form ng-submit="searchProducts()">
+						<div class="search-bar-container ">
+							<closesearch></closesearch>
+							<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-enter="clearSearch()">
+						</div>
+						<button class="btn-gray" type="submit">Search</button>
+					</form>
+
+				</div>
+				<div class="col-md-3 transfer">
+					<button class="btn-transfer" ng-click="transferBasket()">Transfer my baskettt</button>
+					<button class="btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<signup></signup>
+<tesco></tesco>
+
+<div class="row">
+	<div class="product-list-container">
+		<li ng-repeat="product in search_result" class="search-item">
+			<img ng-src="{{product.img}}" alt="">
+			{{ product.name }} {{ product.price }}
+			<button class="btn-orange" ng-click="addProduct(product)">Add</button>
+		</li>
+		<div class="row">
+			<div ng-show="loadingBasket" class="loading-basket">
+				<div class="spinner"></div>	<p>Loading your basket</p>
+			</div>
+			<div class="col-md-12">
+				<div ng-repeat="product in products" class="product-container"  >
+
+					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
+						<p class="product-title">{{product.name}} <i remove></i></p>
+
+						<li class="product-img">
+							<img ng-src="{{product.img}}" alt="">
+						</li>
+						<li class="product-price">
+							<button class="btn-quantity" ng-click="removeProduct(product)">-</button>
+							{{getTotal(product.price, product.quantity)}} ({{ product.quantity }})
+							<button class="btn-quantity" ng-click="addProduct(product)">+</button>
+						</li>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

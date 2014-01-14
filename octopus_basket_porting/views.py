@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from octopus_basket_porting.basket_to_port import BasketToPort
 from octopus_basket_porting.spider_manager import Spider_manager_controller
 from octopus_basket_porting.thread_manager import ThreadManager
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def port_basket(request):
 
     Spider_manager_controller.create_if_none()

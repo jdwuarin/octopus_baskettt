@@ -11,18 +11,19 @@ from tastypie.authentication import SessionAuthentication
 from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
 from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
 from django.http import HttpResponse
+from user_objects_only_authorization import UserObjectsOnlyAuthorization
 import json
 
 
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
-        fields = ['email', 'date_joined']  # we can either whitelist like this or blacklist using exclude
-        allowed_methods = ['get', 'post']
+        fields = ['username', 'email', 'date_joined']  # we can either whitelist like this or blacklist using exclude
+        allowed_methods = ['get']
         resource_name = 'user'
         #excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
-        authorization = DjangoAuthorization()  # these are relevant to the API and who can access these parts of the API
-        authentication = SessionAuthentication()  # in other views, it would be required of us to add the "@login_required" decoration
+        authorization = UserObjectsOnlyAuthorization()
+        authentication = SessionAuthentication()
 
     def prepend_urls(self):
         return [
@@ -95,12 +96,12 @@ class UserResource(ModelResource):
         password = data.get('password', '')
 
         try:
-            User.objects.create_user(email, '', password)
+            User.objects.create_user(email, email, password)
 
         except IntegrityError:
             print "User already exits"
             return self.create_response(request, {
-                #user with same email adress already exists
+                #user with same email address already exists
                 'success': False
             })
 

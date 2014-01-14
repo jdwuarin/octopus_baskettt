@@ -3,14 +3,16 @@ from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from models import Product, Recipe
 from django.http import HttpResponse
+from product_objects_authorization import ProductObjectsAuthorization
 import json
 
 
 class ProductResource(ModelResource):
     class Meta:
         queryset = Product.objects.all()
-        allowed_methods = ['get', 'post']
+        allowed_methods = ['get']
         resource_name = 'product'
+        authorization = ProductObjectsAuthorization()
 
     def prepend_urls(self):
         return [

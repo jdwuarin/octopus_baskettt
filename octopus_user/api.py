@@ -17,34 +17,34 @@ import json
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
-        fields = ['email', 'date_joined'] #we can either whitelist like this or blacklist using exclude
+        fields = ['email', 'date_joined']  # we can either whitelist like this or blacklist using exclude
         allowed_methods = ['get', 'post']
         resource_name = 'user'
         #excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
-        authorization = DjangoAuthorization() #these are relevant to the API and who can access these parts of the API
-        authentication = SessionAuthentication() #in other views, it would be required of us to add the "@login_required" decoration
+        authorization = DjangoAuthorization()  # these are relevant to the API and who can access these parts of the API
+        authentication = SessionAuthentication()  # in other views, it would be required of us to add the "@login_required" decoration
 
     def prepend_urls(self):
         return [
-        url(r"^(?P<resource_name>%s)/login%s$" %
-            (self._meta.resource_name, trailing_slash()),
-            self.wrap_view('login'), name="api_login"),
+            url(r"^(?P<resource_name>%s)/login%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('login'), name="api_login"),
 
-        url(r'^(?P<resource_name>%s)/logout%s$' %
-            (self._meta.resource_name, trailing_slash()),
-            self.wrap_view('logout'), name='api_logout'),
+            url(r'^(?P<resource_name>%s)/logout%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('logout'), name='api_logout'),
 
-        url(r'^(?P<resource_name>%s)/signup%s$' %
-            (self._meta.resource_name, trailing_slash()),
-            self.wrap_view('signup'), name='api_signup'),
+            url(r'^(?P<resource_name>%s)/signup%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('signup'), name='api_signup'),
 
-        url(r'^(?P<resource_name>%s)/current%s$' %
-            (self._meta.resource_name, trailing_slash()),
-            self.wrap_view('current'), name='api_current'),
+            url(r'^(?P<resource_name>%s)/current%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('current'), name='api_current'),
 
-        url(r'^(?P<resource_name>%s)/basket%s$' %
-            (self._meta.resource_name, trailing_slash()),
-            self.wrap_view('basket'), name='api_basket'),
+            url(r'^(?P<resource_name>%s)/basket%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('basket'), name='api_basket'),
         ]
 
     def login(self, request, **kwargs):
@@ -64,18 +64,17 @@ class UserResource(ModelResource):
                 return self.create_response(request, {
                     #redirect to a success page
                     'success': True
-                    })
+                })
             else:
                 return self.create_response(request, {
                     'success': False,
                     'reason': 'disabled',
-                    }, HttpForbidden )
+                }, HttpForbidden)
         else:
             return self.create_response(request, {
                 'success': False,
                 'reason': 'incorrect',
-                }, HttpUnauthorized )
-
+            }, HttpUnauthorized)
 
     def logout(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
@@ -84,10 +83,9 @@ class UserResource(ModelResource):
             print request.user
             print request.session
             logout(request)
-            return self.create_response(request, { 'success': True })
+            return self.create_response(request, {'success': True})
         else:
-            return self.create_response(request, { 'success': False }, HttpUnauthorized)
-
+            return self.create_response(request, {'success': False}, HttpUnauthorized)
 
     def signup(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -111,9 +109,8 @@ class UserResource(ModelResource):
         login(request, user)
 
         return self.create_response(request, {
-                'success': True
-            })
-
+            'success': True
+        })
 
     # Get the current user
     def current(self, request, **kwargs):
@@ -129,7 +126,7 @@ class UserResource(ModelResource):
                 'success': False
             })
 
-        # Recommendation engine
+    # Recommendation engine
     def basket(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
 
@@ -145,15 +142,24 @@ class UserResource(ModelResource):
         except KeyError:
             key_error = True
 
-        if  key_error or int(data['budget'])< 1 or len(data['cuisine']) < 1 or(
-            int(data['days'])<1):
-
+        if key_error or int(data['budget']) < 1 or len(data['cuisine']) < 1 or (
+                int(data['days']) < 1):
             no_success = json.dumps({'success': False})
             return HttpResponse(no_success,
-                content_type="application/json")
+                                content_type="application/json")
 
-        onboarding_info = BasketOnboardingInfo(people = data['people'], budget = data['budget'],
-            tags = data['cuisine'], days = data['days'])
+        #this is a hot fix for the fact that
+        #the only tag for european type cuisines that exists is "European"
+        real_cuisines = []
+        for cuisine in data['cuisine']:
+            if cuisine == "Italian" or cuisine == "French" or cuisine == "Spanish":
+                real_cuisines.append("European")
+            else:
+                real_cuisines.append(cuisine)
+        data['cuisine'] = real_cuisines
+
+        onboarding_info = BasketOnboardingInfo(people=data['people'], budget=data['budget'],
+                                               tags=data['cuisine'], days=data['days'])
 
         basket = BasketRecommendationEngine.create_onboarding_basket(onboarding_info)
 
@@ -174,3 +180,4 @@ class UserResource(ModelResource):
 
         data = json.dumps(response)
 
+        return HttpResponse(data, content_type="application/json")

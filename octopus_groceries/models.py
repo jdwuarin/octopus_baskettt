@@ -12,6 +12,7 @@ class Product(models.Model):
     #added price, productOrigin, image etc
     price = models.CharField(max_length=12, default='NaN', editable=False)
     quantity = models.CharField(max_length=50, default='NaN', editable=False)
+    product_life_expectancy = models.IntegerField(default=-1, editable=False)
     unit = models.CharField(max_length=50, default='none', editable=False)
     supermarket = models.ForeignKey(Supermarket, default=-1, editable=False)
     #max_length is defaulted to 100 for image.
@@ -79,6 +80,4 @@ class AbstractProductProduct(models.Model):
     product_tesco = models.ForeignKey(Product, related_name='product_tesco_id', editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.abstract_product_id) + ", " + str(self.rank) + ", " + str(self.product_tesco_id) 
-
-
+        return str(self.abstract_product_id) + ", " + str(self.rank) + ", " + str(self.product_tesco_id)

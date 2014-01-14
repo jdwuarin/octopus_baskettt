@@ -45,5 +45,3 @@ class RecipeResource(ModelResource):
         queryset = Recipe.objects.all()
         allowed_methods = ['get']
         resource_name = 'recipe'
-
-

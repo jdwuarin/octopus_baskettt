@@ -8,6 +8,3 @@ def index(request):
         return render(request, 'products/index_dev.html', context)
     else:
         return render(request, 'products/index_prod.html', context)
-
-
-

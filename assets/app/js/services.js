@@ -220,7 +220,7 @@ angular.module('App.services', ['LocalStorageModule'])
 			// Populate tesco basket
 			post: function(email, password, list, callback) {
 				return $http({
-					url: 'spider/?format=json',
+					url: 'port_basket/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password, products:list}

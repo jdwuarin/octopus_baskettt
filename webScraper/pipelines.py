@@ -4,23 +4,27 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
-from octopus_product.models import Product, Recipe, Tag, Tag_recipe, Recipe_ingredient, Ingredient, Ingredient_product
+from octopus_groceries.models import Product, Recipe, Tag, TagRecipe, \
+    RecipeAbstractProduct, AbstractProduct, AbstractProductProduct, Supermarket
 from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re
 
 class WebscraperPipeline(object):
+
     def process_item(self, item, spider):
         return item
 
-class Tesco_postgres_pipeline(object):
+class TescoPostgresPipeline(object):
+
     def process_item(self, item, spider):
 
         if spider.name is "tesco":
             item2 = Product()
             item2 = item.save(commit=False) #not saving to db yet
             try:
-                pre_existing_item = Product.objects.get(product_origin='tesco', 
+                supermarket = Supermarket.objects.get(name='tesco')
+                pre_existing_item = Product.objects.get(supermarket_id=supermarket,
                     external_id=item2.external_id)
                 #only update prices and offer flag if item already exists
                 pre_existing_item.price = item2.price
@@ -33,11 +37,10 @@ class Tesco_postgres_pipeline(object):
                 #if item does not exist, add it to the db
                 item2.save()
 
-
         return item
 
 
-class Food_com_postgres_pipeline(object):
+class FoodComPostgresPipeline(object):
 
     def process_item(self, item, spider):
 
@@ -46,7 +49,7 @@ class Food_com_postgres_pipeline(object):
             #the recipe object is the object that will be
             #saved to the OctopusProducts_recipe db
             recipe = Recipe()
-            recipe = item.save(commit=False) #just saves the fields contained in the Recipe model
+            recipe = item.save(commit=False)  # just saves the fields contained in the Recipe model
             try:
                 pre_existing_item = Recipe.objects.get(name=recipe.name) 
                 #recipe already exists (supposedly)
@@ -59,94 +62,94 @@ class Food_com_postgres_pipeline(object):
                 #we have to save all the objects in the various dbs.
 
                 recipe.save()
-                self.add_ingredients(item, recipe)
+                self.add_abstract_product(item, recipe)
                 self.add_tags(item, recipe)
 
         return item
 
-    def add_tags(self, item, recipe):
+    @staticmethod
+    def add_tags(item, recipe):
         tags = item['tags']
 
         for tag_string in tags:
             tag = Tag()
 
             try:
-                tag = Tag.objects.get(name = tag_string)
-                #if the ingredient is already in the list, don't add
+                tag = Tag.objects.get(name=tag_string)
+                #if the abstract_product is already in the list, don't add
                 #it again
             except ObjectDoesNotExist:
                 tag.name = tag_string
                 tag.save()
 
-            tag_recipe = Tag_recipe(tag = tag, recipe = recipe)
+            tag_recipe = TagRecipe(tag=tag, recipe=recipe)
             tag_recipe.save()
 
-    def add_ingredients(self, item, recipe):
+    @staticmethod
+    def add_abstract_product(item, recipe):
 
-        ingredient_items = item['ingredient_items']
+        abstract_product_items = item['abstract_product_items']
 
-        for ingredient_item in ingredient_items:
+        for abstract_product_item in abstract_product_items:
 
-            ingredient = Ingredient()
-            recipe_ingredient = Recipe_ingredient()
-            name = ingredient_item['name']
+            abstract_product = AbstractProduct()
+            recipe_abstract_product = RecipeAbstractProduct()
+            name = abstract_product_item['name']
             try:
-                quantity = ingredient_item['quantity']
-                unit = ingredient_item['unit']
+                quantity = abstract_product_item['quantity']
+                unit = abstract_product_item['unit']
             except KeyError:
-                continue #skip ingredient
+                continue  # skip abstract_product
 
             try:
-                ingredient = Ingredient.objects.get(name = name)
-                #if the ingredient is already in the list, don't add
+                abstract_product = AbstractProduct.objects.get(name = name)
+                #if the abstract_product is already in the list, don't add
                 #it again
             except ObjectDoesNotExist:
-                ingredient.name = name
-                ingredient = determine_if_condiment(ingredient)
-                if not ingredient  is None:
-                    ingredient.save()
+                abstract_product.name = name
+                abstract_product = determine_if_condiment(abstract_product)
+                if not abstract_product is None:
+                    abstract_product.save()
                 else:
-                    continue #skip ingredient
+                    continue  # skip abstract_product
 
-            recipe_ingredient = Recipe_ingredient(recipe = recipe,
-                ingredient = ingredient, quantity = quantity, unit = unit)
-            recipe_ingredient.save()
-
-
+            recipe_abstract_product = RecipeAbstractProduct(recipe=recipe,
+                abstract_product=abstract_product, quantity=quantity, unit=unit)
+            recipe_abstract_product.save()
 
 
-class Ingredient_produt_matching_pipeline(object):
+class AbstractProductProductMatchingPipeline(object):
 
     def process_item(self, item, spider):
 
-        if spider.name is "ing_prod_match":
+        if spider.name is "abs_prod_prod_match":
 
-            ingredient = item['matching_ingredient']
+            abstract_product = item['matching_abstract_product']
             matching_product = Product()
 
             try:
-                matching_product = Product.objects.get(external_id = item['external_id'], 
-                    product_origin = item['product_origin']) 
-                    
+                matching_product = Product.objects.get(external_id=item['external_id'],
+                                                       supermarket=item['supermarket'])
 
             except ObjectDoesNotExist:
                 #product could not be found, raise exception and continue
                 # raise Product_not_found_exception(item['external_id'])
-                matching_product = item.save(commit=False) #save new item
+                matching_product = item.save(commit=False)  # save new item
                 matching_product.save()
 
+            abstract_product_product = AbstractProductProduct(abstract_product=abstract_product,
+                                                              rank=item['rank'])
 
-            ingredient_product = Ingredient_product(ingredient = ingredient, 
-                rank = item['rank'])
+            abstract_product_product.product_tesco = matching_product
 
-            ingredient_product.product_tesco = matching_product
-
-            ingredient_product.save()
+            abstract_product_product.save()
         return item
 
 
-class Product_not_found_exception(Exception):
+class ProductNotFoundException(Exception):
+
     def __init__(self, product_id):
         self.value = product_id
+
     def __str__(self):
         return "could not find " + repr(self.value)

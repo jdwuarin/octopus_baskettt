@@ -18,7 +18,7 @@ import os
 # Path to be changed on server to its final value
 
 PROJECT_DIR = os.path.dirname(__file__)
-PROJECT_DIR = PROJECT_DIR.replace('webScraper/webScraper',"")
+PROJECT_DIR = PROJECT_DIR.replace('webScraper',"")
 sys.path.append(os.path.join(PROJECT_DIR))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
@@ -26,12 +26,11 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
 BOT_NAME = 'webScraper'
 
 SPIDER_MODULES = ['webScraper.spiders']
-NEWSPIDER_MODULE = 'webScraper.spiders'
 
 ITEM_PIPELINES = {
-    'webScraper.pipelines.Tesco_postgres_pipeline' : 1, 
-    'webScraper.pipelines.Food_com_postgres_pipeline' : 2 ,
-    'webScraper.pipelines.Ingredient_produt_matching_pipeline' : 3,
+    'webScraper.pipelines.TescoPostgresPipeline': 1,
+    'webScraper.pipelines.FoodComPostgresPipeline': 2,
+    'webScraper.pipelines.AbstractProductProductMatchingPipeline': 3,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

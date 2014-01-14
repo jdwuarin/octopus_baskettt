@@ -1,45 +1,38 @@
-import json
 from scrapy.selector import Selector
-from scrapy import log
-from scrapy.http import Request
-from scrapy.spider import BaseSpider
+#from scrapy.http import Request
+from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 import re
-# from scrapy.contrib.spiders import CrawlSpider, Rule
-# from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
-from octopus_product.models import Ingredient
-
-from webScraper.items import Product_item
+from webScraper.items import ProductItem
+from octopus_groceries.models import Supermarket
 
 
-class Ingredient_product_matching_spider(BaseSpider):
-    name = 'ing_prod_match'
-    tesco_base_url = "http://www.tesco.com/groceries/Product/Search/Default.aspx?searchBox="
-
-    allowed_domains = [
-        "tesco.com",
-
-    ]
+class TescoSpider(CrawlSpider):
+    name = 'tesco'
+    allowed_domains = ["tesco.com", "secure.tesco.com"]
 
     start_urls = [
-        "http://www.tesco.com"
+        "http://www.tesco.com/groceries/"
     ]
 
+    rules = (
 
-    def parse(self, response):
+        #first level
+        Rule(SgmlLinkExtractor(allow=("/groceries/department", ), restrict_xpaths=(
+            '//ul[@class="navigation Groceries"]',)), follow=True),
 
-        ingredients = Ingredient.objects.all()
-        for ingredient in ingredients:
+        #second level
+        Rule(SgmlLinkExtractor(allow=("/groceries/product/browse", ), restrict_xpaths=('//div[@class="clearfix"]',))
+            , callback="parse_listing_page", follow=True),
 
-            link = self.tesco_base_url + ingredient.name.replace(" ", "+")
+        #finally down to the parsing level
+        Rule(SgmlLinkExtractor(allow=("lvl=3", ), restrict_xpaths=('//p[@class="next"]',))
+            , callback="parse_listing_page", follow=True),
 
-            tesco_request = Request(link, callback = self.parse_tesco_result_page)
-            tesco_request.meta['ingredient'] = ingredient
-            yield tesco_request
+    )
 
-
-
-    def parse_tesco_result_page(self, response):
+    def parse_listing_page(self, response):
 
         sel = Selector(response)
 
@@ -52,66 +45,61 @@ class Ingredient_product_matching_spider(BaseSpider):
         external_image_links = sel.xpath('.//img[contains(@src, "img.tesco.com")]/@src').extract()
         external_ids = self.get_ids_from_links(links)
 
-
         items = []
 
-        rank = 1
         for i in range(len(names)):
 
-           # if products[i]
+        # if products[i]
             # if i == 0 or i == 1:
 
-            item = Product_item()
+            item = ProductItem()
 
-            item['name']  = names[i]
+            item['name'] = names[i]
             item['price'] = prices[i].replace(u'\xA3', 'GBP')
 
-            item['quantity'], item['unit']  = self.get_quantity_and_unit(prices[i].replace(u'\xA3', ''), 
-                prices_per_unit[i].replace(u'\xA3', ''))
+            item['quantity'], item['unit'] = self.get_quantity_and_unit(prices[i].replace(u'\xA3', ''),
+                                                                        prices_per_unit[i].replace(u'\xA3', ''))
             item['link'] = links[i]
             item['external_image_link'] = external_image_links[i]
             item['external_id'] = external_ids[i]
-            item['product_origin'] = 'tesco'
-            item['matching_ingredient'] = response.meta['ingredient']
-            item['rank'] = rank
+            item['supermarket'] = Supermarket.objects.get(name='tesco')
 
             items.append(item)
-            rank = rank + 1
 
         return items
 
-    def get_quantity_and_unit(self, price, price_unit):
+    @staticmethod
+    def get_quantity_and_unit(price, price_unit):
         price_unit = re.sub("[^a-zA-Z0-9/.]", "", price_unit)
 
         price_per_unit, unit = price_unit.split("/")
         multiplier = re.sub("[^0-9.]", "", unit)
         real_unit = re.sub("[^a-zA-Z.]", "", unit)
 
-        try: 
+        try:
             float(multiplier)
-        except ValueError: 
+        except ValueError:
             multiplier = 1.0
 
         if real_unit == "cl":
             real_unit = "ml"
-            multiplier = multiplier * 10.0
+            multiplier *= 10.0
         if real_unit == "l" or real_unit == "kg":
-            multiplier = multiplier * 1000.0
-            if real_unit == "l": 
+            multiplier *= 1000.0
+            if real_unit == "l":
                 real_unit = "ml"
-            else: 
+            else:
                 real_unit = "g"
 
         quantity = (float(price) / float(price_per_unit)) * (
             float(multiplier))
 
-        return str(quantity), real_unit 
+        return str(quantity), real_unit
 
+    @staticmethod
+    def get_good_names(names):
 
-
-    def get_good_names(self, names):
-
-        good_names =  []
+        good_names = []
 
         for name in names:
             if '!\r' not in name and 'Cheaper alternatives' not in name:
@@ -119,9 +107,8 @@ class Ingredient_product_matching_spider(BaseSpider):
 
         return good_names
 
-
-
-    def get_ids_from_links(self, links):
+    @staticmethod
+    def get_ids_from_links(links):
 
         external_ids = []
 

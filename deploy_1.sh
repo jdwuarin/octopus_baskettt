@@ -51,14 +51,17 @@ sudo su - octopus -c 'grunt production'
 python manage.py collectstatic #collect static files where django says they should be from settings.py
 
 #populating de db
-python manage.py schemamigration 'octopusProducts' --initial
+python manage.py schemamigration 'octopus_groceries' --initial
+python manage.py schemamigration 'octopus_user' --initial
 echo "no" | python manage.py syncdb #don't create superuser
-python manage.py createsuperuser --noinput --email foo@baskettt.co --username django_auth_user
-python manage.py migrate 'octopusProducts'
+python manage.py createsuperuser --noinput --email webmaster@baskettt.co --username django_auth_user
+python manage.py migrate 'octopus_groceries'
+python manage.py migrate 'octopus_user'
+python manage.py loaddata supermarket_fixture.json
 cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com
-scrapy crawl ing_prod_match
+scrapy crawl abs_prod_prod_match
 
 #dealing with gunicorn
 cd ../

@@ -5,24 +5,27 @@
 
 from scrapy.item import Item, Field
 from scrapy.contrib.djangoitem import DjangoItem
-from octopus_product.models import Product, Recipe, Ingredient
+from octopus_groceries.models import Product, Recipe, AbstractProduct, Supermarket
 
 
-class Product_item(DjangoItem):
+class ProductItem(DjangoItem):
     django_model = Product
-    matching_ingredient = Field()
+    matching_abstract_product = Field()
     rank = Field()
 
-class Recipe_item(DjangoItem):
+
+class RecipeItem(DjangoItem):
     django_model = Recipe
     tags = Field()
-    ingredient_items = Field() #name, quantity, unit
+    abstract_product_items = Field() #name, quantity, unit
 
-class Ingredient_item(DjangoItem):
-    django_model = Ingredient()
+
+class AbstractProductItem(DjangoItem):
+    django_model = AbstractProduct()
     quantity = Field()
     unit = Field()
 
-class Tesco_basket_porting_item(Item):
+
+class TescoBasketPortingItem(Item):
     success = Field()
     link = Field()

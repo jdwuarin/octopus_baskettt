@@ -30,15 +30,19 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db1',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2'
+        'NAME': 'db1',
 
         'USER': 'octopus_user',
         'PASSWORD': 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l',
-        'HOST': 'localhost',        # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                 # Set to empty string for default.
+        'HOST': 'localhost',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',           # Set to empty string for default.
     }
 }
+
+FIXTURE_DIRS = [
+    'fixtures',
+]
 
 ROOT_URLCONF='octopus.urls'
 

@@ -25,6 +25,8 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
 
 BOT_NAME = 'webScraper'
 
+RETRY_TIMES = 20
+
 SPIDER_MODULES = ['webScraper.spiders']
 
 ITEM_PIPELINES = {

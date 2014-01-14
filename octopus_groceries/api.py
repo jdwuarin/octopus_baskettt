@@ -27,6 +27,7 @@ class ProductResource(ModelResource):
 
         results = []
 
+        data = []
         for product in products:
             product_json = {}
             product_json['id'] = product.id

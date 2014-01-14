@@ -15,7 +15,7 @@
         color: black;
         text-shadow: 0px 1px 1px rgba(0,0,0,0.26);
         line-height: 1.8;
-        margin: 74px 10px 50px 10px;
+        margin: 74px 10px 20px 10px;
         background: #F6F6F6;
         border: 1px solid #C9C9C9;
         color: #888888;
@@ -38,9 +38,15 @@
     font-size: 24px;
     color: #4A494A;
     text-align: center;
-    margin-bottom: 40px;
     display: inline-block;
     line-height: 2.5;
+
+    .first{
+        font-family: 'Pacifico';
+        font-size: 53px;
+        color:#636363;
+        padding-bottom: 30px;
+    }
 
     input.onboard-people{
         display: inline-block;
@@ -63,22 +69,26 @@
 
     p{
         text-align: center;
-        padding: 20px 0px;
-        font-size: 19px;
+        padding: 11px 0px;
+        font-size: 16px;
         color: #686868;
+        width: 200px;
+        .center;
+        border: @gray-border;
+        border-top: 0;
+        background: @light-gray;
     }
 
 }
 
 .onboard-image{
-
     text-align: center;
     cursor: pointer;
     img{
         height: auto;
-        width: 250px;
-        border-radius: 10px;
-        border: 3px solid #CACACA;
+        width: 200px;
+        border: @gray-border;
+
         .center;
     }
 
@@ -92,6 +102,7 @@
 }
 
 .choice-box{
+    margin-top: 80px;
     max-width: 400px;
     padding:30px 15px;
     .center;

@@ -72,8 +72,3 @@ class SpiderManager(object):
 
         print "|||||||||||||||||||||||||||||||||||"
         print "basket error "
-
-
-
-
-

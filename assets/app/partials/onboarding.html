@@ -13,13 +13,29 @@
 				<div ng-switch on="page">
 					<div ng-switch-when="1">I like to eat</div>
 					<div ng-switch-when="2" >
-						I need groceries for
-						<people></people>
-						 people during
-						<input type="text" class="form-control onboard-people" placeholder="7" ng-model="preference.days"> days<br>and
-						I want to spend
-						<input type="text" class="form-control onboard-money" placeholder="60" ng-model="preference.budget">&pound;
-						<a href="javascript:;" class="btn-next" ng-click="saveData()"> <i class="glyphicon glyphicon-arrow-right"></i> </a>
+						<div class="choice-box">
+						<ul>
+							<li class="logo"></li>
+							<li>
+								People
+								<input type="text" class="form-control onboard-people"  ng-model="preference.people">
+							</li>
+							<li>
+								Days
+								<input type="text" class="form-control onboard-people" ng-model="preference.days">
+
+							</li>
+							<li>
+								Price
+								<input type="text" class="form-control onboard-money" placeholder="&pound;" ng-model="preference.budget">
+
+							</li>
+						</ul>
+
+
+						</div>
+						<a href="javascript:;" class="btn-onboarding" ng-click="saveData()">Generate my basket</a>
+
 					</div>
 				</div>
 		</div>

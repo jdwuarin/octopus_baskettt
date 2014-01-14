@@ -5,15 +5,6 @@
 
 angular.module('App.directives', [])
 
-	.directive('people', [function(){
-		return {
-			templateUrl: 'static/app/partials/_people.html',
-			restrict: 'E',
-			link: function(scope) {
-			}
-		};
-	}])
-
 	.directive('ngEnter', [function(){
 		return function (scope, element, attrs) {
 			element.bind("keydown keypress", function (event) {

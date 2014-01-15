@@ -73,7 +73,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.search_result = {};
 
 		$scope.clearSearch = function(){
-			console.log("sda");
 			$scope.search_result = {};
 		};
 
@@ -262,7 +261,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('AlertController', ['$scope', 'Alert', function($scope, Alert) {
+	.controller('AlertController', ['$scope', 'Alert', '$timeout', function($scope, Alert, $timeout) {
 
 		$scope.alerts = Alert.getAll();
 

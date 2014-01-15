@@ -63,12 +63,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
-		Alert.add("You didn't select a cuisine style.","danger");
-
-		Alert.add("You didn't select a cuisine style.","danger");
-
-		Alert.add("You didn't select a cuisine style.","danger");
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -76,6 +71,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
+
+		var goToTop = function(){
+			// set the location.hash to the id of
+			// the element you wish to scroll to.
+			$location.hash('wrap');
+			$anchorScroll();
+		};
 
 		$scope.clearSearch = function(){
 			$scope.search_result = {};
@@ -127,6 +129,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
+			goToTop();
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
 			} else {
@@ -271,7 +274,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		if ($location.path() === "/basket") {
 			$scope.productListPage = true;
-		};
+		}
 
 		$scope.alerts = Alert.getAll();
 

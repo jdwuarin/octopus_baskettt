@@ -121,8 +121,10 @@
     padding:20px;
     text-align:center;
     background: @dark-gray;
-    margin-bottom:20px;
-    margin-top: @header-height;
+    z-index: @zindex-navbar-fixed;
+    top:@header-height+60px;
+    position: fixed;
+    width: 100%;
 
     .instruction{
         color:rgb(207,207,207);

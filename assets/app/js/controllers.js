@@ -64,6 +64,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	}])
 
 	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
+		Alert.add("You didn't select a cuisine style.","danger");
+
+		Alert.add("You didn't select a cuisine style.","danger");
+
+		Alert.add("You didn't select a cuisine style.","danger");
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -104,8 +109,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		} else {
 			Alert.add("We couldn't find your preferences","danger");
 		}
-
-
 
 		// GET search in django
 		$scope.searchProducts = function(){
@@ -261,7 +264,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('AlertController', ['$scope', 'Alert', '$timeout', function($scope, Alert, $timeout) {
+	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
+
+		// The alerts need some padding because of the search bar
+		$scope.productListPage = false;
+
+		if ($location.path() === "/basket") {
+			$scope.productListPage = true;
+		};
 
 		$scope.alerts = Alert.getAll();
 

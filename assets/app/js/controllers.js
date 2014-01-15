@@ -72,13 +72,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
-		var goToTop = function(){
-			// set the location.hash to the id of
-			// the element you wish to scroll to.
-			$location.hash('wrap');
-			$anchorScroll();
-		};
-
 		$scope.clearSearch = function(){
 			$scope.search_result = {};
 		};
@@ -129,7 +122,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
-			goToTop();
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
 			} else {

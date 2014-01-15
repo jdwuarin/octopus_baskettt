@@ -230,16 +230,28 @@ angular.module('App.services', ['LocalStorageModule'])
 
 	}])
 
-	.factory('Alert',  [function() {
+	.factory('Alert',  ['$timeout',function($timeout) {
 
 		var alertList = [];
 
 		return {
 			add: function(message, type) {
-				alertList.push({msg: message, type: type});
+
+				var $this = this,
+				randomId = Math.random();
+
+				$timeout(function(){
+					$this.close(randomId);
+				}, 5000);
+
+				alertList.push({msg: message, type: type, id: randomId});
 			},
-			close: function(index) {
-				alertList.splice(index, 1);
+			close: function(id) {
+				angular.forEach(alertList, function(value, index){
+					if(value.id === id){
+						alertList.splice(index, 1);
+					}
+				});
 			},
 			getAll: function() {
 				return alertList;

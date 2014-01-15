@@ -63,7 +63,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -73,7 +73,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.search_result = {};
 
 		$scope.clearSearch = function(){
-			console.log("sda");
 			$scope.search_result = {};
 		};
 
@@ -105,8 +104,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		} else {
 			Alert.add("We couldn't find your preferences","danger");
 		}
-
-
 
 		// GET search in django
 		$scope.searchProducts = function(){
@@ -262,7 +259,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('AlertController', ['$scope', 'Alert', function($scope, Alert) {
+	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
+
+		// The alerts need some padding because of the search bar
+		$scope.productListPage = false;
+
+		if ($location.path() === "/basket") {
+			$scope.productListPage = true;
+		}
 
 		$scope.alerts = Alert.getAll();
 

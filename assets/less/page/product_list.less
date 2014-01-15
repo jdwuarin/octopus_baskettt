@@ -2,7 +2,7 @@
 //------------------------------------
 
 .product-list-container{
-    margin-top: @header-height;
+    // margin-top: @header-height;
     .col-md-12;
     padding: 0px !important;
 
@@ -10,13 +10,21 @@
         text-align: center;
         vertical-align: baseline;
     }
+
+    .product-search-result{
+        position: fixed;
+        z-index: @zindex-navbar-fixed;
+        overflow-y: auto;
+        height: (@height-search-item+1px)*3; // +1px to see border & *3 for 3 items
+        top:@header-height*2;
+    }
 }
 
 .basket-bar{
     background-color: @light-gray;
     border-bottom: @gray-border;
-    height:60px;
-    line-height: 60px;
+    height:@basket-bar-height;
+    line-height: @basket-bar-height;
     position: fixed;
     z-index: @zindex-navbar-fixed;
     top: @header-height;
@@ -28,7 +36,7 @@
         }
     }
     .transfer{
-        line-height: 60px;
+        line-height: @basket-bar-height;
         float: right;
         border-left: @gray-border;
     }
@@ -37,20 +45,6 @@
         border-right: @gray-border;
     }
 }
-
-.product-list-title{
-
-    height:60px;
-    .btn-gray{
-        color:black!important;
-    }
-
-    button{
-        float: right;
-        margin-top: 13px;
-    }
-}
-
 
 .product-container{
     display: inline-block;
@@ -121,8 +115,10 @@
     padding:20px;
     text-align:center;
     background: @dark-gray;
-    margin-bottom:20px;
-    margin-top: @header-height;
+    z-index: @zindex-navbar-fixed;
+    top:@header-height+@basket-bar-height;
+    position: fixed;
+    width: 100%;
 
     .instruction{
         color:rgb(207,207,207);
@@ -137,8 +133,28 @@
 
 .search-item{
     list-style-type: none;
-    border-bottom: @gray-border;
+    border: @gray-border;
+    border-top: 0;
     background: @light-gray;
+
+    & *{
+        max-height: @height-search-item;
+    }
+
+    ul{
+        padding-left: 0!important;
+        padding-top: 42px;
+    }
+
+    li{
+        &.product-name{
+            font-size: 18px;
+        }
+
+        list-style-type: none;
+        text-align: left;
+    }
+
     img{
         margin: 20px;
         border: 3px solid gray;
@@ -171,7 +187,6 @@
     border-top: 0;
     padding: 0px 20px 20px 20px;
     margin-right: -1px;
-
     ul{
         padding: 0!important; /* cancel chrome padding */
     }
@@ -184,4 +199,8 @@
         list-style-type: none;
 
     }
+}
+
+.alert-margin{
+    margin-top: 50px;
 }

@@ -127,6 +127,7 @@ class AbstractProductProductMatchingPipeline(object):
             abstract_product = item['matching_abstract_product']
             matching_product = Product()
 
+            #try seeing if the product actually exists
             try:
                 matching_product = Product.objects.get(external_id=item['external_id'],
                                                        supermarket=item['supermarket'])
@@ -136,6 +137,7 @@ class AbstractProductProductMatchingPipeline(object):
                 # raise Product_not_found_exception(item['external_id'])
                 matching_product = item.save(commit=False)  # save new item
                 matching_product.save()
+
 
             abstract_product_product = AbstractProductProduct(abstract_product=abstract_product,
                                                               rank=item['rank'])

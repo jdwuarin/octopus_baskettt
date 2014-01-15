@@ -6,7 +6,7 @@ from scrapy import signals
 from octopus_basket_porting.spiders.tesco_basket_spider import TescoBasketSpider
 
 
-class Spider_manager_controller(object):
+class SpiderManagerController(object):
 
     spider_manager = None
 
@@ -42,8 +42,8 @@ class SpiderManager(object):
         crawler = Crawler(settings)
         crawler.signals.connect(cls.basket_created, signal=signals.spider_closed)
         crawler.signals.connect(cls.basket_error, signal=signals.spider_error)
-        crawler.signals.connect(cls.item_not_added_error, signal=signals.item_dropped)
-        crawler.signals.connect(cls.item_successfully_crawled, signal=signals.item_scraped)
+        crawler.signals.connect(cls.item_not_added_error, signal=signals.item_dropped)  # determined in pipeline
+        crawler.signals.connect(cls.item_successfully_crawled, signal=signals.item_scraped)  # determined in pipeline
         crawler.configure()
         crawler.crawl(spider)
         crawler.start()
@@ -65,6 +65,7 @@ class SpiderManager(object):
         spider.thread_manager.build_response(
             cls.basket_status[spider.request][0], 
             cls.basket_status[spider.request][1])
+
         spider.thread_manager.lock.set() #wake up thread which should return response
 
     @classmethod

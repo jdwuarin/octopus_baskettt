@@ -10,6 +10,7 @@ class TescoBasketSpider(CrawlSpider):
 
     def __init__(self, **kw):
         self.start_url = "https://secure.tesco.com/register/"
+        #only contains link and quantity, not full details
         self.product_details = kw.get('product_details')
         self.quantity = kw.get('quantity')
         self.login_id = kw.get('loginId')
@@ -34,7 +35,7 @@ class TescoBasketSpider(CrawlSpider):
             return
 
         for link in self.product_details:
-            request = Request(link, callback = self.add_product)
+            request = Request(link, callback=self.add_product)
             request.meta['link'] = link
             yield request
 
@@ -58,6 +59,8 @@ class TescoBasketSpider(CrawlSpider):
                                 ' weight="0" currentBaseProductId="asderftg" isAlternative="false"') + (
                                     ' parentBaseProductId="" basketAction=""/></basketUpdateItems></request>')
 
+
+
         request = Request(
             url="http://www.tesco.com/groceries/ajax/UpdateActiveBasketItems.aspx",
             method='POST',
@@ -65,6 +68,7 @@ class TescoBasketSpider(CrawlSpider):
             callback=self.item_parsed)
 
         request.meta['link'] = response.meta['link']
+
 
         yield request
 
@@ -74,7 +78,7 @@ class TescoBasketSpider(CrawlSpider):
 
         item = TescoBasketPortingItem()
 
-        if "Failure" in response_string:
+        if "Failure" in response_string or not "prodName" in response_string:
             item['success'] = "False"
         else:
             item['success'] = "True"

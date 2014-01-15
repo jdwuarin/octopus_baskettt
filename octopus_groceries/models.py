@@ -24,8 +24,12 @@ class Product(models.Model):
     external_id = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
-        return str(self.name) + ", " + str(self.price) + ", " + str(self.supermarket) + ", " + str(
-            self.quantity) + ", " + str(self.unit)
+        return str(self.name) + ", " + \
+               str(self.link) + ", " + \
+               str(self.price) + ", " + \
+               str(self.supermarket) + ", " +\
+               str(self.quantity) + ", " + \
+               str(self.unit)
 
 
 class Tag(models.Model):

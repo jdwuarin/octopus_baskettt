@@ -134,18 +134,28 @@ class UserResource(ModelResource):
         data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
 
         key_error = False
+        value_error = False
 
         try:
-            data['budget']
-            data['people']
-            data['cuisine']
-            pass
+            dummy = int(data['budget'])
+            dummy = int(data['people'])
+            dummy = data['cuisine']
+            dummy = int(data['days'])
         except KeyError:
             key_error = True
+        except ValueError:
+            value_error = True
 
-        if key_error or int(data['budget']) < 1 or len(data['cuisine']) < 1 or (
-                int(data['days']) < 1):
+        no_success_condition = value_error or \
+                               key_error or \
+                               int(data['budget']) < 1 or \
+                               len(data['cuisine']) < 1 or \
+                               int(data['days']) < 1 or \
+                               int(data['people']) < 1
+
+        if no_success_condition:
             no_success = json.dumps({'success': False})
+            print "no_success"
             return HttpResponse(no_success,
                                 content_type="application/json")
 
@@ -167,7 +177,7 @@ class UserResource(ModelResource):
         response = []
 
         # The structure of the recommendation engine response is a dictionnary
-        # product_list[selected_product] = [quantity_to_buy, ingredient]
+        # basket[selected_product] = [quantity_to_buy, abstract_product]
         for key, value in basket.iteritems():
             product_json = {}
             product_json['id'] = key.id

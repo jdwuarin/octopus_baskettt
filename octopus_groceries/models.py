@@ -81,7 +81,7 @@ class RecipeAbstractProduct(models.Model):
 class AbstractProductProduct(models.Model):
     abstract_product = models.ForeignKey(AbstractProduct, default=-1, editable=False)
     rank = models.IntegerField(editable=False)
-    product_tesco = models.ForeignKey(Product, related_name='product_tesco_id', editable=False)
+    product = models.ForeignKey(Product, editable=False)
 
     def __unicode__(self):  # just adding this method to say what to display when asked in shell
-        return str(self.abstract_product_id) + ", " + str(self.rank) + ", " + str(self.product_tesco_id)
+        return str(self.abstract_product_id) + ", " + str(self.rank) + ", " + str(self.product)

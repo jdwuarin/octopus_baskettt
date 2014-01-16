@@ -5,7 +5,7 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from octopus_groceries.models import Product, Recipe
+from octopus_groceries.models import Supermarket
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
 from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
@@ -169,8 +169,11 @@ class UserResource(ModelResource):
                 real_cuisines.append(cuisine)
         data['cuisine'] = real_cuisines
 
+        data['supermarket'] = Supermarket.objects.get(name="tesco") #remove tesco hardcode
+
         onboarding_info = BasketOnboardingInfo(people=data['people'], budget=data['budget'],
-                                               tags=data['cuisine'], days=data['days'])
+                                               tags=data['cuisine'], days=data['days'],
+                                               supermarket=data['supermarket'])
 
         basket = BasketRecommendationEngine.create_onboarding_basket(onboarding_info)
 

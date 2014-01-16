@@ -50,7 +50,7 @@ sudo su - octopus -c 'bower install'
 sudo su - octopus -c 'grunt production'
 python manage.py collectstatic #collect static files where django says they should be from settings.py
 
-#populating de db
+#populating the db
 python manage.py schemamigration 'octopus_groceries' --initial
 python manage.py schemamigration 'octopus_user' --initial
 echo "no" | python manage.py syncdb #don't create superuser

@@ -138,13 +138,33 @@ class AbstractProductProductMatchingPipeline(object):
                 matching_product = item.save(commit=False)  # save new item
                 matching_product.save()
 
+            #try seeing if there already is a matching that corresponds to the product
+            try:
+                abstract_product_product = AbstractProductProduct.objects.get(
+                    abstract_product=abstract_product,
+                    product=matching_product)
+                #it already existed with a certain rank, just update said rank
+                abstract_product_product.rank = item['rank']
+                abstract_product_product.save()
+            except ObjectDoesNotExist:
+                # matching did not exist yet. remove item with rank of scraped
+                try:
+                    abstract_product_product_list = AbstractProductProduct.objects.filter(
+                        abstract_product=abstract_product,
+                        rank=item['rank'])
+                    for entry in abstract_product_product_list:
+                        if entry.product.supermarket == item['supermarket']:
+                            entry.delete()
+                except ObjectDoesNotExist:
+                    #if there was no such item, do nothing, just add the matching
+                    #right after this block
+                    pass
+                abstract_product_product = AbstractProductProduct(abstract_product=abstract_product,
+                                                              rank=item['rank'],
+                                                              product = matching_product)
+                abstract_product_product.save()
 
-            abstract_product_product = AbstractProductProduct(abstract_product=abstract_product,
-                                                              rank=item['rank'])
 
-            abstract_product_product.product_tesco = matching_product
-
-            abstract_product_product.save()
         return item
 
 

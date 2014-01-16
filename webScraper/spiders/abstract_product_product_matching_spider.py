@@ -28,10 +28,10 @@ class AbstractProductProductMatchingSpider(BaseSpider):
     def parse(self, response):
 
         abstract_products = AbstractProduct.objects.all()
+
         for abstract_product in abstract_products:
 
             link = self.tesco_base_url + abstract_product.name.replace(" ", "+")
-
             tesco_request = Request(link, callback=self.parse_tesco_result_page)
             tesco_request.meta['abstract_product'] = abstract_product
             yield tesco_request

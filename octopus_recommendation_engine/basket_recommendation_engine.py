@@ -34,12 +34,12 @@ class BasketRecommendationEngine(object):
         product_list = {}
         if len(potential_recipe_list) > 0:
             product_list = cls.get_product_list(potential_recipe_list, basket_onboarding_info.budget,
-                                                basket_onboarding_info.people)
+                                                basket_onboarding_info.people, basket_onboarding_info.supermarket)
 
         return product_list
 
     @classmethod
-    def get_product_list(cls, recipes, budget, people):
+    def get_product_list(cls, recipes, budget, people, supermarket):
         recipe_type_passed = 0
         break_condition = False
         basket_cost = 0
@@ -65,7 +65,8 @@ class BasketRecommendationEngine(object):
 
                 recipe_abstract_product_list = RecipeAbstractProduct.objects.filter(recipe=recipe)
                 should_break, added_cost = cls.merge_lists(recipe_abstract_product_list, product_list_slack,
-                                                           product_list, people, int(budget) - basket_cost)
+                                                           product_list, people, int(budget) - basket_cost,
+                                                           supermarket)
 
                 basket_cost += added_cost
                 if should_break:
@@ -81,7 +82,7 @@ class BasketRecommendationEngine(object):
 
     @classmethod
     def merge_lists(cls, recipe_abstract_product_list, product_list_slack,
-                    product_list, people, recipe_allowance):
+                    product_list, people, recipe_allowance, supermarket):
 
         recipe_allowance_start = recipe_allowance
         should_break = False
@@ -119,13 +120,17 @@ class BasketRecommendationEngine(object):
             #basket in a minimum of required quantity
             potential_product_list = AbstractProductProduct.objects.filter(
                 abstract_product_id=abstract_product.id).order_by("rank")
+
+            potential_product_list = filter(lambda x: x.product.supermarket == supermarket,
+                                            potential_product_list)
+            potential_product_list = map(lambda x: x.product, potential_product_list)
+
             if len(potential_product_list) == 0:
                 continue  # deal with items not found in db
 
-            potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
-            # TODO this is to condition for other supermarkets to work too
-            selected_product = Product.objects.get(
-                id=potential_product_list[potential_product_index_to_get].product_tesco_id)
+            potential_product_index_to_get = int(floor(min(len(potential_product_list), 3) * random.random()))
+
+            selected_product = potential_product_list[potential_product_index_to_get]
 
             prod_usage = Unit_helper.get_product_usage(recipe_abstract_product, selected_product, qu_ing_needed)
 

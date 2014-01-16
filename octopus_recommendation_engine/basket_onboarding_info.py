@@ -4,7 +4,7 @@ class BasketOnboardingInfo:
         self.days = kw['days']
         self.budget = kw['budget']
         self.tags = kw['tags']
-        self.provider = "tesco" #TODO change this hardcode when other providers are added
+        self.supermarket = kw['supermarket']
 
     def __str__(self):
         return str("budget: " + str(self.budget) + " people: " + str(self.people) + " tags: " + str(self.tags))

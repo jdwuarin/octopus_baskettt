@@ -1,6 +1,6 @@
 from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
 from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
-from octopus_groceries.models import Tag, Recipe, TagRecipe
+from octopus_groceries.models import Tag, Recipe, TagRecipe, Supermarket
 from octopus_basket_porting.basket_to_port import BasketToPort
 from octopus_basket_porting.spider_manager import SpiderManagerController
 from octopus_basket_porting.thread_manager import ThreadManager
@@ -36,7 +36,8 @@ def basket_porting_test(request, basket_before):
 
 
 def create_basket_test():
-    info = BasketOnboardingInfo(people=1, budget=20, tags=["European", "Chinese", "Indian"], days="2")
+    info = BasketOnboardingInfo(people=1, budget=20, tags=["European", "Chinese", "Indian"], days="2",
+                                supermarket=Supermarket.objects.get(name="tesco"))
     basket = BasketRecommendationEngine.create_onboarding_basket(info)
 
     # The structure of the recommendation engine response is a dictionnary
@@ -48,7 +49,7 @@ def create_basket_test():
         product_list["http://www.tesco.com" + str(product.link)] = str(int(quantity_abs[0]))
         ii += 1
 
-    basket_porting_test("some_request", product_list)
+    #basket_porting_test("some_request", product_list)
 
 
 def check_basket_persistence(basket_before, basket_after):

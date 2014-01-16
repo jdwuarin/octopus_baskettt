@@ -37,7 +37,8 @@ class ProductResource(ModelResource):
             product_json['price'] = product.price
             product_json['img'] = str(product.external_image_link)
             results.append(product_json)
-            data = json.dumps(results)
+
+        data = json.dumps(results)
 
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)

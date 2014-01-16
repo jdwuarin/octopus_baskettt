@@ -5,6 +5,8 @@ from octopus_basket_porting.spider_manager import SpiderManagerController
 from octopus_basket_porting.thread_manager import ThreadManager
 from django.contrib.auth.decorators import login_required
 
+from twisted.internet import reactor
+
 @login_required
 def port_basket(request):
 

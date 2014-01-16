@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'octopus_basket_porting',
     'octopus_middleware',
     'octopus_recommendation_engine',
+    'octopus_search_engine',
 
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',

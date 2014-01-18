@@ -35,7 +35,6 @@ class BasketRecommendationEngine(object):
         if len(potential_recipe_list) > 0:
             product_list = cls.get_product_list(potential_recipe_list, basket_onboarding_info.budget,
                                                 basket_onboarding_info.people, basket_onboarding_info.supermarket)
-
         return product_list
 
     @classmethod

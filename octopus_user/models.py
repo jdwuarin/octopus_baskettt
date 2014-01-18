@@ -26,7 +26,7 @@ class UserGeneratedBasket(models.Model):
 
 class UserProductSlack(models.Model):
     user = models.ForeignKey(User, editable=False)
-    ingredient = models.ForeignKey(AbstractProduct, default=-1, editable=False)
+    abstract_product = models.ForeignKey(AbstractProduct, default=-1, editable=False)
     product = models.ForeignKey(Product, editable=False)
     slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
     purchase_time = models.DateField(default=0, editable=True)

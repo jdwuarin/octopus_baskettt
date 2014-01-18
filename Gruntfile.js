@@ -3,6 +3,9 @@ module.exports = function(grunt) {
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
+  // Shows execution time
+  require('time-grunt')(grunt);
+
   // Default task(s).
   grunt.registerTask('style', ['less']);
   grunt.registerTask('js', ['concat','uglify']);

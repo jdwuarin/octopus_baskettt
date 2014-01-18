@@ -156,6 +156,7 @@ class BasketRecommendationEngine(object):
                 should_break = True
                 break
 
+            #TODO refactor in order to get rid of product_list_slack and include slack in product_list
             product_list_slack[abstract_product] = (selected_product, slack)
 
             try:

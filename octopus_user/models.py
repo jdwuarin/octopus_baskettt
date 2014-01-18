@@ -11,8 +11,9 @@ class UserSettings(models.Model):
 #basket that was recommended to our user by our algorithm
 class UserRecommendedBasket(models.Model):
     user = models.ForeignKey(User, editable=False)
-    product_list = models.CommaSeparatedIntegerField(max_length=200)
-    time = models.DateField(default=0, editable=True)
+    product_list = models.CommaSeparatedIntegerField(max_length=5000)
+    quantity_list = models.CommaSeparatedIntegerField(max_length=5000)
+    time = models.DateField(default=0, auto_now=True)
 
 
 #basket that was finally transferred to the supermarket (before items failed being transferred etc)
@@ -20,13 +21,13 @@ class UserRecommendedBasket(models.Model):
 class UserGeneratedBasket(models.Model):
     user = models.ForeignKey(User, editable=False)
     user_recommended_basket = models.OneToOneField(UserRecommendedBasket, primary_key=True)
-    product_list = models.CommaSeparatedIntegerField(max_length=200)  # just set to a list of product_ids to that.
-    time = models.DateField(default=0, editable=True)
+    product_list = models.CommaSeparatedIntegerField(max_length=5000)  # just set to a list of product_ids to that.
+    quantity_list = models.CommaSeparatedIntegerField(max_length=5000)
+    time = models.DateField(default=0, auto_now=True)
 
 
 class UserProductSlack(models.Model):
     user = models.ForeignKey(User, editable=False)
-    abstract_product = models.ForeignKey(AbstractProduct, default=-1, editable=False)
     product = models.ForeignKey(Product, editable=False)
     slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
-    purchase_time = models.DateField(default=0, editable=True)
+    purchase_time = models.DateField(default=0, auto_now=True)

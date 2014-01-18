@@ -63,7 +63,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -121,12 +121,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			User.redirect("/onboarding/1");
 		}
 
-		// GET search in django
+		// GET search
 		$scope.searchProducts = function(){
 			if($scope.queryTerm) {
 				Product.search($scope.queryTerm,
 					function(res){ // success
 						$scope.search_result = res;
+						$window.onclick = function (event) {
+							closeSearchWhenClickingElsewhere(event);
+						};
 					},function(res){ // error
 						Alert.add("Could not find this product","danger");
 						$scope.search_result = {};
@@ -178,8 +181,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				});
 			}
 		};
-
-
 
 		$scope.addProduct = function(new_product) {
 			var $products = $scope.products,
@@ -236,7 +237,25 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			return total.toFixed(2);
 		};
 
+	var closeSearchWhenClickingElsewhere = function(event){
 
+		var clickedElement = event.target,
+		parents = angular.element(clickedElement).parents(),
+		clickedOnTheSearchPanel = false;
+
+		// checks if the parents of the div is one of the following string
+		for (var i = parents.length - 1; i >= 0; i--) {
+			if(parents[i].className.indexOf("product-search-result") != -1
+				|| parents[i].className.indexOf("search-bar") != -1){
+				clickedOnTheSearchPanel = true;
+			}
+		};
+
+		if(!clickedOnTheSearchPanel){
+			$scope.clearSearch();
+			$scope.$digest();
+		}
+	};
 
 	}])
 

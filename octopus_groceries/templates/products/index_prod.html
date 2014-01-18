@@ -23,7 +23,7 @@
   <![endif]-->
 
     </head>
-    <body id="ng-app" ng-app="App">
+    <body id="ng-app" ng-app="App" ng-cloak  ng-class="{'bg-gray':productListPage}">
 
       {% csrf_token %}
 
@@ -32,7 +32,7 @@
         <navbar></navbar>
 
         {%verbatim%}
-        <div class="container alert-container" ng-class="{'alert-margin':productListPage}" ng-controller="AlertController">
+        <div class="container alert-container" ng-class="{'alert-margin':productListPage}" ng-controller="AlertController" >
           <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert.id)">{{alert.msg}}</alert>
         </div>
         {%endverbatim%}

@@ -103,11 +103,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// First action on the page -> load the recommended basket
 		if(!Preference.isNotValid(preferenceList)){
-			$scope.loadingBasket = true;
+			$scope.loading = true;
 
 			Basket.post(preferenceList,
 				function(res){
-					$scope.loadingBasket = false;
+					$scope.loading = false;
 
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
@@ -164,11 +164,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
-				$scope.viewLoading = true;
+				$scope.loading = true;
 				var oldRecommendation = Basket.getOldRecommendation();
 
 				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
-					$scope.viewLoading = false;
+					$scope.loading = false;
 					if(Tesco.getUnsuccesful(res).length === 0){
 						Alert.add("Your products have been transfered to Tesco","success");
 					} else{
@@ -188,7 +188,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			for (var i = $products.length-1; i >= 0; i--) {
 				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
 					isPresent = true;
-					$products[i].quantity += 1;
+					if($products[i].quantity>=100){
+						$products[i].quantity = 100;
+					} else{
+						$products[i].quantity += 1;
+					}
 					break;
 				}
 			}
@@ -220,7 +224,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.getTotal = function(val1,val2) {
-			return "GBP" + (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
+			return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
 		};
 
 		$scope.basketTotal = function() {
@@ -279,12 +283,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
 
-		// // The alerts need some padding because of the search bar
-		// $scope.productListPage = false;
-
-		// if ($location.path() === "/basket") {
-		// 	$scope.productListPage = true;
-		// }
 
 		$scope.alerts = Alert.getAll();
 

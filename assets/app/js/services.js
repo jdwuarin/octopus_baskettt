@@ -260,7 +260,7 @@ angular.module('App.services', ['LocalStorageModule'])
 					}
 				});
 
-				if(alreadyExist && !(alertList.length === 0)){
+				if(alreadyExist && (alertList.length !== 0)){
 					return;
 				}
 

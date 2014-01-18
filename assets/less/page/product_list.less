@@ -21,7 +21,7 @@
 }
 
 .basket-bar{
-    background-color: @light-gray;
+    background-color: white;
     border-bottom: @gray-border;
     height:@basket-bar-height;
     line-height: @basket-bar-height;
@@ -49,7 +49,7 @@
 .product-container{
     display: inline-block;
     text-align: justify
-    padding: 20px 20px;
+    padding: 10px 20px;
     margin: 0px 20px;
 
     // .center;
@@ -58,14 +58,25 @@
 .product-box{
     margin: 40px 0px;
     border: @gray-border;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    max-width: 250px;
+    max-width: 150px;
 
     position: relative;
+
+    p{
+        padding: 10px;
+        text-align: center;
+        width: 150px;
+        font-size: 14px;
+        height: 100px;
+        margin-bottom: 0!important;
+        display: table-cell;
+        vertical-align: middle;
+    }
+
     img{
         height:auto;
-        width: 150px;
+        max-width: 150px;
+        width: 100%;
     }
 
     li{
@@ -79,35 +90,46 @@
     }
 
 
-    .product-title, .product-price{
-        padding: 10px;
+    .product-desc{
         background: @light-gray;
+        border-top: @gray-border;
         width: 100%;
+
+        .quantity{
+            width: 104px;
+            .center;
+            padding-bottom: 10px;
+
+            input{
+                text-align: center;
+                cursor: default;
+                background: white;
+            }
+
+            span{
+                cursor: pointer;
+                background: @light-gray;
+                border-radius: 0;
+            }
+        }
     }
 
-    .product-title{
-        border-bottom: @gray-border;
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
-        display: inline-block;
-        height: 61px;
-
+    .product-remove{
+        height: 20px;
         .glyphicon{
-            display: inline-block;
             width: 20px;
-            position: absolute;
-            right: 5px;
-            top: 14px;
+            padding: 10px 26px 10px 0px;
         }
     }
 
     .product-price{
+        font-size: 20px;
+        padding: 10px 0px;
         border-top: @gray-border;
     }
 
     .product-img{
         width:100%;
-        padding: 20px 0px;
     }
 }
 
@@ -135,7 +157,7 @@
     list-style-type: none;
     border: @gray-border;
     border-top: 0;
-    background: @light-gray;
+    background: white;
 
     & *{
         max-height: @height-search-item;

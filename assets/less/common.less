@@ -93,7 +93,12 @@ footer{
 
 
 .loading, .loading-basket{
+	background: white;
+	border: @gray-border;
+    .btn-round(100px);
+	.center;
 	text-align: center;
+	margin-top: 50px;
 	.spinner{
 		display: inline-block;
 	}
@@ -117,4 +122,11 @@ footer{
 	max-width: 700px;
 	.center;
 	margin-top: 30px;
+}
+
+.bg-gray{
+
+	&,& #wrap{
+		background: url('/static/img/bg.png')
+	}
 }

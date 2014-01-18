@@ -5,7 +5,7 @@
 				<div ng-switch on="page">
 					<div ng-switch-when="1" class="first">I like to eat</div>
 					<div ng-switch-when="2" >
-						<div class="choice-box">
+						<form class="choice-box" ng-submit="saveData()">
 						<ul>
 							<li class="logo">I need groceries for</li>
 							<li>
@@ -18,15 +18,14 @@
 
 							</li>
 							<li>
-
 								<input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
 
 							</li>
 						</ul>
 
+							<input type="submit" class="btn-onboarding" value="Generate my basket">
+						</form>
 
-						</div>
-						<a href="javascript:;" class="btn-onboarding" ng-click="saveData()">Generate my basket</a>
 
 					</div>
 				</div>

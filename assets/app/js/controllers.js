@@ -112,6 +112,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
+						Basket.addOldRecommendation(res);
 						$scope.products = res;
 					}
 				});
@@ -163,13 +164,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
 				$scope.viewLoading = true;
+				var oldRecommendation = Basket.getOldRecommendation();
 
-				Tesco.post(tescoCredential.email, tescoCredential.password, list, function(res) {
+				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
 					$scope.viewLoading = false;
 					if(Tesco.getUnsuccesful(res).length === 0){
-						Alert.add("Some products couldn't be transfered","danger");
-					} else{
 						Alert.add("Your products have been transfered to Tesco","success");
+					} else{
+						Alert.add("Some products couldn't be transfered","danger");
 					}
 
 				});

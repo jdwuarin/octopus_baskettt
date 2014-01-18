@@ -191,7 +191,7 @@ angular.module('App.services', ['LocalStorageModule'])
 
 	}])
 
-	.factory('Basket',  ['$http', function($http) {
+	.factory('Basket',  ['$http','localStorage', function($http,localStorage) {
 		var productList = {};
 
 		return {
@@ -209,6 +209,12 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			getAll: function() {
 				return productList;
+			},
+			addOldRecommendation: function(list){
+				localStorage.add('oldRecommendation',list);
+			},
+			getOldRecommendation: function(list){
+				return localStorage.get('oldRecommendation');
 			}
 		};
 
@@ -218,19 +224,19 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Populate tesco basket
-			post: function(email, password, list, callback) {
+			post: function(email, password, list, recommendation, callback) {
 				return $http({
 					url: 'port_basket/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
-					data: {email:email, password:password, products:list}
+					data: {email:email, password:password, products:list, recommendation: recommendation}
 				}).success(callback);
 			},
 			getUnsuccesful: function(basket){
 				var false_list = [];
 
 				angular.forEach(basket, function(value, key){
-					if(value === "False") {
+					if(value == "False") {
 						false_list.push(value);
 					}
 				});

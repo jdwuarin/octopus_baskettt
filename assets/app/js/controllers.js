@@ -74,6 +74,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.clearSearch = function(){
 			$scope.search_result = {};
+			$scope.queryTerm ="";
 		};
 
 		// When you close the signup form the Tesco form comes
@@ -122,6 +123,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
+			// When you open a form it will close the search
+			$scope.clearSearch();
+
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
 			} else {

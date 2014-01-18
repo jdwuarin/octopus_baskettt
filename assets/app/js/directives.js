@@ -26,8 +26,8 @@ angular.module('App.directives', [])
 			link: function(scope, element, attrs) {
 
 				element.bind("click", function() {
-					scope.search_result = {};
-					scope.$apply();
+					scope.clearSearch();
+					scope.$digest();
 				});
 
 			}

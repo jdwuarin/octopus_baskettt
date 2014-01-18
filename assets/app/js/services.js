@@ -225,6 +225,16 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password, products:list}
 				}).success(callback);
+			},
+			getUnsuccesful: function(basket){
+				var false_list = [];
+
+				angular.forEach(basket, function(value, key){
+					if(value === "False") {
+						false_list << value;
+					}
+				});
+				return false_list;
 			}
 		};
 

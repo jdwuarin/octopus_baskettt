@@ -72,11 +72,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
-		$scope.clearSearch = function(){
-			$scope.search_result = {};
-			$scope.queryTerm ="";
-		};
-
 		// When you close the signup form the Tesco form comes
 		$rootScope.$on('CloseSignUpForm', function(){
 			$scope.closeForm();
@@ -89,6 +84,24 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.$apply();
 		});
 
+		$scope.showBasketDetails = function() {
+			$rootScope.$emit('showBasketDetails');
+		};
+
+		$scope.closeForm = function() {
+			$scope.toggleForm(false);
+		};
+
+		$scope.closeTescoForm = function() {
+			$scope.toggleTescoForm(false);
+		};
+
+		$scope.clearSearch = function(){
+			$scope.search_result = {};
+			$scope.queryTerm ="";
+		};
+
+		// First action on the page -> load the recommended basket
 		if(!Preference.isNotValid(preferenceList)){
 			$scope.loadingBasket = true;
 
@@ -133,10 +146,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
-		$scope.closeForm = function() {
-			$scope.toggleForm(false);
-		};
-
 		$scope.signup = function(){
 			var user = $scope.user;
 			if($scope.signupForm.$valid){
@@ -154,16 +163,20 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
 				$scope.viewLoading = true;
+
 				Tesco.post(tescoCredential.email, tescoCredential.password, list, function(res) {
 					$scope.viewLoading = false;
-					Alert.add("Your products have been transfered to Tesco","success");
+					if(Tesco.getUnsuccesful(res).length === 0){
+						Alert.add("Some products couldn't be transfered","danger");
+					} else{
+						Alert.add("Your products have been transfered to Tesco","success");
+					}
+
 				});
 			}
 		};
 
-		$scope.closeTescoForm = function() {
-			$scope.toggleTescoForm(false);
-		};
+
 
 		$scope.addProduct = function(new_product) {
 			var $products = $scope.products,
@@ -216,9 +229,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			return total.toFixed(2);
 		};
 
-		$scope.showBasketDetails = function() {
-			$rootScope.$emit('showBasketDetails');
-		};
+
 
 	}])
 

@@ -7,5 +7,5 @@ from scrapy.item import Item, Field
 
 
 class TescoBasketPortingItem(Item):
+    product = Field()
     success = Field()
-    link = Field()

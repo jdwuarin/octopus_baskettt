@@ -12,7 +12,6 @@ class TescoBasketSpider(CrawlSpider):
         self.start_url = "https://secure.tesco.com/register/"
         #only contains link and quantity, not full details
         self.product_details = kw.get('product_details')
-        self.quantity = kw.get('quantity')
         self.login_id = kw.get('loginId')
         self.password = kw.get('password')
         self.request = kw.get('request')
@@ -34,9 +33,11 @@ class TescoBasketSpider(CrawlSpider):
         if "Sorry" in response.body:
             return
 
-        for link in self.product_details:
+        for product in self.product_details:
+            link = "http://www.tesco.com" + str(product[0].link)
             request = Request(link, callback=self.add_product)
             request.meta['link'] = link
+            request.meta['product'] = product
             yield request
 
     def add_product(self, response):
@@ -47,7 +48,7 @@ class TescoBasketSpider(CrawlSpider):
             '//div[contains(@class, "twoPartContainerBody")]/@id').extract()[0]),
             "basket-", "") + "\""
         referer_url = "\"" + response.meta['link'] + "\""
-        quantity = "\"" + self.product_details[response.meta['link']] + "\""
+        quantity = "\"" + response.meta['product'][1] + "\""
         product_id = str.replace(referer_url, "http://www.tesco.com/groceries/Product/Details/?id=", "")
 
         payload = '<request basketId=' + basket_id + (
@@ -67,7 +68,7 @@ class TescoBasketSpider(CrawlSpider):
             body=payload,
             callback=self.item_parsed)
 
-        request.meta['link'] = response.meta['link']
+        request.meta['product'] = response.meta['product']
 
 
         yield request
@@ -83,7 +84,7 @@ class TescoBasketSpider(CrawlSpider):
         else:
             item['success'] = "True"
 
-        item['link'] = response.meta['link']
+        item['product'] = response.meta['product']
 
         return item
 

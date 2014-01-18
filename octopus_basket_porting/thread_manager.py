@@ -11,7 +11,7 @@ class ThreadManager(object):
         self.lock.wait(server_timeout_time)
 
     def build_response(self, successful_item_list, failed_item_list):
-        self.response = {}
+        self.response = dict()
         self.response['Response_status'] = 'no_timeout'
         for item in successful_item_list:
             self.response[item] = "True"

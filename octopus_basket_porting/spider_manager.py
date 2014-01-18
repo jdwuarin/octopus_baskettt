@@ -51,13 +51,13 @@ class SpiderManager(object):
 
     @classmethod
     def item_successfully_crawled(cls, item, response, spider):
-
-        cls.basket_status[spider.request][0].append(item['link'])
+        #product here is still of type [Product, quantity]
+        cls.basket_status[spider.request][0].append(item['product'])
 
     @classmethod
     def item_not_added_error(cls, item, spider, exception):
 
-        cls.basket_status[spider.request][1].append(item['link'])
+        cls.basket_status[spider.request][1].append(item['product'])
 
 
     @classmethod
@@ -66,7 +66,7 @@ class SpiderManager(object):
             cls.basket_status[spider.request][0], 
             cls.basket_status[spider.request][1])
 
-        spider.thread_manager.lock.set() #wake up thread which should return response
+        spider.thread_manager.lock.set()  # wake up thread which should return response
 
     @classmethod
     def basket_error(cls, failure, response, spider):

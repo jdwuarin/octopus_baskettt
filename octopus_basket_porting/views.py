@@ -4,8 +4,7 @@ from octopus_basket_porting.basket_to_port import BasketToPort
 from octopus_basket_porting.spider_manager import SpiderManagerController
 from octopus_basket_porting.thread_manager import ThreadManager
 from django.contrib.auth.decorators import login_required
-
-from twisted.internet import reactor
+from octopus_groceries.models import Product
 
 @login_required
 def port_basket(request):
@@ -21,7 +20,7 @@ def port_basket(request):
     basket_before_porting = {}
 
     for product in product_details:
-        basket_before_porting["http://www.tesco.com" + str(product['link'])] = str(int(product['quantity']))
+        basket_before_porting[Product.objects.get(id=product)] = str(int(product['quantity']))
 
     thread_manager = ThreadManager()
     this_basket = BasketToPort(request, email, password,
@@ -37,13 +36,13 @@ def port_basket(request):
     return HttpResponse(json.dumps(basket_after_porting), content_type="application/json")
 
 
-def check_basket_persistence(basket_before, basket_after):
-    #if any item that should be in the basket_before_porting isn't for some reason,
+def check_basket_persistence(product_list_before, product_list_after):
+    #if any item that should be in the product_list_before isn't for some reason,
     #report it here
-    for product_link, ported_or_not in basket_before.iteritems():
+    for product in product_list_before:
         try:
-            dummy = basket_after[product_link]
+            dummy = product_list_after[product]
         except KeyError:
-            basket_after[product_link] = "False"
+            product_list_after[product] = "False"
 
-    return basket_after
+    return product_list_after

@@ -7,6 +7,6 @@ def perform_search(request):
 
     supermaket = "tesco"  # TODO remove this hard_code
 
-    
+
 
     pass

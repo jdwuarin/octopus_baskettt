@@ -117,7 +117,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					}
 				});
 		} else {
-			Alert.add("We couldn't find your preferences","danger");
+			Alert.add("Tell us what you like and we'll take care of your basket.","info");
+			User.redirect("/onboarding/1");
 		}
 
 		// GET search in django

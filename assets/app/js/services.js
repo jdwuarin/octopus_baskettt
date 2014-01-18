@@ -252,6 +252,17 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			add: function(message, type) {
+				var alreadyExist = false;
+
+				alreadyExist = angular.forEach(alertList, function(value, key){
+					if(value === message){
+						return true;
+					}
+				});
+
+				if(alreadyExist && !(alertList.length === 0)){
+					return;
+				}
 
 				var $this = this,
 				randomId = Math.random();

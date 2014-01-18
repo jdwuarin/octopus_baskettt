@@ -9,4 +9,5 @@ notifications:
 install:
   - pip install -r stable-req.txt
   - npm install
+  - npm install -g bower
   - bower install

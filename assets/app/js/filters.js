@@ -8,24 +8,10 @@ angular.module('App.filters', [])
 		return price.replace("GBP","");
 	};
 })
-.filter('filteredrecipes', [function() {
-	return function(recipes,diets){
-		if(recipes === undefined)
-			return;
 
-		var result = recipes.slice();// copy array
-		var recipe;
-
-		angular.forEach(diets, function(value, key) { //Checks if the keyword is in the title
-			if(value) {
-				for(var index = 0; index < result.length; index++) {
-					recipe = result[index];
-					if(recipe.title.indexOf(key) == -1) {
-						result.splice(index--,1);
-					}
-				}
-			}
-		});
-		return result;
+// get the large version of tesco's images
+.filter('imglarge', function() {
+	return function(url) {
+		return url.replace("90x90.jpg","225x225.jpg");
 	};
-}]);
+});

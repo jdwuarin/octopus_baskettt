@@ -7,13 +7,23 @@ module.exports = function(config) {
 
 	// list of files / patterns to load in the browser
 	files : [
-	'octopusProducts/static/lib/angular.min.js',
-	'octopusProducts/static/lib/angular-mocks.js',
-	'octopusProducts/static/lib/angular-cookies.min.js',
-	'octopusProducts/static/lib/jquery.min.js',
-	'octopusProducts/static/lib/less.js',
-	'octopusProducts/static/app/js/*.js',
-	'test_angular/unit/**/*.spec.js'
+	'bower_components/angular/angular.js',
+	'bower_components/angular-local-storage/angular-local-storage.js',
+	'bower_components/jquery/jquery.js',
+	'bower_components/angular/angular.js',
+	'bower_components/angular-cookies/angular-cookies.js',
+	'bower_components/angular-local-storage/angular-local-storage.js',
+	'bower_components/angular-mocks/angular-mocks.js',
+	'bower_components/angular-route/angular-route.js',
+	'bower_components/angular-sanitize/angular-sanitize.js',
+	'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+	'bower_components/html5shiv/dist/html5shiv.js',
+	'bower_components/html5shiv/dist/html5shiv-printshiv.js',
+	'bower_components/respond/dest/respond.src.js',
+	'bower_components/angular-animate/angular-animate.js',
+	'bower_components/json3/lib/json3.min.js',
+	'test_angular/unit/**/*.spec.js',
+	'assets/app/js/*.js'
 	],
 
 	// use dots reporter, as travis terminal does not support escaping sequences

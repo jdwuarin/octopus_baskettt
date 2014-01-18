@@ -38,6 +38,8 @@
     "grunt-contrib-htmlmin": "~0.1.3",
     "load-grunt-tasks": "~0.2.0",
     "grunt-uncss": "latest",
-    "grunt-processhtml": "latest"
+    "grunt-processhtml": "latest",
+    "time-grunt": "latest"
+
   }
 }

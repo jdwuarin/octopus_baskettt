@@ -61,12 +61,18 @@ angular.module('App', [
 	.otherwise({ redirectTo: '' });
 }])
 
-.run(['$cookies', '$http', '$rootScope', 'User', 'Alert', function($cookies, $http, $rootScope, User, Alert){
+.run(['$cookies', '$http', '$rootScope', 'User', 'Alert', '$location', function($cookies, $http, $rootScope, User, Alert,$location){
 
 	$http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
+
+		// help with the margin on the product list page
+		$rootScope.productListPage = false;
+		if ($location.path() === "/basket") {
+			$rootScope.productListPage = true;
+		}
 
 		// Force user to log in on required pages
 		if(!User.isLoggedIn()) {

@@ -63,7 +63,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -71,10 +71,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
-
-		$scope.clearSearch = function(){
-			$scope.search_result = {};
-		};
 
 		// When you close the signup form the Tesco form comes
 		$rootScope.$on('CloseSignUpForm', function(){
@@ -88,29 +84,52 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.$apply();
 		});
 
+		$scope.showBasketDetails = function() {
+			$rootScope.$emit('showBasketDetails');
+		};
+
+		$scope.closeForm = function() {
+			$scope.toggleForm(false);
+		};
+
+		$scope.closeTescoForm = function() {
+			$scope.toggleTescoForm(false);
+		};
+
+		$scope.clearSearch = function(){
+			$scope.search_result = {};
+			$scope.queryTerm ="";
+		};
+
+		// First action on the page -> load the recommended basket
 		if(!Preference.isNotValid(preferenceList)){
-			$scope.loadingBasket = true;
+			$scope.loading = true;
 
 			Basket.post(preferenceList,
 				function(res){
-					$scope.loadingBasket = false;
+					$scope.loading = false;
 
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
+						Basket.addOldRecommendation(res);
 						$scope.products = res;
 					}
 				});
 		} else {
-			Alert.add("We couldn't find your preferences","danger");
+			Alert.add("Tell us what you like and we'll take care of your basket.","info");
+			User.redirect("/onboarding/1");
 		}
 
-		// GET search in django
+		// GET search
 		$scope.searchProducts = function(){
 			if($scope.queryTerm) {
 				Product.search($scope.queryTerm,
 					function(res){ // success
 						$scope.search_result = res;
+						$window.onclick = function (event) {
+							closeSearchWhenClickingElsewhere(event);
+						};
 					},function(res){ // error
 						Alert.add("Could not find this product","danger");
 						$scope.search_result = {};
@@ -122,15 +141,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
+			// When you open a form it will close the search
+			$scope.clearSearch();
+
 			if(!User.isLoggedIn()) {
 				$scope.toggleForm(true);
 			} else {
 				$scope.toggleTescoForm(true);
 			}
-		};
-
-		$scope.closeForm = function() {
-			$scope.toggleForm(false);
 		};
 
 		$scope.signup = function(){
@@ -149,16 +167,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
-				$scope.viewLoading = true;
-				Tesco.post(tescoCredential.email, tescoCredential.password, list, function(res) {
-					$scope.viewLoading = false;
-					Alert.add("Your products have been transfered to Tesco","success");
+				$scope.loading = true;
+				var oldRecommendation = Basket.getOldRecommendation();
+
+				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
+					$scope.loading = false;
+					if(Tesco.getUnsuccesful(res).length === 0){
+						Alert.add("Your products have been transfered to Tesco","success");
+					} else{
+						Alert.add("Some products couldn't be transfered","danger");
+					}
+
 				});
 			}
-		};
-
-		$scope.closeTescoForm = function() {
-			$scope.toggleTescoForm(false);
 		};
 
 		$scope.addProduct = function(new_product) {
@@ -168,7 +189,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			for (var i = $products.length-1; i >= 0; i--) {
 				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
 					isPresent = true;
-					$products[i].quantity += 1;
+					if($products[i].quantity>=100){
+						$products[i].quantity = 100;
+					} else{
+						$products[i].quantity += 1;
+					}
 					break;
 				}
 			}
@@ -200,7 +225,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.getTotal = function(val1,val2) {
-			return "GBP" + (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
+			return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
 		};
 
 		$scope.basketTotal = function() {
@@ -212,9 +237,25 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			return total.toFixed(2);
 		};
 
-		$scope.showBasketDetails = function() {
-			$rootScope.$emit('showBasketDetails');
+	var closeSearchWhenClickingElsewhere = function(event){
+
+		var clickedElement = event.target,
+		parents = angular.element(clickedElement).parents(),
+		clickedOnTheSearchPanel = false;
+
+		// checks if the parents of the div is one of the following string
+		for (var i = parents.length - 1; i >= 0; i--) {
+			if(parents[i].className.indexOf("product-search-result") != -1
+				|| parents[i].className.indexOf("search-bar") != -1){
+				clickedOnTheSearchPanel = true;
+			}
 		};
+
+		if(!clickedOnTheSearchPanel){
+			$scope.clearSearch();
+			$scope.$digest();
+		}
+	};
 
 	}])
 
@@ -261,12 +302,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
 
-		// The alerts need some padding because of the search bar
-		$scope.productListPage = false;
-
-		if ($location.path() === "/basket") {
-			$scope.productListPage = true;
-		}
 
 		$scope.alerts = Alert.getAll();
 

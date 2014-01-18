@@ -231,7 +231,7 @@ angular.module('App.services', ['LocalStorageModule'])
 
 				angular.forEach(basket, function(value, key){
 					if(value === "False") {
-						false_list << value;
+						false_list.push(value);
 					}
 				});
 				return false_list;

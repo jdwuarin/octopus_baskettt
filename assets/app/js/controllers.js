@@ -279,12 +279,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
 
-		// The alerts need some padding because of the search bar
-		$scope.productListPage = false;
+		// // The alerts need some padding because of the search bar
+		// $scope.productListPage = false;
 
-		if ($location.path() === "/basket") {
-			$scope.productListPage = true;
-		}
+		// if ($location.path() === "/basket") {
+		// 	$scope.productListPage = true;
+		// }
 
 		$scope.alerts = Alert.getAll();
 

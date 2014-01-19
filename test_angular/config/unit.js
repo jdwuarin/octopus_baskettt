@@ -22,6 +22,8 @@ module.exports = function(config) {
 	'bower_components/respond/dest/respond.src.js',
 	'bower_components/angular-animate/angular-animate.js',
 	'bower_components/json3/lib/json3.min.js',
+	'bower_components/angulartics/dist/angulartics.min.js',
+	'bower_components/angulartics/dist/angulartics-ga.min.js',
 	'test_angular/unit/**/*.spec.js',
 	'assets/app/js/*.js'
 	],

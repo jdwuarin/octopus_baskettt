@@ -39,7 +39,8 @@
     "load-grunt-tasks": "~0.2.0",
     "grunt-uncss": "latest",
     "grunt-processhtml": "latest",
-    "time-grunt": "latest"
+    "time-grunt": "latest",
+    "karma-coverage": "latest"
 
   }
 }

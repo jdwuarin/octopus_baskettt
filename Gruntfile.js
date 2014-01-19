@@ -11,6 +11,8 @@ module.exports = function(grunt) {
   grunt.registerTask('js', ['concat','uglify']);
   grunt.registerTask('img', ['imagemin']);
   grunt.registerTask('test-watch', ['karma:watch']);
+  grunt.registerTask('test', ['karma:unit']);
+
 
   grunt.registerTask('production',[
     'clean:dist',
@@ -81,8 +83,8 @@ module.exports = function(grunt) {
       },
 
       karma: {
-    unit: { options: karmaConfig('test_angular/config/unit.js') },
-    watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
+        unit: { options: karmaConfig('test_angular/config/unit.js') },
+        watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
       },
 
     // Empties folders to start fresh

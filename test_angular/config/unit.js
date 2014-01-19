@@ -28,7 +28,18 @@ module.exports = function(config) {
 
 	// use dots reporter, as travis terminal does not support escaping sequences
 	// possible values: 'dots' || 'progress'
-	reporters : 'progress',
+	reporters : ['progress', 'coverage'],
+
+	preprocessors: {
+		// source files, that you wanna generate coverage for
+		// do not include tests or libraries
+		// (these files will be instrumented by Istanbul)
+		'assets/app/js/*.js': ['coverage']
+	},
+	coverageReporter : {
+		type : 'html',
+		dir : 'test_angular/coverage/'
+	},
 
 	// these are default values, just to show available options
 

@@ -36,3 +36,4 @@ static/*
 .tmp/
 .idea/
 octopus/local_settings.py
+test_angular/coverage/

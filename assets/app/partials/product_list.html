@@ -60,8 +60,10 @@
 				<div ng-repeat="product in products" class="product-container"  >
 
 					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
-						<!-- <div class="product-remove"><i remove></i></div> -->
 						<div class="product-img">
+							<div class="product-remove">
+								<i remove></i>
+							</div>
 							<img ng-src="{{product.img | imglarge}}" alt="">
 						</div>
 

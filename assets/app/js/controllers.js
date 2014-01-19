@@ -67,7 +67,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-
+		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
@@ -175,13 +175,17 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
 					$scope.loading = false;
-					if(Tesco.getUnsuccesful(res).length === 0){
-						$analytics.eventTrack('SuccessfullyTransfered', {  category: 'BasketPorting'});
 
+					var unsuccessfulItems = Tesco.getUnsuccesful(res);
+
+					if(unsuccessfulItems.length === 0){
+						$analytics.eventTrack('SuccessfullyTransfered', {  category: 'BasketPorting'});
+						$scope.unsuccessfulTransfer = false;
 						Alert.add("Your products have been transfered to Tesco","success");
 					} else{
 						$analytics.eventTrack('UnsuccessfullyTransfered', {  category: 'BasketPorting'});
-
+						$scope.unsuccessfulTransfer = true;
+						$scope.tesco_response = unsuccessfulItems;
 						Alert.add("Some products couldn't be transfered","danger");
 					}
 

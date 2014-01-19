@@ -59,13 +59,23 @@ class UserResource(ModelResource):
 
         user = authenticate(username=email, password=password)
 
+        #check if user already ported a basket in the past
+        user_generated_basket = UserGeneratedBasket.objects.filter(
+            user=user)[:1]
+
+        if len(user_generated_basket) == 0:
+            has_history = False
+        else:
+            has_history = True
+
         if user:
             if user.is_active:
                 login(request, user)
-                print "logged in"
+
                 return self.create_response(request, {
                     #redirect to a success page
-                    'success': True
+                    'success': True,
+                    'has_history': has_history
                 })
             else:
                 return self.create_response(request, {

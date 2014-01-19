@@ -31,3 +31,9 @@ class UserProductSlack(models.Model):
     product = models.ForeignKey(Product, editable=False)
     slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
     purchase_time = models.DateField(default=0, auto_now=True)
+
+class UserInvited(models.Model):
+    email = models.CharField(max_length=150, editable=False, primary_key=True)
+    is_invited = models.NullBooleanField(editable=True)
+
+

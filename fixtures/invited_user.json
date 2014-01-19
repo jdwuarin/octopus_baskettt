@@ -1,0 +1,170 @@
+[
+    {
+        "fields": {
+            "email": "jd@baskettt.co"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "arnaud@baskettt.co"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "chris@decoded.co"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "kevinh.kahn@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "joyce.song@outlook.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "jacques@futureadlabs.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "gdfeighery@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "douglas.squirrel@secretsales.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "julientavel@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "nicolo.portunato@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "tportunato@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "trepca@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "john.dwuarin@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "denis.piffaretti@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "amcornea1@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "papafloratos@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "matt@mattdempsey.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "moseeds@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "charlotte.esnaultpelterie@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "harry@gocardless.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "mkusigerski@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "alexandre2k@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "karinjoel8@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+    {
+        "fields": {
+            "email": "euget.thomas@yahoo.fr"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    }
+]

@@ -35,6 +35,7 @@ class ProductResource(ModelResource):
             product_json['id'] = product.id
             product_json['name'] = product.name
             product_json['price'] = product.price
+            product_json['link'] = product.link
             product_json['img'] = str(product.external_image_link)
             results.append(product_json)
 

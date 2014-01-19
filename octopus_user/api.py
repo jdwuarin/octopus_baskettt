@@ -12,6 +12,7 @@ from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardin
 from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
 from django.http import HttpResponse
 from user_objects_only_authorization import UserObjectsOnlyAuthorization
+from django.contrib.auth.decorators import login_required
 import json
 
 
@@ -77,16 +78,12 @@ class UserResource(ModelResource):
                 'reason': 'incorrect',
             }, HttpUnauthorized)
 
+    @login_required
     def logout(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
 
-        if request.user and request.user.is_authenticated():
-            print request.user
-            print request.session
-            logout(request)
-            return self.create_response(request, {'success': True})
-        else:
-            return self.create_response(request, {'success': False}, HttpUnauthorized)
+        logout(request)
+        return self.create_response(request, {'success': True})
 
     def signup(self, request, **kwargs):
         self.method_check(request, allowed=['post'])

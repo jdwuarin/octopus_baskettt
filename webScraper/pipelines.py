@@ -102,11 +102,12 @@ class FoodComPostgresPipeline(object):
                 continue  # skip abstract_product
 
             try:
-                abstract_product = AbstractProduct.objects.get(name = name)
+                abstract_product = AbstractProduct.objects.get(name=name)
                 #if the abstract_product is already in the list, don't add
                 #it again
             except ObjectDoesNotExist:
                 abstract_product.name = name
+                abstract_product.is_food = True  # we know this is scraped form food.com
                 abstract_product = determine_if_condiment(abstract_product)
                 if not abstract_product is None:
                     abstract_product.save()

@@ -26,7 +26,8 @@
     "respond": "~1.4.1",
     "angular": "~1.2.5",
     "angular-animate": "*",
-    "json3": "*"
+    "json3": "*",
+    "angulartics": "*"
   },
   "resolutions": {
     "angular": "1.2.9"

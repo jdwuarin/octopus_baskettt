@@ -27,17 +27,19 @@ describe('OnboardingController', function(){
 		module("App");
 	});
 
-	beforeEach(inject(function ($rootScope, $httpBackend, $controller, Preference, localStorageService) {
+	beforeEach(inject(function ($rootScope, $location, $httpBackend, $controller, Preference, localStorageService, $routeParams) {
 
 		// Create mock
 		ctrlScope = $rootScope.$new();
 		_Preference = Preference;
 		_localStorageService = localStorageService;
+		_location = $location;
+		_routeParams = $routeParams;
 
 		spyOn(Preference, 'getAll').andCallThrough();
 
 		//Creating controller with assigning mocks instead of actual services
-		ctrl = $controller('OnboardingController', { $scope: ctrlScope, Preference: _Preference, localStorageService: _localStorageService});
+		ctrl = $controller('OnboardingController', { $scope: ctrlScope, Preference: _Preference, localStorageService: _localStorageService, $location: _location, $routeParams: _routeParams});
 	}));
 
 	it("Should get the Preferences from a previous session", function(){

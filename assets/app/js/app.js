@@ -8,7 +8,9 @@ angular.module('App', [
 	'App.filters',
 	'App.services',
 	'App.directives',
-	'App.controllers'
+	'App.controllers',
+	'angulartics',
+	'angulartics.google.analytics'
 ])
 
 .config(['$httpProvider', function($httpProvider) {

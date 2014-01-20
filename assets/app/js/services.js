@@ -30,6 +30,9 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			search: function(term, callback, errorcb) {
 				return $http.get(getUrl("search/") + "&term=" + term).success(callback).error(errorcb);
+			},
+			autocomplete: function(term, callback) {
+				return $http.get(getUrl('autocomplete')).success(callback);
 			}
 		};
 	}])

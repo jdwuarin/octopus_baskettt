@@ -41,6 +41,5 @@
     "grunt-processhtml": "latest",
     "time-grunt": "latest",
     "karma-coverage": "latest"
-
   }
 }

@@ -71,12 +71,24 @@ a.profile-link{
 
 .selected {
 	img,p{
-    	border-color: @orange!important;
+		border-color: @orange!important;
 	}
 	p{
 		background-color: @orange!important;
 		color:white!important;
 
+	}
+}
+
+.navbar-toggle{
+	border-color: @dark-orange!important;
+
+	&, &:hover{
+		background-color: white!important;
+	}
+
+	.icon-bar{
+		background-color: @dark-orange!important;
 	}
 }
 
@@ -95,7 +107,8 @@ footer{
 .loading, .loading-basket{
 	background: white;
 	border: @gray-border;
-    .btn-round(100px);
+	width: 100px;
+	border-radius: 10px;
 	.center;
 	text-align: center;
 	margin-top: 50px;

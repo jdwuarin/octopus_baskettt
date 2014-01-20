@@ -63,11 +63,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window) {
+	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-
+		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
@@ -139,6 +139,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.autoComplete = function(query) {
+			return Product.autocomplete(query, function(res){
+
+				var products = [];
+
+				angular.forEach(res.data, function(item){
+					products.push(item.name);
+				});
+
+				return companies;
+			});
+		};
+
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			// When you open a form it will close the search
@@ -161,6 +174,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+
 		$scope.sendToTesco = function(){
 			var tescoCredential = $scope.tescoCredential;
 			var list = $scope.products;
@@ -170,11 +184,21 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				$scope.loading = true;
 				var oldRecommendation = Basket.getOldRecommendation();
 
+				$analytics.eventTrack('ClickToSend', {  category: 'BasketPorting'});
+
 				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
 					$scope.loading = false;
-					if(Tesco.getUnsuccesful(res).length === 0){
+
+					var unsuccessfulItems = Tesco.getUnsuccesful(res);
+
+					if(unsuccessfulItems.length === 0){
+						$analytics.eventTrack('SuccessfullyTransfered', {  category: 'BasketPorting'});
+						$scope.unsuccessfulTransfer = false;
 						Alert.add("Your products have been transfered to Tesco","success");
 					} else{
+						$analytics.eventTrack('UnsuccessfullyTransfered', {  category: 'BasketPorting'});
+						$scope.unsuccessfulTransfer = true;
+						$scope.tesco_response = unsuccessfulItems;
 						Alert.add("Some products couldn't be transfered","danger");
 					}
 

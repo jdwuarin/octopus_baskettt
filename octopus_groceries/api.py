@@ -50,7 +50,7 @@ class ProductResource(ModelResource):
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
 
-    def autocomplete(self, request):
+    def autocomplete(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
         query = request.GET.get('term', '')
 

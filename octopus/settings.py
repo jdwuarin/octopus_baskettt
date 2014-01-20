@@ -29,7 +29,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2'
+        'ENGINE': 'django_hstore.postgresql_psycopg2',  # Add 'postgresql_psycopg2'
         'NAME': 'db1',
 
         'USER': 'octopus_user',
@@ -38,6 +38,17 @@ DATABASES = {
         'PORT': '',           # Set to empty string for default.
     }
 }
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',  # currently running locally
+        'INDEX_NAME': 'haystack',
+        'INCLUDE_SPELLING': True,
+    },
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 FIXTURE_DIRS = [
     'fixtures',
@@ -126,11 +137,21 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.auth',
     'django_verbatim', #Makes django templates work with angularjs
+    # Uncomment the next line to enable the admin:
+    # 'django.contrib.admin',
+    # Uncomment the next line to enable admin documentation:
+    # 'django.contrib.admindocs',
+
+    # Added
+    'django_hstore',  # Support for schemaless in postgress
     'gunicorn',
     'tastypie',
     'corsheaders',
     'south', #brings migration to Django to have stable database-independent migration layer
     'registration',
+    'haystack',
+
+    # My apps
     'octopus_groceries',
     'octopus_user',
     'octopus_basket_porting',
@@ -138,13 +159,7 @@ INSTALLED_APPS = (
     'octopus_recommendation_engine',
     'octopus_search_engine',
 
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
-
-#SESSION_ENGINE = 'mongoengine.django.sessions'
 
 
 # A sample logging configuration. The only tangible logging
@@ -196,6 +211,9 @@ TASTYPIE_CANNED_ERROR = "Sorry about that, there's a problem on our end!"
 MAX_USERNAME_LENGTH = 150
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+SOUTH_DATABASE_ADAPTERS = {'default': 'south.db.postgresql_psycopg2'}
+
 
 ALLOWED_HOSTS = [
     '127.0.0.1',  # localhost

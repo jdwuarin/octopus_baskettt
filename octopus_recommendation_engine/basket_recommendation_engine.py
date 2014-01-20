@@ -2,7 +2,7 @@ import random
 from math import floor, ceil
 
 from octopus_groceries.models import Tag, Recipe, TagRecipe, \
-    RecipeAbstractProduct, AbstractProduct, AbstractProductProduct, Product
+    RecipeAbstractProduct, AbstractProduct, AbstractProductProduct
 from unit_helper import Unit_helper
 
 
@@ -27,14 +27,19 @@ class BasketRecommendationEngine(object):
         potential_recipe_list = []
         for tag in tag_list:
             tag_recipe_list = TagRecipe.objects.filter(tag=tag.id)
-            recipe_id_list = [tag_recipe.recipe_id for tag_recipe in tag_recipe_list]
-            recipe_list = Recipe.objects.filter(id__in=recipe_id_list).order_by('-review_count', '-rating')
+            recipe_id_list = [tag_recipe.recipe_id for tag_recipe in
+                              tag_recipe_list]
+            recipe_list = Recipe.objects.filter(id__in=recipe_id_list).order_by(
+                '-review_count', '-rating')
             potential_recipe_list.append(recipe_list)
 
         product_list = {}
         if len(potential_recipe_list) > 0:
-            product_list = cls.get_product_list(potential_recipe_list, basket_onboarding_info.budget,
-                                                basket_onboarding_info.people, basket_onboarding_info.supermarket)
+            product_list = cls.get_product_list(potential_recipe_list,
+                                                basket_onboarding_info.budget,
+                                                basket_onboarding_info.people,
+                                                basket_onboarding_info.
+                                                supermarket)
         return product_list
 
     @classmethod
@@ -53,7 +58,8 @@ class BasketRecommendationEngine(object):
             for __, recipe in enumerate(recipes):
             # for x in range(0, len(recipes)):
                 try:
-                    recipe = recipe[i / len(recipes)]  # the division will floor the value, which is what we want
+                    recipe = recipe[i / len(
+                        recipes)]  # the division will floor the value, which is what we want
                 except IndexError:
                     recipe_type_passed += 1
                     if recipe_type_passed == len(recipes):
@@ -62,10 +68,12 @@ class BasketRecommendationEngine(object):
                     else:
                         continue  # if no more recipe of that kind, go to next kind
 
-                recipe_abstract_product_list = RecipeAbstractProduct.objects.filter(recipe=recipe)
-                should_break, added_cost = cls.merge_lists(recipe_abstract_product_list, product_list_slack,
-                                                           product_list, people, int(budget) - basket_cost,
-                                                           supermarket)
+                recipe_abstract_product_list = (
+                    RecipeAbstractProduct.objects.filter(recipe=recipe))
+                should_break, added_cost = cls.merge_lists(
+                    recipe_abstract_product_list, product_list_slack,
+                    product_list, people, int(budget) - basket_cost,
+                    supermarket)
 
                 basket_cost += added_cost
                 if should_break:
@@ -86,7 +94,8 @@ class BasketRecommendationEngine(object):
         recipe_allowance_start = recipe_allowance
         should_break = False
         for recipe_abstract_product in recipe_abstract_product_list:
-            abstract_product = AbstractProduct.objects.get(id=recipe_abstract_product.abstract_product.id)
+            abstract_product = AbstractProduct.objects.get(
+                id=recipe_abstract_product.abstract_product.id)
             qu_ing_needed = None
             #first try seeing if I still have some slack of the required
             #abstract_product in my basket
@@ -103,13 +112,15 @@ class BasketRecommendationEngine(object):
 
                 if remaining_slack >= 0:
                     #just reduce slack, don't add any product to basket though
-                    product_list_slack[abstract_product] = (selected_product, remaining_slack)
+                    product_list_slack[abstract_product] = (
+                    selected_product, remaining_slack)
                     continue
                 else:
                     #quantity of abstract_product still needed
                     del product_list_slack[abstract_product]
                     qu_ing_needed = (-float(remaining_slack) / (
-                        float(people) * float(prod_usage))) * float(recipe_abstract_product.quantity)
+                        float(people) * float(prod_usage))) * float(
+                        recipe_abstract_product.quantity)
 
             except KeyError:
                 pass
@@ -120,51 +131,67 @@ class BasketRecommendationEngine(object):
             potential_product_list = AbstractProductProduct.objects.filter(
                 abstract_product_id=abstract_product.id).order_by("rank")
 
-            potential_product_list = filter(lambda x: x.product.supermarket == supermarket,
-                                            potential_product_list)
-            potential_product_list = map(lambda x: x.product, potential_product_list)
+            potential_product_list = filter(
+                lambda x: x.product.supermarket == supermarket,
+                potential_product_list)
+            potential_product_list = map(lambda x: x.product,
+                                         potential_product_list)
 
             if len(potential_product_list) == 0:
                 continue  # deal with items not found in db
 
-            potential_product_index_to_get = int(floor(min(len(potential_product_list), 1) * random.random()))
+            potential_product_index_to_get = int(
+                floor(min(len(potential_product_list), 3) * random.random()))
 
-            selected_product = potential_product_list[potential_product_index_to_get]
+            selected_product = potential_product_list[
+                potential_product_index_to_get]
 
-            prod_usage = Unit_helper.get_product_usage(recipe_abstract_product, selected_product, qu_ing_needed)
+            prod_usage = Unit_helper.get_product_usage(recipe_abstract_product,
+                                                       selected_product,
+                                                       qu_ing_needed)
 
-            quantity_to_buy = ceil((float(people) * float(prod_usage)) / float(selected_product.quantity))
-            slack = quantity_to_buy * float(selected_product.quantity) - (float(people) * float(prod_usage))
+            quantity_to_buy = ceil((float(people) * float(prod_usage)) / float(
+                selected_product.quantity))
+            slack = quantity_to_buy * float(selected_product.quantity) - (
+            float(people) * float(prod_usage))
 
-            product_cost = quantity_to_buy * float(selected_product.price.replace("GBP", ""))
+            product_cost = quantity_to_buy * float(
+                selected_product.price.replace("GBP", ""))
 
-            if people * product_cost_limit < product_cost or cls.banned_word in selected_product.name:
+            if people * product_cost_limit < product_cost or (
+                    cls.banned_word in selected_product.name):
                 continue  # don't add items that are deemed too expensive or contained a banned word
 
             #check that condiment_ratio is not passed
             if abstract_product.is_condiment:
                 if len(product_list) > 0 and (
-                        cls.num_condiment_abstract_product / len(product_list) > cls.condiment_max_ratio):
+                            cls.num_condiment_abstract_product / len(
+                                product_list) > cls.condiment_max_ratio):
                     continue  # don't add extra condiment to basket
                 else:
                     cls.num_condiment_abstract_product += 1.0
 
             #check that cost is not passed
-            recipe_allowance -= quantity_to_buy * float(selected_product.price.replace("GBP", ""))
+            recipe_allowance -= quantity_to_buy * float(
+                selected_product.price.replace("GBP", ""))
 
             if recipe_allowance < 0:
                 should_break = True
                 break
 
-            #TODO refactor in order to get rid of product_list_slack and include slack in product_list
+            # TODO refactor in order to get rid of
+            # TODO product_list_slack and include slack in product_list
             product_list_slack[abstract_product] = (selected_product, slack)
 
             try:
-                bought_quantity = product_list[selected_product][0]  # change that
-                product_list[selected_product] = [bought_quantity + quantity_to_buy, abstract_product]
+                bought_quantity = product_list[selected_product][
+                    0]  # change that
+                product_list[selected_product] = [
+                    bought_quantity + quantity_to_buy, abstract_product]
 
             except KeyError:
             # product was not yet in basket
-                product_list[selected_product] = [quantity_to_buy, abstract_product]
+                product_list[selected_product] = [quantity_to_buy,
+                                                  abstract_product]
 
         return should_break, recipe_allowance_start - recipe_allowance

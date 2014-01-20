@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
@@ -6,21 +8,21 @@ from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from octopus_groceries.models import Supermarket
-from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import SessionAuthentication
-from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
-from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
+from octopus_recommendation_engine.basket_onboarding_info import \
+    BasketOnboardingInfo
+from octopus_recommendation_engine.basket_recommendation_engine import \
+    BasketRecommendationEngine
 from django.http import HttpResponse
 from user_objects_only_authorization import UserObjectsOnlyAuthorization
-from django.contrib.auth.decorators import login_required
 from octopus_user.models import UserGeneratedBasket
-import json
 
 
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
-        fields = ['username', 'email', 'date_joined']  # we can either whitelist like this or blacklist using exclude
+        fields = ['username', 'email',
+                  'date_joined']  # we can either whitelist like this or blacklist using exclude
         allowed_methods = ['get']
         resource_name = 'user'
         #excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
@@ -53,7 +55,9 @@ class UserResource(ModelResource):
     def login(self, request, **kwargs):
 
         self.method_check(request, allowed=['post'])
-        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        data = self.deserialize(request, request.body,
+                                format=request.META.get('CONTENT_TYPE',
+                                                        'application/json'))
 
         email = data.get('email', '')
         password = data.get('password', '')
@@ -64,10 +68,10 @@ class UserResource(ModelResource):
         user_generated_basket = UserGeneratedBasket.objects.filter(
             user=user)[:1]
 
-        if len(user_generated_basket) == 0:
-            has_history = False
-        else:
+        if user_generated_basket:
             has_history = True
+        else:
+            has_history = False
 
         if user:
             if user.is_active:
@@ -96,11 +100,14 @@ class UserResource(ModelResource):
             logout(request)
             return self.create_response(request, {'success': True})
         else:
-            return self.create_response(request, {'success': False}, HttpUnauthorized)
+            return self.create_response(request, {'success': False},
+                                        HttpUnauthorized)
 
     def signup(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
-        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        data = self.deserialize(request, request.body,
+                                format=request.META.get('CONTENT_TYPE',
+                                                        'application/json'))
 
         email = data.get('email', '')
         password = data.get('password', '')
@@ -141,7 +148,9 @@ class UserResource(ModelResource):
     def basket(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
 
-        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        data = self.deserialize(request, request.body,
+                                format=request.META.get('CONTENT_TYPE',
+                                                        'application/json'))
 
         key_error = False
         value_error = False
@@ -156,12 +165,12 @@ class UserResource(ModelResource):
         except ValueError:
             value_error = True
 
-        no_success_condition = value_error or \
-                               key_error or \
-                               int(data['budget']) < 1 or \
-                               len(data['cuisine']) < 1 or \
-                               int(data['days']) < 1 or \
-                               int(data['people']) < 1
+        no_success_condition = value_error or (
+                               key_error) or (
+                               int(data['budget']) < 1) or (
+                               len(data['cuisine']) < 1) or (
+                               int(data['days']) < 1) or (
+                               int(data['people']) < 1)
 
         if no_success_condition:
             no_success = json.dumps({'success': False})
@@ -173,19 +182,24 @@ class UserResource(ModelResource):
         #the only tag for european type cuisines that exists is "European"
         real_cuisines = []
         for cuisine in data['cuisine']:
-            if cuisine == "Italian" or cuisine == "French" or cuisine == "Spanish":
+            if cuisine == "Italian" or cuisine == "French" or (
+                cuisine == "Spanish"):
                 real_cuisines.append("European")
             else:
                 real_cuisines.append(cuisine)
         data['cuisine'] = real_cuisines
 
-        data['supermarket'] = Supermarket.objects.get(name="tesco") #remove tesco hardcode
+        data['supermarket'] = Supermarket.objects.get(
+            name="tesco") #remove tesco hardcode
 
-        onboarding_info = BasketOnboardingInfo(people=data['people'], budget=data['budget'],
-                                               tags=data['cuisine'], days=data['days'],
+        onboarding_info = BasketOnboardingInfo(people=data['people'],
+                                               budget=data['budget'],
+                                               tags=data['cuisine'],
+                                               days=data['days'],
                                                supermarket=data['supermarket'])
 
-        basket = BasketRecommendationEngine.create_onboarding_basket(onboarding_info)
+        basket = BasketRecommendationEngine.create_onboarding_basket(
+            onboarding_info)
 
         response = []
 

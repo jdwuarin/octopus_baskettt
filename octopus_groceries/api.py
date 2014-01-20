@@ -5,6 +5,10 @@ from models import Product, Recipe
 from django.http import HttpResponse
 from product_objects_authorization import ProductObjectsAuthorization
 import json
+from haystack.query import SearchQuerySet
+
+from octopus_groceries.models import AbstractProduct
+
 
 
 class ProductResource(ModelResource):
@@ -19,6 +23,9 @@ class ProductResource(ModelResource):
             url(r"^(?P<resource_name>%s)/search%s$" %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('search'), name="api_product_search"),
+            url(r"^(?P<resource_name>%s)/autocomplete%s$" %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('autocomplete'), name="api_autocomplete"),
         ]
 
     # product/search/?format=json&term=query
@@ -28,7 +35,6 @@ class ProductResource(ModelResource):
         products = Product.objects.filter(name__icontains=q)[:10]
 
         results = []
-
         data = []
         for product in products:
             product_json = {}
@@ -43,6 +49,25 @@ class ProductResource(ModelResource):
 
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
+
+    def autocomplete(self, request):
+        self.method_check(request, allowed=['get'])
+        query = request.GET.get('term', '')
+
+        sqs = SearchQuerySet().autocomplete(
+            content_auto=query).models(AbstractProduct)
+
+        data = []
+        for entry in sqs:
+            product_json = {}
+            product_json['name'] = entry.object.name
+            data.append(product_json)
+
+        data = json.dumps(data)
+
+        mimetype = 'application/json'
+        return HttpResponse(data, mimetype)
+
 
 
 class RecipeResource(ModelResource):

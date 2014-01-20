@@ -166,5 +166,28 @@
         },
         "is_invited": "true",
         "model": "octopus_user.UserInvited"
+    },
+        {
+        "fields": {
+            "email": "Massimilianogritti@gmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+        {
+        "fields": {
+            "email": "john_walch8@hotmail.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
+    },
+        {
+        "fields": {
+            "email": "joakim@tobieson.se"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
     }
+
+]
 ]

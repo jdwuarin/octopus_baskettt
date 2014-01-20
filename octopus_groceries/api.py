@@ -58,10 +58,11 @@ class ProductResource(ModelResource):
             content_auto=query).models(AbstractProduct)
 
         data = []
-        for entry in sqs:
-            product_json = {}
-            product_json['name'] = entry.object.name
-            data.append(product_json)
+        if sqs:
+            for entry in sqs:
+                product_json = {}
+                product_json['name'] = entry.object.name
+                data.append(product_json)
 
         data = json.dumps(data)
 

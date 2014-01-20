@@ -140,7 +140,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.autoComplete = function(query) {
+
+			if(query === undefined){
+				return [];
+			}
+
 			return Product.autocomplete(query, function(res){
+
 
 				var products = [];
 
@@ -148,7 +154,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					products.push(item.name);
 				});
 
-				return companies;
+				return products;
 			});
 		};
 

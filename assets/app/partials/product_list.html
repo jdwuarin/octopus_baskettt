@@ -16,7 +16,10 @@
 				<form ng-submit="searchProducts()">
 					<div class="search-bar-container ">
 						<closesearch></closesearch>
-						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-enter="clearSearch()">
+						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products"
+						ng-esc="clearSearch()"
+						typeahead="suggestion for suggestion in autoComplete($viewValue)"
+						typeahead-on-select="searchProduct()">
 					</div>
 					<button class="btn-gray" type="submit">Search</button>
 				</form>

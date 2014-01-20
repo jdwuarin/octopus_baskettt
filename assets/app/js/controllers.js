@@ -139,6 +139,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.autoComplete = function(query) {
+			return Product.autocomplete(query, function(res){
+
+				var products = [];
+
+				angular.forEach(res.data, function(item){
+					products.push(item.name);
+				});
+
+				return companies;
+			});
+		};
+
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			// When you open a form it will close the search

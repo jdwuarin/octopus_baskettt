@@ -21,8 +21,8 @@ def port_basket(request):
     # if not settings == "False":
     #     #some settings have changed
     #     user_settings = UserSettings(user=user,
-    #                                  num_people=data['people'],
-    #                                  num_days=data['days'],
+    #                                  people=data['people'],
+    #                                  days=data['days'],
     #                                  budget=data['budget'])
     #     user_settings.save()
 

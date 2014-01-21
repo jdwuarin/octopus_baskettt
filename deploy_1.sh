@@ -10,6 +10,8 @@ sudo su - postgres
 createuser --no-superuser --no-createdb --no-createrole octopus_user
 createdb --owner octopus_user db1
 psql -U postgres -d db1 -c "alter user octopus_user with password 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l';"
+psql -U postgres db1 -c 'create extension hstore;'
+psql -U postgres db1 -c 'create extension unaccent;'
 psql -U postgres template1 -c 'create extension hstore;'
 psql -U postgres template1 -c 'create extension unaccent;'
 exit #of postgres
@@ -24,7 +26,7 @@ sudo git clone https://john-dwuarin:st4bV3rr3@github.com/arnaudbenard/octopus.gi
 
 #create octopus user
 sudo groupadd --system webapps
-sudo useradd --system --gid webapps --home /webapps/octopus octopus 
+sudo useradd --system --gid webapps --home /webapps/octopus octopus
 sudo chown -R octopus:users /webapps/octopus
 sudo usermod -a -G users ubuntu #just makes ubuntu have r/w access to octopus folder
 newgrp users #making sure group is loaded for ubuntu user
@@ -87,7 +89,7 @@ pip install setproctitle
 #monitoring with supervisor
 sudo apt-get install -y supervisor
 mkdir -p /webapps/octopus/env/logs
-touch /webapps/octopus/env/logs/gunicorn_supervisor.log 
+touch /webapps/octopus/env/logs/gunicorn_supervisor.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
 sudo cp ./octopus.conf /etc/supervisor/conf.d/octopus.conf
 sudo supervisorctl update

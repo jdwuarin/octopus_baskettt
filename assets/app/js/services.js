@@ -227,12 +227,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Populate tesco basket
-			post: function(email, password, list, recommendation, callback) {
+			post: function(email, password, list, recommendation, preference, callback) {
+
 				return $http({
 					url: 'port_basket/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
-					data: {email:email, password:password, products:list, recommendation: recommendation}
+					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference}
 				}).success(callback);
 			},
 			getUnsuccesful: function(basket){

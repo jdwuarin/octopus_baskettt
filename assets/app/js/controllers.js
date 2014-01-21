@@ -188,11 +188,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			if ($scope.tescoForm.$valid) {
 				$scope.toggleTescoForm(false);
 				$scope.loading = true;
+
 				var oldRecommendation = Basket.getOldRecommendation();
+				var preference = Preference.getAll();
 
 				$analytics.eventTrack('ClickToSend', {  category: 'BasketPorting'});
 
-				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, function(res) {
+				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, function(res) {
 					$scope.loading = false;
 
 					var unsuccessfulItems = Tesco.getUnsuccesful(res);

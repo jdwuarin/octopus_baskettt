@@ -123,6 +123,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// GET search
 		$scope.searchProducts = function(){
+			console.log("test");
 			if($scope.queryTerm) {
 				Product.search($scope.queryTerm,
 					function(res){ // success
@@ -147,9 +148,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			return Product.autocomplete(query, function(res){
 
-
 				var products = [];
-
+	
 				angular.forEach(res.data, function(item){
 					products.push(item.name);
 				});

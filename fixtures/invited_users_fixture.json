@@ -187,7 +187,12 @@
         },
         "is_invited": "true",
         "model": "octopus_user.UserInvited"
+    },
+        {
+        "fields": {
+            "email": "me@me.com"
+        },
+        "is_invited": "true",
+        "model": "octopus_user.UserInvited"
     }
-
-]
 ]

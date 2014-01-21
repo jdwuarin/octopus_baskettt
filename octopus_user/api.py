@@ -15,7 +15,7 @@ from octopus_recommendation_engine.basket_recommendation_engine import \
     BasketRecommendationEngine
 from django.http import HttpResponse
 from user_objects_only_authorization import UserObjectsOnlyAuthorization
-from octopus_user.models import UserGeneratedBasket
+from octopus_user.models import UserGeneratedBasket, UserInvited
 
 
 class UserResource(ModelResource):
@@ -111,6 +111,11 @@ class UserResource(ModelResource):
 
         email = data.get('email', '')
         password = data.get('password', '')
+
+        try:
+            dummy = UserInvited.objects.get(email=email)
+        except UserInvited.DoesNotExist:
+            return HttpResponse('Unauthorized', status=401)
 
         try:
             User.objects.create_user(email, email, password)

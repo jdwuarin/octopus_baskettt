@@ -2,12 +2,13 @@ from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from models import Product, Recipe
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from product_objects_authorization import ProductObjectsAuthorization
 import json
 from haystack.query import SearchQuerySet
 
 from octopus_groceries.models import AbstractProduct
+from octopus_search_engine.octopus_search_engine import perform_search
 
 
 
@@ -31,24 +32,23 @@ class ProductResource(ModelResource):
     # product/search/?format=json&term=query
     def search(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
-        q = request.GET.get('term', '')
-        products = Product.objects.filter(name__icontains=q)[:10]
 
-        results = []
-        data = []
-        for product in products:
+        result_products = perform_search(request)
+
+        result_json = []
+        for product in result_products:
             product_json = {}
             product_json['id'] = product.id
             product_json['name'] = product.name
             product_json['price'] = product.price
             product_json['link'] = product.link
             product_json['img'] = str(product.external_image_link)
-            results.append(product_json)
+            result_json.append(product_json)
 
-        data = json.dumps(results)
+        result_json = json.dumps(result_json)
 
         mimetype = 'application/json'
-        return HttpResponse(data, mimetype)
+        return HttpResponse(result_json, mimetype)
 
     def autocomplete(self, request, **kwargs):
         self.method_check(request, allowed=['get'])

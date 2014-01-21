@@ -60,6 +60,7 @@ python manage.py createsuperuser --noinput --email webmaster@baskettt.co --usern
 python manage.py migrate 'octopus_groceries'
 python manage.py migrate 'octopus_user'
 python manage.py loaddata supermarket_fixture.json
+python manage.py loaddata invited_users_fixture.json
 cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com

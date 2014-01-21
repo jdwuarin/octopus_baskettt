@@ -22,7 +22,7 @@ angular.module('App', [
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }])
 
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider','$analyticsProvider', function($routeProvider,$analyticsProvider) {
 
 	$routeProvider
 	.when('/',

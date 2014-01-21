@@ -10,9 +10,8 @@ sudo su - postgres
 createuser --no-superuser --no-createdb --no-createrole octopus_user
 createdb --owner octopus_user db1
 psql -U postgres -d db1 -c "alter user octopus_user with password 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l';"
-psql -U octopus_user db1 -c 'create extension hstore;'
-psql -U octopus_user db1 -c 'create extension unaccent;'
-psql -U octopus_user db1 -c 'alter function unaccent(text) immutable;'
+psql -U postgres template1 -c 'create extension hstore;'
+psql -U postgres template1 -c 'create extension unaccent;'
 exit #of postgres
 #connect to db using: psql -U octopus_user -h localhost db1
 
@@ -38,7 +37,6 @@ sudo virtualenv env
 source ./env/bin/activate
 apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev
 pip install -r stable-req.txt
-
 
 #static assets
 sudo apt-get update
@@ -71,7 +69,7 @@ sudo apt-get update
 sudo apt-get install openjdk-7-jre-headless -y
 wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.10.deb
 sudo dpkg -i elasticsearch-0.90.10.deb
-#then run elasticsearch (find out how to do that safely)
+sudo cp /webapps/octopuselasticsearch.yml /etc
 
 #haystack
 #nothing to do really, all covered in code if not:

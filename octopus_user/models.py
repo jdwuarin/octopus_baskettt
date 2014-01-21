@@ -5,8 +5,8 @@ from django_hstore import hstore
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    num_people = models.IntegerField(editable=False)
-    num_days = models.IntegerField(editable=False)
+    people = models.IntegerField(editable=False)
+    days = models.IntegerField(editable=False)
     budget = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
 
 # basket that was recommended to our user by our algorithm

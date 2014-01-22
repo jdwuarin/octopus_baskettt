@@ -34,24 +34,6 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('basket', ['$rootScope', function($rootScope){
-		return {
-			templateUrl: 'static/app/partials/_basket_detail.html',
-			restrict: 'E',
-			link: function(scope) {
-
-				scope.showBasket = false;
-				$rootScope.$on('showBasketDetails', function(event){
-					scope.showBasket = false; // change to true if you want to make it work
-				});
-
-				scope.hideShowBasket = function(){
-					scope.showBasket = false;
-				};
-			}
-		};
-	}])
-
 	// When you click on the DOM a the .selected class is injected
 	.directive('click', ['Preference',function(Preference) {
 		return function(scope, element, attrs) {
@@ -87,19 +69,6 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('tesco',[function() {
-		return {
-			link: function (scope, element, attrs) {
-				scope.tescoIsVisible = false;
-				scope.toggleTescoForm = function(value){
-					scope.tescoIsVisible = value;
-				};
-			},
-			restrict: 'E',
-			templateUrl: 'static/app/partials/_tesco.html'
-		};
-	}])
-
 	.directive('navbar',['$rootScope', 'User', function($rootScope, User) {
 
 		return {
@@ -110,7 +79,6 @@ angular.module('App.directives', [])
 						if(res.success){
 							User.setLoggedIn(true);
 							scope.userIsLoggedIn();
-							$rootScope.$emit('CloseSignUpForm');
 						}
 					});
 				});

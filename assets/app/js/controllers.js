@@ -74,21 +74,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
-		// When you close the signup form the Tesco form comes
-		$rootScope.$on('CloseSignUpForm', function(){
-			$scope.closeForm();
-			$scope.toggleTescoForm(true);
-		});
-
 		// When you remove a product from the directive you need to update the scope
 		$rootScope.$on('removeProduct', function(event, $productIndex){
 			$scope.products.splice($productIndex,1);
 			$scope.$apply();
 		});
-
-		$scope.showBasketDetails = function() {
-			$rootScope.$emit('showBasketDetails');
-		};
 
 		$scope.closeForm = function() {
 			$scope.toggleForm(false);
@@ -174,13 +164,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					}
 				}
 			});
-
-
-			// if(!User.isLoggedIn()) {
-			// 	$scope.toggleForm(true);
-			// } else {
-			// 	$scope.toggleTescoForm(true);
-			// }
 		};
 
 
@@ -253,11 +236,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		}
 	}
 
-		if(!clickedOnTheSearchPanel){
-			$scope.clearSearch();
-			$scope.$digest();
-		}
-	};
+	if(!clickedOnTheSearchPanel){
+		$scope.clearSearch();
+		$scope.$digest();
+	}
+};
 
 }])
 
@@ -265,28 +248,34 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	['$scope', '$modalInstance', 'products','User','$sanitize','Alert','Basket','Preference','Tesco', '$analytics',
 	function($scope, $modalInstance, products, User, $sanitize,Alert,Basket,Preference,Tesco,$analytics){
 
-		$scope.signup = true; // shows sign up at first
-		$scope.user = {};
-		$scope.loggedin = false;
 		$scope.tescoCredential = {};
+		$scope.user = {};
+
+		$scope.signup = true; // shows sign up at first
 		$scope.sendTescoForm = true;
+		$scope.loggedin = false;
+		$scope.notInvited = false;
+
 
 		if(User.isLoggedIn()){
-			$scope.loggedin = true
+			$scope.loggedin = true;
 		}
-
-		$scope.signup = function(){
-			var user = $scope.user;
-			User.signup(user.email, user.password, function(data){
-				// $rootScope.$emit('UserSignedUp');
-			});
-		};
 
 		var sanitizeCredentials = function(credentials) {
 			return {
 				email: $sanitize(credentials.email),
 				password: $sanitize(credentials.password)
 			};
+		};
+
+		$scope.signup = function(){
+			var user = $scope.user;
+			User.signup(user.email, user.password, function(data){
+			}, function(res,status){
+				if(status == 401){
+					$scope.notInvited = true;
+				}
+			});
 		};
 
 		$scope.login = function(){
@@ -309,7 +298,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			var oldRecommendation = Basket.getOldRecommendation();
 			var preference = Preference.getAll();
 
-			// $analytics.eventTrack('ClickToSend', {  category: 'BasketPorting'});
+			$analytics.eventTrack('ClickToSend',
+				{  category: 'BasketPorting'});
 
 			if(products.length === 0 || products === undefined){ return; }
 
@@ -319,21 +309,21 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				var unsuccessfulItems = Tesco.getUnsuccesful(res);
 
 				if(unsuccessfulItems.length === 0){
-					// $analytics.eventTrack('SuccessfullyTransfered', {  category: 'BasketPorting'});
+					$analytics.eventTrack('SuccessfullyTransfered',
+						{  category: 'BasketPorting'});
 					$scope.unsuccessfulTransfer = false;
 				} else{
-					// $analytics.eventTrack('UnsuccessfullyTransfered', {  category: 'BasketPorting'});
+					$analytics.eventTrack('UnsuccessfullyTransfered',
+						{  category: 'BasketPorting'});
 					$scope.unsuccessfulTransfer = true;
 				}
 
 			});
 		};
 
-
-
 	}])
 
-.controller('RegistrationController', ['$scope','User', function($scope,User) {
+.controller('RegistrationController', ['$scope','User','Alert', function($scope,User,Alert) {
 
 	$scope.user = {};
 
@@ -342,9 +332,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		if($scope.signupForm.$valid){
 
 			User.signup(user.email, user.password, function(data){
-					// This callback is only called when return success
-					User.redirect("/");
-				});
+				// This callback is only called when return success
+				User.redirect("/");
+			},function(res, status){
+				if(status == 401){
+					Alert.add("You didn't get invited to the beta. You can ping us on <a href='https://twitter.com/basketttco'>Twitter</a>", "info");
+				}
+			});
 		}
 	};
 }])

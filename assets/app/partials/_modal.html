@@ -1,0 +1,91 @@
+<div ng-show="notInvited" class="modal-container">
+    <div class="alert alert-info">
+        You didn't get invited to the beta. You can ping us on <a href="https://twitter.com/basketttco">Twitter</a>.
+    </div>
+</div>
+
+<div ng-show="loggedin">
+
+    <div ng-show="sendTescoForm">
+        <form class="modal-form" ng-submit="sendToTesco()" name="tescoForm" >
+            <div class="form-group instruction">
+                Send your basket to Tesco
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Enter email" ng-model="tescoCredential.email" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" ng-model="tescoCredential.password" required>
+            </div>
+
+            <button type="submit" class="btn-orange">Send</button>
+        </form>
+    </div>
+
+
+    <div ng-show="loading" class="modal-container">
+        <div class="spinner"></div> <br>
+        <p>We're currently transfering your basket. This can take a few seconds.</p>
+    </div>
+
+    <div ng-hide="sendTescoForm">
+        <div ng-hide="loading" class="modal-container">
+            <div ng-show="unsuccessfulTransfer">
+                It looks like something when wrong.
+            </div>
+
+            <div ng-hide="unsuccessfulTransfer">
+                <i class="glyphicon glyphicon-ok-sign"></i> <br>
+                <p>Your basket has been successfully transfered. You can now login to <a href="https://secure.tesco.com/register/account.aspx" target="_blank">Tesco</a>.</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div ng-hide="loggedin">
+    <div ng-show="signup">
+        <form class="modal-form" ng-submit="signup()" name="signupForm">
+            <div class="form-group instruction">
+                You need to sign up to transfer your basket
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Enter email" ng-model="user.email">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" >
+            </div>
+            <div class="modal-action">
+                <a href="javascript:;" ng-click="signup = false">Already registred? Sign in.</a>
+                <button type="submit" class="btn-orange">Sign up</button>
+            </div>
+        </form>
+    </div>
+
+    <div ng-hide="signup">
+        <form class="modal-form" ng-submit="login()" name="loginForm" >
+            <div class="form-group instruction">
+                Please sign in.
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control"placeholder="Enter email" ng-model="user.email">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
+            </div>
+
+            <div class="modal-action">
+                <a href="javascript:;" ng-click="signup = true">Not a member yet? Register.</a>
+                <button type="submit" class="btn-orange">Sign in</button>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -33,7 +33,7 @@
 
         {%verbatim%}
         <div class="container alert-container" ng-class="{'alert-margin':productListPage}" ng-controller="AlertController" >
-          <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert.id)">{{alert.msg}}</alert>
+          <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert.id)" ng-bind-html="alert.msg"></alert>
         </div>
         {%endverbatim%}
 
@@ -56,6 +56,7 @@
         <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
         <script src="{% static "angulartics/dist/angulartics.min.js" %}"></script>
         <script src="{% static "angulartics/dist/angulartics-google-analytics.min.js" %}"></script>
+        <script src="{% static "fastclick/lib/fastclick.js" %}"></script>
         <script src="{% static "json3/lib/json3.min.js" %}"></script>
         <script src="{% static "app/js/app.js" %}"></script>
         <script src="{% static "app/js/controllers.js" %}"></script>
@@ -81,7 +82,7 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
       <script src="bower_components/angulartics/dist/angulartics.min.js"></script>
       <script src="bower_components/angulartics/dist/angulartics-google-analytics.min.js"></script>
-
+      <script src="bower_components/fastclick/lib/fastclick.js"></script>
       <!-- endbower -->
       <!-- endbuild -->
 

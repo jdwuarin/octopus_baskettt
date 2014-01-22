@@ -72,13 +72,13 @@ angular.module('App.services', ['LocalStorageModule'])
 			setLoggedIn: function(val) {
 				LoggedIn = val;
 			},
-			signup: function(email, password, callback) {
+			signup: function(email, password, callback, errorcb) {
 				return $http({
 					url: getUrl('signup'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
-				}).success(callback);
+				}).success(callback).error(errorcb);
 			},
 			// Check if logged in in Django backend
 			// Avoid losing a session when a user reloads the page

@@ -4,20 +4,20 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
-	.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
 
-		$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
-		{ "name": "Chinese", "image": "chinese.png"},
-		{ "name": "Indian", "image": "indian.png"},
-		{ "name": "Spanish", "image": "spanish.png"},
-		{ "name": "Thai",  "image": "thai.png"},
-		{ "name": "French",  "image": "french.png"}];
+	$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
+	{ "name": "Chinese", "image": "chinese.png"},
+	{ "name": "Indian", "image": "indian.png"},
+	{ "name": "Spanish", "image": "spanish.png"},
+	{ "name": "Thai",  "image": "thai.png"},
+	{ "name": "French",  "image": "french.png"}];
 
-		$scope.preference = {};
+	$scope.preference = {};
 
-		var page_id = parseInt($routeParams.id,10);
+	var page_id = parseInt($routeParams.id,10);
 
-		$scope.page = page_id;
+	$scope.page = page_id;
 
 		// Persist data from local storage
 		$scope.preference = Preference.getAll();
@@ -63,7 +63,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-	.controller('ProductListController', ['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics',function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics) {
+.controller('ProductListController',
+	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal',
+	function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics,$modal) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -72,21 +74,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
-		// When you close the signup form the Tesco form comes
-		$rootScope.$on('CloseSignUpForm', function(){
-			$scope.closeForm();
-			$scope.toggleTescoForm(true);
-		});
-
 		// When you remove a product from the directive you need to update the scope
 		$rootScope.$on('removeProduct', function(event, $productIndex){
 			$scope.products.splice($productIndex,1);
 			$scope.$apply();
 		});
-
-		$scope.showBasketDetails = function() {
-			$rootScope.$emit('showBasketDetails');
-		};
 
 		$scope.closeForm = function() {
 			$scope.toggleForm(false);
@@ -149,7 +141,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			return Product.autocomplete(query, function(res){
 
 				var products = [];
-	
+
 				angular.forEach(res.data, function(item){
 					products.push(item.name);
 				});
@@ -163,56 +155,17 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			// When you open a form it will close the search
 			$scope.clearSearch();
 
-			if(!User.isLoggedIn()) {
-				$scope.toggleForm(true);
-			} else {
-				$scope.toggleTescoForm(true);
-			}
-		};
-
-		$scope.signup = function(){
-			var user = $scope.user;
-			if($scope.signupForm.$valid){
-
-				User.signup(user.email, user.password, function(data){
-					$rootScope.$emit('UserSignedUp');
-				});
-			}
-		};
-
-
-		$scope.sendToTesco = function(){
-			var tescoCredential = $scope.tescoCredential;
-			var list = $scope.products;
-
-			if ($scope.tescoForm.$valid) {
-				$scope.toggleTescoForm(false);
-				$scope.loading = true;
-
-				var oldRecommendation = Basket.getOldRecommendation();
-				var preference = Preference.getAll();
-
-				$analytics.eventTrack('ClickToSend', {  category: 'BasketPorting'});
-
-				Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, function(res) {
-					$scope.loading = false;
-
-					var unsuccessfulItems = Tesco.getUnsuccesful(res);
-
-					if(unsuccessfulItems.length === 0){
-						$analytics.eventTrack('SuccessfullyTransfered', {  category: 'BasketPorting'});
-						$scope.unsuccessfulTransfer = false;
-						Alert.add("Your products have been transfered to Tesco","success");
-					} else{
-						$analytics.eventTrack('UnsuccessfullyTransfered', {  category: 'BasketPorting'});
-						$scope.unsuccessfulTransfer = true;
-						$scope.tesco_response = unsuccessfulItems;
-						Alert.add("Some products couldn't be transfered","danger");
+			var modalInstance = $modal.open({
+				templateUrl: 'static/app/partials/_modal.html',
+				controller: 'ModalCtrl',
+				resolve: {
+					products: function () {
+						return $scope.products;
 					}
-
-				});
-			}
+				}
+			});
 		};
+
 
 		$scope.addProduct = function(new_product) {
 			var $products = $scope.products,
@@ -221,53 +174,53 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			for (var i = $products.length-1; i >= 0; i--) {
 				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
 					isPresent = true;
-					if($products[i].quantity>=100){
-						$products[i].quantity = 100;
-					} else{
-						$products[i].quantity += 1;
-					}
-					break;
+				if($products[i].quantity>=100){
+					$products[i].quantity = 100;
+				} else{
+					$products[i].quantity += 1;
 				}
+				break;
 			}
+		}
 
-			if(!isPresent){
-				new_product.quantity = 1;
-				$scope.products.push(new_product);
-			} else {
-				$scope.products = $products;
-			}
-		};
-
-		$scope.removeProduct = function(product) {
-			var $products = $scope.products;
-
-			for (var i = $products.length-1; i >= 0; i--) {
-				if ($products[i].name === product.name) {
-					$products[i].quantity -= 1;
-
-					if($products[i].quantity === 0) {
-						$products.splice(i,1);
-					}
-
-					break;
-				}
-			}
-
+		if(!isPresent){
+			new_product.quantity = 1;
+			$scope.products.push(new_product);
+		} else {
 			$scope.products = $products;
-		};
+		}
+	};
 
-		$scope.getTotal = function(val1,val2) {
-			return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
-		};
+	$scope.removeProduct = function(product) {
+		var $products = $scope.products;
 
-		$scope.basketTotal = function() {
-			var total = 0;
-			angular.forEach($scope.products, function(value, key){
-				total += parseFloat(value.price.replace("GBP","")) * parseInt(value.quantity,10);
-			});
+		for (var i = $products.length-1; i >= 0; i--) {
+			if ($products[i].name === product.name) {
+				$products[i].quantity -= 1;
 
-			return total.toFixed(2);
-		};
+				if($products[i].quantity === 0) {
+					$products.splice(i,1);
+				}
+
+				break;
+			}
+		}
+
+		$scope.products = $products;
+	};
+
+	$scope.getTotal = function(val1,val2) {
+		return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
+	};
+
+	$scope.basketTotal = function() {
+		var total = 0;
+		angular.forEach($scope.products, function(value, key){
+			total += parseFloat(value.price.replace("GBP","")) * parseInt(value.quantity,10);
+		});
+
+		return total.toFixed(2);
+	};
 
 	var closeSearchWhenClickingElsewhere = function(event){
 
@@ -280,35 +233,33 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			if(parents[i].className.indexOf("product-search-result") != -1
 				|| parents[i].className.indexOf("search-bar") != -1){
 				clickedOnTheSearchPanel = true;
-			}
-		};
-
-		if(!clickedOnTheSearchPanel){
-			$scope.clearSearch();
-			$scope.$digest();
 		}
-	};
+	}
 
-	}])
+	if(!clickedOnTheSearchPanel){
+		$scope.clearSearch();
+		$scope.$digest();
+	}
+};
 
-	.controller('RegistrationController', ['$scope','User', function($scope,User) {
+}])
 
+.controller('ModalCtrl',
+	['$scope', '$modalInstance', 'products','User','$sanitize','Alert','Basket','Preference','Tesco', '$analytics',
+	function($scope, $modalInstance, products, User, $sanitize,Alert,Basket,Preference,Tesco,$analytics){
+
+		$scope.tescoCredential = {};
 		$scope.user = {};
 
-		$scope.signup = function(){
-			var user = $scope.user;
-			if($scope.signupForm.$valid){
+		$scope.signup = true; // shows sign up at first
+		$scope.sendTescoForm = true;
+		$scope.loggedin = false;
+		$scope.notInvited = false;
 
-				User.signup(user.email, user.password, function(data){
-					// This callback is only called when return success
-					User.redirect("/");
-				});
-			}
-		};
-	}])
 
-	.controller('LoginController', ['$sanitize','$scope','User','Alert', function($sanitize,$scope,User,Alert) {
-		$scope.user = {};
+		if(User.isLoggedIn()){
+			$scope.loggedin = true;
+		}
 
 		var sanitizeCredentials = function(credentials) {
 			return {
@@ -317,29 +268,114 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			};
 		};
 
+		$scope.signup = function(){
+			var user = $scope.user;
+			User.signup(user.email, user.password, function(data){
+			}, function(res,status){
+				if(status == 401){
+					$scope.notInvited = true;
+				}
+			});
+		};
+
 		$scope.login = function(){
 			var user = $scope.user;
-			if($scope.loginForm.$valid){
-				user = sanitizeCredentials(user);
+			user = sanitizeCredentials(user);
+			User.login(user.email, user.password, function(data){
+				User.setLoggedIn(true);
+				$scope.loggedin = true;
+				// Alert.add("Successfully logged in.", "success");
+			});
+		};
 
-				User.login(user.email, user.password, function(data){
-					User.setLoggedIn(true);
-					Alert.add("Successfully logged in.", "success");
-					User.redirect("/");
-				});
-			}
+		$scope.sendToTesco = function(){
+			var tescoCredential = $scope.tescoCredential;
+			var list = $scope.products;
+
+			$scope.loading = true;
+			$scope.sendTescoForm = false;
+
+			var oldRecommendation = Basket.getOldRecommendation();
+			var preference = Preference.getAll();
+
+			$analytics.eventTrack('ClickToSend',
+				{  category: 'BasketPorting'});
+
+			if(products.length === 0 || products === undefined){ return; }
+
+			Tesco.post(tescoCredential.email, tescoCredential.password, products, oldRecommendation, preference, function(res) {
+				$scope.loading = false;
+
+				var unsuccessfulItems = Tesco.getUnsuccesful(res);
+
+				if(unsuccessfulItems.length === 0){
+					$analytics.eventTrack('SuccessfullyTransfered',
+						{  category: 'BasketPorting'});
+					$scope.unsuccessfulTransfer = false;
+				} else{
+					$analytics.eventTrack('UnsuccessfullyTransfered',
+						{  category: 'BasketPorting'});
+					$scope.unsuccessfulTransfer = true;
+				}
+
+			});
 		};
 
 	}])
 
-	.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
+.controller('RegistrationController', ['$scope','User','Alert', function($scope,User,Alert) {
 
+	$scope.user = {};
 
-		$scope.alerts = Alert.getAll();
+	$scope.signup = function(){
+		var user = $scope.user;
+		if($scope.signupForm.$valid){
 
-		$scope.closeAlert = function(index) {
-			Alert.close(index);
-			$scope.alerts = Alert.getAll();
+			User.signup(user.email, user.password, function(data){
+				// This callback is only called when return success
+				User.redirect("/");
+			},function(res, status){
+				if(status == 401){
+					Alert.add("You didn't get invited to the beta. You can ping us on <a href='https://twitter.com/basketttco'>Twitter</a>", "info");
+				}
+			});
+		}
+	};
+}])
+
+.controller('LoginController', ['$sanitize','$scope','User','Alert', function($sanitize,$scope,User,Alert) {
+	$scope.user = {};
+
+	var sanitizeCredentials = function(credentials) {
+		return {
+			email: $sanitize(credentials.email),
+			password: $sanitize(credentials.password)
 		};
+	};
 
-	}]);
+	$scope.login = function(){
+		var user = $scope.user;
+		if($scope.loginForm.$valid){
+			user = sanitizeCredentials(user);
+
+			User.login(user.email, user.password, function(data){
+				User.setLoggedIn(true);
+				Alert.add("Successfully logged in.", "success");
+				User.redirect("/");
+			});
+		}
+	};
+
+}])
+
+.controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {
+
+
+	$scope.alerts = Alert.getAll();
+
+	$scope.closeAlert = function(index) {
+		Alert.close(index);
+		$scope.alerts = Alert.getAll();
+	};
+
+}]);

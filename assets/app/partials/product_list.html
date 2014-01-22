@@ -1,6 +1,7 @@
 
 <div class="loading-basket" ng-show="loading">
 	<div class="spinner"></div>
+	<p>Building your basket.</p>
 </div>
 
 <div class="row">
@@ -23,7 +24,7 @@
 
 			</div>
 			<div class="col-md-3 transfer">
-				<button class="btn-transfer" ng-click="transferBasket()">Transfer my baskettt</button>
+				<button class="btn-transfer" ng-click="transferBasket()">Transfer my basket</button>
 				<button class="btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
 			</div>
 		</div>
@@ -31,9 +32,6 @@
 	</div>
 
 </div>
-
-<signup></signup>
-<tesco></tesco>
 
 <!-- <div class="row" ng-hide="loading"> -->
 <div class="row">
@@ -68,8 +66,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<div ng-repeat="product in products" class="product-container"  >
-
+				<div ng-repeat="product in products" class="product-container">
 					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
 						<div class="product-img">
 							<div class="product-remove">

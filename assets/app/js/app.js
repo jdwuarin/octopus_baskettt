@@ -68,6 +68,8 @@ angular.module('App', [
 	$http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
 	$http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
+	FastClick.attach(document.body);
+
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
 		// help with the margin on the product list page

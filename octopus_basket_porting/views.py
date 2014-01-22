@@ -5,7 +5,8 @@ from octopus_basket_porting.spider_manager import SpiderManagerController
 from octopus_basket_porting.thread_manager import ThreadManager
 from django.contrib.auth.decorators import login_required
 from octopus_groceries.models import Product
-from octopus_user.models import UserRecommendedBasket, UserGeneratedBasket
+from octopus_user.models import UserRecommendedBasket, UserGeneratedBasket, \
+    UserSettings
 
 
 @login_required
@@ -16,15 +17,15 @@ def port_basket(request):
     #first determine what user made this request
     user = request.user
 
-    #first save the user settings if user is new
-    # settings = data['settings']
-    # if not settings == "False":
-    #     #some settings have changed
-    #     user_settings = UserSettings(user=user,
-    #                                  people=data['people'],
-    #                                  days=data['days'],
-    #                                  budget=data['budget'])
-    #     user_settings.save()
+    # first save the user settings if user is new
+    settings = data['settings']
+    if not settings == "False":
+        #some settings have changed
+        user_settings = UserSettings(user=user,
+                                     people=data['people'],
+                                     days=data['days'],
+                                     budget=data['budget'])
+        user_settings.save()
 
     #then save the basket recommended to the user
     recommended_basket = data['recommendation']

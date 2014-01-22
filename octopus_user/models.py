@@ -5,9 +5,10 @@ from django_hstore import hstore
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    people = models.IntegerField(editable=False)
-    days = models.IntegerField(editable=False)
-    budget = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
+    people = models.IntegerField(default=0)
+    days = models.IntegerField(default=0)
+    budget = models.DecimalField(max_digits=10, decimal_places=4)
+    tags = models.CommaSeparatedIntegerField(max_length=5000, default=[])
 
 # basket that was recommended to our user by our algorithm
 class UserRecommendedBasket(models.Model):

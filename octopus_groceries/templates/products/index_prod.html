@@ -13,7 +13,7 @@
   <script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
   {% else %}
-  <link rel="stylesheet" href="static/styles/style.css">
+  <link rel="stylesheet" href="static/styles/58e91ddf.style.css">
   {% endif %}
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -33,7 +33,7 @@
 
         {%verbatim%}
         <div class="container alert-container" ng-class="{'alert-margin':productListPage}" ng-controller="AlertController" >
-          <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert.id)">{{alert.msg}}</alert>
+          <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert(alert.id)" ng-bind-html="alert.msg"></alert>
         </div>
         {%endverbatim%}
 
@@ -53,7 +53,10 @@
         <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
         <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
         <script src="{% static "angular-bootstrap/ui-bootstrap-tpls.min.js" %}"></script>
-       <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
+        <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
+        <script src="{% static "angulartics/dist/angulartics.min.js" %}"></script>
+        <script src="{% static "angulartics/dist/angulartics-google-analytics.min.js" %}"></script>
+        <script src="{% static "fastclick/lib/fastclick.js" %}"></script>
         <script src="{% static "json3/lib/json3.min.js" %}"></script>
         <script src="{% static "app/js/app.js" %}"></script>
         <script src="{% static "app/js/controllers.js" %}"></script>
@@ -62,10 +65,19 @@
         <script src="{% static "app/js/filters.js" %}"></script>
 
       {% else %}
-      <script src="static/scripts/vendor.js"></script>
+      <script src="static/script/6edd8bcf.vendor.js"></script>
 
-      <script src="static/scripts/scripts.js"></script>
+      <script src="static/script/2115a90c.scripts.js"></script>
 
       {% endif %}
+            <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-47026823-1', 'baskettt.co');
+
+      </script>
     </body>
     </html>

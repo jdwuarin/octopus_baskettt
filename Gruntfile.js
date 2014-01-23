@@ -8,8 +8,8 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('style', ['less']);
-  grunt.registerTask('js', ['concat','uglify']);
-  grunt.registerTask('img', ['imagemin']);
+  // grunt.registerTask('js', ['concat','uglify']);
+  // grunt.registerTask('img', ['imagemin']);
   grunt.registerTask('test-watch', ['karma:watch']);
   grunt.registerTask('test', ['karma:unit']);
 
@@ -28,6 +28,7 @@ module.exports = function(grunt) {
 
     //'rev',
     'usemin',
+    'busting'
    // 'htmlmin'
 
     ]);
@@ -224,9 +225,69 @@ module.exports = function(grunt) {
       options: {
         compress:true
       }
+    },
+    busting: {
+      dist:{
+        html: '<%= app.indexFolder %>index_prod.html',
+        dest: '<%= app.dist %>',
+        assetsList : [
+        'static/scripts/scripts.js',
+        'static/scripts/vendor.js',
+        'static/styles/style.css']
+      }
     }
 
   });
 
+  grunt.task.registerMultiTask('busting', 'Cache busting',
+    function() {
+
+      var crypto = require('crypto'),
+       fs = require('fs'),
+       path = require('path');
+
+      var htmlFile = this.data.html,
+      destFolder = this.data.dest,
+      assetsList = this.data.assetsList,
+      newFilepath = [],
+      htmlPath;
+
+      // Rename the files
+      assetsList.forEach(function(filepath){
+
+        htmlPath = path.resolve(path.dirname(filepath), htmlFile);
+        var hash = crypto.createHash('md5');
+
+        hash.update(grunt.file.read(filepath), 'utf8');
+
+        var hash_temp = hash.digest('hex'),
+        prefix = hash_temp.slice(0, '8'),
+        renamed = [prefix, path.basename(filepath)].join('.'),
+        outPath = path.resolve(path.dirname(filepath), renamed);
+
+        if(path.extname(renamed) === ".css"){
+           newFilepath.push({src: filepath, dest: destFolder + '/styles/' + renamed});
+        } else if(path.extname(renamed) === ".js"){
+           newFilepath.push({src: filepath, dest: destFolder + '/script/' + renamed});
+        }
+
+        fs.renameSync(filepath, outPath);
+      });
+
+      var text = fs.readFileSync(htmlFile,'utf8'),
+      result;
+
+      newFilepath.forEach(function(obj){
+
+        result = text.replace(obj.src, obj.dest ,"gi");
+        text = result;
+
+      });
+
+      fs.writeFileSync(htmlFile,result, 'utf8', function(err){
+         if (err) return console.log(err);
+       });
+
+  });
 
 };

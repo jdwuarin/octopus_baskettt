@@ -45,7 +45,7 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://127.0.0.1:9200/',  # currently running locally
         'INDEX_NAME': 'haystack',
         'INCLUDE_SPELLING': True,
-        'TIMEOUT': 60,
+        'TIMEOUT': 120,
     },
 }
 

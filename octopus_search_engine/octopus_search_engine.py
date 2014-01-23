@@ -3,9 +3,8 @@ from octopus_groceries.models import AbstractProduct, \
     Product, AbstractProductProduct, Supermarket
 
 
-def perform_search(request):
+def perform_search(query):
 
-    query = request.GET.get('term', '')
     supermarket_name = "tesco"  # TODO remove this hard_code
     supermarket = Supermarket.objects.get(name=supermarket_name)
 

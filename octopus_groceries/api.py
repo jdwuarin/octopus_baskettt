@@ -32,8 +32,9 @@ class ProductResource(ModelResource):
     # product/search/?format=json&term=query
     def search(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
+        query = request.GET.get('term', '')
 
-        result_products = perform_search(request)
+        result_products = perform_search(query)
 
         result_json = []
         for product in result_products:

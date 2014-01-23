@@ -228,7 +228,11 @@ module.exports = function(grunt) {
     busting: {
       dist:{
         html: '<%= app.indexFolder %>/index_prod.html',
-        dest: '<%= app.dist %>'
+        dest: '<%= app.dist %>',
+        assetsList : [
+        'static/scripts/scripts.js',
+        'static/scripts/vendor.js',
+        'static/styles/style.css']
       }
     }
 
@@ -236,9 +240,25 @@ module.exports = function(grunt) {
 
   grunt.task.registerMultiTask('busting', 'Cache busting',
     function() {
+
+      var crypto = require('crypto');
+
+      var hash,
+      prefix,
+      hash_temp;
+
       var htmlFile = this.data.html,
-      destFolder = this.data.dest;
-        grunt.log.writeln(this.data.dest);
+      destFolder = this.data.dest,
+      assetsList = this.data.assetsList;
+
+      assetsList.forEach(function(filepath){
+        hash = crypto.createHash('md5');
+        hash.update(grunt.file.read(filepath), 'utf8');
+        hash_temp = hash.digest('hex');
+        prefix = hash_temp.slice(0, '8');
+        console.log(prefix);
+        console.log(filepath);
+      });
   });
 
 };

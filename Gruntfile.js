@@ -8,8 +8,8 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('style', ['less']);
-  grunt.registerTask('js', ['concat','uglify']);
-  grunt.registerTask('img', ['imagemin']);
+  // grunt.registerTask('js', ['concat','uglify']);
+  // grunt.registerTask('img', ['imagemin']);
   grunt.registerTask('test-watch', ['karma:watch']);
   grunt.registerTask('test', ['karma:unit']);
 
@@ -224,9 +224,21 @@ module.exports = function(grunt) {
       options: {
         compress:true
       }
+    },
+    busting: {
+      dist:{
+        html: '<%= app.indexFolder %>/index_prod.html',
+        dest: '<%= app.dist %>'
+      }
     }
 
   });
 
+  grunt.task.registerMultiTask('busting', 'Cache busting',
+    function() {
+      var htmlFile = this.data.html,
+      destFolder = this.data.dest;
+        grunt.log.writeln(this.data.dest);
+  });
 
 };

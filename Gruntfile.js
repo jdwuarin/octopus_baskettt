@@ -7,31 +7,20 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   // Default task(s).
-  grunt.registerTask('style', ['less']);
-  // grunt.registerTask('js', ['concat','uglify']);
-  // grunt.registerTask('img', ['imagemin']);
   grunt.registerTask('test-watch', ['karma:watch']);
   grunt.registerTask('test', ['karma:unit']);
-
-
   grunt.registerTask('production',[
     'clean:dist',
     'copy:dist',
-    'bower-install',
     'useminPrepare',
     'less',
     'concat',
     'ngmin',
     'copy:dist',
-    //'uncss',
     'uglify',
-
-    //'rev',
     'usemin',
     'busting'
-   // 'htmlmin'
-
-    ]);
+  ]);
 
 
   var karmaConfig = function(configFile, customOptions) {
@@ -66,27 +55,10 @@ module.exports = function(grunt) {
       }
     },
 
-    imagemin: {
-      png: {
-        options: {
-          optimizationLevel: 7
-        },
-        files: [{
-        // Set to true to enable the following options…
-        expand: true,
-        // cwd is 'current working directory'
-        cwd: 'assets/img/',
-        src: ['*.png'],
-        dest: 'static/img/',
-        ext: '.png'
-      }]
-          }
-      },
-
-      karma: {
-        unit: { options: karmaConfig('test_angular/config/unit.js') },
-        watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
-      },
+    karma: {
+      unit: { options: karmaConfig('test_angular/config/unit.js') },
+      watch: { options: karmaConfig('test_angular/config/unit.js', { singleRun:false, autoWatch: true}) }
+    },
 
     // Empties folders to start fresh
     clean: {
@@ -101,24 +73,6 @@ module.exports = function(grunt) {
             '<%= app.dist %>/fonts/*'
           ]
         }]
-      },
-      server: '.tmp'
-    },
-
-    'bower-install': {
-
-      target: {
-
-        // Point to the files that should be updated when
-        // you run `grunt bower-install`
-        src: ['<%= app.index %>'],
-
-        // Optional:
-        // ---------
-        cwd: '',
-        ignorePath: '',
-        exclude: [],
-        fileTypes: {}
       }
     },
 
@@ -177,55 +131,13 @@ module.exports = function(grunt) {
           }]
       }
     },
-    // Renames files for browser caching purposes
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= app.dist %>/scripts/{,*/}*.js',
-            '<%= app.dist %>/styles/{,*/}*.css',
-            '<%= app.dist %>/img/*',
-            '<%= app.dist %>/fonts/*'
-          ]
-        }
-      }
-    },
 
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
       html: ['<%= app.indexFolder %>/index_prod.html'],
       css: ['<%= app.dist %>/styles/{,*/}*.css'],
-      // options: {
-      //   assetsDirs: ['<%= app.dist %>']
-      // }
     },
 
-    htmlmin: {
-      dist: {
-        options: {
-          collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeCommentsFromCDATA: true,
-          removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= app.index %>',
-          src: ['*.html', 'partials/{,*/}*.html'],
-          dest: '<%= app.dist %>'
-        }]
-      }
-    },
-    uncss: {
-    dist: {
-      files: [
-        { src: ['<%= app.index %>', '<%= app.source%>/app/partials/*.html'], dest: '<%= app.dist %>/styles/style.css'}
-      ]
-      },
-      options: {
-        compress:true
-      }
-    },
     busting: {
       dist:{
         html: '<%= app.indexFolder %>index_prod.html',
@@ -269,7 +181,11 @@ module.exports = function(grunt) {
            newFilepath.push({src: filepath, dest: destFolder + '/styles/' + renamed});
         } else if(path.extname(renamed) === ".js"){
            newFilepath.push({src: filepath, dest: destFolder + '/script/' + renamed});
+        } else {
+          grunt.log.writeln("Invalid file format");
         }
+
+        grunt.log.writeln("Rename " + filepath + " to " + outPath);
 
         fs.renameSync(filepath, outPath);
       });
@@ -281,11 +197,12 @@ module.exports = function(grunt) {
 
         result = text.replace(obj.src, obj.dest ,"gi");
         text = result;
-
+        grunt.log.writeln("Replace " + obj.src + " to " + obj.dest);
       });
 
       fs.writeFileSync(htmlFile,result, 'utf8', function(err){
-         if (err) return console.log(err);
+
+        if (err) return console.log(err);
        });
 
   });

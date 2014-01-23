@@ -1,10 +1,11 @@
 import cProfile
+from octopus_search_engine.octopus_search_engine import perform_search
 
 
-def perform_search(request):
+def search_test(query):
 
-    query_term = request.GET.get('term', '')
-    supermarket = "tesco"  # TODO remove this hard_code
-    cProfile.run("foo()")
+    result = perform_search(query)
+    print result
+    #cProfile.run("perform_search(query)")
 
 

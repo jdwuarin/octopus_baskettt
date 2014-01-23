@@ -113,7 +113,9 @@ class UserResource(ModelResource):
         password = data.get('password', '')
 
         try:
-            dummy = UserInvited.objects.get(email=email)
+            user_invited = UserInvited.objects.get(email=email)
+            if not user_invited.is_invited:
+                return HttpResponse('Unauthorized', status=401)
         except UserInvited.DoesNotExist:
             return HttpResponse('Unauthorized', status=401)
 

@@ -5,8 +5,6 @@ from octopus_groceries.models import Product, Tag, AbstractProduct, Recipe
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True,
                              use_template=False)
-    # We add this for autocomplete.
-    content_auto = indexes.EdgeNgramField(model_attr='name')
 
     def get_model(self):
         return Product

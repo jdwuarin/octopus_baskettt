@@ -19,15 +19,19 @@ class TescoSpider(CrawlSpider):
     rules = (
 
         #first level
-        Rule(SgmlLinkExtractor(allow=("/groceries/department", ), restrict_xpaths=(
-            '//ul[@class="navigation Groceries"]',)), follow=True),
+        Rule(SgmlLinkExtractor(allow=("/groceries/department", ),
+                               restrict_xpaths=(
+                                   '//ul[@class="navigation Groceries"]',)),
+             follow=True),
 
         #second level
-        Rule(SgmlLinkExtractor(allow=("/groceries/product/browse", ), restrict_xpaths=('//div[@class="clearfix"]',))
+        Rule(SgmlLinkExtractor(allow=("/groceries/product/browse", ),
+                               restrict_xpaths=('//div[@class="clearfix"]',))
             , callback="parse_listing_page", follow=True),
 
         #finally down to the parsing level
-        Rule(SgmlLinkExtractor(allow=("lvl=3", ), restrict_xpaths=('//p[@class="next"]',))
+        Rule(SgmlLinkExtractor(allow=("lvl=3", ),
+                               restrict_xpaths=('//p[@class="next"]',))
             , callback="parse_listing_page", follow=True),
 
     )
@@ -39,10 +43,14 @@ class TescoSpider(CrawlSpider):
         names = self.get_good_names(sel.xpath(
             './/a[contains(@href, "/groceries/Product/Details/")]/text()').extract())
         prices = sel.xpath('//span[(@class="linePrice")]/text()').extract()
-        prices_per_unit = sel.xpath('//span[(@class="linePriceAbbr")]/text()').extract()
+        prices_per_unit = sel.xpath(
+            '//span[(@class="linePriceAbbr")]/text()').extract()
 
-        links = sel.xpath('//h3[contains(@class, "inBasketInfoContainer")]').xpath('.//a/@href').extract()
-        external_image_links = sel.xpath('.//img[contains(@src, "img.tesco.com")]/@src').extract()
+        links = sel.xpath(
+            '//h3[contains(@class, "inBasketInfoContainer")]').xpath(
+            './/a/@href').extract()
+        external_image_links = sel.xpath(
+            './/img[contains(@src, "img.tesco.com")]/@src').extract()
         external_ids = self.get_ids_from_links(links)
 
         items = []
@@ -57,8 +65,9 @@ class TescoSpider(CrawlSpider):
             item['name'] = names[i]
             item['price'] = prices[i].replace(u'\xA3', 'GBP')
 
-            item['quantity'], item['unit'] = self.get_quantity_and_unit(prices[i].replace(u'\xA3', ''),
-                                                                        prices_per_unit[i].replace(u'\xA3', ''))
+            item['quantity'], item['unit'] = self.get_quantity_and_unit(
+                prices[i].replace(u'\xA3', ''),
+                prices_per_unit[i].replace(u'\xA3', ''))
             item['link'] = links[i]
             item['external_image_link'] = external_image_links[i]
             item['external_id'] = external_ids[i]

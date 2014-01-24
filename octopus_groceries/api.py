@@ -61,9 +61,10 @@ class ProductResource(ModelResource):
         data = []
         if sqs:
             for entry in sqs:
-                product_json = {}
-                product_json['name'] = entry.object.name
-                data.append(product_json)
+                if query in entry.object.name:
+                    product_json = {}
+                    product_json['name'] = entry.object.name
+                    data.append(product_json)
 
         data = json.dumps(data)
 

@@ -104,7 +104,10 @@ class FoodComPostgresPipeline(object):
             try:
                 abstract_product = AbstractProduct.objects.get(name=name)
                 #if the abstract_product is already in the list, don't add
-                #it again
+                #it again, then update condiment status
+                abstract_product.is_condiment = determine_if_condiment(
+                    abstract_product).is_condiment
+
             except ObjectDoesNotExist:
                 abstract_product.name = name
                 abstract_product.is_food = True  # we know this is scraped form food.com

@@ -1,6 +1,6 @@
 from haystack.query import SearchQuerySet
 from octopus_groceries.models import AbstractProduct, \
-    Product, AbstractProductProduct, Supermarket
+    Product, AbstractProductSupermarketProduct, Supermarket
 
 
 def perform_search(query):
@@ -20,8 +20,8 @@ def perform_search(query):
             result_product_list = simple_search(
                 spelling_suggestion, supermarket)
 
-
     return result_product_list[:40]
+
 
 def simple_search(query, supermarket):
 
@@ -30,14 +30,16 @@ def simple_search(query, supermarket):
 
     result_product_list = []
 
-    # this will only execute if sqs is not empty
     for result in sqs:
         abstract_product = result.object
-        abspp_list = AbstractProductProduct.objects.filter(
-            abstract_product=abstract_product).order_by('rank')
-        for abspp in abspp_list:
-            if abspp.product.supermarket == supermarket:
-                result_product_list.append(abspp.product)
+        absp = AbstractProductSupermarketProduct.objects.get(
+            abstract_product=abstract_product, supermarket=supermarket)
+        #initialize empty list of size 20
+        product_list = [0]*20
+        for key, value in absp.product_dict:
+            product_list[int(key)-1] = value
+
+        result_product_list += product_list
 
     #search for term in product
     sqs = SearchQuerySet().filter(content=query).models(Product)

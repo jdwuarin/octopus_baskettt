@@ -5,7 +5,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
 from octopus_groceries.models import Product, Recipe, Tag, TagRecipe, \
-    RecipeAbstractProduct, AbstractProduct, AbstractProductProduct, Supermarket
+    RecipeAbstractProduct, AbstractProduct, AbstractProductSupermarketProduct, Supermarket
 from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re
@@ -128,6 +128,8 @@ class AbstractProductProductMatchingPipeline(object):
 
         if spider.name is "abs_prod_prod_match":
 
+            Apsp = AbstractProductSupermarketProduct
+
             abstract_product = item['matching_abstract_product']
             matching_product = Product()
 
@@ -142,32 +144,17 @@ class AbstractProductProductMatchingPipeline(object):
                 matching_product = item.save(commit=False)  # save new item
                 matching_product.save()
 
-            #try seeing if there already is a matching that corresponds to the product
-            try:
-                abstract_product_product = AbstractProductProduct.objects.get(
-                    abstract_product=abstract_product,
-                    product=matching_product)
-                #it already existed with a certain rank, just update said rank
-                abstract_product_product.rank = item['rank']
-                abstract_product_product.save()
-            except ObjectDoesNotExist:
-                # matching did not exist yet. remove item with rank of scraped
-                try:
-                    abstract_product_product_list = AbstractProductProduct.objects.filter(
-                        abstract_product=abstract_product,
-                        rank=item['rank'])
-                    for entry in abstract_product_product_list:
-                        if entry.product.supermarket == item['supermarket']:
-                            entry.delete()
-                except ObjectDoesNotExist:
-                    #if there was no such item, do nothing, just add the matching
-                    #right after this block
-                    pass
-                abstract_product_product = AbstractProductProduct(abstract_product=abstract_product,
-                                                              rank=item['rank'],
-                                                              product = matching_product)
-                abstract_product_product.save()
+            # try seeing if there already is a matching
+            # that corresponds to the product
 
+            apsp, created = Apsp.objects.get_or_create(
+                abstract_product=abstract_product,
+                supermarket=item['supermarket'])
+
+            apsp.product_dict[str(item['rank'])] = matching_product
+
+            apsp.rank = item['rank']
+            apsp.save()
 
         return item
 

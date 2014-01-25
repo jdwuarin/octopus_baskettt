@@ -1,6 +1,5 @@
 from django.db import models
-from djorm_pgfulltext.models import SearchManager
-from djorm_pgfulltext.fields import VectorField
+from django_hstore import hstore
 
 
 class Supermarket(models.Model):
@@ -86,12 +85,14 @@ class RecipeAbstractProduct(models.Model):
             self.abstract_product_id) + ", " + str(self.quantity) + ", " + str(
             self.unit)
 
-
-class AbstractProductProduct(models.Model):
+#maps AbstractProducts to Supermarket specific products
+class AbstractProductSupermarketProduct(models.Model):
     abstract_product = models.ForeignKey(AbstractProduct, default=-1,
                                          editable=False)
-    rank = models.IntegerField(editable=False)
-    product = models.ForeignKey(Product, editable=False)
+    supermarket = models.ForeignKey(Supermarket, default=-1, editable=False)
+    product_dict = hstore.ReferencesField()
+
+    objects = hstore.HStoreManager()
 
     def __unicode__(
             self):  # just adding this method to say what to display when asked in shell

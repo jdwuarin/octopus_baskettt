@@ -2,7 +2,7 @@ import random
 from math import floor, ceil
 
 from octopus_groceries.models import Tag, Recipe, TagRecipe, \
-    RecipeAbstractProduct, AbstractProduct, AbstractProductProduct
+    RecipeAbstractProduct, AbstractProduct, AbstractProductSupermarketProduct
 from unit_helper import Unit_helper
 
 
@@ -128,7 +128,7 @@ class BasketRecommendationEngine(object):
             #abstract_product not yet in the basket.
             #find suitable product and add it to
             #basket in a minimum of required quantity
-            potential_product_list = AbstractProductProduct.objects.filter(
+            potential_product_list = AbstractProductSupermarketProduct.objects.filter(
                 abstract_product_id=abstract_product.id).order_by("rank")
 
             potential_product_list = filter(

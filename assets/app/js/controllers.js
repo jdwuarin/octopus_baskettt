@@ -82,7 +82,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$rootScope.$on('searchEnter', function(event, query){
 			searchProducts(query);
-		})
+		});
 
 		$scope.closeForm = function() {
 			$scope.toggleForm(false);
@@ -92,9 +92,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.toggleTescoForm(false);
 		};
 
-		$scope.clearSearch = function(){
+		$scope.clearResult = function(){
 			$scope.search_result = {};
-			$scope.queryTerm ="";
 		};
 
 		// First action on the page -> load the recommended basket
@@ -153,7 +152,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				});
 
 				$scope.results = products;
-				console.log($scope.results);
 			});
 		};
 

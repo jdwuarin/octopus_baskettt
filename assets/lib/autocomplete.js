@@ -10,10 +10,12 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		scope: {
 			suggestions: '=data',
 			onType: '=onType',
+			clear: '=clear'
 		},
 		controller: function($scope, $element, $attrs){
 
 			$scope.searchParam = "";
+
 			// with the searchFilter the suggestions get filtered
 			$scope.searchFilter;
 
@@ -52,8 +54,6 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 				if($scope.onType){
 					$scope.onType($scope.searchParam);
 				}
-
-				console.log($scope.$eval($attrs['onEnter']));
 
 			});
 
@@ -96,13 +96,15 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			select = scope.select;
 			setIndex = scope.setIndex;
 			getIndex = scope.getIndex;
-			enterFuncString = attrs['onEnter'];
+
 
 			element.keydown(function (e){
 				var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27};
 				var keycode = e.keyCode || e.which;
 
 				l = angular.element(this).find('li').length;
+
+				scope.$eval(scope.clear);
 
 				// implementation of the up and down movement in the list of suggestions
 				switch (keycode){
@@ -166,6 +168,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 					}
 					case key.esc:{
 						scope.completing = false;
+						scope.searchParam = "";
 						scope.$apply();
 					}
 					default:{ return;}
@@ -178,7 +181,12 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			});
 		},
 		template: '<div class="autocomplete">'+
-		'<input type="text" ng-model="searchParam" placeholder="Search for products" />' +
+		'<div class="input-group">' +
+		'<span class="input-group-addon">'+
+		'<i class="glyphicon glyphicon-search"></i>'+
+		'</span>' +
+		'<input type="text" ng-model="searchParam" placeholder="Search for products"  ng-esc="clearSearch()"/>' +
+		'</div>' +
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+
 		'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+

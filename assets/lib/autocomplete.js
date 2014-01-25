@@ -97,6 +97,10 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			setIndex = scope.setIndex;
 			getIndex = scope.getIndex;
 
+			scope.search = function(query){
+				$rootScope.$emit('searchEnter',query);
+				scope.completing = false;
+			};
 
 			element.keydown(function (e){
 				var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27};
@@ -161,8 +165,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						}
 
 						setIndex(-1);
-						scope.completing = false;
-						$rootScope.$emit('searchEnter',scope.searchParam);
+						scope.search(scope.searchParam);
 						scope.$apply();
 						break;
 					}
@@ -181,12 +184,15 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			});
 		},
 		template: '<div class="autocomplete">'+
+		'<div class="input-container">'+
 		'<div class="input-group">' +
 		'<span class="input-group-addon">'+
 		'<i class="glyphicon glyphicon-search"></i>'+
 		'</span>' +
-		'<input type="text" ng-model="searchParam" placeholder="Search for products" ng-esc="clearSearch()"/>' +
+		'<input type="text" ng-model="searchParam" placeholder="Search for products"/>' +
 		'</div>' +
+		'</div>' +
+		'<button class="btn-orange" type="submit" ng-click="search(searchParam)">Search</button>'+
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+
 		'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+

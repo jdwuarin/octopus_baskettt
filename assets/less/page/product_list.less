@@ -15,8 +15,17 @@
         position: fixed;
         z-index: @zindex-navbar-fixed;
         overflow-y: auto;
-        max-height: (@height-search-item+1px)*3; // +1px to see border & *3 for 3 items
+        max-height: (@height-search-item+1px)*5; // +1px to see border & *3 for 3 items
         top:@header-height*2;
+
+        .no-result{
+            padding: 20px 0px;
+            display: none;
+            i{
+                font-size: 25px;
+                color: @gray;
+            }
+        }
     }
 }
 
@@ -50,13 +59,10 @@
     display: inline-block;
     text-align: justify;
     padding: 10px 20px;
-    margin: 0px 20px;
-
-    // .center;
 }
 
 .product-box{
-    margin: 40px 0px;
+    margin: 10px 0px;
     border: @gray-border;
     max-width: @product-size;
     position: relative;
@@ -179,6 +185,9 @@
     border-top: 0;
     background: white;
 
+    .col-md-2{
+        padding: 0!important;
+    }
 
     & *{
         max-height: @height-search-item;
@@ -186,12 +195,12 @@
 
     ul{
         padding-left: 0!important;
-        padding-top: 42px;
+        padding-top: 22px;
     }
 
     li{
         &.product-name{
-            font-size: 18px;
+            font-size: 16px;
         }
 
         list-style-type: none;
@@ -199,11 +208,11 @@
     }
 
     img{
-        margin: 20px;
-        border: 3px solid gray;
+        float: left;
     }
+
     button{
-        margin: 50px 20px;
+        margin: 28px 20px;
         float: right;
     }
 }
@@ -212,13 +221,22 @@
     .search-bar-container{
         position: relative;
         margin-top: 13px;
+
         i.glyphicon-search{
-          // position: absolute;
-          // right:10px;
-          // top:25px;
-          color:@dark-gray;
-          // cursor:pointer;
-      }
+            // position: absolute;
+            // right:10px;
+            // top:25px;
+            color:@dark-gray;
+            // cursor:pointer;
+        }
+
+        button{
+            display: inline-block;
+            position: absolute;
+        }
+        .input-container{
+            display: inline-block;
+        }
     }
 }
 
@@ -301,6 +319,10 @@
 .autocomplete{
     .input-group;
     .center;
+    line-height: 0px;
+    button{
+        margin-left: 10px;
+    }
 }
 .autocomplete input{
     .form-control;
@@ -309,7 +331,6 @@
     max-width: 500px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-
 }
 
 .autocomplete ul{
@@ -324,13 +345,16 @@
     .center;
     border-left: @gray-border;
     border-right: @gray-border;
-    border-bottom: @gray-border;
     width: 100%;
     max-width: 500px;
     background-color: #fff;
     height: 30px;
     line-height: 30px;
     padding-left: 12px;
+
+    &:last-child{
+        border-bottom: @gray-border;
+    }
 }
 
 .autocomplete li.active{

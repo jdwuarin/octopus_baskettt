@@ -81,7 +81,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		});
 
 		$rootScope.$on('searchEnter', function(event, query){
-			searchProducts(query);
+			$scope.searchProducts(query);
 		});
 
 		$scope.closeForm = function() {
@@ -117,7 +117,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		}
 
 		// GET search
-		var searchProducts = function(query){
+		$scope.searchProducts = function(query){
 
 			if(query) {
 				Product.search(query,
@@ -158,7 +158,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			// When you open a form it will close the search
-			$scope.clearSearch();
+			$scope.clearResult();
 
 			var modalInstance = $modal.open({
 				templateUrl: 'static/app/partials/_modal.html',
@@ -242,7 +242,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	}
 
 	if(!clickedOnTheSearchPanel){
-		$scope.clearSearch();
+		$scope.clearResult();
 		$scope.$digest();
 	}
 };

@@ -10,7 +10,8 @@ angular.module('App', [
 	'App.directives',
 	'App.controllers',
 	'angulartics',
-	'angulartics.google.analytics'
+	'angulartics.google.analytics',
+	'autocomplete'
 ])
 
 .config(['$httpProvider', function($httpProvider) {

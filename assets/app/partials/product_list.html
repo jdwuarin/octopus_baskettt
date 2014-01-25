@@ -4,7 +4,7 @@
 	<p>Building your basket.</p>
 </div>
 
-<div class="row">
+<div class="row hidden-xs hidden-sm">
 	<div class="col-md-12 basket-bar">
 		<div class="row">
 			<div class="col-md-3 basket">
@@ -14,13 +14,17 @@
 				</div>
 			</div>
 			<div class="col-md-6 search-bar">
-				<form ng-submit="searchProducts()">
+<!-- 				<form ng-submit="searchProducts()">
 					<div class="search-bar-container ">
 						<closesearch></closesearch>
 						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-esc="clearSearch()">
 					</div>
 					<button class="btn-gray" type="submit">Search</button>
-				</form>
+				</form> -->
+				<div class="search-bar-container">
+					<autocomplete data="results" on-type="autoComplete">
+					</autocomplete>
+				</div>
 
 			</div>
 			<div class="col-md-3 transfer">

@@ -54,16 +54,18 @@ class ProductResource(ModelResource):
     def autocomplete(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
         query = request.GET.get('term', '')
-
         sqs = SearchQuerySet().autocomplete(
             content_auto=query).models(AbstractProduct)
+        # sqs = SearchQuerySet().autocomplete(
+        #     content_auto=query).models(AbstractProduct)
 
         data = []
         if sqs:
             for entry in sqs:
-                product_json = {}
-                product_json['name'] = entry.object.name
-                data.append(product_json)
+                if query in entry.object.name:
+                    product_json = {}
+                    product_json['name'] = entry.object.name
+                    data.append(product_json)
 
         data = json.dumps(data)
 

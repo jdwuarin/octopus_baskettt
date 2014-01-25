@@ -80,6 +80,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.$apply();
 		});
 
+		$rootScope.$on('searchEnter', function(event, query){
+			searchProducts(query);
+		})
+
 		$scope.closeForm = function() {
 			$scope.toggleForm(false);
 		};
@@ -114,10 +118,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		}
 
 		// GET search
-		$scope.searchProducts = function(){
-			console.log("test");
-			if($scope.queryTerm) {
-				Product.search($scope.queryTerm,
+		var searchProducts = function(query){
+
+			if(query) {
+				Product.search(query,
 					function(res){ // success
 						$scope.search_result = res;
 						$window.onclick = function (event) {
@@ -132,13 +136,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.results = [];
+
 		$scope.autoComplete = function(query) {
 
 			if(query === undefined){
 				return [];
 			}
 
-			return Product.autocomplete(query, function(res){
+			Product.autocomplete(query, function(res){
 
 				var products = [];
 
@@ -146,7 +152,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					products.push(item.name);
 				});
 
-				return products;
+				$scope.results = products;
+				console.log($scope.results);
 			});
 		};
 

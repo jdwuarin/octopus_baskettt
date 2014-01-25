@@ -38,16 +38,11 @@
     .transfer{
         line-height: @basket-bar-height;
         float: right;
-        border-left: @gray-border;
         height: @basket-bar-height;
         button{
             float: right;
             margin-top: 13px;
         }
-    }
-
-    .basket{
-        border-right: @gray-border;
     }
 }
 
@@ -184,6 +179,7 @@
     border-top: 0;
     background: white;
 
+
     & *{
         max-height: @height-search-item;
     }
@@ -215,7 +211,7 @@
 .search-bar{
     .search-bar-container{
         position: relative;
-
+        margin-top: 13px;
         i{
           position: absolute;
           right:10px;
@@ -297,4 +293,41 @@
         text-align: center;
         .center;
     }
+}
+
+//  Autocomplete
+//------------------------------------
+
+.autocomplete{
+  width: 100%;
+  position: relative;
+}
+
+.autocomplete input{
+    .form-control;
+    max-width: 500px;
+}
+
+.autocomplete ul{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-left: @gray-border;
+  border-right: @gray-border;
+  border-bottom: @gray-border;
+  padding-left: 0px!important;
+}
+
+.autocomplete li{
+  text-align: left;
+  list-style:none;
+  width: 100%;
+  padding:0.4em;
+  background-color: #fff;
+
+}
+
+.autocomplete li.active{
+  width: 100%;
+  background-color: #4bf;
 }

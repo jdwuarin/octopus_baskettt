@@ -25,6 +25,9 @@ module.exports = function(config) {
 	'bower_components/angulartics/dist/angulartics.min.js',
 	'bower_components/angulartics/dist/angulartics-ga.min.js',
 	'test_angular/unit/**/*.spec.js',
+	'test_angular/unit/**/*.spec.js',
+	'bower_components/fastclick/lib/fastclick.js',
+	'assets/lib/autocomplete.js',
 	'assets/app/js/*.js'
 	],
 

@@ -311,7 +311,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			Tesco.post(tescoCredential.email, tescoCredential.password, products, oldRecommendation, preference, function(res) {
 				$scope.loading = false;
 
-				var unsuccessfulItems = Tesco.getUnsuccesful(res);
+				var unsuccessfulItems = Tesco.getUnsuccessful(res);
 
 				if(unsuccessfulItems.length === 0){
 					$analytics.eventTrack('SuccessfullyTransfered',

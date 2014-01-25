@@ -236,11 +236,12 @@ angular.module('App.services', ['LocalStorageModule'])
 					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference}
 				}).success(callback);
 			},
-			getUnsuccesful: function(basket){
+			getUnsuccessful: function(basket){
 				var false_list = [];
-
+				// console.log(basket);
 				angular.forEach(basket, function(value, key){
-					if(value == "False") {
+
+					if(value.success == "False") {
 						false_list.push(value);
 					}
 				});

@@ -44,7 +44,7 @@
 			<li ng-repeat="product in search_result" class="search-item">
 				<div class="row">
 					<div class="col-md-2">
-						<img ng-src="{{product.img}}" alt="">
+						<img ng-src="{{product.img}}"  alt="">
 					</div>
 					<div class="col-md-8">
 						<ul>
@@ -70,13 +70,13 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<div ng-repeat="product in products" class="product-container">
+				<div ng-repeat="product in products" class="product-container fade-item">
 					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
 						<div class="product-img">
 							<div class="product-remove">
 								<i remove></i>
 							</div>
-							<img ng-src="{{product.img | imglarge}}" alt="">
+							<img ng-src="{{product.img | imglarge}}" alt="" class="animated:hover bounce">
 						</div>
 
 						<div class="product-desc">

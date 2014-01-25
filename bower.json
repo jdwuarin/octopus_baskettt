@@ -29,7 +29,8 @@
     "json3": "*",
     "angulartics": "*",
     "fastclick": "*",
-    "allmighty-autocomplete": "*"
+    "allmighty-autocomplete": "*",
+    "animate.css": "*"
   },
   "resolutions": {
     "angular": "1.2.9"

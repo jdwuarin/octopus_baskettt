@@ -161,7 +161,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						}
 
 						setIndex(-1);
-
+						scope.completing = false;
 						$rootScope.$emit('searchEnter',scope.searchParam);
 						scope.$apply();
 						break;
@@ -185,7 +185,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		'<span class="input-group-addon">'+
 		'<i class="glyphicon glyphicon-search"></i>'+
 		'</span>' +
-		'<input type="text" ng-model="searchParam" placeholder="Search for products"  ng-esc="clearSearch()"/>' +
+		'<input type="text" ng-model="searchParam" placeholder="Search for products" ng-esc="clearSearch()"/>' +
 		'</div>' +
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+

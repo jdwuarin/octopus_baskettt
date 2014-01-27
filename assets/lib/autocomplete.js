@@ -185,12 +185,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		},
 		template: '<div class="autocomplete">'+
 		'<div class="input-container">'+
-		'<div class="input-group">' +
-		'<span class="input-group-addon">'+
-		'<i class="glyphicon glyphicon-search"></i>'+
-		'</span>' +
 		'<input type="text" ng-model="searchParam" placeholder="Search for products"/>' +
-		'</div>' +
 		'</div>' +
 		'<button class="btn-orange" type="submit" ng-click="search(searchParam)">Search</button>'+
 		'<ul ng-show="searchParam && completing">' +

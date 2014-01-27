@@ -37,6 +37,7 @@
     position: fixed;
     z-index: @zindex-navbar-fixed;
     top: @header-height;
+    padding: 0!important;
 
     form{
         .form-inline;
@@ -48,6 +49,7 @@
         line-height: @basket-bar-height;
         float: right;
         height: @basket-bar-height;
+        padding-right: 10px;
         button{
             float: right;
             margin-top: 13px;
@@ -221,13 +223,10 @@
     .search-bar-container{
         position: relative;
         margin-top: 13px;
+        padding-right: 82px;
 
         i.glyphicon-search{
-            // position: absolute;
-            // right:10px;
-            // top:25px;
             color:@dark-gray;
-            // cursor:pointer;
         }
 
         button{
@@ -277,7 +276,7 @@
         }
 
         span{
-            color:rgb(226, 87, 87);
+            color:@red;
         }
     }
 
@@ -315,7 +314,7 @@
         }
 
         &.glyphicon-minus-sign{
-            color: rgb(226, 87, 87);
+            color: @red;
         }
     }
 
@@ -323,6 +322,15 @@
         text-align: center;
         .center;
     }
+}
+
+.modal-open {
+
+  body&,
+  .navbar-fixed-top,
+  .navbar-fixed-bottom {
+    margin-right: 0px!important;
+  }
 }
 
 //  Autocomplete
@@ -341,8 +349,7 @@
     .center;
     width: 250px;
     max-width: 500px;
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
+
 }
 
 .autocomplete ul{

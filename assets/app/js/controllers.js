@@ -255,6 +255,27 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.tescoCredential = {};
 		$scope.user = {};
+		$scope.unsuccessfulItems = [
+		{
+			"id": 18082,
+			"img": "http://img.tesco.com/Groceries/pi/479\\0000010098479\\IDShot_90x90.jpg",
+			"ingredient": "lime",
+			"link": "/groceries/Product/Details/?id=265891385",
+			"name": "Tesco Limes Min 5 Pack",
+			"price": "GBP1.50",
+			"quantity": 1.0,
+			"success": "false"
+		},
+		{
+			"id": 8360,
+			"img": "http://img.tesco.com/Groceries/pi/143\\0000010065143\\IDShot_90x90.jpg",
+			"ingredient": "shallot",
+			"link": "/groceries/Product/Details/?id=259098826",
+			"name": "Tesco Finest Echalion Shallots 400G",
+			"price": "GBP1.50",
+			"quantity": 1.0,
+			"success": "false"
+		}];
 
 		$scope.signup = true; // shows sign up at first
 		$scope.sendTescoForm = true;
@@ -321,6 +342,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					$analytics.eventTrack('UnsuccessfullyTransfered',
 						{  category: 'BasketPorting'});
 					$scope.unsuccessfulTransfer = true;
+					$scope.unsuccessfulItems = unsuccessfulItems;
 				}
 
 			});

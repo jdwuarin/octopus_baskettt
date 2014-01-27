@@ -14,13 +14,7 @@
 				</div>
 			</div>
 			<div class="col-md-6 search-bar">
-<!-- 				<form ng-submit="searchProducts()">
-					<div class="search-bar-container ">
-						<closesearch></closesearch>
-						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-esc="clearSearch()">
-					</div>
-					<button class="btn-gray" type="submit">Search</button>
-				</form> -->
+
 				<div class="search-bar-container">
 					<autocomplete data="results" on-type="autoComplete" clear="clearResult">
 					</autocomplete>
@@ -58,16 +52,7 @@
 				</div>
 			</li>
 		</div>
-		<div class="row" ng-show="unsuccessfulTransfer">
-			<div class="col-md-offset-4 col-md-4 unsuccessful-list">
-				<div class="title">
-					We couldn't transfer the following items
-				</div>
-				<div ng-repeat="product in tesco_response" class="unsuccessful-item">
-					{{product.name}}
-				</div>
-			</div>
-		</div>
+
 		<div class="row">
 			<div class="col-md-12">
 				<div ng-repeat="product in products" class="product-container fade-item">

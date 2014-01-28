@@ -9,13 +9,55 @@ class Supermarket(models.Model):
         return str(self.name)
 
 
+class Department(models.Model):
+    name = models.CharField(max_length=300, default='', editable=False)
+    # matches supermarket_ids to names used in that particular supermarket
+    # for the matching department (same goes for aisles and categories)
+    supermarket_names = hstore.ReferencesField()
+
+    objects = hstore.HStoreManager()
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Aisle(models.Model):  # one level bellow Department
+    name = models.CharField(max_length=300, default='', editable=False)
+    department = models.ForeignKey(Department, editable=False)
+    supermarket_names = hstore.ReferencesField()
+
+    objects = hstore.HStoreManager()
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Category(models.Model):  # one level bellow Aisle
+    name = models.CharField(max_length=300, default='', editable=False)
+    aisle = models.ForeignKey(Department, editable=False)
+    supermarket_names = hstore.ReferencesField()
+
+    objects = hstore.HStoreManager()
+
+    def __unicode__(self):
+        return str(self.name)
+
+
 class Product(models.Model):
+    supermarket = models.ForeignKey(
+        Supermarket, default=None, blank=True, null=True, editable=False)
+    department = models.ForeignKey(
+        Department, default=None, blank=True, null=True, editable=False)
+    aisle = models.ForeignKey(
+        Aisle, default=None, blank=True, null=True, editable=False)
+    category = models.ForeignKey(
+        Category, default=None, blank=True, null=True, editable=False)
+
     #added price, productOrigin, image etc
     price = models.CharField(max_length=12, default='NaN', editable=False)
     quantity = models.CharField(max_length=50, default='NaN', editable=False)
     product_life_expectancy = models.IntegerField(default=-1, editable=False)
     unit = models.CharField(max_length=50, default='none', editable=False)
-    supermarket = models.ForeignKey(Supermarket, default=-1, editable=False)
     #max_length is defaulted to 100 for image.
     external_image_link = models.ImageField(upload_to="images/" + str(
         supermarket) + "/", default='', editable=False)
@@ -23,18 +65,48 @@ class Product(models.Model):
     link = models.CharField(max_length=200, default='', editable=False)
     description = models.CharField(max_length=300, default='')
     offer_flag = models.CharField(max_length=12, default=False, editable=False)
+    offer_description = models.CharField(max_length=200, default="")
     external_id = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
-        return str(self.name) + ", " + \
-               str(self.link) + ", " + \
-               str(self.price) + ", " + \
-               str(self.supermarket) + ", " + \
-               str(self.quantity) + ", " + \
-               str(self.unit)
+        return str(self.name) + ", " + str(
+            self.link) + ", " + str(
+            self.price) + ", " + str(
+            self.supermarket) + ", " + str(
+            self.quantity) + ", " + str(
+            self.unit)
 
 
-class Tag(models.Model):
+class NutritionalFacts(models.Model):
+    product = models.OneToOneField(Product, primary_key=True)
+
+    energy = models.DecimalField(max_digits=10, decimal_places=4,
+                                 editable=False)
+    protein = models.DecimalField(max_digits=10, decimal_places=4,
+                                  editable=False)
+    carbohydrates = models.DecimalField(max_digits=10, decimal_places=4,
+                                        editable=False)
+    sugar = models.DecimalField(max_digits=10, decimal_places=4,
+                                editable=False)
+    starch = models.DecimalField(max_digits=10, decimal_places=4,
+                                 editable=False)
+    fat = models.DecimalField(max_digits=10, decimal_places=4,
+                              editable=False)
+    saturates = models.DecimalField(max_digits=10, decimal_places=4,
+                                    editable=False)
+    monounsaturates = models.DecimalField(max_digits=10, decimal_places=4,
+                                          editable=False)
+    polyunsaturates = models.DecimalField(max_digits=10, decimal_places=4,
+                                          editable=False)
+    fibre = models.DecimalField(max_digits=10, decimal_places=4,
+                                editable=False)
+    salt = models.DecimalField(max_digits=10, decimal_places=4,
+                               editable=False)
+    sodium = models.DecimalField(max_digits=10, decimal_places=4,
+                                 editable=False)
+
+
+class Tag(models.Model):  # for recipes
     name = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
@@ -50,13 +122,14 @@ class Recipe(models.Model):
     review_count = models.IntegerField(editable=False)
 
     def __unicode__(self):
-        return str(self.name) + ", " + str(self.review_count) + ", " + str(
+        return str(self.name) + ", " + str(
+            self.review_count) + ", " + str(
             self.rating)
 
 
 class TagRecipe(models.Model):
-    tag = models.ForeignKey(Tag, default=-1, editable=False)
-    recipe = models.ForeignKey(Recipe, default=-1, editable=False)
+    tag = models.ForeignKey(Tag, default='', editable=False)
+    recipe = models.ForeignKey(Recipe, default='', editable=False)
 
     def __unicode__(self):
         return str(self.recipe_id) + ", " + str(self.tag_id)
@@ -69,27 +142,30 @@ class AbstractProduct(models.Model):
 
     def __unicode__(
             self):  # just adding this method to say what to display when asked in shell
-        return str(self.name) + ", " + str(self.is_food) + ", " + str(
+        return str(self.name) + ", " + str(
+            self.is_food) + ", " + str(
             self.is_condiment)
 
 
 class RecipeAbstractProduct(models.Model):
-    recipe = models.ForeignKey(Recipe, default=-1, editable=False)
-    abstract_product = models.ForeignKey(AbstractProduct, default=-1,
+    recipe = models.ForeignKey(Recipe, default='', editable=False)
+    abstract_product = models.ForeignKey(AbstractProduct, default='',
                                          editable=False)
     quantity = models.CharField(max_length=150, default='', editable=False)
     unit = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
         return str(self.recipe_id) + ", " + str(
-            self.abstract_product_id) + ", " + str(self.quantity) + ", " + str(
+            self.abstract_product_id) + ", " + str(
+            self.quantity) + ", " + str(
             self.unit)
+
 
 #maps AbstractProducts to Supermarket specific products
 class AbstractProductSupermarketProduct(models.Model):
-    abstract_product = models.ForeignKey(AbstractProduct, default=-1,
+    abstract_product = models.ForeignKey(AbstractProduct, default='',
                                          editable=False)
-    supermarket = models.ForeignKey(Supermarket, default=-1, editable=False)
+    supermarket = models.ForeignKey(Supermarket, default='', editable=False)
     product_dict = hstore.ReferencesField()
 
     objects = hstore.HStoreManager()
@@ -97,4 +173,5 @@ class AbstractProductSupermarketProduct(models.Model):
     def __unicode__(
             self):  # just adding this method to say what to display when asked in shell
         return str(self.abstract_product_id) + ", " + str(
-            self.rank) + ", " + str(self.product)
+            self.rank) + ", " + str(
+            self.product)

@@ -1,6 +1,6 @@
 from scrapy.selector import Selector
-#from scrapy.http import Request
-from scrapy.contrib.spiders import CrawlSpider, Rule
+from scrapy.http import Request
+from scrapy.spider import BaseSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 import re
 
@@ -8,7 +8,7 @@ from webScraper.items import ProductItem
 from octopus_groceries.models import Supermarket
 
 
-class TescoSpider(CrawlSpider):
+class TescoSpider(BaseSpider):
     name = 'tesco'
     allowed_domains = ["tesco.com", "secure.tesco.com"]
 
@@ -16,25 +16,39 @@ class TescoSpider(CrawlSpider):
         "http://www.tesco.com/groceries/"
     ]
 
-    rules = (
+    # rules = (
+    #
+    #     #first level
+    #     Rule(SgmlLinkExtractor(allow=("/groceries/department", ),
+    #                            restrict_xpaths=(
+    #                                '//ul[@class="navigation Groceries"]',)),
+    #          follow=True),
+    #
+    #     #second level
+    #     Rule(SgmlLinkExtractor(allow=("/groceries/product/browse", ),
+    #                            restrict_xpaths=('//div[@class="clearfix"]',))
+    #         , callback="parse_listing_page", follow=True),
+    #
+    #     #finally down to the parsing level
+    #     Rule(SgmlLinkExtractor(allow=("lvl=3", ),
+    #                            restrict_xpaths=('//p[@class="next"]',))
+    #         , callback="parse_listing_page", follow=True),
+    #
+    # )
 
-        #first level
-        Rule(SgmlLinkExtractor(allow=("/groceries/department", ),
-                               restrict_xpaths=(
-                                   '//ul[@class="navigation Groceries"]',)),
-             follow=True),
+    def parse (self, resquest):
 
-        #second level
-        Rule(SgmlLinkExtractor(allow=("/groceries/product/browse", ),
-                               restrict_xpaths=('//div[@class="clearfix"]',))
-            , callback="parse_listing_page", follow=True),
+        return Request(TescoSpider.start_urls[0],
+                       callback=self.parse_department)
 
-        #finally down to the parsing level
-        Rule(SgmlLinkExtractor(allow=("lvl=3", ),
-                               restrict_xpaths=('//p[@class="next"]',))
-            , callback="parse_listing_page", follow=True),
+    def parse_department(selfself, request):
+        pass
 
-    )
+    def parse_aisle(selfself, request):
+        pass
+
+    def parse_category(selfself, request):
+        pass
 
     def parse_listing_page(self, response):
 

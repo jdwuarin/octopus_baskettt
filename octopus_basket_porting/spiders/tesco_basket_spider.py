@@ -1,7 +1,9 @@
+from twisted.python.failure import Failure
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
 from octopus_basket_porting.items import TescoBasketPortingItem
+from octopus_basket_porting.pipelines import BadLoginException
 
 
 class TescoBasketSpider(CrawlSpider):
@@ -31,7 +33,7 @@ class TescoBasketSpider(CrawlSpider):
 
     def after_login(self, response):
         if "Sorry" in response.body:
-            return
+            raise BadLoginException
 
         for product in self.product_details:
             link = "http://www.tesco.com" + str(product[0].link)
@@ -59,8 +61,6 @@ class TescoBasketSpider(CrawlSpider):
                             ' qty=' + quantity) + (
                                 ' weight="0" currentBaseProductId="asderftg" isAlternative="false"') + (
                                     ' parentBaseProductId="" basketAction=""/></basketUpdateItems></request>')
-
-
 
         request = Request(
             url="http://www.tesco.com/groceries/ajax/UpdateActiveBasketItems.aspx",

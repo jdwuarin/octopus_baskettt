@@ -3,6 +3,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.exceptions import DropItem
+from twisted.python.failure import Failure
 
 
 class TescoBasketPortingPipeline(object):
@@ -21,3 +22,7 @@ class ProductNotFoundException(Exception):
 
     def __str__(self):
         return "could not find " + repr(self.value)
+
+class BadLoginException(Exception):
+    def __str__(self):
+        return "bad login"

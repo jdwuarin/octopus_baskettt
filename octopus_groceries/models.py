@@ -67,6 +67,7 @@ class Product(models.Model):
     offer_flag = models.CharField(max_length=12, default=False, editable=False)
     offer_description = models.CharField(max_length=200, default="")
     external_id = models.CharField(max_length=150, default='', editable=False)
+    in_stock = models.NullBooleanField(editable=False)
 
     def __unicode__(self):
         return str(self.name) + ", " + str(

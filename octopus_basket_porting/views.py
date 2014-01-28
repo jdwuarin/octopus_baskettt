@@ -91,22 +91,27 @@ def port_basket(request):
         user_generated_basket_after_porting)
 
     response = []
-    for product, is_success in user_generated_basket_after_porting.iteritems():
-        if not type(product[0]) == str:
-            product_json = dict()
-            product_json['id'] = product[0].id
-            product_json['name'] = product[0].name
-            product_json['price'] = product[0].price
-            product_json['link'] = product[0].link
-            product_json['img'] = str(product[0].external_image_link)
-            product_json['quantity'] = product[1]
+
+    # key[0] is the Product item or a string and. If product item, key[1]
+    # is the quantity to order
+    for key, is_success in user_generated_basket_after_porting.iteritems():
+        product_json = dict()
+        if not type(key) == str:
+            product_json['id'] = key[0].id
+            product_json['name'] = key[0].name
+            product_json['price'] = key[0].price
+            product_json['link'] = key[0].link
+            product_json['img'] = str(key[0].external_image_link)
+            product_json['quantity'] = key[1]
             product_json['success'] = is_success
 
         else:
-            product_json['Response_status'] = is_success
+            product_json[key] = is_success
 
         response.append(product_json)
 
+    # frontend needs to check for "Response_status" == "server_timeout" and
+    # "good_login" == "False" in that order before anything else
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 

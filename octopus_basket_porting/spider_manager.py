@@ -4,6 +4,9 @@ from scrapy.utils.project import get_project_settings
 from scrapy import signals
 
 from octopus_basket_porting.spiders.tesco_basket_spider import TescoBasketSpider
+from octopus_basket_porting.pipelines import BadLoginException
+
+
 
 
 class SpiderManagerController(object):
@@ -37,7 +40,7 @@ class SpiderManager(object):
 
         crawled_items = []
         dropped_items = []
-        cls.basket_status[basket.request] = [crawled_items, dropped_items]
+        cls.basket_status[basket.request] = [crawled_items, dropped_items, ]
         settings = get_project_settings()
         crawler = Crawler(settings)
         crawler.signals.connect(cls.basket_created, signal=signals.spider_closed)
@@ -62,14 +65,19 @@ class SpiderManager(object):
 
     @classmethod
     def basket_created(cls, spider, reason):
-        spider.thread_manager.build_response(
-            cls.basket_status[spider.request][0], 
-            cls.basket_status[spider.request][1])
+        if spider.thread_manager.response is None:
+            spider.thread_manager.build_response(
+                cls.basket_status[spider.request][0],
+                cls.basket_status[spider.request][1])
 
         spider.thread_manager.lock.set()  # wake up thread which should return response
 
     @classmethod
     def basket_error(cls, failure, response, spider):
 
-        print "|||||||||||||||||||||||||||||||||||"
-        print "basket error "
+        if failure.check(BadLoginException):
+            spider.thread_manager.build_bad_login_response()
+
+        else:
+            print "|||||||||||||||||||||||||||||||||||"
+            print "uncaught basket error "

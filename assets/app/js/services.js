@@ -33,6 +33,21 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			autocomplete: function(term, callback) {
 				return $http.get(getUrl('autocomplete')+ "&term=" + term).then(callback);
+			},
+			getQuantity: function(searchItems, basketItems){
+				// Oh lord that's ugly
+				for (var i = 0; i < searchItems.length; i++) {
+
+					searchItems[i]["quantity"] = 0;
+
+					for (var j = 0; j < basketItems.length; j++) {
+						if(searchItems[i].id === basketItems[j].id ){
+							searchItems[i]["quantity"] = basketItems[j].quantity;
+						}
+					};
+				};
+
+				return searchItems;
 			}
 		};
 	}])
@@ -87,6 +102,14 @@ angular.module('App.services', ['LocalStorageModule'])
 					url: 'api/v1/user/current/?format=json',
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},
+				}).success(callback);
+			},
+			registerBeta: function(email, callback) {
+				return $http({
+					url: getUrl('beta_subscription'),
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: {email:email}
 				}).success(callback);
 			}
 		};

@@ -28,6 +28,7 @@ angular.module('App', [
 	$routeProvider
 	.when('/',
 	{
+		controller: 'HomeController',
 		templateUrl: 'static/app/partials/home.html',
 		requireLogin: false,
 	})

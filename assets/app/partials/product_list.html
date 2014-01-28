@@ -40,14 +40,20 @@
 					<div class="col-md-2">
 						<img ng-src="{{product.img}}"  alt="">
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-7">
 						<ul>
 							<li class="product-name">{{ product.name }}</li>
 							<li> &pound;{{ product.price | price}}</li>
 						</ul>
 					</div>
-					<div class="col-md-2">
-						<button class="btn-orange" ng-click="addProduct(product)">Add</button>
+					<div class="col-md-3">
+						<button ng-show="product.quantity == 0" class="btn-orange" ng-click="addProduct(product)">Add</button>
+
+						<div ng-hide="product.quantity == 0" class="quantity input-group">
+							<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+							<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+							<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+						</div>
 					</div>
 				</div>
 			</li>

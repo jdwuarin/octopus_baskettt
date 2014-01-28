@@ -50,6 +50,11 @@ class UserResource(ModelResource):
             url(r'^(?P<resource_name>%s)/basket%s$' %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('basket'), name='api_basket'),
+
+            url(r'^(?P<resource_name>%s)/beta_subscription%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('beta_subscription'),
+                name='api_beta_subscription'),
         ]
 
     def login(self, request, **kwargs):
@@ -226,3 +231,27 @@ class UserResource(ModelResource):
         data = json.dumps(response)
 
         return HttpResponse(data, content_type="application/json")
+
+    def beta_subscription(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+
+        data = self.deserialize(request, request.body,
+                                format=request.META.get('CONTENT_TYPE',
+                                                        'application/json'))
+
+        email = data['email']
+
+        response_data = {}
+
+        try:
+            user_invited = UserInvited.objects.get(email=email)
+            response_data['success'] = False
+            response_data['reason'] = "user already exists"
+        except UserInvited.DoesNotExist:
+            user_invited = UserInvited(email=email, is_invited=False)
+            user_invited.save()
+            response_data['success'] = True
+
+        response_data = json.dumps(response_data)
+        return HttpResponse(response_data, content_type="application/json")
+

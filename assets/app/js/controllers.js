@@ -4,6 +4,29 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
+.controller('HomeController',['$scope', '$sanitize', 'User','$analytics',
+	function($scope, $sanitize, User,$analytics){
+
+		$scope.email = [];
+		$scope.betaSuccess = false;
+
+		$scope.registerForBeta = function(){
+
+			var email = $scope.email;
+
+			if($scope.betaForm.$valid){
+
+				User.registerBeta(email, function(data){
+					// This callback is only called when return success
+					$analytics.eventTrack('RegisterToBeta',
+					{ category: 'Onboarding'});
+					$scope.betaSuccess = true;
+				});
+			}
+		};
+
+	}])
+
 .controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
 
 	$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
@@ -122,7 +145,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			if(query) {
 				Product.search(query,
 					function(res){ // success
-						$scope.search_result = res;
+						$scope.search_result = Product.getQuantity(res, $scope.products);
 						$window.onclick = function (event) {
 							closeSearchWhenClickingElsewhere(event);
 						};
@@ -255,27 +278,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.tescoCredential = {};
 		$scope.user = {};
-		$scope.unsuccessfulItems = [
-		{
-			"id": 18082,
-			"img": "http://img.tesco.com/Groceries/pi/479\\0000010098479\\IDShot_90x90.jpg",
-			"ingredient": "lime",
-			"link": "/groceries/Product/Details/?id=265891385",
-			"name": "Tesco Limes Min 5 Pack",
-			"price": "GBP1.50",
-			"quantity": 1.0,
-			"success": "false"
-		},
-		{
-			"id": 8360,
-			"img": "http://img.tesco.com/Groceries/pi/143\\0000010065143\\IDShot_90x90.jpg",
-			"ingredient": "shallot",
-			"link": "/groceries/Product/Details/?id=259098826",
-			"name": "Tesco Finest Echalion Shallots 400G",
-			"price": "GBP1.50",
-			"quantity": 1.0,
-			"success": "false"
-		}];
+		$scope.unsuccessfulItems = [];
 
 		$scope.signup = true; // shows sign up at first
 		$scope.sendTescoForm = true;

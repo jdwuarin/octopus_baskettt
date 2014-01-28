@@ -126,29 +126,6 @@
         border-top: @gray-border;
         width: 100%;
 
-        .quantity{
-            width: 104px;
-            .center;
-            padding-bottom: 10px;
-
-            input{
-
-                text-align: center;
-                cursor: default;
-                color: @gray;
-                background: @light-gray;
-            }
-
-            span{
-                cursor: pointer;
-                background: @orange;
-                border-color: @dark-orange;
-                border-right: 0;
-                border-left: 0;
-                border-radius: 0;
-                color:white
-            }
-        }
     }
 
     .product-price{
@@ -157,8 +134,30 @@
         border-top: @gray-border;
         text-align: center;
     }
+}
 
+.quantity{
+    width: 104px;
+    .center;
+    padding-bottom: 10px;
 
+    input{
+
+        text-align: center;
+        cursor: default;
+        color: @gray;
+        background: @light-gray;
+    }
+
+    span{
+        cursor: pointer;
+        background: @orange;
+        border-color: @dark-orange;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 0;
+        color:white
+    }
 }
 
 .sign-up-inline{
@@ -187,8 +186,21 @@
     border-top: 0;
     background: white;
 
+
+    .btn-orange{
+        width: 104px;
+        float: right;
+        margin: 27px 0px 0px 0px!important;
+    }
+
     .col-md-2{
         padding: 0!important;
+    }
+
+    .quantity{
+        padding-top: 27px;
+        margin: 0!important;
+        float: right;
     }
 
     & *{
@@ -330,7 +342,7 @@
   .navbar-fixed-top,
   .navbar-fixed-bottom {
     margin-right: 0px!important;
-  }
+}
 }
 
 //  Autocomplete

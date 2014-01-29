@@ -16,6 +16,8 @@ class TescoSpider(BaseSpider):
         "http://www.tesco.com/groceries/"
     ]
 
+    base_url = "http://www.tesco.com"
+
     # rules = (
     #
     #     #first level
@@ -36,21 +38,79 @@ class TescoSpider(BaseSpider):
     #
     # )
 
-    def parse (self, resquest):
+    def parse(self, response):
 
-        return Request(TescoSpider.start_urls[0],
-                       callback=self.parse_department)
+        sel = Selector(response)
+        sel = sel.xpath('//ul[contains(@class, "navigation Groceries")]')
 
-    def parse_department(selfself, request):
-        pass
+        department_sels = sel.xpath('.//a[contains(@class, "flyout")]')
 
-    def parse_aisle(selfself, request):
-        pass
+        for entry in department_sels:
+            link = entry.xpath('.//@href').extract()
+            request = Request(link, callback=self.parse_department)
+            request.meta['department'] = entry.xpath('.//text()').extract()
+            yield request
 
-    def parse_category(selfself, request):
-        pass
+    def parse_department(self, response):
 
-    def parse_listing_page(self, response):
+        sel = Selector(response)
+        sel = sel.xpath('//div[contains(@id, "superDeptItems")]')
+
+        sel = sel.xpath('.//ul[contains(@class, "tertNav")]')
+
+        aisle_sels = sel.xpath('.//li')
+
+        for entry in aisle_sels:
+            link = entry.xpath('.//@href').extract()
+            request = Request(link, callback=self.parse_department)
+            request.meta['aisle'] = entry.xpath('.//text()').extract()
+            request.meta['department'] = response.meta['department']
+            yield request
+
+    def parse_aisle(self, response):
+
+        sel = Selector(response)
+        sel = sel.xpath('//div[contains(@class, "deptNavItems")]')
+
+        sel = sel.xpath('.//ul[contains(@class, "tertNav")]')
+
+        category_sels = sel.xpath('.//li')
+
+        for entry in category_sels:
+            link = entry.xpath('.//@href').extract()
+            request = Request(link, callback=self.parse_category)
+            request.meta['category'] = entry.xpath('.//text()').extract()
+            request.meta['aisle'] = response.meta['aisle']
+            request.meta['department'] = response.meta['department']
+            yield request
+
+    def parse_category(self, response):
+
+        sel = Selector(response)
+
+        links = sel.xpath(
+            '//h3[contains(@class, "inBasketInfoContainer")]').xpath(
+            './/a/@href').extract()
+
+        for link in links:
+            request = Request(self.base_url + link,
+                              callback=self.parse_product_page)
+            request.meta['category'] = response.meta['category']
+            request.meta['aisle'] = response.meta['aisle']
+            request.meta['department'] = response.meta['department']
+            yield request
+
+        next_page_links = sel.xpath('//p[@class="next"]/a/@href').extract()
+
+        if next_page_links:
+            request = Request(next_page_links[0],
+                              callback=self.parse_category)
+            request.meta['category'] = response.meta['category']
+            request.meta['aisle'] = response.meta['aisle']
+            request.meta['department'] = response.meta['department']
+            yield request
+
+    def parse_product_page(self, response):
 
         sel = Selector(response)
 

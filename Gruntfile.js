@@ -196,7 +196,7 @@ module.exports = function(grunt) {
         if(path.extname(renamed) === ".css"){
            newFilepath.push({src: filepath, dest: destFolder + '/styles/' + renamed});
         } else if(path.extname(renamed) === ".js"){
-           newFilepath.push({src: filepath, dest: destFolder + '/script/' + renamed});
+           newFilepath.push({src: filepath, dest: destFolder + '/scripts/' + renamed});
         } else {
           grunt.log.writeln("Invalid file format");
         }

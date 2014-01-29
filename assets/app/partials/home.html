@@ -1,39 +1,46 @@
 <div class="row disclaimer">
-	<div class="disclaimer-logo"></div>
-	<div class="disclaimer-quote">The simplest way to get your groceries done.</div>
-	<div class="col-md-12">
-		<a href="#/onboarding/1">
-			<button class="btn-cta">Get Started</button>
-		</a>
+
+	<div class="col-md-7">
+		<!-- <div class="disclaimer-logo"></div> -->
+		<div class="disclaimer-quote">
+			<h1>The simplest way to get your groceries done.</h1>
+			<p>Tell us what you like and we'll take care of the rest. Start spending time on what matters. </p>
+			<button href="javascript:;" ng-click="scrollTo('more')">Learn more</button>
+		</div>
+
+	</div>
+
+	<div class="col-md-5 beta-container">
+		<p>Subscribe to our private beta</p>
+		<div class="beta-alert" ng-show="betaSuccess">Successfully subscribed</div>
+		<form ng-submit="registerForBeta()" name="betaForm" class="">
+			<input type="email" ng-model="email" class="form-control" placeholder="Your email"> <br>
+			<input type="submit" class="btn-orange" value="Subscribe">
+		</form>
+		<div class="condition">You'll get an email with an invite as soon as we open the beta.</div>
 	</div>
 </div>
 
-<div class="row features">
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-cutlery"></i>
-			<p>Get a tailor-made grocery basket according to your eating preferences.</p>
+<div class="row get-started">
+	<div class="col-md-12">
+		<div class="gs-container">
+			<a href="#/onboarding/1">
+				<button class="btn-cta">Try me now</button>
+			</a>
 		</div>
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-check"></i>
-			<p>Modify the basket by adding your favorite products.</p>
-		</div>
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-shopping-cart"></i>
-			<p>Order your groceries directly from the most popular providers in the UK. <br> <i>(Only Tesco available for the moment)</i></p>
-		</div>
-
+	</div>
 </div>
-
-<div class="row">
-	<div class="col-md-12 beta">
-		<div class="title">Subscribe to our beta.</div>
-		<form ng-submit="registerForBeta()" name="betaForm" class="form-inline">
-			<div class="form-group">
-				<input type="email" ng-model="email" class="form-control" placeholder="Your email">
-			</div>
-			<div class="form-group">
-				<input type="submit" class="btn-orange" value="Join">
-			</div>
-		</form>
+<div class="row features" id="#more">
+	<div class="col-md-4">
+		<i class="glyphicon glyphicon-cutlery"></i>
+		<p>Get a tailor-made grocery basket according to your eating preferences.</p>
+	</div>
+	<div class="col-md-4">
+		<i class="glyphicon glyphicon-check"></i>
+		<p>Modify the basket by adding your favorite products.</p>
+	</div>
+	<div class="col-md-4">
+		<i class="glyphicon glyphicon-shopping-cart"></i>
+		<p>Order your groceries directly from the most popular providers in the UK. <br> <i>(Only Tesco available for the moment)</i></p>
 	</div>
 </div>

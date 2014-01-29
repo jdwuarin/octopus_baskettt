@@ -34,6 +34,9 @@
     "grunt-usemin": "~2.0.0",
     "load-grunt-tasks": "~0.2.0",
     "time-grunt": "latest",
-    "karma-coverage": "latest"
+    "karma-coverage": "latest",
+    "grunt-reload": "latest",
+    "grunt-contrib-watch": "latest"
+
   }
 }

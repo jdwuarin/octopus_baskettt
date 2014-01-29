@@ -134,7 +134,7 @@
     },
     {
         "fields": {
-            "email": "harry@gocardless.com",
+            "email": "nimakafai@gmail.com",
             "is_invited": "True"
         },
         "model": "octopus_user.UserInvited"

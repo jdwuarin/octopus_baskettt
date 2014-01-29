@@ -70,7 +70,8 @@ module.exports = function(grunt) {
             '<%= app.dist %>/scripts/*.js',
             '<%= app.dist %>/styles/*.css',
             '<%= app.dist %>/img/*',
-            '<%= app.dist %>/fonts/*'
+            '<%= app.dist %>/fonts/*',
+            '<%= app.dist %>/app/*'
           ]
         }]
       }
@@ -147,6 +148,21 @@ module.exports = function(grunt) {
         'static/scripts/vendor.js',
         'static/styles/style.css']
       }
+    },
+    watch: {
+      scripts: {
+        files: ['**/*.js','**/*.less'],
+        tasks: ['reload'],
+        options: {
+          spawn: false,
+        },
+      },
+    },
+    reload: {
+        port: 6001,
+        proxy: {
+            host: 'localhost'
+        }
     }
 
   });

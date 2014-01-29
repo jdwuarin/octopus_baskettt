@@ -39,25 +39,22 @@ a:hover{
 .navbar{
 
 	// .navbar-default;
+	height: 60px;
 	margin-bottom: 0;
 	background-color: @orange;
 	border: 0;
 	border-radius: 0px;
 	color:white;
 	text-shadow: @font-shadow;
-	// border-top:3px solid @orange;
-	border-bottom: 1px solid #E9BC79;
-	.glyphicon{
-		color: white;
-		margin-top: 5px;
-	}
+	border-bottom: 1px solid @dark-orange;
 
 	.navbar-brand{
-		padding: 11px 15px!important;
+		padding: 12px 15px 12px;
 	}
+
 	.navbar-brand-logo img{
-		width: 37px;
-		height: 37px;
+		width: @logo-ratio*30px;
+		height: 30px;
 	}
 }
 
@@ -99,12 +96,30 @@ a.profile-link{
 //  Footer
 //------------------------------------
 footer{
-	background-color: #333333;
+	background-color: @light-gray;
 	height:@footer-height;
 	font-size: 13px;
-	color:#d7d7d7;
-	line-height: @footer-height;
 	padding-left: 30px;
+	border-top: @gray-border;
+
+	img.baskettt{
+		margin-top: 33px;
+		width: @logo-ratio*50px;
+		height: 50px;
+	}
+
+	.twitter{
+		margin-top: 60px;
+		margin-right: 40px;
+		width: (172/139)* 30px;
+		height: 30px;
+		float: right;
+	}
+
+	p{
+		margin-top: 10px;
+		color:gray;
+	}
 }
 
 

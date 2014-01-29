@@ -3,13 +3,18 @@
     background: url("/static/img/cover4.png");
     background-position: -100px -60px;
     border-bottom: @gray-border;
-    padding:100px 0px 50px 0px;
     -webkit-font-smoothing: antialiased;
+
+    .col-md-7,.col-md-5{
+        padding:120px 0px;
+    }
+
     &:after{
         background: -webkit-radial-gradient(top center, ellipse cover, rgba(255,255,255,0.2) 0%,rgba(0,0,0,0.5) 100%);
     }
 
     h3{
+
         font-family: Futura;
         color:gray;
     }
@@ -23,11 +28,44 @@
     }
 
     .disclaimer-quote{
+        text-shadow:@font-shadow;
+
+        h1{
+            font-size: 33px;
+            font-family: 'Montserrat';
+            margin-top: 0!important;
+        }
+
+        button{
+            margin-top: 20px;
+            float: left;
+            color: white;
+            .btn;
+            .btn-lg;
+            background: transparent;
+            border: 2px solid white;
+            -webkit-font-smoothing: antialiased;
+
+            &:hover{
+                background: @orange;
+                border-color: @orange;
+            }
+        }
+
+        p{
+            color:@light-gray;
+        }
+
+        h1, p{
+            text-align: left;
+        }
+
         font-size: 21px;
         color: white;
         text-shadow: @font-shadow;
         -webkit-font-smoothing: antialiased;
         .center;
+        padding: 0px 50px;
     }
 }
 
@@ -49,25 +87,55 @@
     }
 }
 
-.beta{
-    text-align: center;
+.beta-container{
 
-    .title{
-        font-size: 24px;
-        padding-bottom: 20px;
-    }
-
-    .form-control{
-        width: 250px;
+    & > *{
         .center;
     }
 
-    background-color: @light-gray;
-    border-top: @gray-border;
-    padding: 50px 0px;
+    input{
+        padding: 20px;
+        max-width: 250px;
+        .center;
+    }
 
-    .result{
-        padding-top: 20px;
+    text-shadow:@font-shadow;
+    padding: 0 50px;
+
+    .btn-orange{
+        width: 100%%;
+        padding: 10px;
+    }
+
+    p{
+        color: white;
+        font-size: 22px;
+        padding-bottom: 20px;
+
+    }
+
+    .condition{
+        margin-top: 20px;
+        width: 250px;
+        color:white;
+    }
+
+    .beta-alert{
+        width: 250px;
+        .alert;
+        .alert-info;
+    }
+}
+
+.get-started{
+    background-color: @light-gray;
+    border-bottom: @gray-border;
+    padding: 40px 0px;
+    .gs-container{
+        text-align: center;
+    }
+
+    button{
     }
 }
 

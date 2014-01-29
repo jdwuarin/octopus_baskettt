@@ -4,11 +4,16 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
-.controller('HomeController',['$scope', '$sanitize', 'User','$analytics',
-	function($scope, $sanitize, User,$analytics){
+.controller('HomeController',['$scope', '$sanitize', 'User','$analytics','$anchorScroll','$location',
+	function($scope, $sanitize, User, $analytics, $anchorScroll,$location){
 
 		$scope.email = [];
 		$scope.betaSuccess = false;
+
+		$scope.scrollTo = function(id) {
+			$location.hash(id);
+			$anchorScroll();
+		}
 
 		$scope.registerForBeta = function(){
 
@@ -363,10 +368,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			User.signup(user.email, user.password, function(data){
 				// This callback is only called when return success
-				User.redirect("/");
+				// User.redirect("/");
+				if(data.reason == "not_invited"){
+					Alert.add("You haven't been invited to the beta. You'll get an invite in your inbox in the next few weeks.", "info");
+				} else if(data.reason == "already_exist"){
+					Alert.add("You already have an account associated with this email address.", "info");
+				}
 			},function(res, status){
 				if(status == 401){
-					Alert.add("You didn't get invited to the beta. You can ping us on <a href='https://twitter.com/basketttco'>Twitter</a>", "info");
+					Alert.add("You haven't been authorized to use the beta. Stay tuned!", "info");
 				}
 			});
 		}

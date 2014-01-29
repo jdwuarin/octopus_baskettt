@@ -120,17 +120,28 @@ class UserResource(ModelResource):
         try:
             user_invited = UserInvited.objects.get(email=email)
             if not user_invited.is_invited:
+                # user has already tried signing up but we have
+                # not allowed him to use our beta yet. I.e, user is
+                # not invited
                 return HttpResponse('Unauthorized', status=401)
         except UserInvited.DoesNotExist:
-            return HttpResponse('Unauthorized', status=401)
+            # user is not yet in the userInvited list
+            # we add him with the is_invited flag set to False
+            # we return a success false as user could not sign up
+            user_invited = UserInvited(email=email, is_invited=False)
+            user_invited.save()
+            return self.create_response(request, {
+                'reason': 'not_invited',
+                'success': False
+            })
 
         try:
             User.objects.create_user(email, email, password)
 
         except IntegrityError:
-            print "User already exits"
             return self.create_response(request, {
                 #user with same email address already exists
+                'reason': 'already_exist',
                 'success': False
             })
 
@@ -138,6 +149,7 @@ class UserResource(ModelResource):
         user = authenticate(username=email, password=password)
         login(request, user)
 
+        # user successfully signup
         return self.create_response(request, {
             'success': True
         })

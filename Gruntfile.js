@@ -94,9 +94,9 @@ module.exports = function(grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '.tmp/concat/scripts',
+          cwd: '.tmp/concat/static/scripts',
           src: '*.js',
-          dest: '.tmp/concat/scripts'
+          dest: '.tmp/concat/static/scripts'
         }]
       }
     },

@@ -13,20 +13,13 @@
   <script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
   {% else %}
-  <link rel="stylesheet" href="static/styles/23bedc20.style.css">
-  {% endif %}
+  <link rel="stylesheet" href="static/styles/f4666727.style.css">
 
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src=" {% static "html5shiv/dist/html5shiv.js" %}"></script>
-      <script src=" {% static "respond/dest/respond.min.js" %}"></script>
-  <![endif]-->
   <script type="text/javascript">
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-47026823-1']);
-  _gaq.push(['_trackPageview']);
-
+  _gaq.push(['_setDomainName', 'baskettt.co']);
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
@@ -34,6 +27,14 @@
   })();
 
   </script>
+  {% endif %}
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src=" {% static "html5shiv/dist/html5shiv.js" %}"></script>
+      <script src=" {% static "respond/dest/respond.min.js" %}"></script>
+  <![endif]-->
+
     </head>
     <body id="ng-app" ng-app="App" ng-cloak  ng-class="{'bg-gray':productListPage}">
 
@@ -54,7 +55,19 @@
       </div>
 
       <footer>
-        <p>Contact us via <a href="https://twitter.com/basketttco">Twitter</a></p>
+        <div class="row">
+          <div class="col-md-6">
+            <img class="baskettt" src="/static/img/logob.svg" alt="">
+            <p>
+            The simplest way to get your groceries done.
+            </p>
+          </div>
+          <div class="col-md-6">
+            <a href="https://twitter.com/basketttco">
+              <img class="twitter" src="/static/img/twitter.svg" alt="">
+            </a>
+          </div>
+        </div>
       </footer>
 
       {% if debug %}
@@ -78,9 +91,9 @@
         <script src="{% static "app/js/filters.js" %}"></script>
 
       {% else %}
-      <script src="static/script/6edd8bcf.vendor.js"></script>
+      <script src="static/scripts/22823c72.vendor.js"></script>
 
-      <script src="static/script/2cb21e7f.scripts.js"></script>
+      <script src="static/scripts/c044840c.scripts.js"></script>
 
       {% endif %}
 

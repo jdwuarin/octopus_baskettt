@@ -13,7 +13,7 @@ class Department(models.Model):
     name = models.CharField(max_length=300, default='', editable=False)
     # matches supermarket_ids to names used in that particular supermarket
     # for the matching department (same goes for aisles and categories)
-    supermarket_names = hstore.ReferencesField()
+    supermarket_names = hstore.DictionaryField()
 
     objects = hstore.HStoreManager()
 
@@ -23,8 +23,9 @@ class Department(models.Model):
 
 class Aisle(models.Model):  # one level bellow Department
     name = models.CharField(max_length=300, default='', editable=False)
-    department = models.ForeignKey(Department, editable=False)
-    supermarket_names = hstore.ReferencesField()
+    department = models.ForeignKey(Department,
+        default=None, blank=True, null=True, editable=False)
+    supermarket_names = hstore.DictionaryField()
 
     objects = hstore.HStoreManager()
 
@@ -34,8 +35,11 @@ class Aisle(models.Model):  # one level bellow Department
 
 class Category(models.Model):  # one level bellow Aisle
     name = models.CharField(max_length=300, default='', editable=False)
-    aisle = models.ForeignKey(Department, editable=False)
-    supermarket_names = hstore.ReferencesField()
+    department = models.ForeignKey(Department,
+        default=None, blank=True, null=True, editable=False)
+    aisle = models.ForeignKey(Aisle,
+        default=None, blank=True, null=True, editable=False)
+    supermarket_names = hstore.DictionaryField()
 
     objects = hstore.HStoreManager()
 
@@ -60,13 +64,14 @@ class Product(models.Model):
     unit = models.CharField(max_length=50, default='none', editable=False)
     #max_length is defaulted to 100 for image.
     external_image_link = models.ImageField(upload_to="images/" + str(
-        supermarket) + "/", default='', editable=False)
+        supermarket.name) + "/", default='', editable=False)
     name = models.CharField(max_length=150, default='', editable=False)
     link = models.CharField(max_length=200, default='', editable=False)
     description = models.CharField(max_length=300, default='')
     offer_flag = models.CharField(max_length=12, default=False, editable=False)
     offer_description = models.CharField(max_length=200, default="")
     external_id = models.CharField(max_length=150, default='', editable=False)
+    ingredients = models.TextField(default='', editable=True)
     in_stock = models.NullBooleanField(editable=False) # is product available
 
     def __unicode__(self):

@@ -30,6 +30,7 @@ logfile
 webScraper/.ropeproject
 
 bin/*
+local/*
 
 bower_components
 static/*

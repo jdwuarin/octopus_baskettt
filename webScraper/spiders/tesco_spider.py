@@ -5,6 +5,7 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 import re
 
 from webScraper.items import ProductItem
+from webScraper.product_categorization_pipeline import prod_cat_pip
 from octopus_groceries.models import Supermarket
 
 
@@ -95,6 +96,7 @@ class TescoSpider(BaseSpider):
         for link in links:
             request = Request(self.base_url + link,
                               callback=self.parse_product_page)
+            request.meta['link'] = link
             request.meta['category'] = response.meta['category']
             request.meta['aisle'] = response.meta['aisle']
             request.meta['department'] = response.meta['department']
@@ -114,45 +116,43 @@ class TescoSpider(BaseSpider):
 
         sel = Selector(response)
 
-        names = self.get_good_names(sel.xpath(
-            './/a[contains(@href, "/groceries/Product/Details/")]/text()').extract())
-        prices = sel.xpath('//span[(@class="linePrice")]/text()').extract()
-        prices_per_unit = sel.xpath(
-            '//span[(@class="linePriceAbbr")]/text()').extract()
+        image_sel = sel.xpath('//div[contains(@class, "imageColumn")]')
+        #we only use the first available image here
+        external_image_link = image_sel.xpath('.//li/img/@src')[0].extract()
+        supermarket = Supermarket.objects.get(name="tesco")
+        department, aisle, category = prod_cat_pip(response, supermarket)
 
-        links = sel.xpath(
-            '//h3[contains(@class, "inBasketInfoContainer")]').xpath(
-            './/a/@href').extract()
-        external_image_links = sel.xpath(
-            './/img[contains(@src, "img.tesco.com")]/@src').extract()
-        external_ids = self.get_ids_from_links(links)
+        product_details_sel = sel.xpath(
+            '//div[@class="productDetails"]')
 
-        items = []
+        name = product_details_sel.xpath('.//h1/text()').extract()
+        price = product_details_sel.xpath(
+            './/span[@class="linePrice"]/text()').extract()
+        price_per_unit = product_details_sel.xpath(
+            './/span[(@class="linePriceAbbr")]/text()').extract()
+        link = response.meta['link']
+        external_id = link.replace("/groceries/Product/Details/?id=", "")
 
-        for i in range(len(names)):
 
-        # if products[i]
-            # if i == 0 or i == 1:
 
-            item = ProductItem()
+        item = ProductItem()
 
-            item['name'] = names[i]
-            item['price'] = prices[i].replace(u'\xA3', 'GBP')
+        item['name'] = name
+        item['price'] = price.replace(u'\xA3', 'GBP')
 
-            item['quantity'], item['unit'] = self.get_quantity_and_unit(
-                prices[i].replace(u'\xA3', ''),
-                prices_per_unit[i].replace(u'\xA3', ''))
-            item['link'] = links[i]
-            item['external_image_link'] = external_image_links[i]
-            item['external_id'] = external_ids[i]
-            item['supermarket'] = Supermarket.objects.get(name='tesco')
+        item['quantity'], item['unit'] = self.get_quantity_and_unit(
+            price.replace(u'\xA3', ''),
+            price_per_unit.replace(u'\xA3', ''))
+        item['link'] = link
+        item['external_image_link'] = external_image_link
+        item['external_id'] = external_id
+        item['supermarket'] = supermarket
 
-            items.append(item)
-
-        return items
+        return item
 
     @staticmethod
     def get_quantity_and_unit(price, price_unit):
+        #price per unit looks something like: 4.22/kg
         price_unit = re.sub("[^a-zA-Z0-9/.]", "", price_unit)
 
         price_per_unit, unit = price_unit.split("/")
@@ -189,14 +189,3 @@ class TescoSpider(BaseSpider):
                 good_names.append(name)
 
         return good_names
-
-    @staticmethod
-    def get_ids_from_links(links):
-
-        external_ids = []
-
-        for link in links:
-            external_id = link.replace("/groceries/Product/Details/?id=", "")
-            external_ids.append(external_id)
-
-        return external_ids

@@ -91,10 +91,10 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		},
 		link: function(scope, element, attrs){
 
-			preSelect = scope.preSelect;
-			preSelectOff = scope.preSelectOff;
-			select = scope.select;
-			setIndex = scope.setIndex;
+			var preSelect = scope.preSelect,
+			preSelectOff = scope.preSelectOff,
+			select = scope.select,
+			setIndex = scope.setIndex,
 			getIndex = scope.getIndex;
 
 			scope.search = function(query){
@@ -106,7 +106,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 				var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27};
 				var keycode = e.keyCode || e.which;
 
-				l = angular.element(this).find('li').length;
+				var l = angular.element(this).find('li').length;
 
 				scope.$eval(scope.clear);
 

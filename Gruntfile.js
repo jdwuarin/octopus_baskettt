@@ -100,6 +100,12 @@ module.exports = function(grunt) {
         }]
       }
     },
+    uglify: {
+        options: {
+            // report: 'min',
+            mangle: false
+        }
+    },
 
     // Copies remaining files to places other tasks can use
     copy: {

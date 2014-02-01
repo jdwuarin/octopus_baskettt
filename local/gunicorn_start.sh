@@ -4,7 +4,6 @@ NAME="octopus"                                  # Name of the application
 DJANGODIR=/Users/arnaud/Dropbox/Programming/octopus         # Django project directory
 SOCKFILE=/tmp/gunicorn.sock       # we will communicate using this unix socket
 USER=arnaud                                       # the user to run as
-# GROUP=webapps                                      # the group to run as
 NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
 DJANGO_SETTINGS_MODULE=octopus.settings             # which settings file should Django use
 DJANGO_WSGI_MODULE=octopus.wsgi                     # WSGI module name
@@ -30,4 +29,4 @@ exec ./env/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
   --workers $NUM_WORKERS \
   --user=$USER \
   --log-level=debug \
-  --bind=127.0.0.1:8002
+  --bind=unix:$SOCKFILE

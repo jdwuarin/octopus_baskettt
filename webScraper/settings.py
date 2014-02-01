@@ -27,6 +27,8 @@ BOT_NAME = 'webScraper'
 
 RETRY_TIMES = 20
 
+DOWNLOAD_DELAY = 0.2
+
 SPIDER_MODULES = ['webScraper.spiders']
 
 ITEM_PIPELINES = {

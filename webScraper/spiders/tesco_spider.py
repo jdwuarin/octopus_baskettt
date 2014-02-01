@@ -47,9 +47,9 @@ class TescoSpider(BaseSpider):
         department_sels = sel.xpath('.//a[contains(@class, "flyout")]')
 
         for entry in department_sels:
-            link = entry.xpath('.//@href').extract()
+            link = entry.xpath('.//@href').extract()[0]
             request = Request(link, callback=self.parse_department)
-            request.meta['department'] = entry.xpath('.//text()').extract()
+            request.meta['department'] = entry.xpath('.//text()').extract()[0]
             yield request
 
     def parse_department(self, response):
@@ -62,9 +62,9 @@ class TescoSpider(BaseSpider):
         aisle_sels = sel.xpath('.//li')
 
         for entry in aisle_sels:
-            link = entry.xpath('.//@href').extract()
-            request = Request(link, callback=self.parse_department)
-            request.meta['aisle'] = entry.xpath('.//text()').extract()
+            link = entry.xpath('.//@href').extract()[0]
+            request = Request(link, callback=self.parse_aisle)
+            request.meta['aisle'] = entry.xpath('.//text()').extract()[0]
             request.meta['department'] = response.meta['department']
             yield request
 
@@ -78,9 +78,9 @@ class TescoSpider(BaseSpider):
         category_sels = sel.xpath('.//li')
 
         for entry in category_sels:
-            link = entry.xpath('.//@href').extract()
+            link = entry.xpath('.//@href').extract()[0]
             request = Request(link, callback=self.parse_category)
-            request.meta['category'] = entry.xpath('.//text()').extract()
+            request.meta['category'] = entry.xpath('.//text()').extract()[0]
             request.meta['aisle'] = response.meta['aisle']
             request.meta['department'] = response.meta['department']
             yield request
@@ -118,41 +118,56 @@ class TescoSpider(BaseSpider):
 
         image_sel = sel.xpath('//div[contains(@class, "imageColumn")]')
         #we only use the first available image here
-        external_image_link = image_sel.xpath('.//li/img/@src')[0].extract()
+        external_image_link = image_sel.xpath('.//p/img/@src')[0].extract()
         supermarket = Supermarket.objects.get(name="tesco")
         department, aisle, category = prod_cat_pip(response, supermarket)
 
         product_details_sel = sel.xpath(
             '//div[@class="productDetails"]')
 
-        name = product_details_sel.xpath('.//h1/text()').extract()
+        name = product_details_sel.xpath('.//h1/text()').extract()[0]
         price = product_details_sel.xpath(
-            './/span[@class="linePrice"]/text()').extract()
+            './/span[@class="linePrice"]/text()').extract()[0]
         price_per_unit = product_details_sel.xpath(
-            './/span[(@class="linePriceAbbr")]/text()').extract()
+            './/span[(@class="linePriceAbbr")]/text()').extract()[0]
         link = response.meta['link']
+        # promotion/offer stuff
+        promoBox_sel = sel.xpath('//div[@class="promoBox"]')
+        promotion = promoBox_sel.xpath('.//em/text()').extract()
         external_id = link.replace("/groceries/Product/Details/?id=", "")
 
+        nutritionalfacts = self.get_nutritional_facts(response)
 
 
         item = ProductItem()
 
-        item['name'] = name
+        item['supermarket'] = supermarket
+        item['department'] = department
+        item['aisle'] = aisle
+        item['category'] = category
         item['price'] = price.replace(u'\xA3', 'GBP')
-
         item['quantity'], item['unit'] = self.get_quantity_and_unit(
             price.replace(u'\xA3', ''),
             price_per_unit.replace(u'\xA3', ''))
-        item['link'] = link
         item['external_image_link'] = external_image_link
+        item['name'] = name
+        item['link'] = link
+        if promotion:
+            item['promotion_flag'] = True
+            item['promotion_description'] = promotion[0].replace(u'\xA3', 'GBP')
+        else:
+            item['promotion_flag'] = False
+            item['promotion_description'] = ""
         item['external_id'] = external_id
-        item['supermarket'] = supermarket
+        if not nutritionalfacts is None:
+            item['nutritionalfacts'] = nutritionalfacts
 
         return item
 
     @staticmethod
     def get_quantity_and_unit(price, price_unit):
         #price per unit looks something like: 4.22/kg
+        import re
         price_unit = re.sub("[^a-zA-Z0-9/.]", "", price_unit)
 
         price_per_unit, unit = price_unit.split("/")
@@ -160,7 +175,7 @@ class TescoSpider(BaseSpider):
         real_unit = re.sub("[^a-zA-Z.]", "", unit)
 
         try:
-            float(multiplier)
+            multiplier = float(multiplier)
         except ValueError:
             multiplier = 1.0
 
@@ -174,8 +189,14 @@ class TescoSpider(BaseSpider):
             else:
                 real_unit = "g"
 
-        quantity = (float(price) / float(price_per_unit)) * (
-            float(multiplier))
+        try:
+            quantity = (float(price) / float(price_per_unit)) * (
+                float(multiplier))
+        except ZeroDivisionError:
+            # assuming quantity = 1 in this case.
+            # price per unit was returned as 0. It has been observed
+            # that in this case, quantity is usually 1
+            quantity = 1
 
         return str(quantity), real_unit
 
@@ -189,3 +210,25 @@ class TescoSpider(BaseSpider):
                 good_names.append(name)
 
         return good_names
+
+
+    def get_nutritional_facts(self, response):
+        sel = Selector(response)
+
+        # nutrition_sel = None
+        # potential_sels = sel.xpath('//caption')
+        #
+        # for xx in potential_sels:
+        #     if xx.xpath('.//text()').extract()[0] == "Nutrition":
+        #         nutrition_sel = xx[0]
+        #         nutrition_sel = nutrition_sel.xpath('..')
+        #
+        # if nutrition_sel is None:
+        #     return None
+        #
+        # # else
+        #
+        # headers = None
+        # nutritional_facts = None
+
+        return None

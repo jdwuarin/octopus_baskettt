@@ -23,19 +23,32 @@ class TescoPostgresPipeline(object):
             item2 = Product()
             item2 = item.save(commit=False) #not saving to db yet
             try:
-                supermarket = Supermarket.objects.get(name='tesco')
-                pre_existing_item = Product.objects.get(supermarket_id=supermarket,
-                    external_id=item2.external_id)
+                found_item = Product.objects.get(
+                    supermarket_id=item['supermarket'],
+                    external_id=item['external_id'])
                 #only update prices and offer flag if item already exists
-                pre_existing_item.price = item2.price
-                pre_existing_item.quantity = item2.quantity
-                pre_existing_item.unit = item2.unit
-                pre_existing_item.offer_flag = item2.offer_flag
-                pre_existing_item.save()
+
+                found_item.department = item['department']
+                found_item.aisle = item['aisle']
+                found_item.category = item['category']
+                found_item.price = item['price']
+                found_item.quantity = item['quantity']
+                found_item.unit = item['unit']
+                found_item.external_image_link = item['external_image_link']
+                found_item.name = item['name']
+                found_item.link = item['link']
+                found_item.promotion_flag = item['promotion_flag']
+                found_item.promotion_description = item['promotion_description']
+                try:
+                    found_item.nutritionalfacts = item['nutritionalfacts']
+                except KeyError:
+                    pass  # there were no nutrional facts. just pass
+
+                found_item.save()
 
             except ObjectDoesNotExist:
                 #if item does not exist, add it to the db
-                item2.save()
+                item.save()
 
         return item
 

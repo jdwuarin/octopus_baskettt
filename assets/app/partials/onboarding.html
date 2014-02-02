@@ -3,11 +3,23 @@
 	<div class="row onboard-container">
 		<div class="col-md-12 onboard-title">
 			<div ng-switch on="page">
-				<div ng-switch-when="1" class="first">I like to eat</div>
+				<div ng-switch-when="1">
+					<div class="first">
+						My tastes
+					</div>
+					<div class="explanation">
+						First timer? Awesome! <br>
+						Select all the types of food you like.
+					</div>
+				</div>
 				<div ng-switch-when="2" >
+					<div class="first">My meal plan</div>
+					<div class="explanation">
+						How much food do you need? <br>
+						Fill in your meal plan and <br> we'll make sure you got enough.
+					</div>
 					<form class="choice-box" ng-submit="saveData()">
 						<ul>
-							<li class="logo">I need groceries for</li>
 							<li>
 
 								<input type="text" class="form-control onboard-people"  ng-model="preference.people">people

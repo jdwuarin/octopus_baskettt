@@ -1,6 +1,17 @@
+@media (max-width: 768px) {
+
+    .col-md-7{
+        padding-top: 80px!important;
+    }
+    .col-md-5{
+        padding-top: 30px!important;
+        padding-bottom: 80px!important;
+    }
+}
+
 .disclaimer{
     text-align: center;
-    background: url("/static/img/cover4.png");
+    background: @dark-orange url("/static/img/cover4.png");
     background-position: -100px -60px;
     border-bottom: @gray-border;
     -webkit-font-smoothing: antialiased;
@@ -84,6 +95,12 @@
     }
     .glyphicon{
         font-size: 40px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50% 50%;
+        background: rgb(68, 68, 68);
+        color: white;
+        padding-top: 30px;
     }
 }
 

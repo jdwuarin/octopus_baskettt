@@ -136,6 +136,26 @@ class TescoSpider(BaseSpider):
         promotion = promoBox_sel.xpath('.//em/text()').extract()
         external_id = link.replace("/groceries/Product/Details/?id=", "")
 
+        # code for ingredients
+        details_box_container = sel.xpath('//div[@id="detailsBox-1"]')
+
+        ingredient_index = None
+
+        for ii, h2 in enumerate(details_box_container.xpath(
+                './/h2[not(contains(@class, "hide"))]')):
+            if h2.xpath('.//text()')[0].extract() == "Ingredients":
+                ingredient_index = ii
+
+        ingredients = None
+        if ingredient_index:
+            ingredient_sel = details_box_container.xpath(
+                './/div[@class="content"]')[ingredient_index]
+            try:
+                ingredients = ingredient_sel.xpath('.//p/text()').extract()[0]
+            except IndexError:
+                pass # this is the text starts with "<" bug
+        # done with code for ingredients
+
         nutritionalfacts = self.get_nutritional_facts(response)
 
 
@@ -159,7 +179,9 @@ class TescoSpider(BaseSpider):
             item['promotion_flag'] = False
             item['promotion_description'] = ""
         item['external_id'] = external_id
-        if not nutritionalfacts is None:
+        if ingredients:
+            item['ingredients'] = ingredients
+        if nutritionalfacts:
             item['nutritionalfacts'] = nutritionalfacts
 
         return item

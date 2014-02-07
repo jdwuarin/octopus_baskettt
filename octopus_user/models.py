@@ -7,6 +7,8 @@ class UserSettings(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     people = models.IntegerField(default=0)
     days = models.IntegerField(default=0)
+    # value from 0 to 1. 0 completely insensitive, 1 extremely sensitive
+    price_sensitivity = models.DecimalField(max_digits=10, decimal_places=4)
     budget = models.DecimalField(max_digits=10, decimal_places=4)
     tags = models.CommaSeparatedIntegerField(max_length=5000, default=[])
 

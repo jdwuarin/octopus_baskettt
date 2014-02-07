@@ -159,7 +159,6 @@ INSTALLED_APPS = (
     'octopus_middleware',
     'octopus_recommendation_engine',
     'octopus_search_engine',
-
 )
 
 

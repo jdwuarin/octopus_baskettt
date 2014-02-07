@@ -40,6 +40,10 @@ class TescoPostgresPipeline(object):
                 found_item.promotion_flag = item['promotion_flag']
                 found_item.promotion_description = item['promotion_description']
                 try:
+                    found_item.ingredients = item['ingredients']
+                except KeyError:
+                    pass  # there were no ingredients for the product
+                try:
                     found_item.nutritionalfacts = item['nutritionalfacts']
                 except KeyError:
                     pass  # there were no nutrional facts. just pass

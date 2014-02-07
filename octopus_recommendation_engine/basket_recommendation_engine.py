@@ -1,8 +1,8 @@
 import random
 from math import floor, ceil
+from django.db.models import Q
 
-from octopus_groceries.models import Tag, Recipe, TagRecipe, \
-    RecipeAbstractProduct, AbstractProduct, AbstractProductSupermarketProduct
+from octopus_groceries.models import *
 from unit_helper import Unit_helper
 
 
@@ -16,7 +16,11 @@ class BasketRecommendationEngine(object):
     num_condiment_abstract_product = 0.0
 
     #remove this bad looking hack
-    banned_word = " Cat"
+
+    banned_deps = Department.objects.filter(Q(name="Baby") |
+                                            Q(name="Health & Beaty") |
+                                            Q(name="Household") |
+                                            Q(name="Pets"))
 
     @classmethod
     def create_onboarding_basket(cls, basket_onboarding_info):

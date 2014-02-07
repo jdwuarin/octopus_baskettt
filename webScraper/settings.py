@@ -27,7 +27,7 @@ BOT_NAME = 'webScraper'
 
 RETRY_TIMES = 20
 
-DOWNLOAD_DELAY = 0.2
+DOWNLOAD_DELAY = 0.12
 
 SPIDER_MODULES = ['webScraper.spiders']
 

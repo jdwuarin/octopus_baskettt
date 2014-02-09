@@ -1,36 +1,57 @@
 <div class="row disclaimer">
-
+	<div class="container">
 	<div class="col-md-7">
-		<!-- <div class="disclaimer-logo"></div> -->
 		<div class="disclaimer-quote">
-			<h1>The simplest way to get your groceries done.</h1>
-			<p>Tell us what you like and we'll take care of the rest. Start spending time on what matters. </p>
-			<button href="javascript:;" ng-click="scrollTo('more')">Learn more</button>
+			<h1>The simplest way to  <br> get your groceries done.</h1>
+			<a href="#/onboarding/" >
+				<button class="btn-try-now">Try now</button>
+			</a>
+			<button href="javascript:;" class="btn-learn-more" ng-click="scrollTo('more')">Learn more</button>
 		</div>
 
 	</div>
 
-	<div class="col-md-5 beta-container">
-		<p>Subscribe to our private beta</p>
+	<div class="col-md-5 ">
+		<img src='/static/img/grocery-bag.png' alt="">
+<!-- 		<p>Subscribe to our private beta</p>
 		<div class="beta-alert" ng-show="betaSuccess">Successfully subscribed</div>
 		<form ng-submit="registerForBeta()" name="betaForm" class="">
 			<input type="email" ng-model="email" class="form-control" placeholder="Your email"> <br>
 			<input type="submit" class="btn-orange" value="Subscribe">
 		</form>
-		<div class="condition">You'll get an email with an invite as soon as we open the beta.</div>
+		<div class="condition">You'll get an email with an invite as soon as we open the beta.</div> -->
+	</div>
 	</div>
 </div>
 
-<div class="row get-started">
-	<div class="col-md-12">
-		<div class="gs-container">
-			<a href="#/onboarding/">
-				<button class="btn-cta">Try me now</button>
-			</a>
+<div class="row beta-container">
+	<div class="container">
+		<div class="col-md-6">
+			<p>We're currently in a private beta. Register to get an invite.</p>
+		</div>
+		<div class="col-md-6">
+			<form ng-submit="registerForBeta()" name="betaForm" class="beta-form">
+				<div class="form-group">
+				<input type="email" ng-model="email" class="beta-email" placeholder="Your email">
+				</div>
+				<div class="form-group">
+				<input type="submit" class="btn-register-beta" value="Subscribe">
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
+
 <div class="row features" id="more">
+	<div class="row">
+		<div class="col-md-12 motto">
+				Tell us what you like to eat and we'll take care of the rest.
+				<br>
+				Start spending time on what matters.
+		</div>
+		<hr>
+
+	</div>
 	<div class="col-md-4">
 		<i class="glyphicon glyphicon-cutlery"></i>
 		<p>Get a tailor-made grocery basket according to your eating preferences and your budget.</p>

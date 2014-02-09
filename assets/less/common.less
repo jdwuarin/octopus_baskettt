@@ -47,12 +47,12 @@ a:hover{
 .navbar{
 
     .navbar-collapse{
-        background-color: @orange;
+        background-color: white;
     }
 
-    height: 60px;
+    height: @header-height;
     margin-bottom: 0;
-    background-color: @orange;
+    background-color: white;
     border: 0;
     border-radius: 0px;
     color:white;
@@ -60,22 +60,26 @@ a:hover{
     border-bottom: 1px solid @dark-orange;
 
     .navbar-brand{
-        padding: 12px 15px 12px;
+        padding: 22px 40px 12px;
     }
 
     .navbar-brand-logo img{
-        width: @logo-ratio*30px;
-        height: 30px;
+        width: @logo-ratio*40px;
+        height: 40px;
     }
 }
 
 a.profile-link{
-    color:white!important;
+    color:@dark-gray!important;
     line-height: @header-height!important;
     padding: 0!important;
-    margin-right: 15px;
-    text-shadow:0 1px 1px rgba(0,0,0,0.3);
+    margin-right: 20px;
     text-align: center;
+    font-family: @montserrat;
+    font-size: 14px;
+    text-transform:uppercase;
+    font-weight: bold;
+
     &:hover{
         background-color:transparent!important;
     }

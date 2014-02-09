@@ -30,7 +30,8 @@
     "angulartics": "*",
     "fastclick": "*",
     "allmighty-autocomplete": "*",
-    "animate.css": "*"
+    "animate.css": "*",
+    "onepage-scroll": "*"
   },
   "resolutions": {
     "angular": "1.2.10"

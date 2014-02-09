@@ -50,7 +50,7 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/product_list.html',
 		requireLogin: false
 	})
-	.when('/onboarding/:id',
+	.when('/onboarding',
 	{
 		controller: 'OnboardingController',
 		templateUrl: 'static/app/partials/onboarding.html',

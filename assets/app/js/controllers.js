@@ -24,7 +24,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				User.registerBeta(email, function(data){
 					// This callback is only called when return success
 					$analytics.eventTrack('RegisterToBeta',
-					{ category: 'Onboarding'});
+						{ category: 'Onboarding'});
 					$scope.betaSuccess = true;
 				});
 			}
@@ -32,7 +32,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window) {
 
 	$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
 	{ "name": "Chinese", "image": "chinese.png"},
@@ -43,51 +43,42 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.preference = {};
 
-	var page_id = parseInt($routeParams.id,10);
+	// Persist data from local storage
+	$scope.preference = Preference.getAll();
 
-	$scope.page = page_id;
+	var goToTop = function(){
+		// set the location.hash to the id of
+		// the element you wish to scroll to.
+		$location.hash('wrap');
+		$anchorScroll();
+	};
 
-		// Persist data from local storage
-		$scope.preference = Preference.getAll();
+	$scope.saveData = function() {
 
-		var goToTop = function(){
-			// set the location.hash to the id of
-			// the element you wish to scroll to.
-			$location.hash('wrap');
+		Preference.setParameters($scope.preference);
+		if(Preference.isNotValid(Preference.getAll())) {
+			Alert.add("You didn't put the right informations.","danger");
+			goToTop();
+		} else {
+			$location.path("/basket");
+		}
+		// if (page_id === 1) { //cuisine
 
-			$anchorScroll();
-		};
+		// 	if(Preference.getCuisine().length === 0) {
+		// 		Alert.add("You didn't select a cuisine style.","danger");
+		// 		goToTop();
+		// 	} else {
+		// 		$location.path("/onboarding/2");
+		// 	}
 
-		$scope.saveData = function() {
+		// } else if (page_id === 2) { //numbers page
 
-			Preference.setParameters($scope.preference);
 
-			if (page_id === 1) { //cuisine
 
-				if(Preference.getCuisine().length === 0) {
-					Alert.add("You didn't select a cuisine style.","danger");
-					goToTop();
-				} else {
-					$location.path("/onboarding/2");
-				}
-
-			} else if (page_id === 2) { //numbers page
-
-				if(Preference.isNotValid(Preference.getAll())) {
-					Alert.add("You didn't put the right informations.","danger");
-					goToTop();
-				} else {
-					$location.path("/basket");
-				}
-
-			} else { // Edge case
-				$location.path("/onboarding/1");
-			}
-		};
-
-		$scope.isActive = function(id) {
-			return id === page_id;
-		};
+		// } else { // Edge case
+		// 	$location.path("/onboarding/1");
+		// }
+	};
 
 	}])
 

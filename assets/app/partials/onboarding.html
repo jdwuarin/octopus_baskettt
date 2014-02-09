@@ -1,68 +1,52 @@
 <div class="container">
+  <div class="row onboard-container" onboard>
+    <div class="col-md-12 onboard-title">
+      <section>
+      <div class="first">
+        My tastes
+      </div>
+      <div class="explanation">
+        First timer? Awesome! <br>
+        Select all the types of food you like.
+      </div>
 
-	<div class="row onboard-container">
-		<div class="col-md-12 onboard-title">
-			<div ng-switch on="page">
-				<div ng-switch-when="1">
-					<div class="first">
-						My tastes
-					</div>
-					<div class="explanation">
-						First timer? Awesome! <br>
-						Select all the types of food you like.
-					</div>
-				</div>
-				<div ng-switch-when="2" >
-					<div class="first">My meal plan</div>
-					<div class="explanation">
-						How much food do you need? <br>
-						Fill in your meal plan and <br> we'll make sure you got enough.
-					</div>
-					<form class="choice-box" ng-submit="saveData()">
-						<ul>
-							<li>
+      <div class="row">
+        <div class="col-md-12 onboard-cuisine" >
+          <div class="onboard-box" ng-repeat="cuisine in cuisines">
+            <div class="onboard-image" ng-class="{'selected':selectedStatus}" click>
+              <img ng-src="/static/img/{{cuisine.image}}" alt="">
+              <p>{{cuisine.name}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+      <section>
+      <div class="first">My meal plan</div>
+      <div class="explanation">
+        How much food do you need? <br>
+        Fill in your meal plan and <br> we'll make sure you got enough.
+      </div>
+      <form class="choice-box" ng-submit="saveData()">
+        <ul>
+          <li>
 
-								<input type="text" class="form-control onboard-people"  ng-model="preference.people">people
-							</li>
-							<li>
+            <input type="text" class="form-control onboard-people"  ng-model="preference.people">people
+          </li>
+          <li>
 
-								<input type="text" class="form-control onboard-people" ng-model="preference.days">days
+            <input type="text" class="form-control onboard-people" ng-model="preference.days">days
 
-							</li>
-							<li>
-								<input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
+          </li>
+          <li>
+            <input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
 
-							</li>
-						</ul>
+          </li>
+        </ul>
 
-						<input type="submit" class="btn-onboarding" value="Generate my basket">
-					</form>
-
-
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div ng-switch on="page">
-		<div ng-switch-when="1">
-			<div class="row">
-				<div class="col-md-12 onboard-cuisine" >
-					<div class="onboard-box" ng-repeat="cuisine in cuisines">
-						<div class="onboard-image" ng-class="{'selected':selectedStatus}" click>
-							<img ng-src="/static/img/{{cuisine.image}}" alt="">
-							<p>{{cuisine.name}}</p>
-						</div>
-					</div>
-
-					<div class="next-container">
-						<a href="javascript:;" class="btn-next" ng-click="saveData()"> Next </a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <input type="submit" class="btn-onboarding" value="Generate my basket">
+      </form>
+      </section>
+  </div>
+  </div>
 </div>
-
-
-

@@ -69,7 +69,7 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('navbar',['$rootScope', 'User', function($rootScope, User) {
+	.directive('navbar',['$rootScope', 'User', '$location', function($rootScope, User, $location) {
 
 		return {
 			link: function (scope, element, attrs) {
@@ -82,6 +82,16 @@ angular.module('App.directives', [])
 						}
 					});
 				});
+
+				var fs = false;
+
+				scope.fullscreen = function (){
+					fs = $location.path().indexOf('onboarding') !=-1;
+					if(fs){
+						angular.element('body').css('padding-top','0px');
+					}
+					return fs;
+				}
 
 				scope.userIsLoggedIn = function(){
 					// Defined as a function to force the execution after a redirection

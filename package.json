@@ -37,6 +37,5 @@
     "karma-coverage": "latest",
     "grunt-reload": "latest",
     "grunt-contrib-watch": "latest"
-
   }
 }

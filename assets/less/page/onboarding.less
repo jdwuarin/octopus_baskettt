@@ -1,63 +1,66 @@
 // Onboarding
 //------------------------------------
 .onboard-container{
-    text-align: center;
 }
 
 .onboard-title{
-
-    font-size: 24px;
-    color: #4A494A;
+    font-family: @montserrat;
+    font-size: 48px;
+    color: black;
+    padding-top: 80px;
     text-align: center;
-    display: inline-block;
-    line-height: 2.5;
-    .center;
+}
 
-    .first{
-        font-family: 'Pacifico';
-        font-size: 53px;
-        color:#636363;
+.onboard-instruction{
+
+    padding-top: 80px;
+    header{
+        padding-left: 85px;
     }
 
-    .explanation{
-        padding-bottom: 30px;
-        line-height: 27px;
-        font-size: 20px;
-        color: #A2A2A2;
-        font-weight: 350px;
-        font-family: @arvo;
+    font-family: Helvetica;
+    font-size: 24px;
+    line-height: 51px;
+    color: @dark-gray;
+    text-align: left;
+
+    .number{
+        height: 51px;
+        width: 51px;
+        border: 3px solid @dark-gray;
+        float: left;
+        border-radius: 50% 50%;
+        font-family: @montserrat;
+        text-align: center;
     }
 
-    input.onboard-people{
-        display: inline-block;
-        width: 50px!important;
-        font-size: 20px;
-    }
-
-    input.onboard-money{
-        display: inline-block;
-        width: 80px!important;
-        font-size: 20px;
-
-    }
 
 }
 
+.slider {
+    width: 100%;
+    max-width: 800px;
+    padding: 2em;
+    border: 1px solid #f0f0f0;
+    margin: 2em;
+}
+
 .onboard-box{
-    float: left;
-    width: 200px;
-    margin: 0 20px;
+    display: inline-block;
+    width: 300px;
+    margin: 10px 20px;
+    background: #fafafa;
+    border: 3px solid #D4D4D4;
 
     p{
         text-align: center;
-        padding: 11px 0px;
+        margin-bottom: 0px !important;
+        padding: 25px 0px;
         font-size: 16px;
         color: #686868;
-        width: 200px;
+        font-family: @montserrat;
+        text-transform: uppercase;
         .center;
-        border: @gray-border;
-        border-top: 0;
-        background: @light-gray;
     }
 
 }
@@ -67,9 +70,8 @@
     cursor: pointer;
     img{
         height: auto;
-        width: 200px;
-        border: @gray-border;
-
+        width: 268px;
+        padding-top: 12px;
         .center;
     }
 
@@ -80,7 +82,8 @@
 
 .onboard-cuisine{
     .center;
-    max-width: 800px;
+    padding-top: 50px;
+    // max-width: 800px;
 }
 
 .next-container{

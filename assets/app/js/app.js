@@ -11,7 +11,8 @@ angular.module('App', [
 	'App.controllers',
 	'angulartics',
 	'angulartics.google.analytics',
-	'autocomplete'
+	'autocomplete',
+	'ui.slider'
 ])
 
 .config(['$httpProvider', function($httpProvider) {

@@ -34,14 +34,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 .controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window) {
 
-	$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
-	{ "name": "Chinese", "image": "chinese.png"},
-	{ "name": "Indian", "image": "indian.png"},
-	{ "name": "Spanish", "image": "spanish.png"},
+	$scope.cuisines = [{ "name": "Italian", "image": "italy.png"},
+	{ "name": "Chinese", "image": "china.png"},
+	{ "name": "Indian", "image": "india.png"},
+	{ "name": "Spanish", "image": "spain.png"},
 	{ "name": "Thai",  "image": "thai.png"},
-	{ "name": "French",  "image": "french.png"}];
+	{ "name": "French",  "image": "france.png"}];
 
 	$scope.preference = {};
+	$scope.cookingValue = 10;
 
 	// Persist data from local storage
 	$scope.preference = Preference.getAll();

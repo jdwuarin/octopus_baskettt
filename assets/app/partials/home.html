@@ -1,26 +1,20 @@
 <div class="row disclaimer">
 	<div class="container">
-	<div class="col-md-7">
-		<div class="disclaimer-quote">
-			<h1>The simplest way to  <br> get your groceries done.</h1>
-			<a href="#/onboarding/" >
-				<button class="btn-try-now">Try now</button>
-			</a>
-			<button href="javascript:;" class="btn-learn-more" ng-click="scrollTo('more')">Learn more</button>
+		<div class="spacing"></div>
+		<div class="col-md-12 col-lg-5">
+			<div class="disclaimer-quote">
+				<h1>The simplest way to  <br> get your groceries done.</h1>
+				<a href="#/onboarding/" >
+					<button class="btn-try-now">Try now</button>
+				</a>
+				<button href="javascript:;" class="btn-learn-more" ng-click="scrollTo('more')">Learn more</button>
+			</div>
+
 		</div>
 
-	</div>
-
-	<div class="col-md-5 ">
-		<img src='/static/img/grocery-bag.png' alt="">
-<!-- 		<p>Subscribe to our private beta</p>
-		<div class="beta-alert" ng-show="betaSuccess">Successfully subscribed</div>
-		<form ng-submit="registerForBeta()" name="betaForm" class="">
-			<input type="email" ng-model="email" class="form-control" placeholder="Your email"> <br>
-			<input type="submit" class="btn-orange" value="Subscribe">
-		</form>
-		<div class="condition">You'll get an email with an invite as soon as we open the beta.</div> -->
-	</div>
+		<div class="col-md-12 col-lg-7">
+			<img src='/static/img/grocery-bag.png' alt="">
+		</div>
 	</div>
 </div>
 
@@ -32,10 +26,10 @@
 		<div class="col-md-6">
 			<form ng-submit="registerForBeta()" name="betaForm" class="beta-form">
 				<div class="form-group">
-				<input type="email" ng-model="email" class="beta-email" placeholder="Your email">
+					<input type="email" ng-model="email" class="beta-email" placeholder="Your email">
 				</div>
 				<div class="form-group">
-				<input type="submit" class="btn-register-beta" value="Subscribe">
+					<input type="submit" class="btn-register-beta" value="Subscribe">
 				</div>
 			</form>
 		</div>
@@ -43,25 +37,53 @@
 </div>
 
 <div class="row features" id="more">
-	<div class="row">
-		<div class="col-md-12 motto">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 motto">
 				Tell us what you like to eat and we'll take care of the rest.
 				<br>
 				Start spending time on what matters.
+			</div>
+			<hr>
+
 		</div>
-		<hr>
+		<div class="row feature-description">
+			<div class="col-md-6">
+				<header>Tailor-made basket</header>
+				<article>Tell us your eating preferences and how you manage your groceries. We will create a basket  just for you.</article>
+			</div>
+			<div class="col-md-6 hidden-xs">
+				<img src="/static/img/feature1.png" alt="">
+			</div>
+		</div>
+		<div class="row feature-description">
+			<div class="col-md-6 hidden-xs">
+				<img src="/static/img/feature2.png" alt="">
+			</div>
+			<div class="col-md-6">
+				<header>Make it personal</header>
+				<article>Tell us your eating preferences and how you manage your groceries. We will create a basket  just for you.</article>
+			</div>
+
+		</div>
+		<div class="row feature-description">
+			<div class="col-md-6">
+				<header>Keep your habits</header>
+				<article>When you're done, you can directly order from your favorite shop. We currently only support Tesco.</article>
+			</div>
+			<div class="col-md-6 feature-3 hidden-xs">
+				<img src="/static/img/feature3.png" alt="">
+			</div>
+		</div>
 
 	</div>
-	<div class="col-md-4">
-		<i class="glyphicon glyphicon-cutlery"></i>
-		<p>Get a tailor-made grocery basket according to your eating preferences and your budget.</p>
-	</div>
-	<div class="col-md-4">
-		<i class="glyphicon glyphicon-shopping-cart"></i>
-		<p>Order your groceries directly from Tesco.</p>
-	</div>
-	<div class="col-md-4">
-		<i class="glyphicon glyphicon-time"></i>
-		<p>Everytime you come back, we'll give you the products you need the most.</p>
+</div>
+
+<div class="row quote">
+	<div class="col-md-12">
+		Make your life <b>simpler</b> <br>
+		<a href="#/onboarding/">
+			<button class="btn-try-footer">Try now</button>
+		</a>
 	</div>
 </div>

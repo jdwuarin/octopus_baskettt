@@ -1,45 +1,40 @@
-@media (max-width: 768px) {
-
-    .col-md-7{
-        padding-top: 80px!important;
-    }
-    .col-md-5{
-        padding-top: 30px!important;
-        padding-bottom: 80px!important;
-    }
-}
-
 .disclaimer{
     text-align: center;
     background: @orange;
     -webkit-font-smoothing: antialiased;
+
+    background-image: -o-radial-gradient(75% 111%, ellipse cover, #FEFAD2, @orange);
+    background-image: -moz-radial-gradient(75% 111%, ellipse cover, #FEFAD2, @orange);
     background-image: -webkit-radial-gradient(75% 111%, ellipse cover, #FEFAD2, @orange);
-    // background: #F6C45B;
-    // background: #FEF8BD;
-    // background-image: -o-radial-gradient(75% 111%, rgba(254,248,189,0.44) 35%, rgba(254,248,190,0.44) 40%, rgba(255,255,255,0.34) 44%, #F6C45B 82%);
-    // background-image: -moz-radial-gradient(75% 111%, rgba(254,248,189,0.44) 35%, rgba(254,248,190,0.44) 40%, rgba(255,255,255,0.34) 44%, #F6C45B 82%);
-    // background-image: -webkit-radial-gradient(75% 111%, rgba(254,248,189,0.44) 35%, rgba(254,248,190,0.44) 40%, rgba(255,255,255,0.34) 44%, #F6C45B 82%);
-    // background-image: -ms-radial-gradient(75% 111%, rgba(254,248,189,0.44) 35%, rgba(254,248,190,0.44) 40%, rgba(255,255,255,0.34) 44%, #F6C45B 82%);
-    // background-image: radial-gradient(75% 111%, rgba(254,248,189,0.44) 35%, rgba(254,248,190,0.44) 40%, rgba(255,255,255,0.34) 44%, #F6C45B 82%);
+    background-image: -ms-radial-gradient(75% 111%, ellipse cover, #FEFAD2, @orange);
+    background-image: radial-gradient(75% 111%, ellipse cover, #FEFAD2, @orange);
+
+    .spacing{
+        height: 120px;
+    }
+
     .col-md-7,.col-md-5{
         padding:100px 0px;
     }
 
-    .col-md-5{
+    .col-lg-5{
+        padding-top: 30px;
         img{
-            height: 400px;
-            width:588px;
+            height: auto;
+            width:100%;
+            max-width: 588px;
         }
         padding-bottom: 0px!important;
     }
+
     .disclaimer-quote{
-        text-shadow:@font-shadow;
         .center;
-        padding: 20px 50px 40px 50px;
 
         h1{
             margin-top: 0!important;
-            font-family: Avenir-Book;
+            font-family: @nunito;
+            font-weight: 300!important;
+            font-style: normal;
             text-align: center!important;
             font-size: 36px;
             color: @dark-gray;
@@ -63,11 +58,6 @@
             color: @dark-gray;
             background: transparent;
             border: 3px solid @dark-gray;
-
-            // &:hover{
-            //     background: @orange;
-            //     border-color: @orange;
-            // }
         }
 
         .btn-try-now{
@@ -85,7 +75,8 @@
 
     .motto{
         padding: 87px 0px;
-        font-family: Avenir-Book;
+        font-family: @nunito;
+        font-weight: 300;
         font-size: 24px;
         color: @dark-gray;
         line-height: 40px;
@@ -95,24 +86,31 @@
         margin:0px 20px;
     }
 
-    p{
-        padding-top: 30px;
-        max-width: 250px;
-        text-align: center;
-        .center;
+    .feature-description{
+        padding: 60px 0px;
+
+        header{
+            padding-top: 57px;
+            font-family: Avenir-Book;
+            font-size: 24px;
+            color: @dark-gray;
+            line-height: 21px;
+            padding-bottom: 32px;
+        }
+        article{
+            .center;
+            font-family: Avenir-Book;
+            font-size: 18px;
+            color: #9B9B9B;
+            line-height: 28px;
+            max-width: 300px;
+        }
+        .feature-3{
+            padding-top: 50px;
+            padding-bottom: 80px
+        }
     }
-    span{
-        font-size: 40px;
-    }
-    .glyphicon{
-        font-size: 40px;
-        width: 100px;
-        height: 100px;
-        border-radius: 50% 50%;
-        background: rgb(68, 68, 68);
-        color: white;
-        padding-top: 30px;
-    }
+
 }
 
 .beta-container{
@@ -160,4 +158,26 @@
     }
 }
 
+.quote{
+    background: @gray url('/static/img/simpler.png') no-repeat center;
+    height: 459px;
+    width: auto;
+    font-family: @nunito;
+    font-size: 56px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 300;
+
+    .col-md-12{
+        margin-top: 160px;
+    }
+
+    .btn-try-footer{
+        margin-top: 40px;
+        .btn-trans-gray;
+        height: 70px;
+        width:200px;
+    }
+}
 

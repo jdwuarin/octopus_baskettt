@@ -1,10 +1,14 @@
 .btn-orange{
 	.btn;
+
 	&, &:hover{
 		background-color: @orange!important;
 		border: 1px solid @dark-orange;
 		color:white!important;
 		text-shadow:0 1px 1px rgba(0,0,0,0.3);
+		font-family:@montserrat;
+		font-size: 14px;
+		text-transform: uppercase;
 	}
 }
 
@@ -83,4 +87,17 @@
 	.btn-orange;
 	.btn-lg;
 	width: 100%;
+}
+
+.btn-black{
+	.btn;
+	border-radius: 5px;
+	background: #4A4A4A;
+	border: 1px solid black;
+	font-family: @montserrat;
+	font-size: 14px;
+	color: white;
+	text-transform: uppercase;
+	height: 50px;
+	width: 100px;
 }

@@ -41,7 +41,6 @@
 
 .basket-bar{
     background-color: white;
-    border-bottom: @gray-border;
     height:@basket-bar-height;
     line-height: @basket-bar-height;
     position: fixed;
@@ -49,21 +48,18 @@
     top: @header-height;
     padding: 0!important;
 
-    form{
-        .form-inline;
-        button{
-            display: none;
-        }
+    .basket{
+        font-family: @montserrat;
+        font-size: 17px;
+        color: #262626;
     }
-    .transfer{
-        line-height: @basket-bar-height;
+
+    .btn-transfer{
         float: right;
-        height: @basket-bar-height;
-        padding-right: 10px;
-        button{
-            float: right;
-            margin-top: 13px;
-        }
+        margin-top: 25px;
+        text-shadow: none!important;
+        height: 50px!important;
+        width: 135px!important;
     }
 }
 
@@ -253,14 +249,11 @@
 }
 
 .search-bar{
+
     .search-bar-container{
         position: relative;
-        margin-top: 13px;
+        margin-top: 25px;
         padding-right: 82px;
-
-        i.glyphicon-search{
-            color:@dark-gray;
-        }
 
         button{
             display: inline-block;
@@ -380,9 +373,13 @@
 .autocomplete input{
     .form-control;
     .center;
-    width: 250px;
-    max-width: 500px;
-
+    width: 270px;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid #DEDEDE;
+    font-family: Helvetica;
+    font-size: 16px;
+    color: #9B9B9B;
 }
 
 .autocomplete ul{

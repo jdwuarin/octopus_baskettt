@@ -43,6 +43,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.preference = {};
 	$scope.cookingValue = 10;
+	$scope.cookingStyle = "minimal";
+
 
 	// Persist data from local storage
 	$scope.preference = Preference.getAll();

@@ -24,16 +24,32 @@
       </div>
 
       <div class="slider">
+        <div class="label-left">Minimal</div>
+        <div class="label-right">Gourmet</div>
         <div ui-slider min="0" max="100" ng-model="cookingValue"></div>
-        <p>{{cookingStyle}}</p>
       </div>
 
-
-      <div class="first">My meal plan</div>
-      <div class="explanation">
-        How much food do you need? <br>
-        Fill in your meal plan and <br> we'll make sure you got enough.
+      <div class="onboard-instruction">
+        <span class="number">3</span>
+        <header>Are you following a diet?</header>
       </div>
+
+      <div class="onboard-diet">
+        <input type="radio" ng-model="diet" value="vegan" id="vegan">
+        <label for="vegan">Vegan</label> <br>
+        <input type="radio" ng-model="diet" value="vegetarian" id="vegetarian"><label for="vegetarian">Vegetarian</label> <br>
+        <input type="radio" ng-model="diet" value="prescetarian" id="prescetarian">
+        <label for="prescetarian">Pescetarian</label> <br>
+        <input type="radio" ng-model="diet" value="other" id="other"><label for="other">I don't eat any:</label> <br>
+        <input type="checkbox" ng-model="porc" id="mpor">
+        <label for="mpor">Porc</label>  <br>
+        <input type="checkbox" ng-model="beef" id="mb">
+        <label for="mb">Beef</label>  <br>
+        <input type="checkbox" ng-model="poultry" id="mpou"><label for="mpou">Poultry</label>  <br>
+      </div>
+
+  <!--     <div class="first">My meal plan</div>
+
       <form class="choice-box" ng-submit="saveData()">
         <ul>
           <li>
@@ -49,10 +65,13 @@
             <input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
 
           </li>
-        </ul>
+        </ul> -->
+        <!-- </form> -->
 
-        <input type="submit" class="btn-onboarding" value="Generate my basket">
-      </form>
+        <div class="btn-container">
+          <input type="submit" class="btn-onboarding" value="Go to my personal basket" ng-click="generateBasket()">
+        </div>
+
+      </div>
+    </div>
   </div>
-  </div>
-</div>

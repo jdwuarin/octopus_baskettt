@@ -102,7 +102,7 @@
 // Styling of the search results
 .search-item{
     list-style-type: none;
-    border: @gray-border;
+    border: 2px solid #f0f0f0;
     border-top: 0;
     background: white;
 
@@ -121,6 +121,7 @@
         padding-top: 27px;
         margin: 0!important;
         float: right;
+        width: 104px;
     }
 
     & *{
@@ -128,13 +129,13 @@
     }
 
     ul{
-        padding-left: 0!important;
-        padding-top: 22px;
+        padding-left: 10px!important;
+        padding-top: 14px;
     }
 
     li{
         &.product-name{
-            font-size: 16px;
+            font-size: 15px;
         }
 
         list-style-type: none;
@@ -178,7 +179,7 @@
         position: fixed;
         z-index: @zindex-navbar-fixed;
         overflow-y: auto;
-        max-height: (@height-search-item+1px)*5; // +1px to see border & *3 for 3 items
+        max-height: (@height-search-item+2px)*5; // +1px to see border & *3 for 3 items
         top:@header-height*2;
 
         .no-result{
@@ -275,33 +276,33 @@
         font-weight: 400;
     }
 
-    .quantity{
-        width: @product-size;
-        padding-bottom: 10px;
-        .input-group{
-            width: 100px;
-            .center;
-        }
-
-        input{
-
-            text-align: center;
-            cursor: default;
-            color: @gray;
-            background: @light-gray;
-        }
-
-        span{
-            cursor: pointer;
-            background: @orange;
-            border-color: @dark-orange;
-            border-radius: 0;
-            color:white
-        }
-    }
 }
 
+// Leave outside because it is also used in the search results
+.quantity{
+    width: @product-size;
+    padding-bottom: 10px;
+    .input-group{
+        width: 100px;
+        .center;
+    }
 
+    input{
+
+        text-align: center;
+        cursor: default;
+        color: @gray;
+        background: @light-gray;
+    }
+
+    span{
+        cursor: pointer;
+        background: @orange;
+        border-color: @dark-orange;
+        border-radius: 0;
+        color:white
+    }
+}
 
 .sign-up-inline{
     padding:20px;

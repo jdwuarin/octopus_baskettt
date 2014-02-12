@@ -62,13 +62,13 @@ angular.module('App.services', ['LocalStorageModule'])
 		var LoggedIn = null;
 
 		return {
-			login: function(email, password, callback) { // POST /user/login
+			login: function(email, password, callback,errorcb) { // POST /user/login
 				return $http({
 					url: getUrl('login'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
-				}).success(callback);
+				}).success(callback).error(errorcb);
 			},
 			logout: function(callback) { // GET /user/logout
 				return $http({

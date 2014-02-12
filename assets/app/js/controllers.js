@@ -43,8 +43,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.preference = {};
 	$scope.cookingValue = 10;
-	$scope.cookingStyle = "minimal";
-
+	$scope.diet = '';
 
 	// Persist data from local storage
 	$scope.preference = Preference.getAll();
@@ -392,10 +391,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		if($scope.loginForm.$valid){
 			user = sanitizeCredentials(user);
 
-			User.login(user.email, user.password, function(data){
+			User.login(user.email, user.password,
+				function(data){
 				User.setLoggedIn(true);
 				Alert.add("Successfully logged in.", "success");
 				User.redirect("/");
+			},function(res, status){
+				Alert.add("Wrong credentials.", "danger");
 			});
 		}
 	};

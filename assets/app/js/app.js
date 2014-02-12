@@ -63,7 +63,13 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/transfer.html',
 		requireLogin: true
 	})
-	.otherwise({ redirectTo: '' });
+	.when('/profile',
+	{
+		controller: 'ProfileController',
+		templateUrl: 'static/app/partials/profile.html',
+		requireLogin: true
+	})
+	.otherwise({ redirectTo: '/' });
 }])
 
 .run(['$cookies', '$http', '$rootScope', 'User', 'Alert', '$location', function($cookies, $http, $rootScope, User, Alert,$location){

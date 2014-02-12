@@ -7,14 +7,14 @@
 	<div class="col-md-12 basket-bar">
 		<div class="row">
 			<div class="container">
+
 				<div class="col-md-3 basket">
 					Total: <b>&pound;{{basketTotal()}}</b>
 				</div>
 
 				<div class="col-md-6 search-bar">
 					<div class="search-bar-container">
-						<autocomplete data="results" on-type="autoComplete" clear="clearResult">
-						</autocomplete>
+						<autocomplete data="results" on-type="autoComplete" clear="clearResult"></autocomplete>
 					</div>
 				</div>
 
@@ -23,6 +23,7 @@
 						Checkout
 					</button>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -69,17 +70,20 @@
 						</div>
 
 						<div class="product-desc">
-							<p>{{product.name}}</p>
-
+							<div class="product-name">
+								<p>{{product.name}}</p>
+							</div>
 							<div class="product-price">
 								&pound;{{getTotal(product.price, product.quantity)}}
 							</div>
-
-							<div class="quantity input-group">
-								<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
-								<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
-								<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+							<div class="quantity">
+								<div class="input-group">
+									<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+									<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+									<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+								</div>
 							</div>
+
 						</div>
 					</div>
 				</div>

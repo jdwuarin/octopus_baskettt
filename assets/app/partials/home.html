@@ -20,18 +20,25 @@
 
 <div class="row beta-container">
 	<div class="container">
-		<div class="col-md-6">
+		<div class="col-md-6" ng-hide="betaSuccess">
 			<p>We're currently in a private beta. Register to get an invite.</p>
 		</div>
-		<div class="col-md-6">
-			<form ng-submit="registerForBeta()" name="betaForm" class="beta-form">
-				<div class="form-group">
-					<input type="email" ng-model="email" class="beta-email" placeholder="Your email">
+		<div class="col-md-6" ng-hide="betaSuccess">
+			<form ng-submit="registerForBeta()" name="betaForm" class="beta-form" novalidate>
+				<div class="form-group" ng-class="{ 'has-error' : betaForm.email.$invalid && !betaForm.email.$pristine }" >
+					<input type="email" name="email" ng-model="email" class="beta-email" placeholder="Your email">
 				</div>
 				<div class="form-group">
-					<input type="submit" class="btn-register-beta" value="Subscribe">
+					<input type="submit" class="btn-register-beta" value="Subscribe" ng-disabled="betaForm.$invalid">
 				</div>
 			</form>
+
+		</div>
+		<div class="col-md-12 beta-success" ng-show="betaSuccess">
+				Thank you for registering! Feel free to share your excitement on Twitter.
+				<div class="twitter-btn">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://baskettt.co/" data-text="Can't wait to get my baskettt invite." data-via="basketttco" data-size="large">Tweet</a>
+				</div>
 		</div>
 	</div>
 </div>
@@ -87,3 +94,4 @@
 		</a>
 	</div>
 </div>
+

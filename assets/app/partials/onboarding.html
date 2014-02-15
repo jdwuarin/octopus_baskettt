@@ -12,7 +12,8 @@
 
       <div class="onboard-cuisine" >
         <div class="onboard-box" ng-repeat="cuisine in cuisines">
-          <div class="onboard-image" ng-class="{'selected':selectedStatus}" click>
+          <div class="onboard-image"
+          ng-class="{'selected':selectedStatus}" click>
             <img ng-src="/static/img/{{cuisine.image}}" alt="">
             <p>{{cuisine.name}}</p>
           </div>

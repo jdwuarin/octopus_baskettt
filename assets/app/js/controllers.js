@@ -7,21 +7,18 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 .controller('HomeController',['$scope', '$sanitize', 'User','$analytics','$anchorScroll','$location',
 	function($scope, $sanitize, User, $analytics, $anchorScroll,$location){
 
-		$scope.email = [];
 		$scope.betaSuccess = false;
 
 		$scope.scrollTo = function(id) {
 			$location.hash(id);
 			$anchorScroll();
-		}
+		};
 
 		$scope.registerForBeta = function(){
 
-			var email = $scope.email;
-
 			if($scope.betaForm.$valid){
 
-				User.registerBeta(email, function(data){
+				User.registerBeta($scope.email, function(data){
 					// This callback is only called when return success
 					$analytics.eventTrack('RegisterToBeta',
 						{ category: 'Onboarding'});
@@ -29,6 +26,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				});
 			}
 		};
+
+		// Twitter share button
+		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
 	}])
 
@@ -57,29 +57,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.saveData = function() {
 
-		Preference.setParameters($scope.preference);
-		if(Preference.isNotValid(Preference.getAll())) {
+
+		if(Preference.isNotValid($scope.preference)) {
 			Alert.add("You didn't put the right informations.","danger");
 			goToTop();
 		} else {
+			Preference.setParameters($scope.preference);
 			$location.path("/basket");
 		}
-		// if (page_id === 1) { //cuisine
-
-		// 	if(Preference.getCuisine().length === 0) {
-		// 		Alert.add("You didn't select a cuisine style.","danger");
-		// 		goToTop();
-		// 	} else {
-		// 		$location.path("/onboarding/2");
-		// 	}
-
-		// } else if (page_id === 2) { //numbers page
-
-
-
-		// } else { // Edge case
-		// 	$location.path("/onboarding/1");
-		// }
 	};
 
 	}])
@@ -401,6 +386,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			});
 		}
 	};
+
+}])
+
+.controller('ProfileController', ['$scope', function($scope){
 
 }])
 

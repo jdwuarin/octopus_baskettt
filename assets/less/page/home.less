@@ -51,6 +51,10 @@
             height:70px;
             width: 159px;
             border-radius: 5px;
+
+            &:hover, &:visited{
+                border-color: #333333;
+            }
         }
 
         .btn-learn-more{
@@ -118,7 +122,7 @@
     background: @cream;
     min-height: 170px;
 
-    p{
+    p, .beta-success{
         font-family: Avenir-Roman;
         font-size: 19px;
         color: @dark-gray;
@@ -129,6 +133,16 @@
         .form-inline;
         line-height: 170px;
         float: right;
+    }
+
+    .twitter-btn{
+        line-height: 0px!important;
+        display: inline;
+    }
+
+    .twitter-share-button[style] {
+        vertical-align: text-bottom !important;
+        margin-left: 20px;
     }
 
     .beta-email{
@@ -142,6 +156,18 @@
         font-size: 16px;
         color: @dark-orange;
         line-height: 19px;
+
+        &:focus{
+            border-color: @dark-gray;
+            box-shadow: none!important;
+            -webkit-box-shadow: none!important;
+        }
+    }
+
+    .has-error{
+        .beta-email{
+            border-color: red!important;
+        }
     }
 
     .btn-register-beta{

@@ -19,27 +19,12 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('closesearch', ['$rootScope', function($rootScope){
-		return {
-			template: '<i class="glyphicon glyphicon-remove-circle"></i>',
-			restrict: 'E',
-			link: function(scope, element, attrs) {
-
-				element.bind("click", function() {
-					scope.clearSearch();
-					scope.$digest();
-				});
-
-			}
-		};
-	}])
-
 	// When you click on the DOM a the .selected class is injected
 	.directive('click', ['Preference',function(Preference) {
 		return function(scope, element, attrs) {
 
 			//Initialize the status
-			var selected_preference = Preference.getCuisine();
+			var selected_preference = Preference.getAll();
 
 			var selected = selected_preference.some(function(el){
 				return scope.cuisine.name === el;
@@ -48,7 +33,6 @@ angular.module('App.directives', [])
 			scope.selectedStatus = selected;
 
 			element.bind("click", function() {
-
 				scope.selectedStatus = !scope.selectedStatus;
 				Preference.setCuisine(scope);
 				scope.$apply();

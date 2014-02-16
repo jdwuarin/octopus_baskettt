@@ -1,10 +1,47 @@
 from haystack import indexes
-from octopus_groceries.models import Product, Tag, AbstractProduct, Recipe
+from octopus_groceries.models import *
+
+class DepartmentIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(model_attr='name', document=True,
+                             use_template=False)
+
+    def get_model(self):
+        return Department
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
+
+
+class AisleIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(model_attr='name', document=True,
+                             use_template=False)
+
+    def get_model(self):
+        return Aisle
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
+
+
+class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(model_attr='name', document=True,
+                             use_template=False)
+
+    def get_model(self):
+        return Category
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
 
 
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True,
                              use_template=False)
+    ingredients = indexes.CharField(model_attr='ingredients',
+                                    use_template=False)
 
     def get_model(self):
         return Product

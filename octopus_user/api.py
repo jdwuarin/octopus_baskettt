@@ -1,4 +1,7 @@
 import json
+import string
+import random
+from haystack.query import SearchQuerySet
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -7,15 +10,13 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from octopus_groceries.models import Supermarket
+from octopus_groceries.models import *
 from tastypie.authentication import SessionAuthentication
-from octopus_recommendation_engine.basket_onboarding_info import \
-    BasketOnboardingInfo
 from octopus_recommendation_engine.basket_recommendation_engine import \
     BasketRecommendationEngine
 from django.http import HttpResponse
 from user_objects_only_authorization import UserObjectsOnlyAuthorization
-from octopus_user.models import UserGeneratedBasket, UserInvited
+from octopus_user.models import UserGeneratedBasket, UserInvited, UserSettings
 
 
 class UserResource(ModelResource):
@@ -155,6 +156,13 @@ class UserResource(ModelResource):
     def basket(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
 
+        if request.user.is_authenticated():
+            return self.registered_basket(request, **kwargs)
+        else:
+            return self.anonymous_basket(request, **kwargs)
+
+    #get basket for someone who has noa ccount yet.
+    def anonymous_basket(self, request, **kwargs):
         data = self.deserialize(request, request.body,
                                 format=request.META.get('CONTENT_TYPE',
                                                         'application/json'))
@@ -162,51 +170,78 @@ class UserResource(ModelResource):
         key_error = False
         value_error = False
 
+        hash = ''.join(random.choice(
+            string.ascii_letters + string.digits) for x in range(60))
+
+        user_settings = None
         try:
-            dummy = int(data['budget'])
-            dummy = int(data['people'])
-            dummy = data['cuisine']
-            dummy = int(data['days'])
+            #this is a hot fix for the fact that
+            #the only tag for european type cuisines that exists is "European"
+            real_cuisines = []
+            for cuisine in data['cuisine']:
+                if cuisine == "Italian" or cuisine == "French" or (
+                    cuisine == "Spanish"):
+                    real_cuisines.append("European")
+                else:
+                    # make sure requested tag actually exists
+                    sqs = SearchQuerySet().filter(
+                        content=cuisine).models(Tag)
+                    if sqs:
+                        real_cuisines.append(cuisine)
+                    else:
+                        value_error = True
+                        break
+
+            banned_meats = []
+            for banned_meat in data['banned_meats']:
+                id = BannableMeats.objects.get(name=banned_meat).id
+                banned_meats.append(id)
+
+            banned_abstract_products = []
+            for entry in data['banned_abstract_products']:
+                sqs = SearchQuerySet().models(AbstractProduct)
+                id = sqs.filter(content=entry)[0].object.id
+                banned_abstract_products.append(id)
+
+            data['supermarket'] = Supermarket.objects.get(
+            name="tesco") #TODO remove tesco hardcode
+
+            if not value_error:
+                user_settings = UserSettings(
+                    people=int(data['people']),
+                    days=int(data['days']),
+                    price_sensitivity=float(data['price_sensitivity']),
+                    tags=real_cuisines,
+                    default_supermarket=
+                    data['supermarket'],
+                    pre_user_creation_hash=hash,
+                    diet=Diet.objects.all.get(name=data['diet']),
+                    banned_meats=banned_meats,
+                    banned_abstract_products=banned_abstract_products)
+                user_settings.save()
+
         except KeyError:
             key_error = True
         except ValueError:
             value_error = True
+        except IndexError:
+            value_error = True
 
         no_success_condition = value_error or (
-                               key_error) or (
-                               int(data['budget']) < 1) or (
-                               len(data['cuisine']) < 1) or (
-                               int(data['days']) < 1) or (
-                               int(data['people']) < 1)
+            key_error) or (
+            int(data['people']) < 1) or (
+            int(data['days']) < 1) or (
+            float(data['price_sensitivity']) < 0) or (
+            float(data['price_sensitivity']) > 1) or (
+            len(data['cuisine']) < 1)
 
         if no_success_condition:
             no_success = json.dumps({'success': False})
-            print "no_success"
             return HttpResponse(no_success,
                                 content_type="application/json")
 
-        #this is a hot fix for the fact that
-        #the only tag for european type cuisines that exists is "European"
-        real_cuisines = []
-        for cuisine in data['cuisine']:
-            if cuisine == "Italian" or cuisine == "French" or (
-                cuisine == "Spanish"):
-                real_cuisines.append("European")
-            else:
-                real_cuisines.append(cuisine)
-        data['cuisine'] = real_cuisines
-
-        data['supermarket'] = Supermarket.objects.get(
-            name="tesco") #remove tesco hardcode
-
-        onboarding_info = BasketOnboardingInfo(people=data['people'],
-                                               budget=data['budget'],
-                                               tags=data['cuisine'],
-                                               days=data['days'],
-                                               supermarket=data['supermarket'])
-
         basket = BasketRecommendationEngine.create_onboarding_basket(
-            onboarding_info)
+            user_settings)
 
         response = []
 
@@ -223,6 +258,13 @@ class UserResource(ModelResource):
             product_json['ingredient'] = value[1].name
             response.append(product_json)
 
+        user_settings_hash_json = {}
+        user_settings_hash_json['user_settings_hash'] = hash
+        response.append(user_settings_hash_json)
         data = json.dumps(response)
 
         return HttpResponse(data, content_type="application/json")
+
+    # get basket for someone who already has an account
+    def registered_basket(self, request, **kwargs):
+        pass

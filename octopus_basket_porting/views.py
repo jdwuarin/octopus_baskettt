@@ -18,31 +18,23 @@ def port_basket(request):
     user = request.user
 
     # first save the user settings if user is new
-    settings = data['settings']
-    tags = []
-    for tag in settings['cuisine']:
-        if tag == "Italian" or tag == "French" or (
-            tag == "Spanish"):
-            tags.append(Tag.objects.get(name="European").id)
-        else:
-            tags.append(Tag.objects.get(name=tag).id)
+    try:
+        # try seeing if user already has settings assigned to self
+        user_settings = UserSettings.objects.get(user=user)
 
-    if not settings == "False":
-        #some settings have changed
-        try:
-            user_settings = UserSettings.objects.get(user=user)
-            user_settings.people = settings['people']
-            user_settings.days = settings['days']
-            user_settings.budget = settings['budget']
-            user_settings.tags = tags
+        if not user_settings:
+            user_settings_hash = data['user_settings_hash']
+            # if there is no user_settings_hash, this is a problem
+            # deal with it in except block
+            user_settings = UserSettings.objects.get(
+                pre_user_creation_hash=user_settings_hash)
+            user_settings.user = user
+            user_settings.pre_user_creation_hash = None
             user_settings.save()
-        except UserSettings.DoesNotExist:
-            user_settings = UserSettings(user=user,
-                                         people=settings['people'],
-                                         days=settings['days'],
-                                         budget=settings['budget'],
-                                         tags=tags)
-            user_settings.save()
+
+    except KeyError:
+        return HttpResponse("Cannot find user settings",
+                                content_type="application/json")
 
     #then save the basket recommended to the user
     recommended_basket = data['recommendation']

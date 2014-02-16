@@ -61,6 +61,8 @@ python manage.py migrate 'octopus_groceries'
 python manage.py migrate 'octopus_user'
 python manage.py loaddata supermarket_fixture.json
 python manage.py loaddata invited_users_fixture.json
+python manage.py loaddata diet_fixture.json
+python manage.py loaddata bannable_meats_fixture.json
 cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com

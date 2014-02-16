@@ -1,41 +1,41 @@
 [
   {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 1,
     "fields": {
       "name": "tesco"
     }
   },
   {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 2,
     "fields": {
       "name": "sainsburys"
     }
   },
     {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 3,
     "fields": {
       "name": "waitrose"
     }
   },
     {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 4,
     "fields": {
       "name": "asda"
     }
   },
     {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 5,
     "fields": {
       "name": "ocado"
     }
   },
     {
-    "model": "octopus_groceries.supermarket",
+    "model": "octopus_groceries.Supermarket",
     "pk": 6,
     "fields": {
       "name": "aldi"

@@ -121,7 +121,6 @@ class Tag(models.Model):  # for recipes
 
 
 class Recipe(models.Model):
-    #max_length is defaulted to 100 for image.
 
     name = models.CharField(max_length=150, default='', editable=False)
     rating = models.DecimalField(max_digits=10, decimal_places=4,
@@ -147,8 +146,7 @@ class AbstractProduct(models.Model):
     is_food = models.NullBooleanField(editable=False)
     is_condiment = models.NullBooleanField(editable=False)
 
-    def __unicode__(
-            self):  # just adding this method to say what to display when asked in shell
+    def __unicode__(self):
         return str(self.name) + ", " + str(
             self.is_food) + ", " + str(
             self.is_condiment)
@@ -177,8 +175,21 @@ class AbstractProductSupermarketProduct(models.Model):
 
     objects = hstore.HStoreManager()
 
-    def __unicode__(
-            self):  # just adding this method to say what to display when asked in shell
+    def __unicode__(self):
         return str(self.abstract_product_id) + ", " + str(
             self.rank) + ", " + str(
             self.product)
+
+
+class BannableMeats(models.Model):
+    name = models.CharField(max_length=150, editable=False, primary_key=True)
+
+    def __unicode__(self):
+        return str(self.name)
+
+
+class Diet(models.Model):
+    name = models.CharField(max_length=150, editable=False, primary_key=True)
+
+    def __unicode__(self):
+        return str(self.name)

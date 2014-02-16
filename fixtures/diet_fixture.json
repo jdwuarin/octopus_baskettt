@@ -1,0 +1,23 @@
+[
+  {
+    "model": "octopus_groceries.Diet",
+    "pk": 1,
+    "fields": {
+      "name": "vegan"
+    }
+  },
+  {
+    "model": "octopus_groceries.Diet",
+    "pk": 2,
+    "fields": {
+      "name": "vegetarian"
+    }
+  },
+    {
+    "model": "octopus_groceries.Diet",
+    "pk": 3,
+    "fields": {
+      "name": "pescetarian"
+    }
+  }
+]

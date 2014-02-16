@@ -18,7 +18,7 @@ class BasketRecommendationEngine(object):
     #remove this bad looking hack
 
     banned_deps = Department.objects.filter(Q(name="Baby") |
-                                            Q(name="Health & Beaty") |
+                                            Q(name="Health & Beauty") |
                                             Q(name="Household") |
                                             Q(name="Pets"))
 

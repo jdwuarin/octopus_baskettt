@@ -1,3 +1,33 @@
+/* ==========================================================================
+   _layout.less:
+   Contains all the layout of the application
+   ========================================================================= */
+
+
+/* Dimensions
+   ========================================================================= */
+
+@header-height: 70px;
+@header-height-mobile: 50px;
+@basket-bar-height:70px;
+@footer-height: 175px;
+@height-search-item: 90px;
+@product-size: 150px;
+
+
+/* Images
+   ========================================================================= */
+
+@logo-ratio: 702/246; // width/height
+@mini-logo-ratio: 80/90;
+
+
+/* Other
+   ========================================================================= */
+
+@gray-border: 1px solid @normal-gray;
+
+
 @media (max-width: 768px) {
     .twitter{
         margin: 0 auto!important;
@@ -84,6 +114,7 @@ a.navbar-link{
 
     &:hover{
         background-color:transparent!important;
+        color:@hover-color!important;
     }
 }
 
@@ -92,8 +123,8 @@ a.navbar-link{
     font-size: 14px;
     padding-top: 10px!important;
     padding-bottom: 10px!important;
-    margin-top: 10px;
-    margin-right: 21px;
+    margin-top: 11px;
+    margin-right: 30px;
 }
 
 .selected {
@@ -194,3 +225,4 @@ footer{
         background: url('/static/img/bg.png')
     }
 }
+

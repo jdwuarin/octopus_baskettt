@@ -36,6 +36,7 @@
     "time-grunt": "latest",
     "karma-coverage": "latest",
     "grunt-reload": "latest",
-    "grunt-contrib-watch": "latest"
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-connect": "~0.6.0"
   }
 }

@@ -42,11 +42,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	{ "name": "French",  "image": "france.png"}];
 
 	$scope.preference = {};
-	$scope.cookingValue = 10;
-	$scope.diet = '';
-
+	$scope.diet = {};
+	$scope.meat = {};
 	// Persist data from local storage
 	$scope.preference = Preference.getAll();
+	$scope.cookingValue = $scope.preference.budget ? $scope.preference.budget : 20;
 
 	var goToTop = function(){
 		// set the location.hash to the id of
@@ -55,8 +55,32 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$anchorScroll();
 	};
 
-	$scope.saveData = function() {
+	// JQuery logic in the controller because I don't have access to the
+	// ui-slider directive - ugly but does the work
+	angular.element('.slider-bar').bind('mouseup', function(){
+		$scope.preference.budget = $scope.cookingValue;
+		Preference.setParameters($scope.preference);
+	});
 
+	// Watcher here instead of a directive
+	// Too much of a hasle to create a template
+	$scope.$watch('diet', function(newValue){
+		if(newValue !== "other"){ // Cancel selection
+			$scope.meat.porc = false;
+			$scope.meat.beef = false;
+			$scope.meat.poultry = false;
+			$scope.diet = newValue;
+		}
+	});
+
+	$scope.$watch('meat', function(newValue){
+		console.log($scope.diet);
+		if($scope.diet !== "other"){
+			$scope.diet = "other";
+		}
+	}, true);
+
+	$scope.generateBasket = function() {
 
 		if(Preference.isNotValid($scope.preference)) {
 			Alert.add("You didn't put the right informations.","danger");
@@ -67,7 +91,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		}
 	};
 
-	}])
+}])
 
 .controller('ProductListController',
 	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal',
@@ -75,6 +99,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
+
+		preferenceList = {"cuisine":["Thai","French"],"budget":50, "people":20, "days":2};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
@@ -390,7 +416,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 }])
 
 .controller('ProfileController', ['$scope', function($scope){
-
+	$scope.selectedMenu = "1";
 }])
 
 .controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {

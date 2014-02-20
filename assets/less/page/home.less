@@ -43,32 +43,19 @@
 
         .btn-learn-more, .btn-try-now{
             margin-top: 40px;
-            .btn;
-            font-family: @montserrat;
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            text-transform: uppercase;
             height:70px;
             width: 159px;
             border-radius: 5px;
-
-            &:hover, &:visited{
-                border-color: #333333;
-            }
         }
 
         .btn-learn-more{
+            .btn-trans-gray;
             margin-left: 20px;
-            color: @dark-gray;
-            background: transparent;
-            border: 3px solid @dark-gray;
         }
 
         .btn-try-now{
+            .btn-cream;
             margin-right: 20px;
-            color: @dark-orange;
-            border: 3px solid @dark-orange;
-            background: @cream;
         }
     }
 }
@@ -123,7 +110,7 @@
     min-height: 170px;
 
     p, .beta-success{
-        font-family: Avenir-Roman;
+        font-family: @nunito;
         font-size: 19px;
         color: @dark-gray;
         line-height: 170px;
@@ -146,22 +133,12 @@
     }
 
     .beta-email{
-        .form-control;
-        border-radius: 5px;
-        background: white;
-        border: 3px solid @dark-orange;
+        .text-input;
+        border-width: 3px;
         width:305px;
         height:51px;
-        font-family: @montserrat;
         font-size: 16px;
-        color: @dark-orange;
         line-height: 19px;
-
-        &:focus{
-            border-color: @dark-gray;
-            box-shadow: none!important;
-            -webkit-box-shadow: none!important;
-        }
     }
 
     .has-error{

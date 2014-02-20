@@ -1,26 +1,51 @@
+/* ==========================================================================
+   style.less:
+   Main stylesheet
+   ========================================================================= */
+
+
+/* Fonts
+   ========================================================================= */
+
 @import url(https://fonts.googleapis.com/css?family=Montserrat|Pacifico|Nunito:400,300|Arvo&subset=latin);
 
-// Variables and mixins
-@import "variables.less";
-@import "mixins.less";
+
+/* External libraries
+   ========================================================================= */
+
 @import "../bootstrap/less/bootstrap.less";
+@import "lib/jquery-ui-slider.less";
 
-// Lib
-@import "_animation.less";
 
-// Main styling sheet
-@import "buttons.less";
-@import "common.less";
+/* Base
+   ========================================================================= */
 
-// Per page specifics
+@import "base/_colors.less";
+@import "base/_mixins.less";
+@import "base/_typography.less";
+@import "base/_layout.less";
+
+
+/* Modules
+   ========================================================================= */
+@import "modules/_animation.less";
+@import "modules/_button.less";
+@import "modules/_form.less";
+@import "modules/_list.less";
+@import "modules/_modal.less";
+@import "modules/_spinner.less";
+
+
+/* Page
+   ========================================================================= */
+
 @import "page/product_list.less";
 @import "page/onboarding.less";
 @import "page/home.less";
 @import "page/signup.less";
 @import "page/profile.less";
 
+/* Mobile overrides
+   ========================================================================= */
 
 @import "mobile.less";
-// Other
-@import "_spinner.less";
-@import "/static/jquery-ui/themes/smoothness/jquery-ui.css";

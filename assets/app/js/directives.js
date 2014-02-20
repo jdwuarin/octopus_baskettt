@@ -2,12 +2,50 @@
 
 /* Directives */
 
-
 angular.module('App.directives', [])
 
+	.directive('scrollTo',[function(){
+		return function(scope, element, attrs){
+			element.bind("click", function(event){
+				var $selector = $(attrs.scrollTo);
+				if($selector.length){
+					$("html, body").animate({
+						// 65 because it looks about right
+						scrollTop : $selector[0].offsetTop - 65
+					}, 1000);
+				}
+			});
+		};
+	}])
+
+	// .directive('radioButton', [function(){
+	// 	return {
+	// 		restrict: 'E',
+	// 		scope:{
+	// 			title: '@rbTitle',
+	// 			idString: '@rbId',
+	// 			checklist: '&rbChecklist',
+	// 			modelName: '@rbModel'
+	// 		},
+	// 		template: 	'<input type="radio" id="{{idString}}"'+
+	// 					' ng-model="diet" value="{{title}}">'+
+	// 					'<label for="{{idString}}">{{title}}</label> <br>'+
+	// 					'<div ng-repeat="checkbox in checklist()"> '+
+	// 					'<input type="checkbox" id="{{checkbox}}">'+
+	// 					'<label for="{{checkbox}}">{{checkbox}}</label><br>'+
+	// 					'</div>',
+	// 		link: function(scope, element, attrs) {
+	// 			// // scope.boolChecklist = typeof scope.checklist() !== "undefined";
+	// 			// if(scope.checklist()){
+	// 			// 	console.log(scope.checklist());
+	// 			// }
+	// 		}
+	// 	};
+	// }])
+
 	.directive('ngEsc', [function(){
-		return function (scope, element, attrs) {
-			element.bind("keydown keypress", function (event) {
+		return function(scope, element, attrs) {
+			element.bind("keydown keypress", function(event) {
 				if(event.which === 27) {
 					scope.$apply(function (){
 						scope.$eval(attrs.ngEsc);
@@ -24,9 +62,9 @@ angular.module('App.directives', [])
 		return function(scope, element, attrs) {
 
 			//Initialize the status
-			var selected_preference = Preference.getAll();
+			var preferences = Preference.getAll().cuisine;
 
-			var selected = selected_preference.some(function(el){
+			var selected = preferences.some(function(el){
 				return scope.cuisine.name === el;
 			});
 

@@ -27,7 +27,7 @@
       <div class="slider">
         <div class="label-left">Minimal</div>
         <div class="label-right">Gourmet</div>
-        <div ui-slider min="0" max="100" ng-model="cookingValue"></div>
+        <div ui-slider min="0" max="100" ng-model="cookingValue" class="slider-bar"></div>
       </div>
 
       <div class="onboard-instruction">
@@ -36,17 +36,23 @@
       </div>
 
       <div class="onboard-diet">
+
+    <!--     <radio-button rb-title="Vegan" rb-id="vegan" rb-model="diet"></radio-button>
+        <radio-button rb-title="Vegetarian" rb-id="vegetarian" rb-model="diet"></radio-button>
+        <radio-button rb-title="Prescetarian" rb-id="prescetarian" rb-model="diet"></radio-button>
+        <radio-button rb-title="Other" rb-id="other" rb-checklist="checklist" rb-model="diet"></radio-button> -->
+
         <input type="radio" ng-model="diet" value="vegan" id="vegan">
         <label for="vegan">Vegan</label> <br>
         <input type="radio" ng-model="diet" value="vegetarian" id="vegetarian"><label for="vegetarian">Vegetarian</label> <br>
         <input type="radio" ng-model="diet" value="prescetarian" id="prescetarian">
         <label for="prescetarian">Pescetarian</label> <br>
         <input type="radio" ng-model="diet" value="other" id="other"><label for="other">I don't eat any:</label> <br>
-        <input type="checkbox" ng-model="porc" id="mpor">
+        <input type="checkbox" ng-model="meat.porc" id="mpor">
         <label for="mpor">Porc</label>  <br>
-        <input type="checkbox" ng-model="beef" id="mb">
+        <input type="checkbox" ng-model="meat.beef" id="mb">
         <label for="mb">Beef</label>  <br>
-        <input type="checkbox" ng-model="poultry" id="mpou"><label for="mpou">Poultry</label>  <br>
+        <input type="checkbox" ng-model="meat.poultry" id="mpou"><label for="mpou">Poultry</label>  <br>
       </div>
 
   <!--     <div class="first">My meal plan</div>

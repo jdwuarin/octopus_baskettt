@@ -44,8 +44,8 @@ angular.module('App.services', ['LocalStorageModule'])
 						if(searchItems[i].id === basketItems[j].id ){
 							searchItems[i]["quantity"] = basketItems[j].quantity;
 						}
-					};
-				};
+					}
+				}
 
 				return searchItems;
 			}
@@ -126,6 +126,30 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 
 		return {
+			setCuisine: function(scope) {
+
+				var isPresent = false;
+
+				preferenceList = this.getAll();
+
+				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
+						//if it's already in the list
+						if (preferenceList.cuisine[i] === scope.cuisine.name) {
+							isPresent = true;
+
+							if(!scope.selectedStatus){
+								preferenceList.cuisine.splice(i,1);
+							}
+						}
+				}
+
+				if (!isPresent && scope.selectedStatus) {
+					preferenceList.cuisine.push(scope.cuisine.name);
+				}
+
+				var cuisine_str = JSON.stringify(preferenceList);
+				localStorage.add('preferences', cuisine_str);
+			},
 			setParameters: function(preferences) {
 
 				preferenceList.cuisine = preferences.cuisine;

@@ -6,7 +6,7 @@ import re
 # from scrapy.contrib.spiders import CrawlSpider, Rule
 # from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 
-from octopus_groceries.models import AbstractProduct
+from octopus_groceries.models import AbstractProduct, Product
 
 from webScraper.items import ProductItem
 from webScraper.spiders.tesco_spider import TescoSpider
@@ -61,10 +61,7 @@ class AbstractProductProductMatchingSpider(BaseSpider):
             item = ProductItem()
 
             item['name'] = names[i]
-            item['price'] = prices[i].replace(u'\xA3', 'GBP')
 
-            item['quantity'], item['unit'] = self.get_quantity_and_unit(prices[i].replace(u'\xA3', ''),
-                                                                        prices_per_unit[i].replace(u'\xA3', ''))
             item['link'] = links[i]
             item['external_image_link'] = external_image_links[i]
             item['external_id'] = external_ids[i]
@@ -72,38 +69,18 @@ class AbstractProductProductMatchingSpider(BaseSpider):
             item['matching_abstract_product'] = response.meta['abstract_product']
             item['rank'] = rank
 
-            items.append(item)
-            rank += 1
+            # make sure product is actually in the database
+            try:
+                product = Product.objects.get(external_id=item['external_id'],
+                                              supermarket=item['supermarket'])
+                # then only append to items and increment rank if found
+                items.append(item)
+                rank += 1
+            except:
+                pass
+
 
         return items
-
-    @staticmethod
-    def get_quantity_and_unit(price, price_unit):
-        price_unit = re.sub("[^a-zA-Z0-9/.]", "", price_unit)
-
-        price_per_unit, unit = price_unit.split("/")
-        multiplier = re.sub("[^0-9.]", "", unit)
-        real_unit = re.sub("[^a-zA-Z.]", "", unit)
-
-        try: 
-            float(multiplier)
-        except ValueError: 
-            multiplier = 1.0
-
-        if real_unit == "cl":
-            real_unit = "ml"
-            multiplier *= 10.0
-        if real_unit == "l" or real_unit == "kg":
-            multiplier *= 1000.0
-            if real_unit == "l": 
-                real_unit = "ml"
-            else: 
-                real_unit = "g"
-
-        quantity = (float(price) / float(price_per_unit)) * (
-            float(multiplier))
-
-        return str(quantity), real_unit 
 
     @staticmethod
     def get_good_names(names):

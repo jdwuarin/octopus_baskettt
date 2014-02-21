@@ -169,7 +169,6 @@ class AbstractProductProductMatchingPipeline(object):
 
             apsp.product_dict[str(item['rank'])] = matching_product
 
-            apsp.rank = item['rank']
             apsp.save()
 
         return item

@@ -40,12 +40,12 @@ class BasketRecommendationEngine(object):
 
         product_list = []
         if len(potential_recipe_list) > 0:
-            product_list = cls.get_product_list(potential_recipe_list,
+            product_list = cls.get_product_matrix(potential_recipe_list,
                                                 user_settings)
         return product_list
 
     @classmethod
-    def get_product_list(cls, potential_recipes, user_settings):
+    def get_product_matrix(cls, potential_recipes, user_settings):
         recipe_type_passed = 0
         meals_per_day = 1  # should probably be in user_settings somehow
         product_matrix = []
@@ -103,7 +103,7 @@ class BasketRecommendationEngine(object):
             abstract_products_each, user_settings, "each")
 
         # the lists are then merged.
-        product_matric = cls.merge_matrix(product_matrix)
+        product_matrix = cls.merge_matrix(product_matrix)
 
         return product_matrix
 
@@ -132,13 +132,16 @@ class BasketRecommendationEngine(object):
             num_to_remove = ceil(num_to_remove)
 
             num_removed = 0
+            aptd = []  # abstract_products to delete
             for abstract_product in abstract_products:
                 if abstract_product.is_condiment:
-                    del abstract_products[abstract_product]
+                    aptd.append(abstract_product)
                     num_removed += 1
-
                 if num_removed >= num_to_remove:
                     break
+
+            for abstract_product in aptd:
+                del abstract_products[abstract_product]
 
     # TODO, implement these two filters
     @classmethod
@@ -159,49 +162,45 @@ class BasketRecommendationEngine(object):
 
         # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
         product_matrix = []
-        total_cost = 0.0
-        for abstract_product, quantity in abstract_products:
+        for abstract_product, quantity in abstract_products.iteritems():
 
             # get list of products attached to abstract_product:
             apsp = AbstractProductSupermarketProduct.objects.get(
                 abstract_product=abstract_product,
                 supermarket=user_settings.default_supermarket)
 
-            my_prod_index = cls.get_selected_product_index(
+            my_prod_rank = cls.get_selected_product_rank(
                 apsp, user_settings.price_sensitivity)
 
-            if my_prod_index is None:
+            if my_prod_rank is None:
                 continue  # deal with non existing objects
 
             product_list = []
-            selected_product = apsp.product_dict[str(my_prod_index)]
+            selected_product = apsp.product_dict[str(my_prod_rank)]
             quantity_to_buy = cls.get_quantity_for_product(
                                  selected_product,
                                  user_settings,
                                  abstract_product_unit,
                                  quantity)
-            product_cost = quantity_to_buy * float(
-            selected_product.price.replace("GBP", ""))
-            total_cost += product_cost
             product_list.append([selected_product,
                                  quantity_to_buy])
 
             # populate with other similar products that can be selected
-            for ii in len(apsp.product_dict):
-                if ii != my_prod_index:
+            for ii in range(1, len(apsp.product_dict)+1):
+                if ii != my_prod_rank:
                     product_list.append(
                         apsp.product_dict[str(ii)])
 
             if product_list:
                 product_matrix.append(product_list)
 
-        return product_matrix, total_cost
+        return product_matrix
 
     # selects the most appropriate product in a list based
     # solely on price_sensitivity of the user
     # complexity: O(n) in min(num_products and selected_within_rank)
     @classmethod
-    def get_selected_product_index(cls, apsp, price_sensitivity):
+    def get_selected_product_rank(cls, apsp, price_sensitivity):
 
         select_within_rank = 5
         num_prod = len(apsp.product_dict)
@@ -212,8 +211,9 @@ class BasketRecommendationEngine(object):
         loop_size = int(min(num_prod, select_within_rank))
 
         considered_products = []
-        for ii in range(loop_size):
-            considered_products.append(apsp.product_dict[str(ii)], ii)
+        # starting at 1 because ranks start at 1 and not 0
+        for ii in range(1, loop_size):
+            considered_products.append([apsp.product_dict[str(ii)], ii])
 
         # just sort with respect to price/quantity
         considered_products = sorted(considered_products,
@@ -222,10 +222,11 @@ class BasketRecommendationEngine(object):
                 product[0].quantity))
 
         # we floor the value because as always, indexes start at 0
-        selected_index = considered_products[
-            floor(price_sensitivity * loop_size)][1]
+        # the floor is done via the int() function
+        selected_rank = considered_products[
+            int(price_sensitivity * loop_size)][1]
 
-        return selected_index
+        return selected_rank
 
     # determines what quantity should be purchased of a certain
     # product based on the basket requirements and the user
@@ -266,3 +267,5 @@ class BasketRecommendationEngine(object):
                 output_product_matrix[-1][0][1] += product_matrix[ii][0][1]
             else:
                 output_product_matrix.append(product_matrix[ii])
+
+        return output_product_matrix

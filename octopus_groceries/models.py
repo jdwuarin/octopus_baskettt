@@ -178,8 +178,6 @@ class AbstractProductSupermarketProduct(models.Model):
 
     def __unicode__(self):
         return str(self.abstract_product.name) + ", " + str(
-            self.rank) + ", " + str(
-            self.product) + ", " + str(
             self.supermarket)
 
 

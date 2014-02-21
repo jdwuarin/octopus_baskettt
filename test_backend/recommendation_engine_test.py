@@ -61,27 +61,24 @@ def create_basket_test():
 
     user_settings = UserSettings(
                     people=2,
-                    days=2,
+                    days=7,
                     price_sensitivity=0.23,
                     tags=["European", "Chinese", "Indian"],
                     default_supermarket=Supermarket.objects.get(name="tesco"),
                     pre_user_creation_hash="dummy",
-                    diet=Diet.objects.all.get(name="vegan"),
+                    diet=Diet.objects.get(name="Vegan"),
                     banned_meats=[1, 3],
                     banned_abstract_products=[])
 
     basket = BasketRecommendationEngine.create_onboarding_basket(user_settings)
 
-    # The structure of the recommendation engine response is a dictionnary
-    # basket[selected_product] = [quantity_to_buy, abstract_product]
-    ii = 0
-    product_list = []
-    for product, quantity_abs in basket.iteritems():
-        print ii, product, quantity_abs
-        product_list.append((product, str(int(quantity_abs[0]))))
-        ii += 1
+    # The structure of the recommendation engine response is a list like:
+    # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
+    for row in basket:
+        for product in row:
+            print product
 
-    basket_porting_test("some_request", product_list)
+    # basket_porting_test("some_request", product_list)
 
 def check_basket_persistence(product_list_before, product_list_after):
     #if any item that should be in the product_list_before isn't for some reason,

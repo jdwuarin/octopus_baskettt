@@ -5,7 +5,7 @@ from django_hstore import hstore
 
 
 class UserSettings(models.Model):
-    user = models.OneToOneField(User, primary_key=True, blank=True, null=True)
+    user = models.OneToOneField(User, blank=True, null=True)
     people = models.IntegerField(default=0)
     days = models.IntegerField(default=0)
     # value from 0 to 1. 0 completely insensitive, 1 extremely sensitive
@@ -20,7 +20,7 @@ class UserSettings(models.Model):
     diet = models.ForeignKey(Diet, blank=True, null=True)
     banned_meats = models.CommaSeparatedIntegerField(
         max_length=5000, default=[])  # id list of BannableMeats
-    banned_abstract_produts = models.CommaSeparatedIntegerField(
+    banned_abstract_products = models.CommaSeparatedIntegerField(
         max_length=5000, default=[])  # id list of AbstractProducts
 
     def __unicode__(self):

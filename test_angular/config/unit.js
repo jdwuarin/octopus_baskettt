@@ -9,7 +9,7 @@ module.exports = function(config) {
 	files : [
 	'bower_components/angular/angular.js',
 	'bower_components/angular-local-storage/angular-local-storage.js',
-	'bower_components/jquery/jquery.js',
+	'bower_components/jQuery/dist/jquery.js',
 	'bower_components/angular/angular.js',
 	'bower_components/angular-cookies/angular-cookies.js',
 	'bower_components/angular-local-storage/angular-local-storage.js',
@@ -25,7 +25,15 @@ module.exports = function(config) {
 	'bower_components/angulartics/dist/angulartics.min.js',
 	'bower_components/angulartics/dist/angulartics-ga.min.js',
 	'test_angular/unit/**/*.spec.js',
-	'assets/app/js/*.js'
+	'test_angular/unit/**/*.spec.js',
+	'bower_components/fastclick/lib/fastclick.js',
+	'assets/lib/autocomplete.js',
+	'assets/app/js/*.js',
+	'bower_components/jquery-ui/ui/jquery.ui.core.js',
+	'bower_components/jquery-ui/ui/jquery.ui.widget.js',
+	'bower_components/jquery-ui/ui/jquery.ui.mouse.js',
+	'bower_components/jquery-ui/ui/jquery.ui.slider.js',
+	'bower_components/angular-ui-slider/src/slider.js'
 	],
 
 	// use dots reporter, as travis terminal does not support escaping sequences

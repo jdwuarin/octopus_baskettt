@@ -4,64 +4,94 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll) {
+.controller('HomeController',['$scope', '$sanitize', 'User','$analytics','$anchorScroll','$location',
+	function($scope, $sanitize, User, $analytics, $anchorScroll,$location){
 
-	$scope.cuisines = [{ "name": "Italian", "image": "italian.png"},
-	{ "name": "Chinese", "image": "chinese.png"},
-	{ "name": "Indian", "image": "indian.png"},
-	{ "name": "Spanish", "image": "spanish.png"},
-	{ "name": "Thai",  "image": "thai.png"},
-	{ "name": "French",  "image": "french.png"}];
+		$scope.betaSuccess = false;
 
-	$scope.preference = {};
-
-	var page_id = parseInt($routeParams.id,10);
-
-	$scope.page = page_id;
-
-		// Persist data from local storage
-		$scope.preference = Preference.getAll();
-
-		var goToTop = function(){
-			// set the location.hash to the id of
-			// the element you wish to scroll to.
-			$location.hash('wrap');
-
+		$scope.scrollTo = function(id) {
+			$location.hash(id);
 			$anchorScroll();
 		};
 
-		$scope.saveData = function() {
+		$scope.registerForBeta = function(){
 
-			Preference.setParameters($scope.preference);
+			if($scope.betaForm.$valid){
 
-			if (page_id === 1) { //cuisine
-
-				if(Preference.getCuisine().length === 0) {
-					Alert.add("You didn't select a cuisine style.","danger");
-					goToTop();
-				} else {
-					$location.path("/onboarding/2");
-				}
-
-			} else if (page_id === 2) { //numbers page
-
-				if(Preference.isNotValid(Preference.getAll())) {
-					Alert.add("You didn't put the right informations.","danger");
-					goToTop();
-				} else {
-					$location.path("/basket");
-				}
-
-			} else { // Edge case
-				$location.path("/onboarding/1");
+				User.registerBeta($scope.email, function(data){
+					// This callback is only called when return success
+					$analytics.eventTrack('RegisterToBeta',
+						{ category: 'Onboarding'});
+					$scope.betaSuccess = true;
+				});
 			}
 		};
 
-		$scope.isActive = function(id) {
-			return id === page_id;
-		};
+		// Twitter share button
+		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
 	}])
+
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window) {
+
+	$scope.cuisines = [{ "name": "Italian", "image": "italy.png"},
+	{ "name": "Chinese", "image": "china.png"},
+	{ "name": "Indian", "image": "india.png"},
+	{ "name": "Spanish", "image": "spain.png"},
+	{ "name": "Thai",  "image": "thai.png"},
+	{ "name": "French",  "image": "france.png"}];
+
+	$scope.preference = {};
+	$scope.diet = {};
+	$scope.meat = {};
+	// Persist data from local storage
+	$scope.preference = Preference.getAll();
+	$scope.cookingValue = $scope.preference.budget ? $scope.preference.budget : 20;
+
+	var goToTop = function(){
+		// set the location.hash to the id of
+		// the element you wish to scroll to.
+		$location.hash('wrap');
+		$anchorScroll();
+	};
+
+	// JQuery logic in the controller because I don't have access to the
+	// ui-slider directive - ugly but does the work
+	angular.element('.slider-bar').bind('mouseup', function(){
+		$scope.preference.budget = $scope.cookingValue;
+		Preference.setParameters($scope.preference);
+	});
+
+	// Watcher here instead of a directive
+	// Too much of a hasle to create a template
+	$scope.$watch('diet', function(newValue){
+		if(newValue !== "other"){ // Cancel selection
+			$scope.meat.porc = false;
+			$scope.meat.beef = false;
+			$scope.meat.poultry = false;
+			$scope.diet = newValue;
+		}
+	});
+
+	$scope.$watch('meat', function(newValue){
+		console.log($scope.diet);
+		if($scope.diet !== "other"){
+			$scope.diet = "other";
+		}
+	}, true);
+
+	$scope.generateBasket = function() {
+
+		if(Preference.isNotValid($scope.preference)) {
+			Alert.add("You didn't put the right informations.","danger");
+			goToTop();
+		} else {
+			Preference.setParameters($scope.preference);
+			$location.path("/basket");
+		}
+	};
+
+}])
 
 .controller('ProductListController',
 	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal',
@@ -69,6 +99,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
+
+		preferenceList = {"cuisine":["Thai","French"],"budget":50, "people":20, "days":2};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
@@ -80,6 +112,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.$apply();
 		});
 
+		$rootScope.$on('searchEnter', function(event, query){
+			$scope.searchProducts(query);
+		});
+
 		$scope.closeForm = function() {
 			$scope.toggleForm(false);
 		};
@@ -88,9 +124,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$scope.toggleTescoForm(false);
 		};
 
-		$scope.clearSearch = function(){
+		$scope.clearResult = function(){
 			$scope.search_result = {};
-			$scope.queryTerm ="";
 		};
 
 		// First action on the page -> load the recommended basket
@@ -114,12 +149,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		}
 
 		// GET search
-		$scope.searchProducts = function(){
-			console.log("test");
-			if($scope.queryTerm) {
-				Product.search($scope.queryTerm,
+		$scope.searchProducts = function(query){
+
+			if(query) {
+				Product.search(query,
 					function(res){ // success
-						$scope.search_result = res;
+						$scope.search_result = Product.getQuantity(res, $scope.products);
 						$window.onclick = function (event) {
 							closeSearchWhenClickingElsewhere(event);
 						};
@@ -132,13 +167,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
+		$scope.results = [];
+
 		$scope.autoComplete = function(query) {
 
 			if(query === undefined){
 				return [];
 			}
 
-			return Product.autocomplete(query, function(res){
+			Product.autocomplete(query, function(res){
 
 				var products = [];
 
@@ -146,14 +183,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					products.push(item.name);
 				});
 
-				return products;
+				$scope.results = products;
 			});
 		};
 
 		// Forces user to loggin if he wants to transfer his basket
 		$scope.transferBasket = function(){
 			// When you open a form it will close the search
-			$scope.clearSearch();
+			$scope.clearResult();
 
 			var modalInstance = $modal.open({
 				templateUrl: 'static/app/partials/_modal.html',
@@ -237,7 +274,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	}
 
 	if(!clickedOnTheSearchPanel){
-		$scope.clearSearch();
+		$scope.clearResult();
 		$scope.$digest();
 	}
 };
@@ -250,6 +287,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.tescoCredential = {};
 		$scope.user = {};
+		$scope.unsuccessfulItems = [];
 
 		$scope.signup = true; // shows sign up at first
 		$scope.sendTescoForm = true;
@@ -306,7 +344,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			Tesco.post(tescoCredential.email, tescoCredential.password, products, oldRecommendation, preference, function(res) {
 				$scope.loading = false;
 
-				var unsuccessfulItems = Tesco.getUnsuccesful(res);
+				var unsuccessfulItems = Tesco.getUnsuccessful(res);
 
 				if(unsuccessfulItems.length === 0){
 					$analytics.eventTrack('SuccessfullyTransfered',
@@ -316,6 +354,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					$analytics.eventTrack('UnsuccessfullyTransfered',
 						{  category: 'BasketPorting'});
 					$scope.unsuccessfulTransfer = true;
+					$scope.unsuccessfulItems = unsuccessfulItems;
 				}
 
 			});
@@ -333,10 +372,15 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			User.signup(user.email, user.password, function(data){
 				// This callback is only called when return success
-				User.redirect("/");
+				// User.redirect("/");
+				if(data.reason == "not_invited"){
+					Alert.add("You haven't been invited to the beta. You'll get an invite in your inbox in the next few weeks.", "info");
+				} else if(data.reason == "already_exist"){
+					Alert.add("You already have an account associated with this email address.", "info");
+				}
 			},function(res, status){
 				if(status == 401){
-					Alert.add("You didn't get invited to the beta. You can ping us on <a href='https://twitter.com/basketttco'>Twitter</a>", "info");
+					Alert.add("You haven't been authorized to use the beta. Stay tuned!", "info");
 				}
 			});
 		}
@@ -358,14 +402,21 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		if($scope.loginForm.$valid){
 			user = sanitizeCredentials(user);
 
-			User.login(user.email, user.password, function(data){
+			User.login(user.email, user.password,
+				function(data){
 				User.setLoggedIn(true);
 				Alert.add("Successfully logged in.", "success");
 				User.redirect("/");
+			},function(res, status){
+				Alert.add("Wrong credentials.", "danger");
 			});
 		}
 	};
 
+}])
+
+.controller('ProfileController', ['$scope', function($scope){
+	$scope.selectedMenu = "1";
 }])
 
 .controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {

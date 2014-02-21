@@ -1,46 +1,42 @@
-
 <div class="loading-basket" ng-show="loading">
 	<div class="spinner"></div>
 	<p>Building your basket.</p>
 </div>
 
-<div class="row">
+<div class="row hidden-xs hidden-sm">
 	<div class="col-md-12 basket-bar">
 		<div class="row">
-			<div class="col-md-3 basket">
-				<div ng-mouseover="showBasketDetails()">
-					My basket <b>(&pound;{{basketTotal()}})</b>
-					<basket></basket>
-				</div>
-			</div>
-			<div class="col-md-6 search-bar">
-				<form ng-submit="searchProducts()">
-					<div class="search-bar-container ">
-						<closesearch></closesearch>
-						<input ng-model="queryTerm" type="text" class="form-control" placeholder="Search for products" ng-esc="clearSearch()">
-					</div>
-					<button class="btn-gray" type="submit">Search</button>
-				</form>
+			<div class="container">
 
-			</div>
-			<div class="col-md-3 transfer">
-				<button class="btn-transfer" ng-click="transferBasket()">Transfer my basket</button>
-				<button class="btn-gray" ng-click="resetSelection()" style="display:none;">Reset</button>
+				<div class="col-md-3 basket">
+					Total: <b>&pound;{{basketTotal()}}</b>
+				</div>
+
+				<div class="col-md-6 search-bar">
+					<div class="search-bar-container">
+						<autocomplete data="results" on-type="autoComplete" clear="clearResult"></autocomplete>
+					</div>
+				</div>
+
+				<div class="col-md-3 transfer">
+					<button class="btn-transfer" ng-click="transferBasket()">
+						Checkout
+					</button>
+				</div>
+
 			</div>
 		</div>
-
 	</div>
-
 </div>
 
-<!-- <div class="row" ng-hide="loading"> -->
 <div class="row">
 	<div class="product-list-container">
 		<div class="product-search-result col-md-6 col-md-offset-3">
+			<li class="search-item no-result"><i class="glyphicon glyphicon-exclamation-sign"></i>  <br> We couldn't find what you were looking for. </li>
 			<li ng-repeat="product in search_result" class="search-item">
 				<div class="row">
-					<div class="col-md-3">
-						<img ng-src="{{product.img}}" alt="">
+					<div class="col-md-2">
+						<img ng-src="{{product.img}}"  alt="">
 					</div>
 					<div class="col-md-7">
 						<ul>
@@ -48,45 +44,46 @@
 							<li> &pound;{{ product.price | price}}</li>
 						</ul>
 					</div>
-					<div class="col-md-2">
-						<button class="btn-orange" ng-click="addProduct(product)">Add</button>
+					<div class="col-md-3">
+						<button ng-show="product.quantity == 0" class="btn-orange" ng-click="addProduct(product)">Add</button>
+
+						<div ng-hide="product.quantity == 0" class="quantity input-group">
+							<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+							<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+							<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+						</div>
 					</div>
 				</div>
 			</li>
 		</div>
-		<div class="row" ng-show="unsuccessfulTransfer">
-			<div class="col-md-offset-4 col-md-4 unsuccessful-list">
-				<div class="title">
-					We couldn't transfer the following items
-				</div>
-				<div ng-repeat="product in tesco_response" class="unsuccessful-item">
-					{{product.name}}
-				</div>
-			</div>
-		</div>
+
 		<div class="row">
 			<div class="col-md-12">
-				<div ng-repeat="product in products" class="product-container">
+				<!-- <div class="category">Fresh food</div> -->
+				<div ng-repeat="product in products" class="product-container fade-item">
 					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
 						<div class="product-img">
 							<div class="product-remove">
 								<i remove></i>
 							</div>
-							<img ng-src="{{product.img | imglarge}}" alt="">
+							<img ng-src="{{product.img | imglarge}}" alt="" class="animated:hover bounce">
 						</div>
 
 						<div class="product-desc">
-							<p>{{product.name}}</p>
-
+							<div class="product-name">
+								<p>{{product.name}}</p>
+							</div>
 							<div class="product-price">
 								&pound;{{getTotal(product.price, product.quantity)}}
 							</div>
-
-							<div class="quantity input-group">
-								<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
-								<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
-								<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+							<div class="quantity">
+								<div class="input-group">
+									<span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+									<input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+									<span class="input-group-addon" ng-click="addProduct(product)">+</span>
+								</div>
 							</div>
+
 						</div>
 					</div>
 				</div>

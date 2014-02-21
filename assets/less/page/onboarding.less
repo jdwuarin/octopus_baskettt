@@ -1,88 +1,72 @@
 // Onboarding
 //------------------------------------
 .onboard-container{
-    text-align: center;
-}
 
-.onboard-progress-bar{
-    text-align: center;
-    padding-left: 0!important;
-
-    li.progress-box{
-        list-style-type: none;
-        display: inline-block;
-        width: 40px;
-        height:40px;
-        border-radius: 2px;
-        font-family: Futura;
-        font-size: 20px;
-        color: black;
-        text-shadow: 0px 1px 1px rgba(0,0,0,0.26);
-        line-height: 1.8;
-        margin: 74px 10px 20px 10px;
-        background: #F6F6F6;
-        border: 1px solid #C9C9C9;
-        color: #888888;
+    .btn-container{
+        width: 100%;
+        text-align: center;
     }
 
-    .active{
-        background: #F6CD5A!important;
-        border: 1px solid #CEA75F!important;
-        color: white!important;
-    }
-
-    .onboard-next, .onboard-previous{
-        list-style-type: none;
-        display: inline-block;
+    .btn-onboarding{
+        .btn-trans-orange;
+        .btn-lg;
+        width: 530px;
+        height: 81px;
+        margin: 80px auto;
     }
 
 }
 
 .onboard-title{
-    font-size: 24px;
-    color: #4A494A;
+    font-family: @montserrat;
+    font-size: 48px;
+    color: black;
+    padding-top: 80px;
     text-align: center;
-    display: inline-block;
-    line-height: 2.5;
-    .center;
+}
 
-    .first{
-        font-family: 'Pacifico';
-        font-size: 53px;
-        color:#636363;
-        padding-bottom: 30px;
+.onboard-instruction{
+
+    padding-top: 80px;
+    header{
+        padding-left: 85px;
     }
 
-    input.onboard-people{
-        display: inline-block;
-        width: 50px!important;
-        font-size: 20px;
+    font-family: Helvetica;
+    font-size: 24px;
+    line-height: 51px;
+    color: @dark-gray;
+    text-align: left;
+
+    .number{
+        height: 51px;
+        width: 51px;
+        border: 3px solid @dark-gray;
+        float: left;
+        border-radius: 50% 50%;
+        font-family: @montserrat;
+        text-align: center;
     }
 
-    input.onboard-money{
-        display: inline-block;
-        width: 80px!important;
-        font-size: 20px;
-
-    }
 
 }
 
 .onboard-box{
-    float: left;
-    width: 200px;
-    margin: 0 20px;
+    display: inline-block;
+    width: 300px;
+    margin: 10px 20px;
+    background: #fafafa;
+    border: 3px solid #D4D4D4;
 
     p{
         text-align: center;
-        padding: 11px 0px;
+        margin-bottom: 0px !important;
+        padding: 25px 0px;
         font-size: 16px;
         color: #686868;
-        width: 200px;
+        font-family: @montserrat;
+        text-transform: uppercase;
         .center;
-        border: @gray-border;
-        border-top: 0;
-        background: @light-gray;
     }
 
 }
@@ -92,9 +76,8 @@
     cursor: pointer;
     img{
         height: auto;
-        width: 200px;
-        border: @gray-border;
-
+        width: 268px;
+        padding-top: 12px;
         .center;
     }
 
@@ -105,49 +88,28 @@
 
 .onboard-cuisine{
     .center;
-    max-width: 800px;
+    padding-top: 50px;
 }
 
-.next-container{
-    text-align: center;
-    margin-bottom: 20px;
-}
 
-.choice-box{
-    margin-top: 80px;
-    max-width: 400px;
-    padding:30px;
-    .center;
-    border: @gray-border;
-    border-top-width: 3px;
+.onboard-diet{
+    padding-top: 20px;
+    padding-left: 85px;
 
-    .logo{
-        // background: url("/static/img/logotest.png") no-repeat;
-        // width: 200px;
-        // height: 80px;
-        // background-size: 200px 80px;
-        font-family: 'Pacifico';
-        font-size: 35px;
-        text-align: center;
-        border-bottom: 0;
-        .center;
-        margin-bottom: 20px;
+    font-family: Helvetica;
+    font-size: 18px;
+    color: #4A4A4A;
+
+    input{
+        margin-right: 10px;
+        float: left;
     }
 
-    ul{
-        padding-left: 0!important;
+    label{
+        vertical-align: baseline;
     }
 
-    li{
-        text-align: right;
-        list-style-type: none;
-        border-bottom: @gray-border;
-
-        input{
-            text-align: left;
-            float: left;
-            border-radius: 0;
-            margin-top: 16px;
-        }
+    input[type="checkbox"]{
+        margin-left: 20px;
     }
 }

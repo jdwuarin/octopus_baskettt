@@ -10,7 +10,9 @@ angular.module('App', [
 	'App.directives',
 	'App.controllers',
 	'angulartics',
-	'angulartics.google.analytics'
+	'angulartics.google.analytics',
+	'autocomplete',
+	'ui.slider'
 ])
 
 .config(['$httpProvider', function($httpProvider) {
@@ -27,6 +29,7 @@ angular.module('App', [
 	$routeProvider
 	.when('/',
 	{
+		controller: 'HomeController',
 		templateUrl: 'static/app/partials/home.html',
 		requireLogin: false,
 	})
@@ -48,7 +51,7 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/product_list.html',
 		requireLogin: false
 	})
-	.when('/onboarding/:id',
+	.when('/start',
 	{
 		controller: 'OnboardingController',
 		templateUrl: 'static/app/partials/onboarding.html',
@@ -60,7 +63,13 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/transfer.html',
 		requireLogin: true
 	})
-	.otherwise({ redirectTo: '' });
+	.when('/profile',
+	{
+		controller: 'ProfileController',
+		templateUrl: 'static/app/partials/profile.html',
+		requireLogin: true
+	})
+	.otherwise({ redirectTo: '/' });
 }])
 
 .run(['$cookies', '$http', '$rootScope', 'User', 'Alert', '$location', function($cookies, $http, $rootScope, User, Alert,$location){

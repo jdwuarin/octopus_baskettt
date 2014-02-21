@@ -1,0 +1,214 @@
+/* ==========================================================================
+   _layout.less:
+   Contains all the layout of the application
+   ========================================================================= */
+
+
+/* Dimensions
+   ========================================================================= */
+
+@header-height: 70px;
+@header-height-mobile: 50px;
+@basket-bar-height:70px;
+@footer-height: 175px;
+@height-search-item: 90px;
+@product-size: 150px;
+
+
+/* Images
+   ========================================================================= */
+
+@logo-ratio: 702/246; // width/height
+@mini-logo-ratio: 80/90;
+
+
+/* Other
+   ========================================================================= */
+
+@gray-border: 1px solid @normal-gray;
+
+
+//  Body
+//------------------------------------
+html,body{
+    background-color:white;
+    height: 100%;
+}
+
+body{
+    padding-top: @header-height;
+    user-select:none!important;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto;
+    /* Negative indent footer by its height */
+    margin: 0 auto -@footer-height;
+    /* Pad bottom by footer height */
+    padding: 0 0 @footer-height;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.row{
+    margin-left:0!important;
+    margin-right:0!important;
+}
+
+//  Header
+//------------------------------------
+
+.navbar{
+
+    border-bottom: 5px solid @light-gray!important;
+    height: @header-height;
+    margin-bottom: 0;
+    background-color: white;
+    border: 0;
+    border-radius: 0px;
+    color:white;
+    text-shadow: @font-shadow;
+
+    .navbar-collapse{
+        height: @header-height!important;
+        background-color: white;
+        border-bottom: 5px solid @light-gray!important;
+    }
+
+    .navbar-brand{
+        padding: 14px 40px 12px;
+    }
+
+    .navbar-brand-logo img{
+        width: @logo-ratio*30px;
+        height: 30px;
+    }
+}
+
+a.navbar-link{
+    color:@dark-gray!important;
+    line-height: @header-height!important;
+    padding: 0!important;
+    margin-right: 20px;
+    text-align: center;
+    font-family: @montserrat;
+    font-size: 14px;
+    text-transform:uppercase;
+    font-weight: bold;
+
+    &:hover{
+        background-color:transparent!important;
+        color:@hover-color!important;
+    }
+}
+
+.btn-basket{
+    .btn-trans-orange;
+    font-size: 14px;
+    padding: 10px 0px!important;
+    margin-top: 11px;
+    margin-right: 30px;
+}
+
+.btn-login{
+    .btn-gray;
+    .navbar-btn;
+    padding: 8px 13px!important;
+    margin: 11px 10px!important;
+}
+
+.selected {
+
+    background:@orange!important;
+
+    img,p{
+        border-color: @orange!important;
+    }
+
+    p{
+        background-color: @orange!important;
+        color:white!important;
+    }
+}
+
+.navbar-toggle{
+
+    border: 0!important;
+    &, &:hover{
+        background-color: white!important;
+    }
+
+    .icon-bar{
+        background-color: @dark-gray!important;
+    }
+}
+
+//  Footer
+//------------------------------------
+footer{
+    background-color: @light-gray;
+    height:@footer-height;
+    font-size: 13px;
+    padding-left: 30px;
+
+    img.baskettt{
+        margin-top: 51px;
+        width: @logo-ratio*50px;
+        height: 50px;
+    }
+
+    .twitter{
+        margin-top: 70px;
+        margin-right: 40px;
+        width: (172/139)* 30px;
+        height: 30px;
+        float: right;
+    }
+
+    p{
+        margin-top: 10px;
+        color:gray;
+    }
+
+    .rackspace{
+        padding-top: 34px;
+    }
+}
+
+
+.loading, .loading-basket{
+    background: white;
+    border: @gray-border;
+    width: 200px;
+    border-radius: 10px;
+    .center;
+    text-align: center;
+    margin-top: 50px;
+    .spinner{
+        display: inline-block;
+    }
+}
+
+.loading-basket{
+    padding: 30px 0px;
+}
+
+.alert-container{
+    .alert:first-child{
+        margin-top: 30px;
+    }
+}
+
+.alert-margin{
+    margin-top: 80px;
+}
+
+.form-container{
+    max-width: 700px;
+    .center;
+    margin-top: 30px;
+}

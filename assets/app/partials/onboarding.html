@@ -1,56 +1,84 @@
 <div class="container">
+  <div class="row onboard-container" onboard>
+    <div class="col-md-12">
 
-	<div class="row onboard-container">
-		<div class="col-md-12 onboard-title">
-			<div ng-switch on="page">
-				<div ng-switch-when="1" class="first">I like to eat</div>
-				<div ng-switch-when="2" >
-					<form class="choice-box" ng-submit="saveData()">
-						<ul>
-							<li class="logo">I need groceries for</li>
-							<li>
+      <div class="onboard-title">
+        Join baskettt.
+      </div>
 
-								<input type="text" class="form-control onboard-people"  ng-model="preference.people">people
-							</li>
-							<li>
+      <div class="onboard-instruction">
+        <span class="number">1</span> <header>What is your favorite food (pick multiples)?</header>
+      </div>
 
-								<input type="text" class="form-control onboard-people" ng-model="preference.days">days
+      <div class="onboard-cuisine" >
+        <div class="onboard-box" ng-repeat="cuisine in cuisines">
+          <div class="onboard-image"
+          ng-class="{'selected':selectedStatus}" click>
+            <img ng-src="/static/img/{{cuisine.image}}" alt="">
+            <p>{{cuisine.name}}</p>
+          </div>
+        </div>
+      </div>
 
-							</li>
-							<li>
-								<input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
+      <div class="onboard-instruction">
+        <span class="number">2</span> <header>What is your cooking style?</header>
+      </div>
 
-							</li>
-						</ul>
+      <div class="slider">
+        <div class="label-left">Minimal</div>
+        <div class="label-right">Gourmet</div>
+        <div ui-slider min="0" max="100" ng-model="cookingValue" class="slider-bar"></div>
+      </div>
 
-						<input type="submit" class="btn-onboarding" value="Generate my basket">
-					</form>
+      <div class="onboard-instruction">
+        <span class="number">3</span>
+        <header>Are you following a diet?</header>
+      </div>
 
+      <div class="onboard-diet">
 
-				</div>
-			</div>
-		</div>
-	</div>
+    <!--     <radio-button rb-title="Vegan" rb-id="vegan" rb-model="diet"></radio-button>
+        <radio-button rb-title="Vegetarian" rb-id="vegetarian" rb-model="diet"></radio-button>
+        <radio-button rb-title="Prescetarian" rb-id="prescetarian" rb-model="diet"></radio-button>
+        <radio-button rb-title="Other" rb-id="other" rb-checklist="checklist" rb-model="diet"></radio-button> -->
 
-	<div ng-switch on="page">
-		<div ng-switch-when="1">
-			<div class="row">
-				<div class="col-md-12 onboard-cuisine" >
-					<div class="onboard-box" ng-repeat="cuisine in cuisines">
-						<div class="onboard-image" ng-class="{'selected':selectedStatus}" click>
-							<img ng-src="/static/img/{{cuisine.image}}" alt="">
-							<p>{{cuisine.name}}</p>
-						</div>
-					</div>
+        <input type="radio" ng-model="diet" value="vegan" id="vegan">
+        <label for="vegan">Vegan</label> <br>
+        <input type="radio" ng-model="diet" value="vegetarian" id="vegetarian"><label for="vegetarian">Vegetarian</label> <br>
+        <input type="radio" ng-model="diet" value="prescetarian" id="prescetarian">
+        <label for="prescetarian">Pescetarian</label> <br>
+        <input type="radio" ng-model="diet" value="other" id="other"><label for="other">I don't eat any:</label> <br>
+        <input type="checkbox" ng-model="meat.porc" id="mpor">
+        <label for="mpor">Porc</label>  <br>
+        <input type="checkbox" ng-model="meat.beef" id="mb">
+        <label for="mb">Beef</label>  <br>
+        <input type="checkbox" ng-model="meat.poultry" id="mpou"><label for="mpou">Poultry</label>  <br>
+      </div>
 
-					<div class="next-container">
-						<a href="javascript:;" class="btn-next" ng-click="saveData()"> Next </a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+  <!--     <div class="first">My meal plan</div>
 
+      <form class="choice-box" ng-submit="saveData()">
+        <ul>
+          <li>
 
+            <input type="text" class="form-control onboard-people"  ng-model="preference.people">people
+          </li>
+          <li>
 
+            <input type="text" class="form-control onboard-people" ng-model="preference.days">days
+
+          </li>
+          <li>
+            <input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
+
+          </li>
+        </ul> -->
+        <!-- </form> -->
+
+        <div class="btn-container">
+          <input type="submit" class="btn-onboarding" value="Go to my personal basket" ng-click="generateBasket()">
+        </div>
+
+      </div>
+    </div>
+  </div>

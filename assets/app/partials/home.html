@@ -1,25 +1,97 @@
 <div class="row disclaimer">
-	<div class="disclaimer-logo"></div>
-	<div class="disclaimer-quote">The simplest way to get your groceries done.</div>
+	<div class="container">
+		<div class="spacing"></div>
+		<div class="col-md-12 col-lg-5">
+			<div class="disclaimer-quote">
+				<h1>The simplest way to  <br> get your groceries done.</h1>
+				<a href="#/start/" >
+					<button class="btn-try-now">Try now</button>
+				</a>
+				<button class="btn-learn-more" scroll-to="#more">Learn more</button>
+			</div>
+
+		</div>
+
+		<div class="col-md-12 col-lg-7">
+			<img src='/static/img/grocery-bag.png' alt="">
+		</div>
+	</div>
+</div>
+
+<div class="row beta-container">
+	<div class="container">
+		<div class="col-md-6" ng-hide="betaSuccess">
+			<p>We're currently in a private beta. Register to get an invite.</p>
+		</div>
+		<div class="col-md-6" ng-hide="betaSuccess">
+			<form ng-submit="registerForBeta()" name="betaForm" class="beta-form" novalidate>
+				<div class="form-group" ng-class="{ 'has-error' : betaForm.email.$invalid && !betaForm.email.$pristine }" >
+					<input type="email" name="email" ng-model="email" class="beta-email" placeholder="Your email">
+				</div>
+				<div class="form-group">
+					<input type="submit" class="btn-register-beta" value="Subscribe" ng-disabled="betaForm.$invalid">
+				</div>
+			</form>
+
+		</div>
+		<div class="col-md-12 beta-success" ng-show="betaSuccess">
+				Thank you for registering! Feel free to share your excitement on Twitter.
+				<div class="twitter-btn">
+				<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://baskettt.co/" data-text="Can't wait to get my baskettt invite." data-via="basketttco" data-size="large">Tweet</a>
+				</div>
+		</div>
+	</div>
+</div>
+
+<div class="row features" id="more">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 motto">
+				Tell us what you like to eat and we'll take care of the rest.
+				<br>
+				Start spending time on what matters.
+			</div>
+			<hr>
+
+		</div>
+		<div class="row feature-description">
+			<div class="col-md-6">
+				<header>Tailor-made basket</header>
+				<article>Tell us your eating preferences and how you manage your groceries. We will create a basket  just for you.</article>
+			</div>
+			<div class="col-md-6 hidden-xs">
+				<img src="/static/img/feature1.png" alt="">
+			</div>
+		</div>
+		<div class="row feature-description">
+			<div class="col-md-6 hidden-xs">
+				<img src="/static/img/feature2.png" alt="">
+			</div>
+			<div class="col-md-6">
+				<header>Make it personal</header>
+				<article>Add you favorite products to your basket. Next time you come, we will recommend you the products you love.</article>
+			</div>
+
+		</div>
+		<div class="row feature-description">
+			<div class="col-md-6">
+				<header>Keep your habits</header>
+				<article>When you're done, you can directly order from your favorite shop. We currently only support Tesco.</article>
+			</div>
+			<div class="col-md-6 feature-3 hidden-xs">
+				<img src="/static/img/feature3.png" alt="">
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div class="row quote">
 	<div class="col-md-12">
-		<a href="#/onboarding/1">
-			<button class="btn-cta">Get Started</button>
+		Make your life <b>simpler</b> <br>
+		<a href="#/start/">
+			<button class="btn-try-footer">Try now</button>
 		</a>
 	</div>
 </div>
 
-<div class="row features">
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-cutlery"></i>
-			<p>Get a tailor-made grocery basket according to your eating preferences.</p>
-		</div>
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-check"></i>
-			<p>Modify the basket by adding your favorite products.</p>
-		</div>
-		<div class="col-md-4">
-			<i class="glyphicon glyphicon-shopping-cart"></i>
-			<p>Order your groceries directly from the most popular providers in the UK. <br> <i>(Only Tesco available for the moment)</i></p>
-		</div>
-
-</div>

@@ -2,12 +2,50 @@
 
 /* Directives */
 
-
 angular.module('App.directives', [])
 
+	.directive('scrollTo',[function(){
+		return function(scope, element, attrs){
+			element.bind("click", function(event){
+				var $selector = $(attrs.scrollTo);
+				if($selector.length){
+					$("html, body").animate({
+						// 65 because it looks about right
+						scrollTop : $selector[0].offsetTop - 65
+					}, 1000);
+				}
+			});
+		};
+	}])
+
+	// .directive('radioButton', [function(){
+	// 	return {
+	// 		restrict: 'E',
+	// 		scope:{
+	// 			title: '@rbTitle',
+	// 			idString: '@rbId',
+	// 			checklist: '&rbChecklist',
+	// 			modelName: '@rbModel'
+	// 		},
+	// 		template: 	'<input type="radio" id="{{idString}}"'+
+	// 					' ng-model="diet" value="{{title}}">'+
+	// 					'<label for="{{idString}}">{{title}}</label> <br>'+
+	// 					'<div ng-repeat="checkbox in checklist()"> '+
+	// 					'<input type="checkbox" id="{{checkbox}}">'+
+	// 					'<label for="{{checkbox}}">{{checkbox}}</label><br>'+
+	// 					'</div>',
+	// 		link: function(scope, element, attrs) {
+	// 			// // scope.boolChecklist = typeof scope.checklist() !== "undefined";
+	// 			// if(scope.checklist()){
+	// 			// 	console.log(scope.checklist());
+	// 			// }
+	// 		}
+	// 	};
+	// }])
+
 	.directive('ngEsc', [function(){
-		return function (scope, element, attrs) {
-			element.bind("keydown keypress", function (event) {
+		return function(scope, element, attrs) {
+			element.bind("keydown keypress", function(event) {
 				if(event.which === 27) {
 					scope.$apply(function (){
 						scope.$eval(attrs.ngEsc);
@@ -19,36 +57,20 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('closesearch', ['$rootScope', function($rootScope){
-		return {
-			template: '<i class="glyphicon glyphicon-remove-circle"></i>',
-			restrict: 'E',
-			link: function(scope, element, attrs) {
-
-				element.bind("click", function() {
-					scope.clearSearch();
-					scope.$digest();
-				});
-
-			}
-		};
-	}])
-
 	// When you click on the DOM a the .selected class is injected
 	.directive('click', ['Preference',function(Preference) {
 		return function(scope, element, attrs) {
 
 			//Initialize the status
-			var selected_preference = Preference.getCuisine();
+			var preferences = Preference.getAll().cuisine;
 
-			var selected = selected_preference.some(function(el){
+			var selected = preferences.some(function(el){
 				return scope.cuisine.name === el;
 			});
 
 			scope.selectedStatus = selected;
 
 			element.bind("click", function() {
-
 				scope.selectedStatus = !scope.selectedStatus;
 				Preference.setCuisine(scope);
 				scope.$apply();
@@ -69,7 +91,7 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('navbar',['$rootScope', 'User', function($rootScope, User) {
+	.directive('navbar',['$rootScope', 'User', '$location', function($rootScope, User, $location) {
 
 		return {
 			link: function (scope, element, attrs) {
@@ -82,6 +104,16 @@ angular.module('App.directives', [])
 						}
 					});
 				});
+
+				var fs = false;
+
+				scope.fullscreen = function (){
+					fs = $location.path().indexOf('onboarding') !=-1;
+					if(fs){
+						angular.element('body').css('padding-top','0px');
+					}
+					return fs;
+				}
 
 				scope.userIsLoggedIn = function(){
 					// Defined as a function to force the execution after a redirection

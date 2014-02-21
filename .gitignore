@@ -1,5 +1,6 @@
 octopus_groceries/migrations
 octopus_user/migrations
+octopus_groceries/templates/products/index_prod.html
 env
 lib-cov
 *.seed
@@ -38,3 +39,4 @@ static/*
 .idea/
 octopus/local_settings.py
 test_angular/coverage/
+local/

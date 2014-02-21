@@ -1,0 +1,87 @@
+/* ==========================================================================
+   _button.less:
+   Contains the style of all the buttons
+   ========================================================================= */
+
+
+// Generator:
+// .generate-button(@color, @bg-color, @border-color, @font-family, @font-size)
+
+
+.btn-orange{
+    .generate-button(white, @orange, @dark-orange, @montserrat, 14px);
+}
+
+.btn-gray{
+    .generate-button(black, #f6f6f6, #c9c9c9, @montserrat, 14px);
+}
+
+.btn-red{
+    .btn;
+    &, &:hover{
+        background-color: @red !important;
+        border: 1px solid @dark-red;
+        color: white!important;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.btn-trans-gray{
+    .btn;
+    font-family: @montserrat;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    border-radius: 5px;
+    color: @dark-gray;
+    background: transparent;
+    border: 3px solid @dark-gray;
+}
+
+.btn-cream{
+    .btn;
+    color: @dark-orange;
+    border: 3px solid @dark-orange;
+    background: @cream;
+    font-family: @montserrat;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+
+    &:hover, &:visited{
+        border-color: @darkest-gray;
+    }
+}
+
+.btn-trans-orange{
+    .btn;
+    font-family: @montserrat;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    border-radius: 5px;
+    color: @orange!important;
+    background: transparent;
+    border: 2px solid @orange!important;
+
+    &:hover{
+        border-color: @darkest-gray!important;
+        color:@darkest-gray!important;
+    }
+}
+
+.btn-black{
+    .btn;
+    border-radius: 5px;
+    background: @darkest-gray;
+    border: 1px solid black;
+    font-family: @montserrat;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    height: 50px;
+    width: 100px;
+    &:hover{
+        color:white;
+    }
+}

@@ -1,19 +1,52 @@
-// Variables and mixins
-@import "variables.less";
-@import "mixins.less";
+/* ==========================================================================
+   style.less:
+   Main stylesheet
+   ========================================================================= */
+
+
+/* Fonts
+   ========================================================================= */
+
+@import url(https://fonts.googleapis.com/css?family=Montserrat|Pacifico|Nunito:400,300|Arvo&subset=latin);
+
+
+/* External libraries
+   ========================================================================= */
+
 @import "../bootstrap/less/bootstrap.less";
+@import "lib/jquery-ui-slider.less";
 
-// Main styling sheet
-@import "buttons.less";
-@import "common.less";
 
-// Per page specifics
+/* Base
+   ========================================================================= */
+
+@import "base/_colors.less";
+@import "base/_mixins.less";
+@import "base/_typography.less";
+@import "base/_layout.less";
+
+
+/* Modules
+   ========================================================================= */
+@import "modules/_animation.less";
+@import "modules/_button.less";
+@import "modules/_form.less";
+@import "modules/_list.less";
+@import "modules/_modal.less";
+@import "modules/_spinner.less";
+@import "modules/_slider.less";
+
+
+/* Page
+   ========================================================================= */
+
 @import "page/product_list.less";
 @import "page/onboarding.less";
 @import "page/home.less";
 @import "page/signup.less";
+@import "page/profile.less";
 
-// Other
-@import "_spinner.less";
+/* Mobile overrides
+   ========================================================================= */
 
-
+@import "mobile.less";

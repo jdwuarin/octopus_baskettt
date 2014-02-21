@@ -1,0 +1,53 @@
+/* ==========================================================================
+   _modals.less:
+   Contains all the styling about modal windows
+   ========================================================================= */
+
+
+.modal-form{
+    padding: 20px;
+}
+
+.modal-action{
+    a{
+        float: right;
+        padding-top: 10px;
+    }
+
+}
+
+.modal-container{
+    padding: 20px;
+
+    p{
+        text-align: center;
+    }
+
+    i{
+        text-align: center;
+        display: block;
+        font-size: 51px;
+
+        &.glyphicon-ok-sign{
+            color: rgb(96, 199, 96);
+        }
+
+        &.glyphicon-minus-sign{
+            color: @red;
+        }
+    }
+
+    .spinner{
+        text-align: center;
+        .center;
+    }
+}
+
+.modal-open {
+
+    body&,
+    .navbar-fixed-top,
+    .navbar-fixed-bottom {
+        margin-right: 0px!important;
+    }
+}

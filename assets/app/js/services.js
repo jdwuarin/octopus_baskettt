@@ -33,6 +33,21 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			autocomplete: function(term, callback) {
 				return $http.get(getUrl('autocomplete')+ "&term=" + term).then(callback);
+			},
+			getQuantity: function(searchItems, basketItems){
+				// Oh lord that's ugly
+				for (var i = 0; i < searchItems.length; i++) {
+
+					searchItems[i]["quantity"] = 0;
+
+					for (var j = 0; j < basketItems.length; j++) {
+						if(searchItems[i].id === basketItems[j].id ){
+							searchItems[i]["quantity"] = basketItems[j].quantity;
+						}
+					}
+				}
+
+				return searchItems;
 			}
 		};
 	}])
@@ -47,13 +62,13 @@ angular.module('App.services', ['LocalStorageModule'])
 		var LoggedIn = null;
 
 		return {
-			login: function(email, password, callback) { // POST /user/login
+			login: function(email, password, callback,errorcb) { // POST /user/login
 				return $http({
 					url: getUrl('login'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
-				}).success(callback);
+				}).success(callback).error(errorcb);
 			},
 			logout: function(callback) { // GET /user/logout
 				return $http({
@@ -88,6 +103,14 @@ angular.module('App.services', ['LocalStorageModule'])
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},
 				}).success(callback);
+			},
+			registerBeta: function(email, callback) {
+				return $http({
+					url: getUrl('beta_subscription'),
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: {email:email}
+				}).success(callback);
 			}
 		};
 	}])
@@ -103,24 +126,15 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 
 		return {
-			getCuisine: function() {
-
-				var local_cuisine = localStorage.get('preferences').cuisine;
-
-				// If we haven't saved any preferences in local storage take the temporary one
-				if(local_cuisine) {
-					return local_cuisine;
-				} else {
-					return preferenceList.cuisine;
-				}
-			},
 			setCuisine: function(scope) {
 
 				var isPresent = false;
 
+				preferenceList = this.getAll();
+
 				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
 						//if it's already in the list
-						if (preferenceList.cuisine[i] == scope.cuisine.name) {
+						if (preferenceList.cuisine[i] === scope.cuisine.name) {
 							isPresent = true;
 
 							if(!scope.selectedStatus){
@@ -131,16 +145,16 @@ angular.module('App.services', ['LocalStorageModule'])
 
 				if (!isPresent && scope.selectedStatus) {
 					preferenceList.cuisine.push(scope.cuisine.name);
-					var cuisine_str = JSON.stringify(preferenceList);
-					localStorage.add('preferences', cuisine_str);
 				}
+
+				var cuisine_str = JSON.stringify(preferenceList);
+				localStorage.add('preferences', cuisine_str);
 			},
 			setParameters: function(preferences) {
 
-				preferenceList.cuisine = this.getCuisine();
-				preferenceList.people = preferences.people;
-				preferenceList.days   = preferences.days;
-				preferenceList.budget = preferences.budget;
+				preferenceList.cuisine = preferences.cuisine;
+				preferenceList.budget  = preferences.budget;
+				preferenceList.diet    = preferences.diet;
 
 				var pref_str = JSON.stringify(preferenceList);
 				localStorage.add('preferences', pref_str);
@@ -236,11 +250,12 @@ angular.module('App.services', ['LocalStorageModule'])
 					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference}
 				}).success(callback);
 			},
-			getUnsuccesful: function(basket){
+			getUnsuccessful: function(basket){
 				var false_list = [];
-
+				// console.log(basket);
 				angular.forEach(basket, function(value, key){
-					if(value == "False") {
+
+					if(value.success == "False") {
 						false_list.push(value);
 					}
 				});

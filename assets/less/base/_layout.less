@@ -28,23 +28,11 @@
 @gray-border: 1px solid @normal-gray;
 
 
-@media (max-width: 768px) {
-    .twitter{
-        margin: 0 auto!important;
-        float:none!important;
-    }
-}
-
 //  Body
 //------------------------------------
 html,body{
     background-color:white;
     height: 100%;
-}
-
-
-html, html a {
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
 
 body{
@@ -76,13 +64,7 @@ a:hover{
 
 .navbar{
 
-    .navbar-collapse{
-        height: @header-height!important;
-        background-color: white;
-        border-bottom: 5px solid #F0F0F0!important;
-    }
-
-    border-bottom: 5px solid #F0F0F0!important;
+    border-bottom: 5px solid @light-gray!important;
     height: @header-height;
     margin-bottom: 0;
     background-color: white;
@@ -90,6 +72,12 @@ a:hover{
     border-radius: 0px;
     color:white;
     text-shadow: @font-shadow;
+
+    .navbar-collapse{
+        height: @header-height!important;
+        background-color: white;
+        border-bottom: 5px solid @light-gray!important;
+    }
 
     .navbar-brand{
         padding: 14px 40px 12px;
@@ -121,10 +109,16 @@ a.navbar-link{
 .btn-basket{
     .btn-trans-orange;
     font-size: 14px;
-    padding-top: 10px!important;
-    padding-bottom: 10px!important;
+    padding: 10px 0px!important;
     margin-top: 11px;
     margin-right: 30px;
+}
+
+.btn-login{
+    .btn-gray;
+    .navbar-btn;
+    padding: 8px 13px!important;
+    margin: 11px 10px!important;
 }
 
 .selected {
@@ -218,11 +212,3 @@ footer{
     .center;
     margin-top: 30px;
 }
-
-.bg-gray{
-
-    &,& #wrap{
-        background: url('/static/img/bg.png')
-    }
-}
-

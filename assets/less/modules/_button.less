@@ -1,23 +1,19 @@
-.btn-orange{
-    .btn;
+/* ==========================================================================
+   _button.less:
+   Contains the style of all the buttons
+   ========================================================================= */
 
-    &, &:hover{
-        background-color: @orange!important;
-        border: 1px solid @dark-orange;
-        color:white!important;
-        font-family:@montserrat;
-        font-size: 14px;
-        text-transform: uppercase;
-    }
+
+// Generator:
+// .generate-button(@color, @bg-color, @border-color, @font-family, @font-size)
+
+
+.btn-orange{
+    .generate-button(white, @orange, @dark-orange, @montserrat, 14px);
 }
 
 .btn-gray{
-    .btn;
-    &, &:hover{
-        background-color: #F6F6F6!important;
-        border: 1px solid #C9C9C9;
-        color:black!important;
-    }
+    .generate-button(black, #f6f6f6, #c9c9c9, @montserrat, 14px);
 }
 
 .btn-red{
@@ -72,34 +68,6 @@
         border-color: @darkest-gray!important;
         color:@darkest-gray!important;
     }
-}
-
-.btn-login{
-    .btn-gray;
-    .navbar-btn;
-    padding: 8px 13px!important;
-    margin: 11px 10px!important;
-}
-
-.btn-quantity{
-    .input-group-addon;
-}
-
-.btn-close{
-    cursor:pointer;
-    text-align: right;
-    height: 30px;
-}
-
-.btn-transfer{
-    .btn-orange;
-}
-
-.btn-onboarding{
-    .btn-trans-orange;
-    .btn-lg;
-    width: 530px;
-    height: 81px;
 }
 
 .btn-black{

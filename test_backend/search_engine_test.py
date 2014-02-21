@@ -6,6 +6,6 @@ def search_test(query):
 
     result = perform_search(query)
     print result
-    #cProfile.run("perform_search(query)")
+    #cProfile.run("perform_search('tomato')")
 
 

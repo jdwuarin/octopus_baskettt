@@ -40,6 +40,8 @@ class CategoryIndex(indexes.SearchIndex, indexes.Indexable):
 class ProductIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True,
                              use_template=False)
+    supermarket = indexes.CharField(model_attr='supermarket',
+                                    use_template=False)
     ingredients = indexes.CharField(model_attr='ingredients',
                                     use_template=False)
 
@@ -78,6 +80,20 @@ class AbstractProductIndex(indexes.SearchIndex, indexes.Indexable):
         """Used when the entire index for model is updated."""
         return self.get_model().objects.all()
 
+
+class AbstractProductSupermarketProductIndex(indexes.SearchIndex,
+                                             indexes.Indexable):
+    text = indexes.CharField(model_attr='abstract_product', document=True,
+                             use_template=False)
+    supermarket = indexes.CharField(model_attr='supermarket',
+                                    use_template=False)
+
+    def get_model(self):
+        return AbstractProductSupermarketProduct
+
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
 
 class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(model_attr='name', document=True,

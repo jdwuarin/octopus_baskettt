@@ -20,32 +20,42 @@ def perform_search(query):
             result_product_list = simple_search(
                 spelling_suggestion, supermarket)
 
-    return result_product_list[:40]
+    return result_product_list
 
 
 def simple_search(query, supermarket):
 
-    #search for containing term in AbstractProduct
-    sqs = SearchQuerySet().filter(content=query).models(AbstractProduct)
-
+    num_results_per_type = 20
     result_product_list = []
 
-    for result in sqs:
-        abstract_product = result.object
-        absp = AbstractProductSupermarketProduct.objects.get(
-            abstract_product=abstract_product, supermarket=supermarket)
-        #initialize empty list of size 20
-        product_list = [0]*20
-        for key, value in absp.product_dict:
-            product_list[int(key)-1] = value
+    #search for containing term in AbstractProductSupermarketProduct
+    sqs = SearchQuerySet().filter(supermarket=supermarket).models(
+        AbstractProductSupermarketProduct)
+    sqs = sqs.filter(text=query)
 
-        result_product_list += product_list
+    # just used to make sure we only add 20 of those and no more
+    ii = 0
+    for apsp in sqs:
+        for __, product in apsp.object.product_dict.iteritems():
+            result_product_list.append(product)
+            ii += 1
+
+            if ii >= num_results_per_type:
+                break
+
+        if ii >= num_results_per_type:
+            break
+
+    # for apsp in sqs:
+    #     for rank, product in apsp.object.product_dict.iteritems():
+    #         result_product_list.append(product)
 
     #search for term in product
-    sqs = SearchQuerySet().filter(content=query).models(Product)
+    sqs = SearchQuerySet().filter(suoermarket=supermarket).models(Product)
+    sqs = sqs.filter(text=query)[:num_results_per_type]
 
     for result in sqs:
-        if result.object.supermarket == supermarket:
-            result_product_list.append(result.object)
+       result_product_list.append(result.object)
+
 
     return result_product_list

@@ -1,6 +1,7 @@
-from octopus_recommendation_engine.basket_onboarding_info import BasketOnboardingInfo
-from octopus_recommendation_engine.basket_recommendation_engine import BasketRecommendationEngine
-from octopus_groceries.models import Tag, Product, TagRecipe, Supermarket
+from octopus_recommendation_engine.basket_recommendation_engine import \
+    BasketRecommendationEngine
+from octopus_user.models import UserSettings
+from octopus_groceries.models import *
 from octopus_basket_porting.basket_to_port import BasketToPort
 from octopus_basket_porting.spider_manager import SpiderManagerController
 from octopus_basket_porting.thread_manager import ThreadManager
@@ -27,7 +28,8 @@ def basket_porting_test(request, product_list_before):
     #product_list is a list of type: [product, quantity]
 
     product_list_after = this_basket.thread_manager.get_response()
-    product_list_after = check_basket_persistence(product_list_before, product_list_after)
+    product_list_after = check_basket_persistence(product_list_before,
+                                                  product_list_after)
 
     #####################
     for key, value in product_list_after.iteritems():
@@ -56,9 +58,19 @@ def basket_porting_test(request, product_list_before):
 
 
 def create_basket_test():
-    info = BasketOnboardingInfo(people=1, budget=20, tags=["European", "Chinese", "Indian"], days="2",
-                                supermarket=Supermarket.objects.get(name="tesco"))
-    basket = BasketRecommendationEngine.create_onboarding_basket(info)
+
+    user_settings = UserSettings(
+                    people=2,
+                    days=2,
+                    price_sensitivity=0.23,
+                    tags=["European", "Chinese", "Indian"],
+                    default_supermarket=Supermarket.objects.get(name="tesco"),
+                    pre_user_creation_hash="dummy",
+                    diet=Diet.objects.all.get(name="vegan"),
+                    banned_meats=[1, 3],
+                    banned_abstract_products=[])
+
+    basket = BasketRecommendationEngine.create_onboarding_basket(user_settings)
 
     # The structure of the recommendation engine response is a dictionnary
     # basket[selected_product] = [quantity_to_buy, abstract_product]
@@ -70,7 +82,6 @@ def create_basket_test():
         ii += 1
 
     basket_porting_test("some_request", product_list)
-
 
 def check_basket_persistence(product_list_before, product_list_after):
     #if any item that should be in the product_list_before isn't for some reason,

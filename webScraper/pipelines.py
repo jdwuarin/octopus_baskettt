@@ -156,10 +156,9 @@ class AbstractProductProductMatchingPipeline(object):
                                                        supermarket=item['supermarket'])
 
             except ObjectDoesNotExist:
-                #product could not be found, raise exception and continue
-                # raise Product_not_found_exception(item['external_id'])
-                matching_product = item.save(commit=False)  # save new item
-                matching_product.save()
+                # product could not be found, raise exception and continue
+                # do not save new item as department etc is not known
+                pass
 
             # try seeing if there already is a matching
             # that corresponds to the product

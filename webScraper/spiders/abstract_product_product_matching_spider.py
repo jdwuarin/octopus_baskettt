@@ -9,6 +9,7 @@ import re
 from octopus_groceries.models import AbstractProduct
 
 from webScraper.items import ProductItem
+from webScraper.spiders.tesco_spider import TescoSpider
 from octopus_groceries.models import Supermarket
 
 

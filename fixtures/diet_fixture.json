@@ -3,21 +3,21 @@
     "model": "octopus_groceries.Diet",
     "pk": 1,
     "fields": {
-      "name": "vegan"
+      "name": "Vegan"
     }
   },
   {
     "model": "octopus_groceries.Diet",
     "pk": 2,
     "fields": {
-      "name": "vegetarian"
+      "name": "Vegetarian"
     }
   },
     {
     "model": "octopus_groceries.Diet",
     "pk": 3,
     "fields": {
-      "name": "pescetarian"
+      "name": "Pescetarian"
     }
   }
 ]

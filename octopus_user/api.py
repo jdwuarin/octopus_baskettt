@@ -203,8 +203,7 @@ class UserResource(ModelResource):
                 id = sqs.filter(content=entry)[0].object.id
                 banned_abstract_products.append(id)
 
-            data['supermarket'] = Supermarket.objects.get(
-            name="tesco") #TODO remove tesco hardcode
+            data['supermarket'] = "tesco" #TODO remove tesco hardcode
 
             if not value_error:
                 user_settings = UserSettings(
@@ -213,7 +212,7 @@ class UserResource(ModelResource):
                     price_sensitivity=float(data['price_sensitivity']),
                     tags=real_cuisines,
                     default_supermarket=
-                    data['supermarket'],
+                    Supermarket.objects.get(name=data['supermarket']),
                     pre_user_creation_hash=hash,
                     diet=Diet.objects.all.get(name=data['diet']),
                     banned_meats=banned_meats,
@@ -245,6 +244,7 @@ class UserResource(ModelResource):
 
         response = []
 
+        # going to be basket[abstrac_product] = [(product, quantity), product..]
         # The structure of the recommendation engine response is a dictionnary
         # basket[selected_product] = [quantity_to_buy, abstract_product]
         for key, value in basket.iteritems():

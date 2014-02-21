@@ -171,14 +171,16 @@ class AbstractProductSupermarketProduct(models.Model):
     abstract_product = models.ForeignKey(AbstractProduct, default='',
                                          editable=False)
     supermarket = models.ForeignKey(Supermarket, default='', editable=False)
+    # rank => product
     product_dict = hstore.ReferencesField()
 
     objects = hstore.HStoreManager()
 
     def __unicode__(self):
-        return str(self.abstract_product_id) + ", " + str(
+        return str(self.abstract_product.name) + ", " + str(
             self.rank) + ", " + str(
-            self.product)
+            self.product) + ", " + str(
+            self.supermarket)
 
 
 class BannableMeats(models.Model):

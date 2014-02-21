@@ -9,13 +9,14 @@ from unit_helper import Unit_helper
 #per person limit cost for single product
 product_cost_limit = 6
 
-
 class BasketRecommendationEngine(object):
-    num_days_sigma_acceptance_rate = 0.3
-    condiment_max_ratio = 0.3
+    condiment_max_ratio = 0.2
     num_condiment_abstract_product = 0.0
+    num_returned_prod_per_abstract_product = 20
 
-    #remove this bad looking hack
+    # In the default product list, no products
+    # should stem from any of those departments
+    # TODO remove this bad looking hack
 
     banned_deps = Department.objects.filter(Q(name="Baby") |
                                             Q(name="Health & Beauty") |
@@ -23,10 +24,10 @@ class BasketRecommendationEngine(object):
                                             Q(name="Pets"))
 
     @classmethod
-    def create_onboarding_basket(cls, basket_onboarding_info):
+    def create_onboarding_basket(cls, user_settings):
         #TODO, remove tesco hard-code
 
-        tag_list = Tag.objects.filter(name__in=basket_onboarding_info.tags)
+        tag_list = Tag.objects.filter(name__in=user_settings.tags)
 
         potential_recipe_list = []
         for tag in tag_list:
@@ -37,165 +38,231 @@ class BasketRecommendationEngine(object):
                 '-review_count', '-rating')
             potential_recipe_list.append(recipe_list)
 
-        product_list = {}
+        product_list = []
         if len(potential_recipe_list) > 0:
             product_list = cls.get_product_list(potential_recipe_list,
-                                                basket_onboarding_info.budget,
-                                                basket_onboarding_info.people,
-                                                basket_onboarding_info.
-                                                supermarket)
+                                                user_settings)
         return product_list
 
     @classmethod
-    def get_product_list(cls, recipes, budget, people, supermarket):
+    def get_product_list(cls, potential_recipes, user_settings):
         recipe_type_passed = 0
-        break_condition = False
-        basket_cost = 0
-        #abstract_product, [selected_product, slack(remaining for use for other recipes)]
-        product_list_slack = {}
-        #product, [quantity_to_buy, mapped abstract_product]
-        product_list = {}
+        meals_per_day = 1  # should probably be in user_settings somehow
+        product_matrix = []
         i = 0
 
-        while basket_cost < budget:
+        # a rough recipe_list is first gathered
+        recipe_list = []
+        while len(recipe_list) * meals_per_day < user_settings.days:
 
-            for __, recipe in enumerate(recipes):
-            # for x in range(0, len(recipes)):
+            for ii, recipe in enumerate(potential_recipes):
+
                 try:
                     recipe = recipe[i / len(
-                        recipes)]  # the division will floor the value, which is what we want
+                        potential_recipes)]  # the division will floor the value, which is what we want
                 except IndexError:
                     recipe_type_passed += 1
-                    if recipe_type_passed == len(recipes):
+                    if recipe_type_passed == len(potential_recipes):
                         break_condition = True
                         break
                     else:
                         continue  # if no more recipe of that kind, go to next kind
 
-                recipe_abstract_product_list = (
-                    RecipeAbstractProduct.objects.filter(recipe=recipe))
-                should_break, added_cost = cls.merge_lists(
-                    recipe_abstract_product_list, product_list_slack,
-                    product_list, people, int(budget) - basket_cost,
-                    supermarket)
+                recipe_list.append(recipe)
 
-                basket_cost += added_cost
-                if should_break:
-                    break_condition = True
+        # mappings to abstract_products are then obtained
+        recipe_abstract_product_list = (
+            RecipeAbstractProduct.objects.filter(
+                recipe__in=recipe_list).order_by('abstract_product'))
+
+        # units are dealt with separating abstract_products in
+        # a list requiring grams and "each" of a certain abstract_product.
+        # returned dicts are or the form: my_dict[abstract_product] = quantity
+        abstract_products_grams, abstract_products_each =\
+            Unit_helper.get_abstract_products_by_unit(
+                recipe_abstract_product_list)
+
+        # we first filter out the "too many" condiments that we might have
+        cls.filter_out_extra_condiments(abstract_products_grams)
+        cls.filter_out_extra_condiments(abstract_products_each)
+
+        # we then filter out all the ingredients that do not
+        # respects the users diet or banned meats or products etc...
+        cls.filter_diet(abstract_products_grams, user_settings)
+        cls.filter_diet(abstract_products_each, user_settings)
+
+        cls.filter_banned_meats(abstract_products_grams, user_settings)
+        cls.filter_banned_meats(abstract_products_each, user_settings)
+
+        # a product matrix is then obtained for each unit type
+        # where the result looks like:
+        # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
+        product_matrix = cls.get_products_to_buy(
+            abstract_products_grams, user_settings, "grams")
+        product_matrix += cls.get_products_to_buy(
+            abstract_products_each, user_settings, "each")
+
+        # the lists are then merged.
+        product_matric = cls.merge_matrix(product_matrix)
+
+        return product_matrix
+
+    #check that condiment_ratio is not passed
+    # first obtain condiment ratio on list
+    @classmethod
+    def filter_out_extra_condiments(cls, abstract_products):
+        condiment_count = 0.0
+
+        if not abstract_products:
+            return None
+
+        for abstract_product in abstract_products:
+            if abstract_product.is_condiment:
+                condiment_count += 1.0
+
+        if condiment_count/float(len(abstract_products)) > (
+            cls.condiment_max_ratio):
+            # there are too many condiments here, remove a certain amount
+            # such that: (condiment_count - num_to_remove)/
+            # len(abstract_products - num_to_remove) < 0.3
+            num_to_remove = (condiment_count -
+                             cls.condiment_max_ratio *
+                             float(len(abstract_products))) / (
+                        1.0 - cls.condiment_max_ratio)
+            num_to_remove = ceil(num_to_remove)
+
+            num_removed = 0
+            for abstract_product in abstract_products:
+                if abstract_product.is_condiment:
+                    del abstract_products[abstract_product]
+                    num_removed += 1
+
+                if num_removed >= num_to_remove:
                     break
 
-                i += 1
+    # TODO, implement these two filters
+    @classmethod
+    def filter_diet(cls, abstract_products, user_settings):
 
-            if break_condition:
-                break
-
-        return product_list
+        pass
 
     @classmethod
-    def merge_lists(cls, recipe_abstract_product_list, product_list_slack,
-                    product_list, people, recipe_allowance, supermarket):
+    def filter_banned_meats(cls, abstract_products, user_settings):
 
-        recipe_allowance_start = recipe_allowance
-        should_break = False
-        for recipe_abstract_product in recipe_abstract_product_list:
-            abstract_product = AbstractProduct.objects.get(
-                id=recipe_abstract_product.abstract_product.id)
-            qu_ing_needed = None
-            #first try seeing if I still have some slack of the required
-            #abstract_product in my basket
-            try:
-                selected_product, slack = product_list_slack[abstract_product]
+        pass
 
-                #same values in the two different units
-                prod_usage = Unit_helper.get_product_usage(
-                    recipe_abstract_product, selected_product)
-                if prod_usage == "-1":
-                    continue  # there was an error, skip abstract_product
+    @classmethod
+    def get_products_to_buy(cls,
+                            abstract_products,
+                            user_settings,
+                            abstract_product_unit):
 
-                remaining_slack = slack - (float(people) * float(prod_usage))
+        # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
+        product_matrix = []
+        total_cost = 0.0
+        for abstract_product, quantity in abstract_products:
 
-                if remaining_slack >= 0:
-                    #just reduce slack, don't add any product to basket though
-                    product_list_slack[abstract_product] = (
-                    selected_product, remaining_slack)
-                    continue
-                else:
-                    #quantity of abstract_product still needed
-                    del product_list_slack[abstract_product]
-                    qu_ing_needed = (-float(remaining_slack) / (
-                        float(people) * float(prod_usage))) * float(
-                        recipe_abstract_product.quantity)
+            # get list of products attached to abstract_product:
+            apsp = AbstractProductSupermarketProduct.objects.get(
+                abstract_product=abstract_product,
+                supermarket=user_settings.default_supermarket)
 
-            except KeyError:
-                pass
+            my_prod_index = cls.get_selected_product_index(
+                apsp, user_settings.price_sensitivity)
 
-            #abstract_product not yet in the basket.
-            #find suitable product and add it to
-            #basket in a minimum of required quantity
-            potential_product_list = AbstractProductSupermarketProduct.objects.filter(
-                abstract_product_id=abstract_product.id).order_by("rank")
+            if my_prod_index is None:
+                continue  # deal with non existing objects
 
-            potential_product_list = filter(
-                lambda x: x.product.supermarket == supermarket,
-                potential_product_list)
-            potential_product_list = map(lambda x: x.product,
-                                         potential_product_list)
-
-            if len(potential_product_list) == 0:
-                continue  # deal with items not found in db
-
-            potential_product_index_to_get = int(
-                floor(min(len(potential_product_list), 3) * random.random()))
-
-            selected_product = potential_product_list[
-                potential_product_index_to_get]
-
-            prod_usage = Unit_helper.get_product_usage(recipe_abstract_product,
-                                                       selected_product,
-                                                       qu_ing_needed)
-
-            quantity_to_buy = ceil((float(people) * float(prod_usage)) / float(
-                selected_product.quantity))
-            slack = quantity_to_buy * float(selected_product.quantity) - (
-            float(people) * float(prod_usage))
-
+            product_list = []
+            selected_product = apsp.product_dict[str(my_prod_index)]
+            quantity_to_buy = cls.get_quantity_for_product(
+                                 selected_product,
+                                 user_settings,
+                                 abstract_product_unit,
+                                 quantity)
             product_cost = quantity_to_buy * float(
-                selected_product.price.replace("GBP", ""))
+            selected_product.price.replace("GBP", ""))
+            total_cost += product_cost
+            product_list.append([selected_product,
+                                 quantity_to_buy])
 
-            if people * product_cost_limit < product_cost or (
-                    cls.banned_word in selected_product.name):
-                continue  # don't add items that are deemed too expensive or contained a banned word
+            # populate with other similar products that can be selected
+            for ii in len(apsp.product_dict):
+                if ii != my_prod_index:
+                    product_list.append(
+                        apsp.product_dict[str(ii)])
 
-            #check that condiment_ratio is not passed
-            if abstract_product.is_condiment:
-                if len(product_list) > 0 and (
-                            cls.num_condiment_abstract_product / len(
-                                product_list) > cls.condiment_max_ratio):
-                    continue  # don't add extra condiment to basket
-                else:
-                    cls.num_condiment_abstract_product += 1.0
+            if product_list:
+                product_matrix.append(product_list)
 
-            #check that cost is not passed
-            recipe_allowance -= quantity_to_buy * float(
-                selected_product.price.replace("GBP", ""))
+        return product_matrix, total_cost
 
-            if recipe_allowance < 0:
-                should_break = True
-                break
+    # selects the most appropriate product in a list based
+    # solely on price_sensitivity of the user
+    # complexity: O(n) in min(num_products and selected_within_rank)
+    @classmethod
+    def get_selected_product_index(cls, apsp, price_sensitivity):
 
-            # TODO refactor in order to get rid of
-            # TODO product_list_slack and include slack in product_list
-            product_list_slack[abstract_product] = (selected_product, slack)
+        select_within_rank = 5
+        num_prod = len(apsp.product_dict)
 
-            try:
-                bought_quantity = product_list[selected_product][
-                    0]  # change that
-                product_list[selected_product] = [
-                    bought_quantity + quantity_to_buy, abstract_product]
+        if num_prod < 1:
+            return None
 
-            except KeyError:
-            # product was not yet in basket
-                product_list[selected_product] = [quantity_to_buy,
-                                                  abstract_product]
+        loop_size = int(min(num_prod, select_within_rank))
 
-        return should_break, recipe_allowance_start - recipe_allowance
+        considered_products = []
+        for ii in range(loop_size):
+            considered_products.append(apsp.product_dict[str(ii)], ii)
+
+        # just sort with respect to price/quantity
+        considered_products = sorted(considered_products,
+            key=lambda product:
+            float(product[0].price.replace("GBP", ""))/float(
+                product[0].quantity))
+
+        # we floor the value because as always, indexes start at 0
+        selected_index = considered_products[
+            floor(price_sensitivity * loop_size)][1]
+
+        return selected_index
+
+    # determines what quantity should be purchased of a certain
+    # product based on the basket requirements and the user
+    # complexity: tbd
+    @classmethod
+    def get_quantity_for_product(cls,
+                                 product,
+                                 user_settings,
+                                 abstract_product_unit,
+                                 abstract_product_quantity):
+
+        prod_usage = Unit_helper.get_product_usage(abstract_product_unit,
+                                                   product.unit,
+                                                   abstract_product_quantity)
+
+        quantity_to_buy = ceil((float(
+            user_settings.people) * float(
+            prod_usage)) / float(
+            product.quantity))
+
+        return quantity_to_buy
+
+    @classmethod
+    def merge_matrix(cls, product_matrix):
+
+        product_matrix = sorted(product_matrix,
+                                key=lambda entry: entry[0][0])
+
+        output_product_matrix = []
+        output_product_matrix.append(product_matrix[1])
+
+        loop_range = len(product_matrix)
+        for ii in range(1, loop_range):
+            # essentially test the last product of the output.
+            # if it is the same as the one being iterated over, just
+            # add quantities instead of returning multiple products.
+            if output_product_matrix[-1][0][0] == product_matrix[ii][0][0]:
+                output_product_matrix[-1][0][1] += product_matrix[ii][0][1]
+            else:
+                output_product_matrix.append(product_matrix[ii])

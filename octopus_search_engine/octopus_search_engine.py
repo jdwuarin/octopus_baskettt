@@ -46,10 +46,6 @@ def simple_search(query, supermarket):
         if ii >= num_results_per_type:
             break
 
-    # for apsp in sqs:
-    #     for rank, product in apsp.object.product_dict.iteritems():
-    #         result_product_list.append(product)
-
     #search for term in product
     sqs = SearchQuerySet().filter(suoermarket=supermarket).models(Product)
     sqs = sqs.filter(text=query)[:num_results_per_type]

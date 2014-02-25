@@ -89,13 +89,9 @@ class BasketRecommendationEngine(object):
             if not recipe_column_indexes:
                 break
 
-        print "recipe_list_size : " + str(len(recipe_list))
-
         # mappings to abstract_products are then obtained
         recipe_abstract_product_list = RecipeAbstractProduct.objects.filter(
             recipe__in=recipe_list).order_by('abstract_product')
-
-        print "recipe_abstract_product_list_size: " + str(len(recipe_abstract_product_list))
 
         # units are dealt with separating abstract_products in
         # a list requiring grams and "each" of a certain abstract_product.
@@ -103,16 +99,9 @@ class BasketRecommendationEngine(object):
         abstract_products_grams, abstract_products_each =\
             Unit_helper.get_abstract_products_by_unit(
                 recipe_abstract_product_list)
-
-        print "abstract_products_grams_len_1: " + str(len(abstract_products_grams))
-        print "abstract_products_each_len_1: " + str(len(abstract_products_each))
-
         # we first filter out the "too many" condiments that we might have
         cls.filter_out_extra_condiments(abstract_products_grams)
         cls.filter_out_extra_condiments(abstract_products_each)
-
-        print "abstract_products_grams_len_2: " + str(len(abstract_products_grams))
-        print "abstract_products_each_len_2: " + str(len(abstract_products_each))
 
         # we then filter out all the ingredients that do not
         # respects the users diet or banned meats or products etc...
@@ -128,17 +117,11 @@ class BasketRecommendationEngine(object):
         product_matrix = cls.get_products_to_buy(
             abstract_products_grams, user_settings, "grams")
 
-        print "product_matrix_len_grams: " + str(len(product_matrix))
-
         product_matrix += cls.get_products_to_buy(
             abstract_products_each, user_settings, "each")
 
-        print "product_matrix_len_both: " + str(len(product_matrix))
-
         # the lists are then merged. I.e same products quantities are just added
         product_matrix = cls.merge_matrix(product_matrix)
-
-        print "product_matrix_len_merged: " + str(len(product_matrix))
 
         return product_matrix
 

@@ -10,7 +10,7 @@ from unit_helper import Unit_helper
 product_cost_limit = 6
 
 class BasketRecommendationEngine(object):
-    condiment_max_ratio = 0.2
+    condiment_max_ratio = 0.3
     num_condiment_abstract_product = 0.0
     num_returned_prod_per_abstract_product = 20
 
@@ -41,39 +41,61 @@ class BasketRecommendationEngine(object):
         product_list = []
         if len(potential_recipe_list) > 0:
             product_list = cls.get_product_matrix(potential_recipe_list,
-                                                user_settings)
+                                                  user_settings)
         return product_list
 
     @classmethod
     def get_product_matrix(cls, potential_recipes, user_settings):
         recipe_type_passed = 0
-        meals_per_day = 1  # should probably be in user_settings somehow
+        meals_per_day = 2  # should probably be in user_settings somehow
         product_matrix = []
-        i = 0
+
+        # here I just generate a dict with all the indexes of
+        # the recipes that should be iterated over remember and the
+        # row the iteration is at, potential_recipes; we start at 0
+        # is a list of list (a sort of matrix, where columns height can differ)
+        recipe_column_indexes = {}
+        for ii in range(len(potential_recipes)):
+            recipe_column_indexes[ii] = 0
 
         # a rough recipe_list is first gathered
         recipe_list = []
-        while len(recipe_list) * meals_per_day < user_settings.days:
 
-            for ii, recipe in enumerate(potential_recipes):
+        num_wanted_recipes = meals_per_day * user_settings.days
+        while len(recipe_list) < num_wanted_recipes:
 
+            # if an index error occured, the recipe_column has been exhausted
+            # add it to this list and remove it from dict so as not to iterate
+            # over it anymore
+            column_indexes_to_delete = []
+
+            for column, row in recipe_column_indexes.iteritems():
                 try:
-                    recipe = recipe[i / len(
-                        potential_recipes)]  # the division will floor the value, which is what we want
-                except IndexError:
-                    recipe_type_passed += 1
-                    if recipe_type_passed == len(potential_recipes):
-                        break_condition = True
+                    recipe = potential_recipes[column][row]
+                    # if recipe was there, add it to recipe_list
+                    recipe_list.append(recipe)
+                    # then increment row
+                    recipe_column_indexes[column] = row + 1
+                    # break out if number of wanted recipes is reached
+                    if len(recipe_list) == num_wanted_recipes:
                         break
-                    else:
-                        continue  # if no more recipe of that kind, go to next kind
 
-                recipe_list.append(recipe)
+                except IndexError:
+                    column_indexes_to_delete.append(column)
+
+            for index in column_indexes_to_delete:
+                del recipe_column_indexes[index]
+
+            if not recipe_column_indexes:
+                break
+
+        print "recipe_list_size : " + str(len(recipe_list))
 
         # mappings to abstract_products are then obtained
-        recipe_abstract_product_list = (
-            RecipeAbstractProduct.objects.filter(
-                recipe__in=recipe_list).order_by('abstract_product'))
+        recipe_abstract_product_list = RecipeAbstractProduct.objects.filter(
+            recipe__in=recipe_list).order_by('abstract_product')
+
+        print "recipe_abstract_product_list_size: " + str(len(recipe_abstract_product_list))
 
         # units are dealt with separating abstract_products in
         # a list requiring grams and "each" of a certain abstract_product.
@@ -82,9 +104,15 @@ class BasketRecommendationEngine(object):
             Unit_helper.get_abstract_products_by_unit(
                 recipe_abstract_product_list)
 
+        print "abstract_products_grams_len_1: " + str(len(abstract_products_grams))
+        print "abstract_products_each_len_1: " + str(len(abstract_products_each))
+
         # we first filter out the "too many" condiments that we might have
         cls.filter_out_extra_condiments(abstract_products_grams)
         cls.filter_out_extra_condiments(abstract_products_each)
+
+        print "abstract_products_grams_len_2: " + str(len(abstract_products_grams))
+        print "abstract_products_each_len_2: " + str(len(abstract_products_each))
 
         # we then filter out all the ingredients that do not
         # respects the users diet or banned meats or products etc...
@@ -99,11 +127,18 @@ class BasketRecommendationEngine(object):
         # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
         product_matrix = cls.get_products_to_buy(
             abstract_products_grams, user_settings, "grams")
+
+        print "product_matrix_len_grams: " + str(len(product_matrix))
+
         product_matrix += cls.get_products_to_buy(
             abstract_products_each, user_settings, "each")
 
-        # the lists are then merged.
+        print "product_matrix_len_both: " + str(len(product_matrix))
+
+        # the lists are then merged. I.e same products quantities are just added
         product_matrix = cls.merge_matrix(product_matrix)
+
+        print "product_matrix_len_merged: " + str(len(product_matrix))
 
         return product_matrix
 
@@ -212,7 +247,7 @@ class BasketRecommendationEngine(object):
 
         considered_products = []
         # starting at 1 because ranks start at 1 and not 0
-        for ii in range(1, loop_size):
+        for ii in range(1, loop_size+1):
             considered_products.append([apsp.product_dict[str(ii)], ii])
 
         # just sort with respect to price/quantity
@@ -238,6 +273,7 @@ class BasketRecommendationEngine(object):
                                  abstract_product_unit,
                                  abstract_product_quantity):
 
+
         prod_usage = Unit_helper.get_product_usage(abstract_product_unit,
                                                    product.unit,
                                                    abstract_product_quantity)
@@ -253,10 +289,11 @@ class BasketRecommendationEngine(object):
     def merge_matrix(cls, product_matrix):
 
         product_matrix = sorted(product_matrix,
-                                key=lambda entry: entry[0][0])
+                                key=lambda entry: entry[0][0].name)
 
         output_product_matrix = []
-        output_product_matrix.append(product_matrix[1])
+        if len(product_matrix) > 0:
+            output_product_matrix.append(product_matrix[0])
 
         loop_range = len(product_matrix)
         for ii in range(1, loop_range):
@@ -266,6 +303,9 @@ class BasketRecommendationEngine(object):
             if output_product_matrix[-1][0][0] == product_matrix[ii][0][0]:
                 output_product_matrix[-1][0][1] += product_matrix[ii][0][1]
             else:
-                output_product_matrix.append(product_matrix[ii])
+                # TODO, make this hotfix better by selecting better products
+                # when bullshit is returned.
+                if product_matrix[ii][0][0].department not in cls.banned_deps:
+                    output_product_matrix.append(product_matrix[ii])
 
         return output_product_matrix

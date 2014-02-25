@@ -66,15 +66,15 @@
 							<div class="product-remove">
 								<i remove></i>
 							</div>
-							<img ng-src="{{product.img | imglarge}}" alt="" class="animated:hover bounce">
+							<img ng-src="{{product.main.img | imglarge}}" alt="" class="animated:hover bounce">
 						</div>
 
 						<div class="product-desc">
 							<div class="product-name">
-								<p>{{product.name}}</p>
+								<p>{{product.main.name}}</p>
 							</div>
 							<div class="product-price">
-								&pound;{{getTotal(product.price, product.quantity)}}
+								&pound;{{getTotal(product.main.price, product.quantity)}}
 							</div>
 							<div class="quantity">
 								<div class="input-group">

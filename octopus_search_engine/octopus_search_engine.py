@@ -36,18 +36,31 @@ def simple_search(query, supermarket):
     # just used to make sure we only add 20 of those and no more
     ii = 0
     for apsp in sqs:
-        for __, product in apsp.object.product_dict.iteritems():
-            result_product_list.append(product)
+
+        print apsp.object.abstract_product
+
+        apsp_prod_list = []
+        for rank, product in apsp.object.product_dict.iteritems():
+            apsp_prod_list.append([rank, product])
             ii += 1
 
             if ii >= num_results_per_type:
                 break
 
+        # sort by rank
+        apsp_prod_list = sorted(apsp_prod_list,
+                                 key=lambda x: x[0])
+        # remove rank info
+        apsp_prod_list = map(lambda x: x[1], apsp_prod_list)
+
+        result_product_list += apsp_prod_list
+
         if ii >= num_results_per_type:
             break
 
+
     #search for term in product
-    sqs = SearchQuerySet().filter(suoermarket=supermarket).models(Product)
+    sqs = SearchQuerySet().filter(supermarket=supermarket).models(Product)
     sqs = sqs.filter(text=query)[:num_results_per_type]
 
     for result in sqs:

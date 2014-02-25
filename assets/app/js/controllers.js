@@ -64,31 +64,31 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	// Watcher here instead of a directive
 	// Too much of a hasle to create a template
-	$scope.$watch('diet', function(newValue){
-		if(newValue !== "other"){ // Cancel selection
-			$scope.meat.porc = false;
-			$scope.meat.beef = false;
-			$scope.meat.poultry = false;
-			$scope.diet = newValue;
-		}
-	});
+	// $scope.$watch('diet', function(newValue){
+	// 	if(newValue !== "other"){ // Cancel selection
+	// 		$scope.meat.porc = false;
+	// 		$scope.meat.beef = false;
+	// 		$scope.meat.poultry = false;
+	// 		$scope.diet = newValue;
+	// 	}
+	// });
 
-	$scope.$watch('meat', function(newValue){
-		console.log($scope.diet);
-		if($scope.diet !== "other"){
-			$scope.diet = "other";
-		}
-	}, true);
+	// $scope.$watch('meat', function(newValue){
+	// 	console.log($scope.diet);
+	// 	if($scope.diet !== "other"){
+	// 		$scope.diet = "other";
+	// 	}
+	// }, true);
 
 	$scope.generateBasket = function() {
 
-		if(Preference.isNotValid($scope.preference)) {
-			Alert.add("You didn't put the right informations.","danger");
-			goToTop();
-		} else {
-			Preference.setParameters($scope.preference);
+		// if(Preference.isNotValid($scope.preference)) {
+		// 	Alert.add("You didn't put the right informations.","danger");
+		// 	goToTop();
+		// } else {
+		// 	Preference.setParameters($scope.preference);
 			$location.path("/basket");
-		}
+		//}
 	};
 
 }])
@@ -100,7 +100,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
 
-		preferenceList = {"cuisine":["Thai","French"],"budget":50, "people":20, "days":2};
+		preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
@@ -141,6 +141,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					} else {
 						Basket.addOldRecommendation(res);
 						$scope.products = res;
+						console.log(res);
 					}
 				});
 		} else {

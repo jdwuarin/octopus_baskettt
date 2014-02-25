@@ -62,8 +62,8 @@ def create_basket_test():
     user_settings = UserSettings(
                     people=2,
                     days=7,
-                    price_sensitivity=0.23,
-                    tags=["European", "Chinese", "Indian"],
+                    price_sensitivity=0.5,
+                    tags=["European", "Chinese"],
                     default_supermarket=Supermarket.objects.get(name="tesco"),
                     pre_user_creation_hash="dummy",
                     diet=Diet.objects.get(name="Vegan"),
@@ -74,9 +74,12 @@ def create_basket_test():
 
     # The structure of the recommendation engine response is a list like:
     # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
-    for row in basket:
-        for product in row:
-            print product
+
+    print str(len(basket))
+
+    # for row in basket:
+    #     for product in row:
+    #         print product
 
     # basket_porting_test("some_request", product_list)
 

@@ -31,10 +31,12 @@
     "fastclick": "*",
     "allmighty-autocomplete": "*",
     "animate.css": "*",
-    "onepage-scroll": "*"
+    "onepage-scroll": "*",
+    "jquery-ui": "*",
+    "angular-ui-slider": "*"
   },
   "resolutions": {
-    "angular": "1.2.10",
-    "jquery": "~1.9"
+    "angular": "1.2.13",
+    "jquery": "~2.0.3"
   }
 }

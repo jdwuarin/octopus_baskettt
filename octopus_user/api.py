@@ -209,16 +209,22 @@ class UserResource(ModelResource):
                         value_error = True
                         break
 
+            # TODO fix this bullshit
             banned_meats = []
-            for banned_meat in data['banned_meats']:
-                id = BannableMeats.objects.get(name=banned_meat).id
-                banned_meats.append(id)
+            # for banned_meat in data['banned_meats']:
+            #     id = BannableMeats.objects.get(name=banned_meat).id
+            #     banned_meats.append(id)
+
+            
+            data['diet'] = "Vegan"
 
             banned_abstract_products = []
-            for entry in data['banned_abstract_products']:
-                sqs = SearchQuerySet().models(AbstractProduct)
-                id = sqs.filter(content=entry)[0].object.id
-                banned_abstract_products.append(id)
+            # for entry in data['banned_abstract_products']:
+            #     sqs = SearchQuerySet().models(AbstractProduct)
+            #     id = sqs.filter(content=entry)[0].object.id
+            #     banned_abstract_products.append(id)
+
+            ############################
 
             data['supermarket'] = "tesco" #TODO remove tesco hardcode
 
@@ -231,7 +237,7 @@ class UserResource(ModelResource):
                     default_supermarket=
                     Supermarket.objects.get(name=data['supermarket']),
                     pre_user_creation_hash=hash,
-                    diet=Diet.objects.all.get(name=data['diet']),
+                    diet=Diet.objects.get(name=data['diet']),
                     banned_meats=banned_meats,
                     banned_abstract_products=banned_abstract_products)
                 user_settings.save()
@@ -261,18 +267,40 @@ class UserResource(ModelResource):
 
         response = []
 
-        # going to be basket[abstrac_product] = [(product, quantity), product..]
-        # The structure of the recommendation engine response is a dictionnary
-        # basket[selected_product] = [quantity_to_buy, abstract_product]
-        for key, value in basket.iteritems():
+        # basket[0] = [[selected_product, quantity], other_prod1, op2,...]
+
+        print "basket length: " + str(len(basket))
+
+        for entry in basket:
+
+            # this is the json that will be returned
             product_json = {}
-            product_json['id'] = key.id
-            product_json['name'] = key.name
-            product_json['price'] = key.price
-            product_json['link'] = key.link
-            product_json['img'] = str(key.external_image_link)
-            product_json['quantity'] = value[0]
-            product_json['ingredient'] = value[1].name
+
+            # this is the main product, the one to be showed by default
+            product_json_main = {}
+            product_json_main['id'] = entry[0][0].id
+            product_json_main['name'] = entry[0][0].name
+            product_json_main['price'] = entry[0][0].price
+            product_json_main['link'] = entry[0][0].link
+            product_json_main['img'] = str(entry[0][0].external_image_link)
+            product_json_main['ingredient'] = entry[0][0].ingredients
+
+            product_json['main'] = (product_json_main)
+            product_json['quantity'] = entry[0][1]
+            other_products = []
+
+            for ii in range(1, len(entry)):
+                product_json_other = {}
+                product_json_other['id'] = entry[ii].id
+                product_json_other['name'] = entry[ii].name
+                product_json_other['price'] = entry[ii].price
+                product_json_other['link'] = entry[ii].link
+                product_json_other['img'] = str(entry[ii].external_image_link)
+                product_json_other['ingredient'] = entry[ii].ingredients
+
+                other_products.append(product_json_other)
+
+            product_json['other_products'] = other_products
             response.append(product_json)
 
         user_settings_hash_json = {}

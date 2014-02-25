@@ -1,6 +1,6 @@
 class Unit_helper(object):
     recipe_ingredient_gram_unit = [
-        "grams"
+        "grams",
         "bag",
         "can",
         "g",
@@ -127,7 +127,6 @@ class Unit_helper(object):
                           needed_quantity):
 
         if abstract_product_unit in cls.recipe_ingredient_gram_unit:
-
             #see what the product listing uses as unit
             if product_unit == "g" or product_unit == "ml":
                 return needed_quantity

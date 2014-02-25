@@ -119,7 +119,7 @@ class UserResource(ModelResource):
         password = data.get('password', '')
 
         try:
-            user_invited = UserInvited.objects.get(email=email)
+            user_invited = UserInvited.objects.get(email__iexact=email)
             if not user_invited.is_invited:
                 # user has already tried signing up but we have
                 # not allowed him to use our beta yet. I.e, user is
@@ -132,19 +132,34 @@ class UserResource(ModelResource):
             user_invited = UserInvited(email=email, is_invited=False)
             user_invited.save()
             return self.create_response(request, {
-                'reason': 'not_invited',
+                'reason': 'added, but not_invited',
                 'success': False
             })
 
+        # make sure user doesn't already exist using
+        # case insensitive email as username
         try:
-            User.objects.create_user(email, email, password)
+            User.objects.get(username__iexact=email)
 
-        except IntegrityError:
             return self.create_response(request, {
                 #user with same email address already exists
                 'reason': 'already_exist',
                 'success': False
             })
+
+        except User.DoesNotExist:
+            try:
+                # then create user
+                User.objects.create_user(email, email, password)
+
+            except IntegrityError:
+                # some error occured, return success False
+                return self.create_response(request, {
+                    #some other error occured
+                    'reason': 'unindentified error',
+                    'success': False
+                })
+
 
         # Login after registration
         user = authenticate(username=email, password=password)
@@ -327,7 +342,7 @@ class UserResource(ModelResource):
         response_data = {}
 
         try:
-            user_invited = UserInvited.objects.get(email=email)
+            user_invited = UserInvited.objects.get(email__iexact=email)
             response_data['success'] = False
             response_data['reason'] = "user already exists"
         except UserInvited.DoesNotExist:

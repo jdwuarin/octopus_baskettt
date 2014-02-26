@@ -1,21 +1,57 @@
 #!bin/bash
 
+adduser ubuntu
+sudo usermod -aG sudo ubuntu
+su ubuntu
+sudo passwd -l root
+
+#copy ssh public key to server from LOCAL
+scp ~/Dropbox/Server_me/octopus/octopus_key.pub ubuntu@134.213.31.177:/home/ubuntu/
+
+#back on server:
+mkdir /home/ubuntu/.ssh
+mv /home/ubuntu/octopus_key.pub /home/ubuntu/.ssh
+chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+chmod 700 /home/ubuntu/.ssh
+chmod 600 /home/ubuntu/.ssh/authorized_keys
+ 
+# make sure this file: "/etc/ssh/sshd_config"
+# contains the following:
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication no
+UseDNS no
+AllowUsers ubuntu
+
+# setup iptables (create rules)
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -I INPUT -p tcp  --dport 22 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -A INPUT -j DROP
+sudo iptables -I INPUT 1 -i lo -j ACCEPT
+sudo iptables-save | sudo tee /etc/iptables.up.rules
+
+# make iptables reload everytime we restart the server
+sudo touch /etc/network/if-pre-up.d/iptables
+echo '#!/bin/sh' | sudo tee -a /etc/network/if-pre-up.d/iptables
+echo '/sbin/iptables-restore < /etc/iptables.up.rules' | sudo tee -a /etc/network/if-pre-up.d/iptables
+sudo chmod +x /etc/network/if-pre-up.d/iptables
+
+# save changes made to iptables on shutdown
+sudo touch /etc/network/if-post-down.d/iptables
+echo '#!/bin/sh
+iptables-save -c > /etc/iptables.save
+if [ -f /etc/iptables.downrules ]; then
+   iptables-restore < /etc/iptables.downrules
+fi
+exit 0' | sudo tee -a /etc/network/if-post-down.d/iptables
+
+sudo service ssh restart
+
 #just update server
 sudo apt-get update
 sudo apt-get -y upgrade
-
-#postgres part
-sudo apt-get install postgresql postgresql-contrib
-sudo su - postgres
-createuser --no-superuser --no-createdb --no-createrole octopus_user
-createdb --owner octopus_user db1
-psql -U postgres -d db1 -c "alter user octopus_user with password 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l';"
-psql -U postgres db1 -c 'create extension hstore;'
-psql -U postgres db1 -c 'create extension unaccent;'
-psql -U postgres template1 -c 'create extension hstore;'
-psql -U postgres template1 -c 'create extension unaccent;'
-exit #of postgres
-#connect to db using: psql -U octopus_user -h localhost db1
 
 #clone project
 sudo apt-get install -y git
@@ -35,9 +71,9 @@ sudo chmod -R g+w /webapps/octopus
 #install virtualenv
 sudo apt-get install python-virtualenv
 cd /webapps/octopus
-sudo virtualenv env
+virtualenv env
 source ./env/bin/activate
-apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev
+sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
 pip install -r stable-req.txt
 
 #static assets
@@ -45,10 +81,10 @@ sudo apt-get update
 sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository -y ppa:chris-lea/node.js
 sudo apt-get update
-sudo apt-get install nodejs
+sudo apt-get -y install nodejs
 sudo npm install -g grunt-cli
 sudo su - octopus -c 'npm install'
-sudo  npm install -g bower
+sudo npm install -g bower
 sudo su - octopus -c 'bower install'
 sudo su - octopus -c 'grunt production'
 
@@ -68,23 +104,11 @@ scrapy crawl tesco
 scrapy crawl food_com
 scrapy crawl abs_prod_prod_match
 
-#elasticsearch
-sudo apt-get update
-sudo apt-get install openjdk-7-jre-headless -y
-wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.10.deb
-sudo dpkg -i elasticsearch-0.90.10.deb
-sudo cp /webapps/octopuselasticsearch.yml /etc
-
-#haystack
-#nothing to do really, all covered in code if not:
-#python manage.py update_index #to build the index (do after db population)
-
 #dealing with gunicorn
-cd ../
 sudo chown -R octopus:users ./ #just making sure the privileges are still acurate
 cp gunicorn_start.sh ./env/bin
 sudo chown octopus:users ./env/bin/gunicorn_start.sh
-chmod u+x ./env/bin/gunicorn_start.sh
+sudo chmod u+x ./env/bin/gunicorn_start.sh
 sudo apt-get install python-dev
 pip install setproctitle
 

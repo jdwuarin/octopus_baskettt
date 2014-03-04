@@ -140,8 +140,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
 						Basket.addOldRecommendation(res);
-						$scope.products = res;
-						console.log(res);
+						$scope.products = Product.formatUI(res);
 					}
 				});
 		} else {
@@ -171,8 +170,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.results = [];
 
 		$scope.autoComplete = function(query) {
-
-			if(query === undefined){
+			if(typeof query === "undefined" || query.length === 0){
 				return [];
 			}
 
@@ -252,9 +250,20 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	};
 
 	$scope.basketTotal = function() {
+
 		var total = 0;
-		angular.forEach($scope.products, function(value, key){
-			total += parseFloat(value.price.replace("GBP","")) * parseInt(value.quantity,10);
+
+		if(typeof $scope.products === "undefined") { return 0; }
+
+		// Flatten the array
+		var productList = $scope.products.map(function (v) {
+			return v.products;
+		}).reduce(function (a, b){
+			return a.concat(b);
+		});
+
+		productList.forEach(function (p) {
+			total += parseFloat(p.price.replace("GBP","")) * parseInt(p.quantity,10);
 		});
 
 		return total.toFixed(2);

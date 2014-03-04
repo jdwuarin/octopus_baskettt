@@ -48,7 +48,39 @@ angular.module('App.services', ['LocalStorageModule'])
 				}
 
 				return searchItems;
+			},
+			formatUI: function(productSets) {
+
+				var mainProducts = productSets.map(function (productSet) {
+					if(productSet["main"]) {
+						productSet["main"]["quantity"]=(productSet.quantity);
+					}
+					return productSet["main"];
+				}).filter(function (product) {
+					return !!product;
+				});
+
+				var byDepartment = {};
+				mainProducts.forEach(function (product) {
+					var department = product.department;
+					if (!byDepartment[department]) {
+						byDepartment[department] = [];
+					}
+					byDepartment[department].push(product);
+				});
+
+				var result = Object.keys(byDepartment).sort(function (a, b) {
+					return byDepartment[b].length - byDepartment[a].length;
+				}).map(function (name) {
+					return {
+						name: name,
+						products: byDepartment[name]
+					};
+				});
+
+				return result;
 			}
+
 		};
 	}])
 

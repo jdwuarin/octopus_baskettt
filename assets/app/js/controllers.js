@@ -204,42 +204,49 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 
 		$scope.addProduct = function(new_product) {
+
 			var $products = $scope.products,
-			isPresent = false;
+			isPresent = false,
+			index = -1;
 
-			for (var i = $products.length-1; i >= 0; i--) {
-				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
-					isPresent = true;
-				if($products[i].quantity>=100){
-					$products[i].quantity = 100;
-				} else{
-					$products[i].quantity += 1;
+			$products.map(function (d, i) {
+				if(d.name === new_product.department) { index = i; }
+			});
+
+			// If new department
+			if (index === -1) {
+				$products.push({
+					name: new_product.department,
+					products: [new_product]
+				});
+			} else {
+
+				$products[index]["products"] = $products[index]["products"].map(function (p) {
+					if(p.name === new_product.name){
+						p.quantity += 1;
+						isPresent = true;
+					}
+					return p;
+				});
+
+				// If new product in existing department
+				if(!isPresent) {
+					$products[index]["products"].push(new_product);
 				}
-				break;
 			}
-		}
-
-		if(!isPresent){
-			new_product.quantity = 1;
-			$scope.products.push(new_product);
-		} else {
-			$scope.products = $products;
-		}
-	};
+		};
 
 	$scope.removeProduct = function(product) {
 		var $products = $scope.products;
 
 		for (var i = $products.length-1; i >= 0; i--) {
-			if ($products[i].name === product.name) {
-				$products[i].quantity -= 1;
 
-				if($products[i].quantity === 0) {
-					$products.splice(i,1);
-				}
-
-				break;
-			}
+			$products[i]["products"] = $products[i]["products"].map(function (p) {
+				if(p.name === product.name) { p.quantity -= 1; }
+				return p;
+			}).filter(function (p) {
+				return p.quantity > 0;
+			});
 		}
 
 		$scope.products = $products;

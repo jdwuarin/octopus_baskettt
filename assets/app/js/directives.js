@@ -138,7 +138,7 @@ angular.module('App.directives', [])
 		return {
 			link: function (scope, element, attrs) {
 				element.bind("click", function() {
-					$rootScope.$emit('removeProduct', scope.$index);
+					$rootScope.$emit('removeProduct', scope.product);
 				});
 			},
 			template: '<i class="glyphicon glyphicon-remove"></i>',

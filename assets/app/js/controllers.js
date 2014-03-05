@@ -107,8 +107,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.search_result = {};
 
 		// When you remove a product from the directive you need to update the scope
-		$rootScope.$on('removeProduct', function(event, $productIndex){
-			$scope.products.splice($productIndex,1);
+		$rootScope.$on('removeProduct', function(event, product){
+			var $products = $scope.products;
+			// TODO: Move that logic to a service
+			for (var i = $products.length-1; i >= 0; i--) {
+				$products[i]["products"] = $products[i]["products"].map(function (p) {
+					if(p.name === product.name) { p.quantity = 0; }
+					return p;
+				}).filter(function (p) {
+					return p.quantity > 0;
+				});
+			}
+
+			$scope.products = $products;
 			$scope.$apply();
 		});
 

@@ -32,7 +32,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
 
 	$scope.cuisines = [{ "name": "Italian", "image": "italy.png"},
 	{ "name": "Chinese", "image": "china.png"},
@@ -42,11 +42,23 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	{ "name": "French",  "image": "france.png"}];
 
 	$scope.preference = {};
-	$scope.diet = {};
-	$scope.meat = {};
-	// Persist data from local storage
 	$scope.preference = Preference.getAll();
-	$scope.cookingValue = $scope.preference.budget ? $scope.preference.budget : 20;
+
+	$scope.number = 8;
+	$scope.peopleIndex = 1;
+	$scope.preference.days = 7;
+
+	$scope.getNumber = function(num) {
+		return new Array(num);
+	}
+
+	$rootScope.$on('peoplePosition', function(event, selectedIndex){
+		$scope.peopleIndex = selectedIndex;
+		$scope.$digest();
+	});
+
+	// Persist data from local storage
+	$scope.cookingValue = $scope.preference.price_sensitivity ? $scope.preference.price_sensitivity : 20;
 
 	var goToTop = function(){
 		// set the location.hash to the id of
@@ -58,37 +70,30 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	// JQuery logic in the controller because I don't have access to the
 	// ui-slider directive - ugly but does the work
 	angular.element('.slider-bar').bind('mouseup', function(){
-		$scope.preference.budget = $scope.cookingValue;
-		Preference.setParameters($scope.preference);
+		$scope.preference.price_sensitivity = $scope.cookingValue;
 	});
 
-	// Watcher here instead of a directive
-	// Too much of a hasle to create a template
-	// $scope.$watch('diet', function(newValue){
-	// 	if(newValue !== "other"){ // Cancel selection
-	// 		$scope.meat.porc = false;
-	// 		$scope.meat.beef = false;
-	// 		$scope.meat.poultry = false;
-	// 		$scope.diet = newValue;
-	// 	}
-	// });
+	$scope.addDays = function(){
+		$scope.preference.days++;
+	};
 
-	// $scope.$watch('meat', function(newValue){
-	// 	console.log($scope.diet);
-	// 	if($scope.diet !== "other"){
-	// 		$scope.diet = "other";
-	// 	}
-	// }, true);
+	$scope.removeDays = function(){
+		if($scope.preference.days !==1) {
+			$scope.preference.days--;
+		}
+	};
 
 	$scope.generateBasket = function() {
-
-		// if(Preference.isNotValid($scope.preference)) {
-		// 	Alert.add("You didn't put the right informations.","danger");
-		// 	goToTop();
-		// } else {
-		// 	Preference.setParameters($scope.preference);
+		$scope.preference.people = $scope.peopleIndex+1;
+		console.log($scope.preference);
+		if(Preference.isNotValid($scope.preference)) {
+			Alert.add("It looks like you didn't select all of your preferences.","danger");
+			goToTop();
+		}
+		else {
+			Preference.setParameters($scope.preference);
 			$location.path("/basket");
-		//}
+		}
 	};
 
 }])
@@ -99,8 +104,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-
-		preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
+		console.log(preferenceList);
+		// preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};

@@ -185,8 +185,9 @@ angular.module('App.services', ['LocalStorageModule'])
 			setParameters: function(preferences) {
 
 				preferenceList.cuisine = preferences.cuisine;
-				preferenceList.budget  = preferences.budget;
-				preferenceList.diet    = preferences.diet;
+				preferenceList.price_sensitivity  = preferences.price_sensitivity;
+				preferenceList.people  = preferences.people;
+				preferenceList.days    = preferences.days;
 
 				var pref_str = JSON.stringify(preferenceList);
 				localStorage.add('preferences', pref_str);
@@ -207,14 +208,14 @@ angular.module('App.services', ['LocalStorageModule'])
 				// First check to avoid an error with length
 				if(isUndefined(list.cuisine) ||
 					isUndefined(list.people) ||
-					isUndefined(list.budget) ||
+					isUndefined(list.price_sensitivity) ||
 					isUndefined(list.days)) {
 					return true;
 				}
 
 				if(list.cuisine.length === 0 ||
 					list.people.length === 0 ||
-					list.budget.length === 0 ||
+					list.price_sensitivity.length === 0 ||
 					list.days.length === 0) {
 					return true;
 				} else {

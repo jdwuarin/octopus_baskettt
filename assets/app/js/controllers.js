@@ -130,7 +130,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		if(!User.isLoggedIn()) {
-			console.log(User.isLoggedIn());
 			$scope.getBasket();
 		}
 

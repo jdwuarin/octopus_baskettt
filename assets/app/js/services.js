@@ -149,13 +149,13 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	// Factory that uses our user api
-	.factory('User', ['$cookies', '$http', '$location', function($cookies, $http, $location) {
+	.factory('User', ['$cookies', '$http', '$location', '$route', function($cookies, $http, $location, $route) {
 
 		function getUrl(req) {
 			return 'api/v1/user/' + req + '/?format=json';
 		}
 
-		var LoggedIn = null;
+		var LoggedIn = (angular.copy(window.activeUser).length !== 0);
 
 		return {
 			login: function(email, password, callback,errorcb) { // POST /user/login
@@ -190,15 +190,6 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
 				}).success(callback).error(errorcb);
-			},
-			// Check if logged in in Django backend
-			// Avoid losing a session when a user reloads the page
-			requestLoggedIn: function(callback) {
-				return $http({
-					url: 'api/v1/user/current/?format=json',
-					method: "GET",
-					headers: {'Content-Type': 'application/json'},
-				}).success(callback);
 			},
 			registerBeta: function(email, callback) {
 				return $http({

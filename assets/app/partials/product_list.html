@@ -70,7 +70,7 @@
 				</div>
 
 				<div ng-repeat="department in products track by $index">
-				<h3>{{ department.name }} </h3>
+				<h3 ng-class="{departmentpadding: $index !== 0}">{{ department.name }} </h3>
 				<div class="product-container fade-item" ng-repeat="product in department.products">
 					<div class="product-box" ng-class="{'selected_product':selectedStatus}" >
 						<div class="product-img">

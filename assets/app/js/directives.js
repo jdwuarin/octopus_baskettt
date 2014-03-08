@@ -21,7 +21,7 @@ angular.module('App.directives', [])
 	.directive('onboardPeople', ['$rootScope', function($rootScope){
 		return {
 			link: function(scope, element, attrs) {
-				element.bind("mouseover click", function(event){
+				element.bind("click", function(event){
 					$rootScope.$emit('peoplePosition', parseInt(attrs.position,10));
 				});
 			}
@@ -123,7 +123,7 @@ angular.module('App.directives', [])
 		return {
 			link: function (scope, element, attrs) {
 				element.bind("click", function() {
-					$rootScope.$emit('removeProduct', scope.product);
+					$rootScope.$emit('deleteProduct', scope.product);
 				});
 			},
 			template: '<i class="glyphicon glyphicon-remove"></i>',

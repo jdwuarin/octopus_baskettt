@@ -34,44 +34,25 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 .controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
 
-	$scope.cuisines = [{ "name": "Italian", "image": "italy.png"},
-	{ "name": "Chinese", "image": "china.png"},
-	{ "name": "Indian", "image": "india.png"},
-	{ "name": "Spanish", "image": "spain.png"},
-	{ "name": "Thai",  "image": "thai.png"},
-	{ "name": "French",  "image": "france.png"}];
+	$scope.cuisines = [
+		{ "name": "Italian", "image": "italy.png"},
+		{ "name": "Chinese", "image": "china.png"},
+		{ "name": "Indian", "image": "india.png"},
+		{ "name": "Spanish", "image": "spain.png"},
+		{ "name": "Thai",  "image": "thai.png"},
+		{ "name": "French",  "image": "france.png"}
+	];
 
-	$scope.preference = {};
 	$scope.preference = Preference.getAll();
-
 	$scope.number = 8;
 	$scope.peopleIndex = 1;
 	$scope.preference.days = 7;
-
-	$scope.getNumber = function(num) {
-		return new Array(num);
-	}
-
-	$rootScope.$on('peoplePosition', function(event, selectedIndex){
-		$scope.peopleIndex = selectedIndex;
-		$scope.$digest();
-	});
-
-	// Persist data from local storage
 	$scope.cookingValue = $scope.preference.price_sensitivity ? $scope.preference.price_sensitivity : 20;
 
-	var goToTop = function(){
-		// set the location.hash to the id of
-		// the element you wish to scroll to.
-		$location.hash('wrap');
-		$anchorScroll();
+	// Generate empty array for ng-repeat to display the people icons
+	$scope.getNumber = function(num) {
+		return new Array(num);
 	};
-
-	// JQuery logic in the controller because I don't have access to the
-	// ui-slider directive - ugly but does the work
-	angular.element('.slider-bar').bind('mouseup', function(){
-		$scope.preference.price_sensitivity = $scope.cookingValue;
-	});
 
 	$scope.addDays = function(){
 		$scope.preference.days++;
@@ -85,16 +66,31 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.generateBasket = function() {
 		$scope.preference.people = $scope.peopleIndex+1;
-		console.log($scope.preference);
+		$scope.preference.price_sensitivity = parseInt($scope.cookingValue, 10) / 100;
+
 		if(Preference.isNotValid($scope.preference)) {
 			Alert.add("It looks like you didn't select all of your preferences.","danger");
-			goToTop();
+			// Scroll to top
+			$location.hash('wrap');
+			$anchorScroll();
 		}
 		else {
 			Preference.setParameters($scope.preference);
 			$location.path("/basket");
 		}
 	};
+
+
+	$rootScope.$on('peoplePosition', function(event, selectedIndex){
+		$scope.peopleIndex = selectedIndex;
+		$scope.$digest();
+	});
+
+	// JQuery logic in the controller because I don't have access to the
+	// ui-slider directive - ugly but does the work
+	angular.element('.slider-bar').bind('mouseup', function(){
+		$scope.preference.price_sensitivity = $scope.cookingValue;
+	});
 
 }])
 
@@ -105,51 +101,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
 		console.log(preferenceList);
-		// preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
+		$scope.autocompleteResult = [];
+		$scope.basketMessage = User.isLoggedIn();
 
-		// When you remove a product from the directive you need to update the scope
-		$rootScope.$on('removeProduct', function(event, product){
-			var $products = $scope.products;
-			// TODO: Move that logic to a service
-			for (var i = $products.length-1; i >= 0; i--) {
-				$products[i]["products"] = $products[i]["products"].map(function (p) {
-					if(p.name === product.name) { p.quantity = 0; }
-					return p;
-				}).filter(function (p) {
-					return p.quantity > 0;
-				});
-			}
-
-			$scope.products = $products;
-			$scope.$apply();
-		});
-
-		$rootScope.$on('searchEnter', function(event, query){
-			$scope.searchProducts(query);
-		});
-
-		$scope.closeForm = function() {
-			$scope.toggleForm(false);
-		};
-
-		$scope.closeTescoForm = function() {
-			$scope.toggleTescoForm(false);
-		};
-
-		$scope.clearResult = function(){
-			$scope.search_result = {};
-		};
-
-		// First action on the page -> load the recommended basket
-		if(!Preference.isNotValid(preferenceList)){
-			$scope.loading = true;
-
-			Basket.post(preferenceList,
-				function(res){
+		$scope.getBasket = function() {
+			// First action on the page -> load the recommended basket
+			if(!Preference.isNotValid(preferenceList)){
+				$scope.loading = true;
+				$scope.basketMessage = false;
+				Basket.post(preferenceList, function(res){
 					$scope.loading = false;
 
 					if(res.success === false){
@@ -159,10 +123,19 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						$scope.products = Product.formatUI(res);
 					}
 				});
-		} else {
-			Alert.add("Tell us what you like and we'll take care of your basket.","info");
-			User.redirect("/onboarding/1");
+			} else {
+				Alert.add("Tell us what you like and we'll take care of your basket.","info");
+				User.redirect("/start");
+			}
+		};
+
+		if(!User.isLoggedIn()) {
+			$scope.getBasket();
 		}
+
+		$scope.clearResult = function(){
+			$scope.search_result = {};
+		};
 
 		// GET search
 		$scope.searchProducts = function(query){
@@ -183,22 +156,16 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
-		$scope.results = [];
 
 		$scope.autoComplete = function(query) {
-			if(typeof query === "undefined" || query.length === 0){
-				return [];
-			}
+			if(typeof query === "undefined" || query.length === 0){ return [];}
 
 			Product.autocomplete(query, function(res){
-
-				var products = [];
+				$scope.autocompleteResult = [];
 
 				angular.forEach(res.data, function(item){
-					products.push(item.name);
+					$scope.autocompleteResult.push(item.name);
 				});
-
-				$scope.results = products;
 			});
 		};
 
@@ -220,97 +187,50 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 
 		$scope.addProduct = function(new_product) {
-
-			var $products = $scope.products,
-			isPresent = false,
-			index = -1;
-
-			$products.map(function (d, i) {
-				if(d.name === new_product.department) { index = i; }
-			});
-
-			// If new department
-			if (index === -1) {
-				$products.push({
-					name: new_product.department,
-					products: [new_product]
-				});
-			} else {
-
-				$products[index]["products"] = $products[index]["products"].map(function (p) {
-					if(p.name === new_product.name){
-						p.quantity += 1;
-						isPresent = true;
-					}
-					return p;
-				});
-
-				// If new product in existing department
-				if(!isPresent) {
-					$products[index]["products"].push(new_product);
-				}
-			}
+			Product.add($scope.products, new_product);
 		};
 
-	$scope.removeProduct = function(product) {
-		var $products = $scope.products;
+		$scope.removeProduct = function(product) {
+			Product.remove($scope.products, product);
+		};
 
-		for (var i = $products.length-1; i >= 0; i--) {
+		$scope.getTotal = function(val1,val2) {
+			return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
+		};
 
-			$products[i]["products"] = $products[i]["products"].map(function (p) {
-				if(p.name === product.name) { p.quantity -= 1; }
-				return p;
-			}).filter(function (p) {
-				return p.quantity > 0;
-			});
-		}
+		$scope.basketTotal = function() {
+			return Product.getTotal($scope.products);
+		};
 
-		$scope.products = $products;
-	};
-
-	$scope.getTotal = function(val1,val2) {
-		return (parseFloat(val1.replace("GBP","")) * parseFloat(val2)).toFixed(2);
-	};
-
-	$scope.basketTotal = function() {
-
-		var total = 0;
-
-		if(typeof $scope.products === "undefined") { return 0; }
-
-		// Flatten the array
-		var productList = $scope.products.map(function (v) {
-			return v.products;
-		}).reduce(function (a, b){
-			return a.concat(b);
+		// When you remove a product from the directive you need to update the scope
+		$rootScope.$on('deleteProduct', function(event, item){
+			$scope.products = Product.delete($scope.products, item);
+			$scope.$apply();
 		});
 
-		productList.forEach(function (p) {
-			total += parseFloat(p.price.replace("GBP","")) * parseInt(p.quantity,10);
+		$rootScope.$on('searchEnter', function(event, query){
+			$scope.searchProducts(query);
 		});
 
-		return total.toFixed(2);
-	};
+		var closeSearchWhenClickingElsewhere = function(event){
 
-	var closeSearchWhenClickingElsewhere = function(event){
+			var clickedElement = event.target,
+			parents = angular.element(clickedElement).parents(),
+			clickedOnTheSearchPanel = false;
 
-		var clickedElement = event.target,
-		parents = angular.element(clickedElement).parents(),
-		clickedOnTheSearchPanel = false;
+			// checks if the parents of the div is one of the following string
+			for (var i = parents.length - 1; i >= 0; i--) {
+				if(parents[i].className.indexOf("product-search-result") != -1 ||
+					parents[i].className.indexOf("search-bar") != -1){
+					clickedOnTheSearchPanel = true;
+				}
+			}
 
-		// checks if the parents of the div is one of the following string
-		for (var i = parents.length - 1; i >= 0; i--) {
-			if(parents[i].className.indexOf("product-search-result") != -1
-				|| parents[i].className.indexOf("search-bar") != -1){
-				clickedOnTheSearchPanel = true;
-		}
-	}
-
-	if(!clickedOnTheSearchPanel){
-		$scope.clearResult();
-		$scope.$digest();
-	}
-};
+			if(!clickedOnTheSearchPanel){
+				$scope.clearResult();
+				$scope.$digest();
+			}
+		};
 
 }])
 

@@ -82,37 +82,15 @@ angular.module('App', [
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
 		// help with the margin on the product list page
-		$rootScope.productListPage = false;
-		if ($location.path() === "/basket") {
-			$rootScope.productListPage = true;
-		}
+		// $rootScope.productListPage = false;
+		// if ($location.path() === "/basket") {
+		// 	$rootScope.productListPage = true;
+		// }
 
 		// Force user to log in on required pages
-		if(!User.isLoggedIn()) {
-
-			User.requestLoggedIn(function(res){
-				// The user is logged in in the backend
-				if(res.success){
-					User.setLoggedIn(true);
-				} else{
-					User.setLoggedIn(false);
-					if(currRoute.requireLogin){
-						User.redirect("/login");
-					}
-				}
-			});
+		if(!User.isLoggedIn() && currRoute.requireLogin){
+			User.redirect("/login");
 		}
 
-
-		// The onboarding process has only three steps
-		if(currRoute.controller === "OnboardingController") {
-
-			var onboarding_id = parseInt(currRoute.params.id, 10);
-
-			if(onboarding_id === 0 || onboarding_id > 2) {
-				User.redirect("/");
-			}
-
-		}
 	});
 }]);

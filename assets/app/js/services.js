@@ -13,21 +13,6 @@ angular.module('App.services', ['LocalStorageModule'])
 		}
 
 		return {
-			get: function(id, callback) { // GET /id
-				return $http.get(getUrl(id)).success(callback);
-			},
-			query: function(callback) { // GET /
-				return $http.get(getUrl()).success(callback);
-			},
-			save:function(product,callback) {
-				return $http.post(getUrl(), product).success(callback);
-			},
-			remove: function(id, callback) {
-				return $http.delete(getUrl(id)).success(callback);
-			},
-			put: function(product, callback) {
-				return $http.put(getUrl(product.id), product).success(callback);
-			},
 			search: function(term, callback, errorcb) {
 				return $http.get(getUrl("search/") + "&term=" + term).success(callback).error(errorcb);
 			},
@@ -79,19 +64,98 @@ angular.module('App.services', ['LocalStorageModule'])
 				});
 
 				return result;
+			},
+			getTotal: function(productSets) {
+				var total = 0;
+
+				if(typeof productSets === "undefined") { return 0; }
+
+				// Flatten the array
+				var productList = productSets.map(function (v) {
+					return v.products;
+				}).reduce(function (a, b){
+					return a.concat(b);
+				});
+
+				productList.forEach(function (p) {
+					total += parseFloat(p.price.replace("GBP","")) * parseInt(p.quantity,10);
+				});
+
+				return total.toFixed(2);
+			},
+			delete: function($products, item) {
+
+				for (var i = $products.length-1; i >= 0; i--) {
+					$products[i]["products"] = $products[i]["products"].map(function (p) {
+						if(p.name === item.name) { p.quantity = 0; }
+						return p;
+					}).filter(function (p) {
+						return p.quantity > 0;
+					});
+				}
+
+				return $products;
+			},
+			add: function($products, item){
+
+				var isPresent = false,
+				index = -1;
+
+				$products.map(function (d, i) {
+					if(d.name === item.department) { index = i; }
+				});
+
+				// If new department
+				if (index === -1) {
+					$products.push({
+						name: item.department,
+						products: [item]
+					});
+				} else {
+
+					$products[index]["products"] = $products[index]["products"].map(function (p) {
+						if(p.name === item.name){
+							p.quantity += 1;
+							isPresent = true;
+						}
+						return p;
+					});
+
+					// If new product in existing department
+					if(!isPresent) {
+						item.quantity = 1;
+						$products[index]["products"].push(item);
+					}
+				}
+				console.log($products);
+				return $products;
+			},
+			remove: function($products, item) {
+
+				for (var i = $products.length-1; i >= 0; i--) {
+
+					$products[i]["products"] = $products[i]["products"].map(function (p) {
+						if(p.name === item.name) { p.quantity -= 1; }
+						return p;
+					}).filter(function (p) {
+						return p.quantity > 0;
+					});
+				}
+
+				return $products;
 			}
 
 		};
 	}])
 
 	// Factory that uses our user api
-	.factory('User', ['$cookies', '$http', '$location', function($cookies, $http, $location) {
+	.factory('User', ['$cookies', '$http', '$location', '$route', function($cookies, $http, $location, $route) {
 
 		function getUrl(req) {
 			return 'api/v1/user/' + req + '/?format=json';
 		}
 
-		var LoggedIn = null;
+		var LoggedIn = (angular.copy(window.activeUser).length !== 0);
 
 		return {
 			login: function(email, password, callback,errorcb) { // POST /user/login
@@ -126,15 +190,6 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email, password:password}
 				}).success(callback).error(errorcb);
-			},
-			// Check if logged in in Django backend
-			// Avoid losing a session when a user reloads the page
-			requestLoggedIn: function(callback) {
-				return $http({
-					url: 'api/v1/user/current/?format=json',
-					method: "GET",
-					headers: {'Content-Type': 'application/json'},
-				}).success(callback);
 			},
 			registerBeta: function(email, callback) {
 				return $http({
@@ -211,14 +266,18 @@ angular.module('App.services', ['LocalStorageModule'])
 					isUndefined(list.price_sensitivity) ||
 					isUndefined(list.days)) {
 					return true;
-				}
-
-				if(list.cuisine.length === 0 ||
+				} else if(list.cuisine.length === 0 ||
 					list.people.length === 0 ||
 					list.price_sensitivity.length === 0 ||
 					list.days.length === 0) {
 					return true;
-				} else {
+				} else if(list.people < 0 ||
+					list.price_sensitivity < 0 ||
+					list.price_sensitivity > 1 ||
+					list.days < 0){
+					return true;
+				}
+				else {
 					return false;
 				}
 			}

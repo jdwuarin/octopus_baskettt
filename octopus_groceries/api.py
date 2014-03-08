@@ -44,6 +44,10 @@ class ProductResource(ModelResource):
             product_json['price'] = product.price
             product_json['link'] = product.link
             product_json['img'] = str(product.external_image_link)
+
+            if product.department:
+                product_json['department'] = product.department.name
+
             result_json.append(product_json)
 
         result_json = json.dumps(result_json)

@@ -127,7 +127,6 @@ angular.module('App.services', ['LocalStorageModule'])
 						$products[index]["products"].push(item);
 					}
 				}
-				console.log($products);
 				return $products;
 			},
 			remove: function($products, item) {

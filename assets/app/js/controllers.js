@@ -100,7 +100,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-		console.log(preferenceList);
+
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
@@ -184,7 +184,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				}
 			});
 		};
-
 
 		$scope.addProduct = function(new_product) {
 			Product.add($scope.products, new_product);

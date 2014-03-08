@@ -321,13 +321,13 @@ class UserResource(ModelResource):
                 product_json_other['img'] = str(entry[ii].external_image_link)
                 product_json_other['ingredient'] = entry[ii].ingredients
                 department = entry[ii].department
-                product_json_main['department'] = (
+                product_json_other['department'] = (
                     "other" if department is None else department.name)
                 aisle = entry[ii].aisle
-                product_json_main['aisle'] = (
+                product_json_other['aisle'] = (
                     "other" if aisle is None else aisle.name)
                 category = entry[ii].category
-                product_json_main['category'] = (
+                product_json_other['category'] = (
                     "other" if category is None else category.name)
 
                 other_products.append(product_json_other)

@@ -46,3 +46,28 @@ scrapy crawl tesco
 scrapy crawl food_com
 scrapy crawl ing_prod_match
 ```
+
+add the following to local settings: 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_hstore.postgresql_psycopg2',  # Add 'postgresql_psycopg2'
+        'NAME': 'db1',
+
+        'USER': 'octopus_user',
+        'PASSWORD': 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l',
+        'HOST': 'localhost',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '5432',           # Set to empty string for default.
+    }
+}
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',  # currently running locally
+        'INDEX_NAME': 'haystack',
+        'INCLUDE_SPELLING': True,
+        'TIMEOUT': 120,
+    },
+}

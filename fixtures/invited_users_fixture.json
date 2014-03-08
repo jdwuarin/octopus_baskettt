@@ -1,205 +1,233 @@
 [
     {
         "fields": {
-            "email": "jd@baskettt.co",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "aaparmeggiani@gmail.com"
     },
     {
         "fields": {
-            "email": "arnaud@baskettt.co",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "alessandro@dncapital.com"
     },
     {
         "fields": {
-            "email": "chris@decoded.co",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "alexandre2k@gmail.com"
     },
     {
         "fields": {
-            "email": "kevinh.kahn@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "amcornea1@gmail.com"
     },
     {
         "fields": {
-            "email": "joyce.song@outlook.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "arnaud@baskettt.co"
     },
     {
         "fields": {
-            "email": "jacques@futureadlabs.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "arnaudbenard13@gmail.com"
     },
     {
         "fields": {
-            "email": "gdfeighery@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "charlotte.esnaultpelterie@gmail.com"
     },
     {
         "fields": {
-            "email": "douglas.squirrel@secretsales.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "chris@decoded.co"
     },
     {
         "fields": {
-            "email": "julientavel@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "denis.piffaretti@gmail.com"
     },
     {
         "fields": {
-            "email": "nicolo.portunato@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "douglas.squirrel@secretsales.com"
     },
     {
         "fields": {
-            "email": "tportunato@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "euget.thomas@yahoo.fr"
     },
     {
         "fields": {
-            "email": "trepca@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "gdfeighery@gmail.com"
     },
     {
         "fields": {
-            "email": "john.dwuarin@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "harry@gocardless.com"
     },
     {
         "fields": {
-            "email": "denis.piffaretti@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "jacques@futureadlabs.com"
     },
     {
         "fields": {
-            "email": "amcornea1@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "jd@baskettt.co"
     },
     {
         "fields": {
-            "email": "papafloratos@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "joakim@tobieson.se"
     },
     {
         "fields": {
-            "email": "matt@mattdempsey.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "john.dwuarin@gmail.com"
     },
     {
         "fields": {
-            "email": "moseeds@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "john_walch8@hotmail.com"
     },
     {
         "fields": {
-            "email": "charlotte.esnaultpelterie@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "joyce.song@outlook.com"
     },
     {
         "fields": {
-            "email": "nimakafai@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "julientavel@gmail.com"
     },
     {
         "fields": {
-            "email": "mkusigerski@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "karinjoel8@gmail.com"
     },
     {
         "fields": {
-            "email": "alexandre2k@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "kevinh.kahn@gmail.com"
     },
     {
         "fields": {
-            "email": "karinjoel8@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "Massimilianogritti@gmail.com"
     },
     {
         "fields": {
-            "email": "euget.thomas@yahoo.fr",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "matt@mattdempsey.com"
     },
-        {
+    {
         "fields": {
-            "email": "Massimilianogritti@gmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "me@me.com"
     },
-        {
+    {
         "fields": {
-            "email": "john_walch8@hotmail.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "mkusigerski@gmail.com"
     },
-        {
+    {
         "fields": {
-            "email": "joakim@tobieson.se",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "moseeds@gmail.com"
     },
-        {
+    {
         "fields": {
-            "email": "me@me.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "nicolo.portunato@gmail.com"
     },
-        {
+    {
         "fields": {
-            "email": "alessandro@dncapital.com",
-            "is_invited": "True"
+            "is_invited": true
         },
-        "model": "octopus_user.UserInvited"
+        "model": "octopus_user.userinvited",
+        "pk": "niya.lim@gmail.com"
+    },
+    {
+        "fields": {
+            "is_invited": true
+        },
+        "model": "octopus_user.userinvited",
+        "pk": "papafloratos@gmail.com"
+    },
+    {
+        "fields": {
+            "is_invited": false
+        },
+        "model": "octopus_user.userinvited",
+        "pk": "steve@sincuru.com"
+    },
+    {
+        "fields": {
+            "is_invited": true
+        },
+        "model": "octopus_user.userinvited",
+        "pk": "tportunato@gmail.com"
+    },
+    {
+        "fields": {
+            "is_invited": true
+        },
+        "model": "octopus_user.userinvited",
+        "pk": "trepca@gmail.com"
     }
 ]

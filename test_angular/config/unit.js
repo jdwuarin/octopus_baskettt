@@ -7,9 +7,9 @@ module.exports = function(config) {
 
 	// list of files / patterns to load in the browser
 	files : [
+	'bower_components/jquery/jquery.js',
 	'bower_components/angular/angular.js',
 	'bower_components/angular-local-storage/angular-local-storage.js',
-	'bower_components/jQuery/dist/jquery.js',
 	'bower_components/angular/angular.js',
 	'bower_components/angular-cookies/angular-cookies.js',
 	'bower_components/angular-local-storage/angular-local-storage.js',

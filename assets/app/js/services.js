@@ -211,14 +211,18 @@ angular.module('App.services', ['LocalStorageModule'])
 					isUndefined(list.price_sensitivity) ||
 					isUndefined(list.days)) {
 					return true;
-				}
-
-				if(list.cuisine.length === 0 ||
+				} else if(list.cuisine.length === 0 ||
 					list.people.length === 0 ||
 					list.price_sensitivity.length === 0 ||
 					list.days.length === 0) {
 					return true;
-				} else {
+				} else if(list.people < 0 ||
+					list.price_sensitivity < 0 ||
+					list.price_sensitivity > 1 ||
+					list.days < 0){
+					return true;
+				}
+				else {
 					return false;
 				}
 			}

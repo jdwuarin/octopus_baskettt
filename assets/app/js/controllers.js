@@ -50,7 +50,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.getNumber = function(num) {
 		return new Array(num);
-	}
+	};
 
 	$rootScope.$on('peoplePosition', function(event, selectedIndex){
 		$scope.peopleIndex = selectedIndex;
@@ -85,7 +85,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	$scope.generateBasket = function() {
 		$scope.preference.people = $scope.peopleIndex+1;
-		console.log($scope.preference);
+		$scope.preference.price_sensitivity = parseInt($scope.cookingValue, 10) / 100;
 		if(Preference.isNotValid($scope.preference)) {
 			Alert.add("It looks like you didn't select all of your preferences.","danger");
 			goToTop();

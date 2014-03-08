@@ -55,7 +55,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	};
 
 	$scope.addDays = function(){
-		$scope.preference.days++;
+		if($scope.preference.days < 10) {
+			$scope.preference.days++;
+		}
 	};
 
 	$scope.removeDays = function(){
@@ -261,6 +263,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.signup = function(){
 			var user = $scope.user;
 			User.signup(user.email, user.password, function(data){
+				$scope.loggedin = true;
 			}, function(res,status){
 				if(status == 401){
 					$scope.notInvited = true;
@@ -280,7 +283,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.sendToTesco = function(){
 			var tescoCredential = $scope.tescoCredential;
-			var list = $scope.products;
+			var list = products.map(function (v) {
+					return v.products;
+				}).reduce(function (a, b){
+					return a.concat(b);
+				});
 
 			$scope.loading = true;
 			$scope.sendTescoForm = false;
@@ -291,9 +298,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			$analytics.eventTrack('ClickToSend',
 				{  category: 'BasketPorting'});
 
-			if(products.length === 0 || products === undefined){ return; }
+			if(list.length === 0 || list === undefined){ return; }
 
-			Tesco.post(tescoCredential.email, tescoCredential.password, products, oldRecommendation, preference, function(res) {
+			Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, function(res) {
 				$scope.loading = false;
 
 				var unsuccessfulItems = Tesco.getUnsuccessful(res);

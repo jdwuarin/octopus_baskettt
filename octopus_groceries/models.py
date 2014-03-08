@@ -81,7 +81,8 @@ class Product(models.Model):
             self.price) + ", " + str(
             self.supermarket) + ", " + str(
             self.quantity) + ", " + str(
-            self.unit)
+            self.unit) + ", " + str(
+            self.department)
 
 
 class NutritionalFacts(models.Model):

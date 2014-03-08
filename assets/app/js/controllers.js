@@ -32,7 +32,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
 
 	$scope.cuisines = [{ "name": "Italian", "image": "italy.png"},
 	{ "name": "Chinese", "image": "china.png"},
@@ -42,11 +42,23 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	{ "name": "French",  "image": "france.png"}];
 
 	$scope.preference = {};
-	$scope.diet = {};
-	$scope.meat = {};
-	// Persist data from local storage
 	$scope.preference = Preference.getAll();
-	$scope.cookingValue = $scope.preference.budget ? $scope.preference.budget : 20;
+
+	$scope.number = 8;
+	$scope.peopleIndex = 1;
+	$scope.preference.days = 7;
+
+	$scope.getNumber = function(num) {
+		return new Array(num);
+	}
+
+	$rootScope.$on('peoplePosition', function(event, selectedIndex){
+		$scope.peopleIndex = selectedIndex;
+		$scope.$digest();
+	});
+
+	// Persist data from local storage
+	$scope.cookingValue = $scope.preference.price_sensitivity ? $scope.preference.price_sensitivity : 20;
 
 	var goToTop = function(){
 		// set the location.hash to the id of
@@ -58,37 +70,30 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	// JQuery logic in the controller because I don't have access to the
 	// ui-slider directive - ugly but does the work
 	angular.element('.slider-bar').bind('mouseup', function(){
-		$scope.preference.budget = $scope.cookingValue;
-		Preference.setParameters($scope.preference);
+		$scope.preference.price_sensitivity = $scope.cookingValue;
 	});
 
-	// Watcher here instead of a directive
-	// Too much of a hasle to create a template
-	// $scope.$watch('diet', function(newValue){
-	// 	if(newValue !== "other"){ // Cancel selection
-	// 		$scope.meat.porc = false;
-	// 		$scope.meat.beef = false;
-	// 		$scope.meat.poultry = false;
-	// 		$scope.diet = newValue;
-	// 	}
-	// });
+	$scope.addDays = function(){
+		$scope.preference.days++;
+	};
 
-	// $scope.$watch('meat', function(newValue){
-	// 	console.log($scope.diet);
-	// 	if($scope.diet !== "other"){
-	// 		$scope.diet = "other";
-	// 	}
-	// }, true);
+	$scope.removeDays = function(){
+		if($scope.preference.days !==1) {
+			$scope.preference.days--;
+		}
+	};
 
 	$scope.generateBasket = function() {
-
-		// if(Preference.isNotValid($scope.preference)) {
-		// 	Alert.add("You didn't put the right informations.","danger");
-		// 	goToTop();
-		// } else {
-		// 	Preference.setParameters($scope.preference);
+		$scope.preference.people = $scope.peopleIndex+1;
+		console.log($scope.preference);
+		if(Preference.isNotValid($scope.preference)) {
+			Alert.add("It looks like you didn't select all of your preferences.","danger");
+			goToTop();
+		}
+		else {
+			Preference.setParameters($scope.preference);
 			$location.path("/basket");
-		//}
+		}
 	};
 
 }])
@@ -99,16 +104,27 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-
-		preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
+		console.log(preferenceList);
+		// preferenceList = {"cuisine":["Thai","French"],"price_sensitivity":0.5, "budget":500, "people":4, "days":7};
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 
 		// When you remove a product from the directive you need to update the scope
-		$rootScope.$on('removeProduct', function(event, $productIndex){
-			$scope.products.splice($productIndex,1);
+		$rootScope.$on('removeProduct', function(event, product){
+			var $products = $scope.products;
+			// TODO: Move that logic to a service
+			for (var i = $products.length-1; i >= 0; i--) {
+				$products[i]["products"] = $products[i]["products"].map(function (p) {
+					if(p.name === product.name) { p.quantity = 0; }
+					return p;
+				}).filter(function (p) {
+					return p.quantity > 0;
+				});
+			}
+
+			$scope.products = $products;
 			$scope.$apply();
 		});
 
@@ -140,8 +156,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
 						Basket.addOldRecommendation(res);
-						$scope.products = res;
-						console.log(res);
+						$scope.products = Product.formatUI(res);
 					}
 				});
 		} else {
@@ -171,8 +186,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.results = [];
 
 		$scope.autoComplete = function(query) {
-
-			if(query === undefined){
+			if(typeof query === "undefined" || query.length === 0){
 				return [];
 			}
 
@@ -206,42 +220,49 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 
 		$scope.addProduct = function(new_product) {
+
 			var $products = $scope.products,
-			isPresent = false;
+			isPresent = false,
+			index = -1;
 
-			for (var i = $products.length-1; i >= 0; i--) {
-				if ($products[i].name === new_product.name) { //if it's in the list bump up the quantity
-					isPresent = true;
-				if($products[i].quantity>=100){
-					$products[i].quantity = 100;
-				} else{
-					$products[i].quantity += 1;
+			$products.map(function (d, i) {
+				if(d.name === new_product.department) { index = i; }
+			});
+
+			// If new department
+			if (index === -1) {
+				$products.push({
+					name: new_product.department,
+					products: [new_product]
+				});
+			} else {
+
+				$products[index]["products"] = $products[index]["products"].map(function (p) {
+					if(p.name === new_product.name){
+						p.quantity += 1;
+						isPresent = true;
+					}
+					return p;
+				});
+
+				// If new product in existing department
+				if(!isPresent) {
+					$products[index]["products"].push(new_product);
 				}
-				break;
 			}
-		}
-
-		if(!isPresent){
-			new_product.quantity = 1;
-			$scope.products.push(new_product);
-		} else {
-			$scope.products = $products;
-		}
-	};
+		};
 
 	$scope.removeProduct = function(product) {
 		var $products = $scope.products;
 
 		for (var i = $products.length-1; i >= 0; i--) {
-			if ($products[i].name === product.name) {
-				$products[i].quantity -= 1;
 
-				if($products[i].quantity === 0) {
-					$products.splice(i,1);
-				}
-
-				break;
-			}
+			$products[i]["products"] = $products[i]["products"].map(function (p) {
+				if(p.name === product.name) { p.quantity -= 1; }
+				return p;
+			}).filter(function (p) {
+				return p.quantity > 0;
+			});
 		}
 
 		$scope.products = $products;
@@ -252,9 +273,20 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	};
 
 	$scope.basketTotal = function() {
+
 		var total = 0;
-		angular.forEach($scope.products, function(value, key){
-			total += parseFloat(value.price.replace("GBP","")) * parseInt(value.quantity,10);
+
+		if(typeof $scope.products === "undefined") { return 0; }
+
+		// Flatten the array
+		var productList = $scope.products.map(function (v) {
+			return v.products;
+		}).reduce(function (a, b){
+			return a.concat(b);
+		});
+
+		productList.forEach(function (p) {
+			total += parseFloat(p.price.replace("GBP","")) * parseInt(p.quantity,10);
 		});
 
 		return total.toFixed(2);

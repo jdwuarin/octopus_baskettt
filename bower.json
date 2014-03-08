@@ -36,7 +36,7 @@
     "angular-ui-slider": "*"
   },
   "resolutions": {
-    "angular": "1.2.13",
+    "angular": "1.2.10",
     "jquery": "~2.0.3"
   }
 }

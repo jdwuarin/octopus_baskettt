@@ -18,30 +18,15 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	// .directive('radioButton', [function(){
-	// 	return {
-	// 		restrict: 'E',
-	// 		scope:{
-	// 			title: '@rbTitle',
-	// 			idString: '@rbId',
-	// 			checklist: '&rbChecklist',
-	// 			modelName: '@rbModel'
-	// 		},
-	// 		template: 	'<input type="radio" id="{{idString}}"'+
-	// 					' ng-model="diet" value="{{title}}">'+
-	// 					'<label for="{{idString}}">{{title}}</label> <br>'+
-	// 					'<div ng-repeat="checkbox in checklist()"> '+
-	// 					'<input type="checkbox" id="{{checkbox}}">'+
-	// 					'<label for="{{checkbox}}">{{checkbox}}</label><br>'+
-	// 					'</div>',
-	// 		link: function(scope, element, attrs) {
-	// 			// // scope.boolChecklist = typeof scope.checklist() !== "undefined";
-	// 			// if(scope.checklist()){
-	// 			// 	console.log(scope.checklist());
-	// 			// }
-	// 		}
-	// 	};
-	// }])
+	.directive('onboardPeople', ['$rootScope', function($rootScope){
+		return {
+			link: function(scope, element, attrs) {
+				element.bind("mouseover click", function(event){
+					$rootScope.$emit('peoplePosition', parseInt(attrs.position,10));
+				});
+			}
+		};
+	}])
 
 	.directive('ngEsc', [function(){
 		return function(scope, element, attrs) {
@@ -113,7 +98,7 @@ angular.module('App.directives', [])
 						angular.element('body').css('padding-top','0px');
 					}
 					return fs;
-				}
+				};
 
 				scope.userIsLoggedIn = function(){
 					// Defined as a function to force the execution after a redirection
@@ -138,7 +123,7 @@ angular.module('App.directives', [])
 		return {
 			link: function (scope, element, attrs) {
 				element.bind("click", function() {
-					$rootScope.$emit('removeProduct', scope.$index);
+					$rootScope.$emit('removeProduct', scope.product);
 				});
 			},
 			template: '<i class="glyphicon glyphicon-remove"></i>',

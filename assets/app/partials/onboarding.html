@@ -30,55 +30,36 @@
         <div ui-slider min="0" max="100" ng-model="cookingValue" class="slider-bar"></div>
       </div>
 
-<!--       <div class="onboard-instruction">
-        <span class="number">3</span>
-        <header>Are you following a diet?</header>
+      <div class="onboard-instruction">
+        <span class="number">3</span> <header>How many days of groceries?</header>
       </div>
 
-      <div class="onboard-diet"> -->
+      <div class="onboard-cal">
+        <div class="onboard-minus" ng-click="removeDays()">-</div>
+        <div class="calendar">
+          <header></header>
+          <div class="cal-content">
+            <div class="number">{{preference.days}}</div>
+            <div class="days">days</div>
+          </div>
+        </div>
+        <div class="onboard-plus" ng-click="addDays()">+</div>
+      </div>
 
-    <!--     <radio-button rb-title="Vegan" rb-id="vegan" rb-model="diet"></radio-button>
-        <radio-button rb-title="Vegetarian" rb-id="vegetarian" rb-model="diet"></radio-button>
-        <radio-button rb-title="Prescetarian" rb-id="prescetarian" rb-model="diet"></radio-button>
-        <radio-button rb-title="Other" rb-id="other" rb-checklist="checklist" rb-model="diet"></radio-button> -->
-<!-- 
-        <input type="radio" ng-model="diet" value="vegan" id="vegan">
-        <label for="vegan">Vegan</label> <br>
-        <input type="radio" ng-model="diet" value="vegetarian" id="vegetarian"><label for="vegetarian">Vegetarian</label> <br>
-        <input type="radio" ng-model="diet" value="prescetarian" id="prescetarian">
-        <label for="prescetarian">Pescetarian</label> <br>
-        <input type="radio" ng-model="diet" value="other" id="other"><label for="other">I don't eat any:</label> <br>
-        <input type="checkbox" ng-model="meat.porc" id="mpor">
-        <label for="mpor">Porc</label>  <br>
-        <input type="checkbox" ng-model="meat.beef" id="mb">
-        <label for="mb">Beef</label>  <br>
-        <input type="checkbox" ng-model="meat.poultry" id="mpou"><label for="mpou">Poultry</label>  <br>
-      </div> -->
+      <div class="onboard-instruction">
+        <span class="number">4</span> <header>How many people?</header>
+      </div>
 
-  <!--     <div class="first">My meal plan</div>
-
-      <form class="choice-box" ng-submit="saveData()">
-        <ul>
-          <li>
-
-            <input type="text" class="form-control onboard-people"  ng-model="preference.people">people
-          </li>
-          <li>
-
-            <input type="text" class="form-control onboard-people" ng-model="preference.days">days
-
-          </li>
-          <li>
-            <input type="text" class="form-control onboard-money" placeholder="" ng-model="preference.budget">&pound;
-
-          </li>
-        </ul> -->
-        <!-- </form> -->
+      <div class="onboard-people">
+        <div ng-repeat="i in getNumber(number) track by $index">
+          <i class="glyphicon glyphicon-user" ng-class="{peopleselected: $index <= peopleIndex }" position="{{$index}}" onboard-people></i>
+        </div>
 
         <div class="btn-container">
           <input type="submit" class="btn-onboarding" value="Go to my personal basket" ng-click="generateBasket()">
         </div>
-
       </div>
+
     </div>
   </div>
+</div>

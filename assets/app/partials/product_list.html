@@ -59,22 +59,23 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<!-- <div class="category">Fresh food</div> -->
-				<div ng-repeat="product in products" class="product-container fade-item">
-					<div class="product-box" ng-class="{'selected_product':selectedStatus}">
+				<div ng-repeat="department in products">
+				<h3>{{ department.name }} </h3>
+				<div class="product-container fade-item" ng-repeat="product in department.products">
+					<div class="product-box" ng-class="{'selected_product':selectedStatus}" >
 						<div class="product-img">
 							<div class="product-remove">
 								<i remove></i>
 							</div>
-							<img ng-src="{{product.main.img | imglarge}}" alt="" class="animated:hover bounce">
+							<img ng-src="{{product.img | imglarge}}" alt="" class="animated:hover bounce">
 						</div>
 
 						<div class="product-desc">
 							<div class="product-name">
-								<p>{{product.main.name}}</p>
+								<p>{{product.name}}</p>
 							</div>
 							<div class="product-price">
-								&pound;{{getTotal(product.main.price, product.quantity)}}
+								&pound;{{getTotal(product.price, product.quantity)}}
 							</div>
 							<div class="quantity">
 								<div class="input-group">
@@ -87,6 +88,7 @@
 						</div>
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>

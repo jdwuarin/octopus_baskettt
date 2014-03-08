@@ -230,7 +230,7 @@ class UserResource(ModelResource):
             #     id = BannableMeats.objects.get(name=banned_meat).id
             #     banned_meats.append(id)
 
-            
+
             data['diet'] = "Vegan"
 
             banned_abstract_products = []
@@ -285,7 +285,6 @@ class UserResource(ModelResource):
         # basket[0] = [[selected_product, quantity], other_prod1, op2,...]
 
         for entry in basket:
-
             # this is the json that will be returned
             product_json = {}
 
@@ -296,17 +295,17 @@ class UserResource(ModelResource):
             product_json_main['price'] = entry[0][0].price
             product_json_main['link'] = entry[0][0].link
             product_json_main['img'] = str(entry[0][0].external_image_link)
-            product_json_main['ingredient'] = entry[0][0].ingredients
+            # product_json_main['ingredient'] = entry[0][0].ingredients
 
             department = entry[0][0].department
             product_json_main['department'] = (
                 "other" if department is None else department.name)
-            aisle = entry[0][0].aisle
-            product_json_main['aisle'] = (
-                "other" if aisle is None else aisle.name)
-            category = entry[0][0].category
-            product_json_main['category'] = (
-                "other" if category is None else category.name)
+            # aisle = entry[0][0].aisle
+            # product_json_main['aisle'] = (
+                # "other" if aisle is None else aisle.name)
+            # category = entry[0][0].category
+            # product_json_main['category'] = (
+                # "other" if category is None else category.name)
 
             product_json['main'] = (product_json_main)
             product_json['quantity'] = entry[0][1]
@@ -319,16 +318,17 @@ class UserResource(ModelResource):
                 product_json_other['price'] = entry[ii].price
                 product_json_other['link'] = entry[ii].link
                 product_json_other['img'] = str(entry[ii].external_image_link)
-                product_json_other['ingredient'] = entry[ii].ingredients
-                department = entry[ii].department
+
+                # product_json_other['ingredient'] = entry[ii].ingredients
+                # department = entry[ii].department
                 product_json_other['department'] = (
                     "other" if department is None else department.name)
-                aisle = entry[ii].aisle
-                product_json_other['aisle'] = (
-                    "other" if aisle is None else aisle.name)
-                category = entry[ii].category
-                product_json_other['category'] = (
-                    "other" if category is None else category.name)
+                # aisle = entry[ii].aisle
+                # product_json_other['aisle'] = (
+                    # "other" if aisle is None else aisle.name)
+                # category = entry[ii].category
+                # product_json_other['category'] = (
+                    # "other" if category is None else category.name)
 
                 other_products.append(product_json_other)
 

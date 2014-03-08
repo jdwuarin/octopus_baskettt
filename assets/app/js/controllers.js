@@ -100,30 +100,38 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-
+		console.log(preferenceList);
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
 		$scope.search_result = {};
 		$scope.autocompleteResult = [];
+		$scope.basketMessage = User.isLoggedIn();
 
-		// First action on the page -> load the recommended basket
-		if(!Preference.isNotValid(preferenceList)){
-			$scope.loading = true;
+		$scope.getBasket = function() {
+			// First action on the page -> load the recommended basket
+			if(!Preference.isNotValid(preferenceList)){
+				$scope.loading = true;
+				$scope.basketMessage = false;
+				Basket.post(preferenceList, function(res){
+					$scope.loading = false;
 
-			Basket.post(preferenceList, function(res){
-				$scope.loading = false;
+					if(res.success === false){
+						Alert.add("We couldn't create your basket.","danger");
+					} else {
+						Basket.addOldRecommendation(res);
+						$scope.products = Product.formatUI(res);
+					}
+				});
+			} else {
+				Alert.add("Tell us what you like and we'll take care of your basket.","info");
+				User.redirect("/start");
+			}
+		};
 
-				if(res.success === false){
-					Alert.add("We couldn't create your basket.","danger");
-				} else {
-					Basket.addOldRecommendation(res);
-					$scope.products = Product.formatUI(res);
-				}
-			});
-		} else {
-			Alert.add("Tell us what you like and we'll take care of your basket.","info");
-			User.redirect("/start");
+		if(!User.isLoggedIn()) {
+			console.log(User.isLoggedIn());
+			$scope.getBasket();
 		}
 
 		$scope.clearResult = function(){

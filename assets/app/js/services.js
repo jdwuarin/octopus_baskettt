@@ -323,6 +323,17 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			getOldRecommendation: function(list){
 				return localStorage.get('oldRecommendation');
+			},
+			getUserSettingsKey: function(){
+				return localStorage.get('user_settings_hash');
+			},
+			setUserSettingsKey: function(list){
+				var key = list.map(function(p){
+					return p["user_settings_hash"];
+				}).filter(function(p){
+					return !!p;
+				});
+				localStorage.add('user_settings_hash',key[0]);
 			}
 		};
 
@@ -332,13 +343,13 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Populate tesco basket
-			post: function(email, password, list, recommendation, preference, callback) {
+			post: function(email, password, list, recommendation, preference, user_settings_hash, callback) {
 
 				return $http({
 					url: 'port_basket/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
-					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference}
+					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference, user_settings_hash: user_settings_hash}
 				}).success(callback);
 			},
 			getUnsuccessful: function(basket){

@@ -55,7 +55,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	};
 
 	$scope.addDays = function(){
-		$scope.preference.days++;
+		if($scope.preference.days < 10) {
+			$scope.preference.days++;
+		}
 	};
 
 	$scope.removeDays = function(){
@@ -100,7 +102,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
-		console.log(preferenceList);
+
 		$scope.tesco_response = {};
 		$scope.user = {};
 		$scope.tescoCredential = {};
@@ -120,6 +122,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
 						Basket.addOldRecommendation(res);
+						Basket.setUserSettingsKey(res);
 						$scope.products = Product.formatUI(res);
 					}
 				});
@@ -184,7 +187,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				}
 			});
 		};
-
 
 		$scope.addProduct = function(new_product) {
 			Product.add($scope.products, new_product);
@@ -262,6 +264,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.signup = function(){
 			var user = $scope.user;
 			User.signup(user.email, user.password, function(data){
+				$scope.loggedin = true;
 			}, function(res,status){
 				if(status == 401){
 					$scope.notInvited = true;
@@ -280,21 +283,26 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.sendToTesco = function(){
-			var tescoCredential = $scope.tescoCredential;
-			var list = $scope.products;
+			var tescoCredential = $scope.tescoCredential,
+				list = products.map(function (v) {
+					return v.products;
+				}).reduce(function (a, b){
+					return a.concat(b);
+				});
 
-			$scope.loading = true;
-			$scope.sendTescoForm = false;
-
-			var oldRecommendation = Basket.getOldRecommendation();
-			var preference = Preference.getAll();
+			var oldRecommendation = Basket.getOldRecommendation(),
+			preference = Preference.getAll(),
+			user_settings_hash = Basket.getUserSettingsKey();
 
 			$analytics.eventTrack('ClickToSend',
 				{  category: 'BasketPorting'});
 
-			if(products.length === 0 || products === undefined){ return; }
+			$scope.loading = true;
+			$scope.sendTescoForm = false;
 
-			Tesco.post(tescoCredential.email, tescoCredential.password, products, oldRecommendation, preference, function(res) {
+			if(list.length === 0 || list === undefined){ return; }
+
+			Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, user_settings_hash, function(res) {
 				$scope.loading = false;
 
 				var unsuccessfulItems = Tesco.getUnsuccessful(res);

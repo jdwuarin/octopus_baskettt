@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.conf import settings
-# from octopus_user.models import UserResource
 
 def index(request):
 

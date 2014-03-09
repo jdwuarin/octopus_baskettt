@@ -241,8 +241,9 @@ class BasketRecommendationEngine(object):
 
         # we floor the value because as always, indexes start at 0
         # the floor is done via the int() function
+
         selected_rank = considered_products[
-            int(price_sensitivity * loop_size)][1]
+            int(round(price_sensitivity * loop_size-1))][1]
 
         return selected_rank
 

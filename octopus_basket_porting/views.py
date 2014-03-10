@@ -30,7 +30,7 @@ def port_basket(request):
             user_settings.delete()
 
         except UserSettings.DoesNotExist:
-            # no problam, there actually was no hash
+            # no problem, there actually was no hash
             pass
 
     except UserSettings.DoesNotExist:
@@ -88,7 +88,6 @@ def port_basket(request):
                                user_generated_basket_before_porting,
                                thread_manager)
 
-
     SpiderManagerController.add_basket_to_port(this_basket)
 
     this_basket.thread_manager.wait(15)
@@ -104,7 +103,8 @@ def port_basket(request):
         user_generated_basket_before_porting,
         user_generated_basket_after_porting)
 
-    response = []
+    response = {}
+    response_product_list = []
 
     # key[0] is the Product item or a string and. If product item, key[1]
     # is the quantity to order
@@ -118,11 +118,14 @@ def port_basket(request):
             product_json['img'] = str(key[0].external_image_link)
             product_json['quantity'] = key[1]
             product_json['success'] = is_success
+            response_product_list.append(product_json)
 
         else:
-            product_json[key] = is_success
+            # the server status and good_login status
+            response[key] = is_success
 
-        response.append(product_json)
+    # the product list
+    response['product_list'] = response_product_list
 
     # frontend needs to check for "Response_status" == "server_timeout" and
     # "good_login" == "False" in that order before anything else

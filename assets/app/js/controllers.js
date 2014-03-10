@@ -124,6 +124,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Basket.addOldRecommendation(res);
 						Basket.setUserSettingsKey(res);
 						$scope.products = Product.formatUI(res);
+						$location.hash('ng-app');
+						$anchorScroll();
 					}
 				});
 			} else {

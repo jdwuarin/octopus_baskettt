@@ -57,7 +57,7 @@ angular.module('App.directives', [])
 
 			element.bind("click", function() {
 				scope.selectedStatus = !scope.selectedStatus;
-				Preference.setCuisine(scope);
+				Preference.setCuisine(scope.cuisine.name, scope.selectedStatus);
 				scope.$apply();
 			});
 		};

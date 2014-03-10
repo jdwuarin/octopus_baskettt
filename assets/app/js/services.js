@@ -202,7 +202,7 @@ angular.module('App.services', ['LocalStorageModule'])
 	}])
 
 	// Service that contains the preferences in the onboarding
-	.service('Preference', ['localStorage','Alert', function(localStorage, Alert) {
+	.service('Preference', [ function() {
 
 		var preferenceList = {};
 		preferenceList.cuisine= [];
@@ -212,50 +212,27 @@ angular.module('App.services', ['LocalStorageModule'])
 		};
 
 		return {
-			setCuisine: function(scope) {
+			setCuisine: function(cuisineName, presentStatus) {
 
-				var isPresent = false;
+				var position = preferenceList.cuisine.indexOf(cuisineName);
 
-				preferenceList = this.getAll();
-
-				for (var i = preferenceList.cuisine.length-1; i >= 0; i--) {
-						//if it's already in the list
-						if (preferenceList.cuisine[i] === scope.cuisine.name) {
-							isPresent = true;
-
-							if(!scope.selectedStatus){
-								preferenceList.cuisine.splice(i,1);
-							}
-						}
+				if(position === -1 && presentStatus){
+					preferenceList.cuisine.push(cuisineName);
+				} else if(!presentStatus){
+					preferenceList.cuisine.splice(position,1);
 				}
 
-				if (!isPresent && scope.selectedStatus) {
-					preferenceList.cuisine.push(scope.cuisine.name);
-				}
-
-				var cuisine_str = JSON.stringify(preferenceList);
-				localStorage.add('preferences', cuisine_str);
 			},
 			setParameters: function(preferences) {
 
 				preferenceList.cuisine = preferences.cuisine;
 				preferenceList.price_sensitivity  = preferences.price_sensitivity;
-				preferenceList.people  = preferences.people;
-				preferenceList.days    = preferences.days;
-
-				var pref_str = JSON.stringify(preferenceList);
-				localStorage.add('preferences', pref_str);
+				preferenceList.people = preferences.people;
+				preferenceList.days = preferences.days;
 
 			},
 			getAll: function() {
-				// On some browser it crashes when preferences has no cuisine
-				// We'll init the localstorage first
-				if(!localStorage.get('preferences')) {
-					var init = JSON.stringify(preferenceList);
-					localStorage.add('preferences',init);
-				}
-
-				return localStorage.get('preferences');
+				return preferenceList;
 			},
 			isNotValid: function(list) {
 

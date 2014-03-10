@@ -33,12 +33,12 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/home.html',
 		requireLogin: false,
 	})
-	.when('/signup',
-	{
-		controller: 'RegistrationController',
-		templateUrl: 'static/app/partials/signup.html',
-		requireLogin: false
-	})
+	// .when('/signup',
+	// {
+	// 	controller: 'RegistrationController',
+	// 	templateUrl: 'static/app/partials/signup.html',
+	// 	requireLogin: false
+	// })
 	.when('/login',
 	{
 		controller: 'LoginController',

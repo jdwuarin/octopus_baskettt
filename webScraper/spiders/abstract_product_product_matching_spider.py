@@ -79,7 +79,6 @@ class AbstractProductProductMatchingSpider(BaseSpider):
             except:
                 pass
 
-
         return items
 
     @staticmethod

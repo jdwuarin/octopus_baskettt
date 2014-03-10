@@ -24,7 +24,7 @@ class UserSettings(models.Model):
         max_length=5000, default=[])  # id list of AbstractProducts
 
     def __unicode__(self):
-        return str(self.name) + ", " + str(
+        return str(self.user) + ", " + str(
             self.people) + ", " + str(
             self.days) + ", " + str(
             self.price_sensitivity) + ", " + str(
@@ -32,7 +32,7 @@ class UserSettings(models.Model):
             self.diet) + ", " + str(
             self.default_supermarket) + ", " + str(
             self.banned_meats) + ", " + str(
-            self.banned_abstract_produts)
+            self.banned_abstract_products)
 
 
 # basket that was recommended to our user by our algorithm

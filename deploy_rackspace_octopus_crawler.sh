@@ -38,7 +38,12 @@ python manage.py loaddata supermarket_fixture.json
 python manage.py loaddata invited_users_fixture.json
 python manage.py loaddata diet_fixture.json
 python manage.py loaddata bannable_meats_fixture.json
+python manage.py loaddata tag:fixtures.json # must be run before food_com spider
 cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com
 scrapy crawl abs_prod_prod_match
+
+#haystack
+#nothing to do really, all covered in code if not:
+#python manage.py update_index #to build the index (do after db population)

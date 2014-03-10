@@ -1,0 +1,16 @@
+[
+  {
+    "model": "octopus_groceries.Tag",
+    "pk": "1",
+    "fields": {
+      "name": "Italian"
+    }
+  },
+  {
+    "model": "octopus_groceries.Tag",
+    "pk": "2",
+    "fields": {
+      "name": "French"
+    }
+  }
+]

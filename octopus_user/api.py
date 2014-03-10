@@ -186,41 +186,79 @@ class UserResource(ModelResource):
         self.method_check(request, allowed=['post'])
 
         if request.user.is_authenticated():
-            return self.registered_basket(request, **kwargs)
+            return self.get_later_basket(request, **kwargs)
         else:
-            return self.anonymous_basket(request, **kwargs)
+            return self.get_first_basket(request, **kwargs)
 
-    #get basket for someone who has noa ccount yet.
-    def anonymous_basket(self, request, **kwargs):
+    #get basket for someone who has no ccount yet.
+    def get_first_basket(self, request, **kwargs):
         data = self.deserialize(request, request.body,
                                 format=request.META.get('CONTENT_TYPE',
                                                         'application/json'))
-        user_settings = helpers.save_anonymous_basket_user_settings(data)
+        # get user_settings
+        user_settings = None
+        if request.user.is_authenticated():
+            try:
+                user_settings = UserSettings.objects.get(user=request.user)
+            except:
+                pass
+        else:
+            user_settings = helpers.save_anonymous_basket_user_settings(data)
 
         if not user_settings:
             no_success = json.dumps({'success': False})
             return HttpResponse(no_success,
                                 content_type="application/json")
 
+        print user_settings
+        # get basket from user_settings
         basket = BasketRecommendationEngine.create_onboarding_basket(
             user_settings)
 
-        response = helpers.get_response_from_basket(basket)
+        # create response from basket
+        response = helpers.get_json_basket(basket)
 
+        # add hash to response
         user_settings_hash_json = {}
         user_settings_hash_json[
             'user_settings_hash'] = user_settings.pre_user_creation_hash
         response.append(user_settings_hash_json)
-        data = json.dumps(response)
 
+        data = json.dumps(response)
         return HttpResponse(data, content_type="application/json")
 
 
     # get basket for someone who already has an account
-    def registered_basket(self, request, **kwargs):
+    def get_later_basket(self, request, **kwargs):
+        user = request.user
 
+        # see if user has some baskets
+        ugb = UserGeneratedBasket.objects.filter(user=user).order_by('-time')
+        urb = UserRecommendedBasket.objects.filter(user=user).order_by('-time')
 
-        pass
+        if ugb:
+            # if so, take last and just remove 20% switching them with similar
+            # in similar ailse (yes, this is sort of a shitty hack)
+            last_ugb = ugb[len(ugb)-1]
+            basket = []
+            for id, quantity in last_ugb.product_dict.iteritems():
+                try:
+                    product = Product.objects.get(id=id)
+                    basket.append([[product, quantity]])
+                except Product.DoesNotExist:
+                    pass
+            if basket:
+                response = helpers.get_json_basket(basket)
+                data = json.dumps(response)
+                return HttpResponse(data, content_type="application/json")
+            else:
+                no_success = json.dumps({'success': False})
+                return HttpResponse(no_success,
+                                    content_type="application/json")
+
+        else:
+            # no basket yet, just create an anonymous one.
+            return self.get_first_basket(request, **kwargs)
 
 
     def beta_subscription(self, request, **kwargs):

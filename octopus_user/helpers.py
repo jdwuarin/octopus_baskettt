@@ -6,7 +6,19 @@ from octopus_groceries.models import *
 from octopus_user.models import *
 from django.http import HttpResponse
 
-def get_response_from_basket(basket):
+
+def get_list_from_comma_separated_string(comma_separated_string):
+
+    # first get rid of the [ and ] form string
+    comma_separated_string = comma_separated_string[1:-1]
+    # the create the list from the string
+
+    return_list = comma_separated_string.split(", ")
+
+    return return_list
+
+
+def get_json_basket(basket):
 
     response = []
 
@@ -35,7 +47,7 @@ def get_response_from_basket(basket):
         # product_json_main['category'] = (
             # "other" if category is None else category.name)
 
-        product_json['main'] = (product_json_main)
+        product_json['main'] = product_json_main
         product_json['quantity'] = entry[0][1]
         other_products = []
 
@@ -75,22 +87,18 @@ def save_anonymous_basket_user_settings(data):
 
     user_settings = None
     try:
-        #this is a hot fix for the fact that
-        #the only tag for european type cuisines that exists is "European"
-        real_cuisines = []
+        cuisine_ids = []
         for cuisine in data['cuisine']:
-            if cuisine == "Italian" or cuisine == "French" or (
-                cuisine == "Spanish"):
-                real_cuisines.append("European")
-            else:
                 # make sure requested tag actually exists
-                sqs = SearchQuerySet().filter(
-                    content=cuisine).models(Tag)
-                if sqs:
-                    real_cuisines.append(cuisine)
-                else:
-                    value_error = True
-                    break
+            sqs = SearchQuerySet().filter(
+                content=cuisine).models(Tag)
+            if sqs:
+                # just take the first one if there is some collision because of
+                # some ransom buggy reason. This shouldn't be the case
+                cuisine_ids.append(Tag.objects.filter(name=cuisine)[0].id)
+            else:
+                value_error = True
+                break
 
         # TODO fix this bullshit
         banned_meats = []
@@ -116,7 +124,7 @@ def save_anonymous_basket_user_settings(data):
                 people=int(data['people']),
                 days=int(data['days']),
                 price_sensitivity=float(data['price_sensitivity']),
-                tags=real_cuisines,
+                tags=cuisine_ids,
                 default_supermarket=
                 Supermarket.objects.get(name=data['supermarket']),
                 pre_user_creation_hash=user_hash,
@@ -124,6 +132,11 @@ def save_anonymous_basket_user_settings(data):
                 banned_meats=banned_meats,
                 banned_abstract_products=banned_abstract_products)
             user_settings.save()
+            # this is done to make sure the object is as it would be
+            # from getting it form anywhere in the code considering the lists
+            # are extracted as strings
+            user_settings = UserSettings.objects.get(
+                pre_user_creation_hash=user_hash)
 
     except KeyError:
         key_error = True

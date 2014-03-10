@@ -76,6 +76,7 @@ class SpiderManager(object):
     def basket_error(cls, failure, response, spider):
 
         if failure.check(BadLoginException):
+            print "I am here..."
             spider.thread_manager.build_bad_login_response()
 
         else:

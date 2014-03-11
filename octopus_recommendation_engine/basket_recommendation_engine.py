@@ -13,10 +13,6 @@ class BasketRecommendationEngine(object):
     num_condiment_abstract_product = 0.0
     num_returned_prod_per_abstract_product = 20
 
-    # In the default product list, no products
-    # should stem from any of those departments
-    # TODO remove this bad looking hack
-
 
     @classmethod
     def create_onboarding_basket(cls, user_settings):
@@ -54,6 +50,9 @@ class BasketRecommendationEngine(object):
             product_list = cls.get_product_matrix(potential_recipe_list,
                                                   user_settings)
         return product_list
+
+    @classmethod
+    def create_following_basket
 
     @classmethod
     def get_product_matrix(cls, potential_recipes, user_settings):

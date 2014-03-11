@@ -141,13 +141,19 @@ class FoodComPostgresPipeline(object):
 
 class AbstractProductProductMatchingPipeline(object):
 
-    banned_deps = Department.objects.filter(Q(name="Baby") |
-                                            Q(name="Health & Beauty") |
-                                            Q(name="Household") |
-                                            Q(name="Pets"))
+
+    banned_deps = None
 
     @classmethod
     def process_item(cls, item, spider):
+
+        # this is done here because otherwise, calling Department
+        # from outside actualy starts the django app and thus the reactor...
+        if cls.banned_deps is None:
+            cls.banned_deps = Department.objects.filter(Q(name="Baby") |
+                                        Q(name="Health & Beauty") |
+                                        Q(name="Household") |
+                                        Q(name="Pets"))
 
         if spider.name is "abs_prod_prod_match":
 
@@ -178,6 +184,10 @@ class AbstractProductProductMatchingPipeline(object):
             if matching_product.department not in cls.banned_deps:
                 apsp.product_dict[str(item['rank'])] = matching_product
                 apsp.save()
+            else:
+                # delete if their are no matching products
+                if len(apsp.product_dict) == 0:
+                    apsp.delete()
 
         return item
 

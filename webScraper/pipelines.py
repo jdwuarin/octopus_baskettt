@@ -4,8 +4,8 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from django.core.exceptions import ObjectDoesNotExist
 from scrapy.exceptions import DropItem
-from octopus_groceries.models import Product, Recipe, Tag, TagRecipe, \
-    RecipeAbstractProduct, AbstractProduct, AbstractProductSupermarketProduct, Supermarket
+from octopus_groceries.models import *
+from django.db.models import Q
 from webScraper.spiders.initial_ingredients import determine_if_condiment
 
 import re
@@ -141,7 +141,13 @@ class FoodComPostgresPipeline(object):
 
 class AbstractProductProductMatchingPipeline(object):
 
-    def process_item(self, item, spider):
+    banned_deps = Department.objects.filter(Q(name="Baby") |
+                                            Q(name="Health & Beauty") |
+                                            Q(name="Household") |
+                                            Q(name="Pets"))
+
+    @classmethod
+    def process_item(cls, item, spider):
 
         if spider.name is "abs_prod_prod_match":
 
@@ -167,9 +173,11 @@ class AbstractProductProductMatchingPipeline(object):
                 abstract_product=abstract_product,
                 supermarket=item['supermarket'])
 
-            apsp.product_dict[str(item['rank'])] = matching_product
-
-            apsp.save()
+            # only save the matching product if it is not from one of the banned
+            # deps
+            if matching_product.department not in cls.banned_deps:
+                apsp.product_dict[str(item['rank'])] = matching_product
+                apsp.save()
 
         return item
 

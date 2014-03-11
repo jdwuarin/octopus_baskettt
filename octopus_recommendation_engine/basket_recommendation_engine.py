@@ -1,6 +1,5 @@
 import random
 from math import floor, ceil
-from django.db.models import Q
 
 from octopus_groceries.models import *
 from unit_helper import Unit_helper
@@ -18,10 +17,6 @@ class BasketRecommendationEngine(object):
     # should stem from any of those departments
     # TODO remove this bad looking hack
 
-    banned_deps = Department.objects.filter(Q(name="Baby") |
-                                            Q(name="Health & Beauty") |
-                                            Q(name="Household") |
-                                            Q(name="Pets"))
 
     @classmethod
     def create_onboarding_basket(cls, user_settings):

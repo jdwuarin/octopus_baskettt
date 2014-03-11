@@ -1,4 +1,6 @@
 import random
+import json
+from django.http import HttpResponse
 from math import floor, ceil
 
 from octopus_groceries.models import *
@@ -52,7 +54,31 @@ class BasketRecommendationEngine(object):
         return product_list
 
     @classmethod
-    def create_following_basket
+    def create_following_basket(cls, user):
+
+        # see if user has some baskets
+        ugb = octopus_user.models.UserGeneratedBasket.\
+            objects.filter(user=user).order_by('-time')
+        urb = octopus_user.models.UserRecommendedBasket.\
+            objects.filter(user=user).order_by('-time')
+
+        if ugb:
+            # if so, take last and just remove 20% switching them with similar
+            # in similar ailse (yes, this is sort of a shitty hack)
+            last_ugb = ugb[len(ugb)-1]
+            basket = []
+            for id, quantity in last_ugb.product_dict.iteritems():
+                try:
+                    product = Product.objects.get(id=id)
+                    basket.append([[product, quantity]])
+                except Product.DoesNotExist:
+                    pass
+
+            return basket
+
+        else:
+            # no basket yet, just create an anonymous one.
+            return None
 
     @classmethod
     def get_product_matrix(cls, potential_recipes, user_settings):
@@ -217,10 +243,11 @@ class BasketRecommendationEngine(object):
                                  quantity_to_buy])
 
             # populate with other similar products that can be selected
-            for ii in range(1, len(apsp.product_dict)+1):
-                if ii != my_prod_rank:
+
+            for rank, product in apsp.product_dict.iteritems():
+                if rank != my_prod_rank:
                     product_list.append(
-                        apsp.product_dict[str(ii)])
+                    apsp.product_dict[str(rank)])
 
             if product_list:
                 product_matrix.append(product_list)
@@ -243,8 +270,18 @@ class BasketRecommendationEngine(object):
 
         considered_products = []
         # starting at 1 because ranks start at 1 and not 0
-        for ii in range(1, loop_size+1):
-            considered_products.append([apsp.product_dict[str(ii)], ii])
+        running_index = 1 # keep track of rank in product_dict
+        loop_index = 1 # keep track of index in loop
+        while loop_index < loop_size+1:
+            try:
+                prod_to_add = apsp.product_dict[str(running_index)]
+                considered_products.append([prod_to_add, running_index])
+                # only increment loop_index when ranked item was found
+                loop_index += 1
+            except KeyError:
+                pass
+            # always increment the running index
+            running_index += 1
 
         # just sort with respect to price/quantity
         considered_products = sorted(considered_products,
@@ -300,9 +337,6 @@ class BasketRecommendationEngine(object):
             if output_product_matrix[-1][0][0] == product_matrix[ii][0][0]:
                 output_product_matrix[-1][0][1] += product_matrix[ii][0][1]
             else:
-                # TODO, make this hotfix better by selecting better products
-                # when bullshit is returned.
-                if product_matrix[ii][0][0].department not in cls.banned_deps:
-                    output_product_matrix.append(product_matrix[ii])
+                output_product_matrix.append(product_matrix[ii])
 
         return output_product_matrix

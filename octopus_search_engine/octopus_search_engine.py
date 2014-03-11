@@ -37,8 +37,6 @@ def simple_search(query, supermarket):
     ii = 0
     for apsp in sqs:
 
-        print apsp.object.abstract_product
-
         apsp_prod_list = []
         for rank, product in apsp.object.product_dict.iteritems():
             apsp_prod_list.append([rank, product])

@@ -210,7 +210,6 @@ class UserResource(ModelResource):
             return HttpResponse(no_success,
                                 content_type="application/json")
 
-        print user_settings
         # get basket from user_settings
         basket = BasketRecommendationEngine.create_onboarding_basket(
             user_settings)
@@ -232,34 +231,15 @@ class UserResource(ModelResource):
     def get_later_basket(self, request, **kwargs):
         user = request.user
 
-        # see if user has some baskets
-        ugb = UserGeneratedBasket.objects.filter(user=user).order_by('-time')
-        urb = UserRecommendedBasket.objects.filter(user=user).order_by('-time')
+        basket = BasketRecommendationEngine.create_following_basket(user)
 
-        if ugb:
-            # if so, take last and just remove 20% switching them with similar
-            # in similar ailse (yes, this is sort of a shitty hack)
-            last_ugb = ugb[len(ugb)-1]
-            basket = []
-            for id, quantity in last_ugb.product_dict.iteritems():
-                try:
-                    product = Product.objects.get(id=id)
-                    basket.append([[product, quantity]])
-                except Product.DoesNotExist:
-                    pass
-            if basket:
-                response = helpers.get_json_basket(basket)
-                data = json.dumps(response)
-                return HttpResponse(data, content_type="application/json")
-            else:
-                no_success = json.dumps({'success': False})
-                return HttpResponse(no_success,
-                                    content_type="application/json")
+        if basket:
+            response = helpers.get_json_basket(basket)
+            data = json.dumps(response)
+            return HttpResponse(data, content_type="application/json")
 
         else:
-            # no basket yet, just create an anonymous one.
             return self.get_first_basket(request, **kwargs)
-
 
     def beta_subscription(self, request, **kwargs):
         self.method_check(request, allowed=['post'])

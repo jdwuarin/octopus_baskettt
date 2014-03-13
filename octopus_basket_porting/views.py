@@ -7,40 +7,55 @@ from django.contrib.auth.decorators import login_required
 from octopus_groceries.models import Product, Tag
 from octopus_user.models import UserRecommendedBasket, UserGeneratedBasket, \
     UserSettings
+from octopus_basket_porting.pipelines import BadLoginException
 
 
 @login_required
 def port_basket(request):
     SpiderManagerController.create_if_none()
     data = json.loads(request.body)
+    user_settings_hash = data['user_settings_hash']
 
-    #first determine what user made this request
+    # first determine what user made this request
     user = request.user
 
-    # first save the user settings if user is new
+    # then save the user settings if user is new
     try:
         # try seeing if user already has settings assigned to self
         user_settings = UserSettings.objects.get(user=user)
+        # it exists, so try to delete it
+        try:
+            user_settings = UserSettings.objects.get(
+                pre_user_creation_hash=user_settings_hash)
+            user_settings.delete()
 
-        if not user_settings:
-            user_settings_hash = data['user_settings_hash']
-            # if there is no user_settings_hash, this is a problem
-            # deal with it in except block
+        except UserSettings.DoesNotExist:
+            # no problem, there actually was no hash
+            pass
+
+    except UserSettings.DoesNotExist:
+
+        try:
             user_settings = UserSettings.objects.get(
                 pre_user_creation_hash=user_settings_hash)
             user_settings.user = user
             user_settings.pre_user_creation_hash = None
             user_settings.save()
 
-    except KeyError:
-        return HttpResponse("Cannot find user settings",
+        # if there is no user_settings_hash, this is a problem
+        # deal with it in except block
+        except UserSettings.DoesNotExist:
+            return HttpResponse("Cannot find user settings",
                                 content_type="application/json")
+
 
     #then save the basket recommended to the user
     recommended_basket = data['recommendation']
     rb_product_dict = {}
-    for product in recommended_basket:
-        rb_product_dict[str(product['id'])] = str(product['quantity'])
+    for entry in recommended_basket:
+        # if it is not the hash added at end of list in the list sent
+        if len(entry) > 1:
+            rb_product_dict[str(entry['main']['id'])] = str(entry['quantity'])
 
     user_recommended_basket = UserRecommendedBasket(user=user,
                                                     product_dict=
@@ -78,11 +93,18 @@ def port_basket(request):
     this_basket.thread_manager.wait(15)
 
     user_generated_basket_after_porting = this_basket.thread_manager.get_response()
+
+    # make sure user could login to tesco. if not, notify user.
+    if user_generated_basket_after_porting['good_login'] == "False":
+       return HttpResponse(json.dumps(
+           user_generated_basket_after_porting), content_type="application/json")
+
     user_generated_basket_after_porting = check_basket_persistence(
         user_generated_basket_before_porting,
         user_generated_basket_after_porting)
 
-    response = []
+    response = {}
+    response_product_list = []
 
     # key[0] is the Product item or a string and. If product item, key[1]
     # is the quantity to order
@@ -96,11 +118,14 @@ def port_basket(request):
             product_json['img'] = str(key[0].external_image_link)
             product_json['quantity'] = key[1]
             product_json['success'] = is_success
+            response_product_list.append(product_json)
 
         else:
-            product_json[key] = is_success
+            # the server status and good_login status
+            response[key] = is_success
 
-        response.append(product_json)
+    # the product list
+    response['product_list'] = response_product_list
 
     # frontend needs to check for "Response_status" == "server_timeout" and
     # "good_login" == "False" in that order before anything else

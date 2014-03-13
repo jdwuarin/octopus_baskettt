@@ -4,13 +4,13 @@ from django.db.models import Q
 
 from octopus_groceries.models import *
 from unit_helper import Unit_helper
+import octopus_user
 
 
 #per person limit cost for single product
-product_cost_limit = 6
 
 class BasketRecommendationEngine(object):
-    condiment_max_ratio = 0.3
+    condiment_max_ratio = 0.2
     num_condiment_abstract_product = 0.0
     num_returned_prod_per_abstract_product = 20
 
@@ -27,7 +27,23 @@ class BasketRecommendationEngine(object):
     def create_onboarding_basket(cls, user_settings):
         #TODO, remove tesco hard-code
 
-        tag_list = Tag.objects.filter(name__in=user_settings.tags)
+        # get the tags id list from the user settings
+
+        tags_id = octopus_user.helpers.get_list_from_comma_separated_string(
+            user_settings.tags)
+
+        pre_tag_list = Tag.objects.filter(id__in=tags_id)
+
+        #this is a hot fix for the fact that
+        #the only tag for european type cuisines that exists is "European"
+        tag_list = []
+        for tag in pre_tag_list:
+            # id's 1 and 2 contain the Italian and French tags
+            # as per specified in the tag_fixtures.json file
+            if tag.id == 1 or tag.id == 2:
+                tag_list.append(Tag.objects.get(name="European"))
+            else:
+                tag_list.append(tag)
 
         potential_recipe_list = []
         for tag in tag_list:
@@ -183,9 +199,12 @@ class BasketRecommendationEngine(object):
         for abstract_product, quantity in abstract_products.iteritems():
 
             # get list of products attached to abstract_product:
-            apsp = AbstractProductSupermarketProduct.objects.get(
-                abstract_product=abstract_product,
-                supermarket=user_settings.default_supermarket)
+            try:
+                apsp = AbstractProductSupermarketProduct.objects.get(
+                    abstract_product=abstract_product,
+                    supermarket=user_settings.default_supermarket)
+            except AbstractProductSupermarketProduct.DoesNotExist:
+                pass  # this should not happen in production, but if it does, just pass
 
             my_prod_rank = cls.get_selected_product_rank(
                 apsp, user_settings.price_sensitivity)
@@ -241,8 +260,9 @@ class BasketRecommendationEngine(object):
 
         # we floor the value because as always, indexes start at 0
         # the floor is done via the int() function
+
         selected_rank = considered_products[
-            int(price_sensitivity * loop_size)][1]
+            int(round(price_sensitivity * loop_size-1))][1]
 
         return selected_rank
 

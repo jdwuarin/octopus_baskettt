@@ -3,6 +3,13 @@
     "model": "octopus_groceries.Diet",
     "pk": 1,
     "fields": {
+      "name": "Normal"
+    }
+  },
+  {
+    "model": "octopus_groceries.Diet",
+    "pk": 1,
+    "fields": {
       "name": "Vegan"
     }
   },

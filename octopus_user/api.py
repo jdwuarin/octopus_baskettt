@@ -1,7 +1,4 @@
 import json
-import string
-import random
-from haystack.query import SearchQuerySet
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -10,7 +7,6 @@ from tastypie.http import HttpUnauthorized, HttpForbidden
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
-from octopus_groceries.models import *
 from tastypie.authentication import SessionAuthentication
 from octopus_recommendation_engine.basket_recommendation_engine import \
     BasketRecommendationEngine
@@ -20,6 +16,8 @@ from octopus_user.models import UserGeneratedBasket, UserInvited, UserSettings
 from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done
 from django import forms
 from djangular.forms.angular_model import NgModelFormMixin
+from octopus_user.models import *
+import helpers
 
 from django.contrib.auth.forms import  PasswordResetForm
 
@@ -225,162 +223,80 @@ class UserResource(ModelResource):
         self.method_check(request, allowed=['post'])
 
         if request.user.is_authenticated():
-            return self.registered_basket(request, **kwargs)
+            return self.get_later_basket(request, **kwargs)
         else:
-            return self.anonymous_basket(request, **kwargs)
+            return self.get_first_basket(request, **kwargs)
 
-    #get basket for someone who has noa ccount yet.
-    def anonymous_basket(self, request, **kwargs):
+    #get basket for someone who has no ccount yet.
+    def get_first_basket(self, request, **kwargs):
         data = self.deserialize(request, request.body,
                                 format=request.META.get('CONTENT_TYPE',
                                                         'application/json'))
-
-        key_error = False
-        value_error = False
-
-        hash = ''.join(random.choice(
-            string.ascii_letters + string.digits) for x in range(60))
-
+        # get user_settings
         user_settings = None
-        try:
-            #this is a hot fix for the fact that
-            #the only tag for european type cuisines that exists is "European"
-            real_cuisines = []
-            for cuisine in data['cuisine']:
-                if cuisine == "Italian" or cuisine == "French" or (
-                    cuisine == "Spanish"):
-                    real_cuisines.append("European")
-                else:
-                    # make sure requested tag actually exists
-                    sqs = SearchQuerySet().filter(
-                        content=cuisine).models(Tag)
-                    if sqs:
-                        real_cuisines.append(cuisine)
-                    else:
-                        value_error = True
-                        break
+        if request.user.is_authenticated():
+            try:
+                user_settings = UserSettings.objects.get(user=request.user)
+            except:
+                pass
+        else:
+            user_settings = helpers.save_anonymous_basket_user_settings(data)
 
-            # TODO fix this bullshit
-            banned_meats = []
-            # for banned_meat in data['banned_meats']:
-            #     id = BannableMeats.objects.get(name=banned_meat).id
-            #     banned_meats.append(id)
-
-
-            data['diet'] = "Vegan"
-
-            banned_abstract_products = []
-            # for entry in data['banned_abstract_products']:
-            #     sqs = SearchQuerySet().models(AbstractProduct)
-            #     id = sqs.filter(content=entry)[0].object.id
-            #     banned_abstract_products.append(id)
-
-            ############################
-
-            data['supermarket'] = "tesco" #TODO remove tesco hardcode
-
-            if not value_error:
-                user_settings = UserSettings(
-                    people=int(data['people']),
-                    days=int(data['days']),
-                    price_sensitivity=float(data['price_sensitivity']),
-                    tags=real_cuisines,
-                    default_supermarket=
-                    Supermarket.objects.get(name=data['supermarket']),
-                    pre_user_creation_hash=hash,
-                    diet=Diet.objects.get(name=data['diet']),
-                    banned_meats=banned_meats,
-                    banned_abstract_products=banned_abstract_products)
-                user_settings.save()
-
-        except KeyError:
-            key_error = True
-        except ValueError:
-            value_error = True
-        except IndexError:
-            value_error = True
-
-        no_success_condition = value_error or (
-            key_error) or (
-            int(data['people']) < 1) or (
-            int(data['days']) < 1) or (
-            float(data['price_sensitivity']) < 0) or (
-            float(data['price_sensitivity']) > 1) or (
-            len(data['cuisine']) < 1)
-
-        if no_success_condition:
+        if not user_settings:
             no_success = json.dumps({'success': False})
             return HttpResponse(no_success,
                                 content_type="application/json")
 
+        print user_settings
+        # get basket from user_settings
         basket = BasketRecommendationEngine.create_onboarding_basket(
             user_settings)
 
-        response = []
+        # create response from basket
+        response = helpers.get_json_basket(basket)
 
-        # basket[0] = [[selected_product, quantity], other_prod1, op2,...]
-
-        for entry in basket:
-            # this is the json that will be returned
-            product_json = {}
-
-            # this is the main product, the one to be shown by default
-            product_json_main = {}
-            product_json_main['id'] = entry[0][0].id
-            product_json_main['name'] = entry[0][0].name
-            product_json_main['price'] = entry[0][0].price
-            product_json_main['link'] = entry[0][0].link
-            product_json_main['img'] = str(entry[0][0].external_image_link)
-            # product_json_main['ingredient'] = entry[0][0].ingredients
-
-            department = entry[0][0].department
-            product_json_main['department'] = (
-                "other" if department is None else department.name)
-            # aisle = entry[0][0].aisle
-            # product_json_main['aisle'] = (
-                # "other" if aisle is None else aisle.name)
-            # category = entry[0][0].category
-            # product_json_main['category'] = (
-                # "other" if category is None else category.name)
-
-            product_json['main'] = (product_json_main)
-            product_json['quantity'] = entry[0][1]
-            other_products = []
-
-            for ii in range(1, len(entry)):
-                product_json_other = {}
-                product_json_other['id'] = entry[ii].id
-                product_json_other['name'] = entry[ii].name
-                product_json_other['price'] = entry[ii].price
-                product_json_other['link'] = entry[ii].link
-                product_json_other['img'] = str(entry[ii].external_image_link)
-                # product_json_other['ingredient'] = entry[ii].ingredients
-                # department = entry[ii].department
-                product_json_other['department'] = (
-                    "other" if department is None else department.name)
-                # aisle = entry[ii].aisle
-                # product_json_other['aisle'] = (
-                    # "other" if aisle is None else aisle.name)
-                # category = entry[ii].category
-                # product_json_other['category'] = (
-                    # "other" if category is None else category.name)
-
-                other_products.append(product_json_other)
-
-            product_json['other_products'] = other_products
-            response.append(product_json)
-
+        # add hash to response
         user_settings_hash_json = {}
-        user_settings_hash_json['user_settings_hash'] = hash
+        user_settings_hash_json[
+            'user_settings_hash'] = user_settings.pre_user_creation_hash
         response.append(user_settings_hash_json)
-        data = json.dumps(response)
 
+        data = json.dumps(response)
         return HttpResponse(data, content_type="application/json")
 
 
     # get basket for someone who already has an account
-    def registered_basket(self, request, **kwargs):
-        pass
+    def get_later_basket(self, request, **kwargs):
+        user = request.user
+
+        # see if user has some baskets
+        ugb = UserGeneratedBasket.objects.filter(user=user).order_by('-time')
+        urb = UserRecommendedBasket.objects.filter(user=user).order_by('-time')
+
+        if ugb:
+            # if so, take last and just remove 20% switching them with similar
+            # in similar ailse (yes, this is sort of a shitty hack)
+            last_ugb = ugb[len(ugb)-1]
+            basket = []
+            for id, quantity in last_ugb.product_dict.iteritems():
+                try:
+                    product = Product.objects.get(id=id)
+                    basket.append([[product, quantity]])
+                except Product.DoesNotExist:
+                    pass
+            if basket:
+                response = helpers.get_json_basket(basket)
+                data = json.dumps(response)
+                return HttpResponse(data, content_type="application/json")
+            else:
+                no_success = json.dumps({'success': False})
+                return HttpResponse(no_success,
+                                    content_type="application/json")
+
+        else:
+            # no basket yet, just create an anonymous one.
+            return self.get_first_basket(request, **kwargs)
+
 
     def beta_subscription(self, request, **kwargs):
         self.method_check(request, allowed=['post'])

@@ -70,7 +70,6 @@ class TescoBasketSpider(CrawlSpider):
 
         request.meta['product'] = response.meta['product']
 
-
         yield request
 
     def item_parsed(self, response):

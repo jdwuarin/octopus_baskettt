@@ -39,15 +39,15 @@ DATABASES = {
 
         'USER': 'octopus_user',
         'PASSWORD': 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l',
-        'HOST': 'localhost',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '5432',           # Set to empty string for default.
+        'HOST': '162.13.177.180', # as of writing this was the adress of octopus_postgres_master
+        'PORT': '5435',           # Set to empty string for default.
     }
 }
 
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://127.0.0.1:9200/',  # currently running locally
+        'URL': 'http://162.13.177.216:9201/',  # currently running locally
         'INDEX_NAME': 'haystack',
         'INCLUDE_SPELLING': True,
         'TIMEOUT': 120,

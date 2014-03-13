@@ -60,10 +60,10 @@ def basket_porting_test(request, product_list_before):
 def create_basket_test():
 
     user_settings = UserSettings(
-                    people=2,
+                    people=4,
                     days=7,
                     price_sensitivity=0.5,
-                    tags=["European", "Chinese"],
+                    tags=["Thai", "French"],
                     default_supermarket=Supermarket.objects.get(name="tesco"),
                     pre_user_creation_hash="dummy",
                     diet=Diet.objects.get(name="Vegan"),
@@ -77,9 +77,9 @@ def create_basket_test():
 
     print str(len(basket))
 
-    # for row in basket:
-    #     for product in row:
-    #         print product
+    for row in basket:
+        for product in row:
+            print product
 
     # basket_porting_test("some_request", product_list)
 

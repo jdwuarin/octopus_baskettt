@@ -207,7 +207,7 @@ path.plugins: /var/lib/elasticsearch/plugins
 
 # Set both 'bind_host' and 'publish_host':
 #
-network.host: 127.0.0.1
+network.host: 0.0.0.0
 
 # Set a custom port for the node to node communication (9300 by default):
 #
@@ -219,7 +219,7 @@ network.host: 127.0.0.1
 
 # Set a custom port to listen for HTTP traffic:
 #
-http.port: 9200
+http.port: 9201
 
 # Set a custom allowed content length:
 #

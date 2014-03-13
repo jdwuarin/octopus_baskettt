@@ -128,7 +128,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.getBasket = function() {
 			// First action on the page -> load the recommended basket
-			if(!Preference.isNotValid(preferenceList)){
+
+			if(!Preference.isNotValid(preferenceList) || User.isLoggedIn()){
 				$scope.loading = true;
 				$scope.basketMessage = false;
 				Basket.post(preferenceList, function(res){

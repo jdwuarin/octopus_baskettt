@@ -4,6 +4,22 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
+.controller('ResetController', ['$scope', '$http', function($scope, $http){
+	var xsrf = $.param({email: "arnaud@baskettt.co"});
+
+	$scope.passwordReset = function() {
+		return $http({
+					url: '/api/v1/user/password/reset/',
+					method: "POST",
+					data: xsrf,
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).success(function(res){
+					console.log("tamere");
+					console.log(res);
+				});
+	};
+}])
+
 .controller('HomeController',['$scope', '$sanitize', 'User','$analytics','$anchorScroll','$location',
 	function($scope, $sanitize, User, $analytics, $anchorScroll,$location){
 
@@ -112,7 +128,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.getBasket = function() {
 			// First action on the page -> load the recommended basket
-			if(!Preference.isNotValid(preferenceList)){
+
+			if(!Preference.isNotValid(preferenceList) || User.isLoggedIn()){
 				$scope.loading = true;
 				$scope.basketMessage = false;
 				Basket.post(preferenceList, function(res){
@@ -368,8 +385,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			User.login(user.email, user.password,
 				function(data){
 				User.setLoggedIn(true);
-				Alert.add("Successfully logged in.", "success");
-				User.redirect("/");
+				User.redirect("/basket");
 			},function(res, status){
 				Alert.add("Wrong credentials.", "danger");
 			});

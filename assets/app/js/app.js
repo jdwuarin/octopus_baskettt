@@ -33,6 +33,11 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/home.html',
 		requireLogin: false,
 	})
+	.when('/reset',
+	{
+		controller: 'ResetController',
+		templateUrl: 'static/app/partials/reset.html'
+	})
 	// .when('/signup',
 	// {
 	// 	controller: 'RegistrationController',

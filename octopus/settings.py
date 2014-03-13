@@ -26,6 +26,11 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'arnaud@baskettt.co'
+EMAIL_HOST_PASSWORD = 'octopusaf93c3457f'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 DATABASES = {
     'default': {
@@ -151,7 +156,7 @@ INSTALLED_APPS = (
     'south', #brings migration to Django to have stable database-independent migration layer
     'registration',
     'haystack',
-
+    'djangular',
     # My apps
     'octopus_groceries',
     'octopus_user',

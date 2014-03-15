@@ -113,8 +113,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 }])
 
 .controller('ProductListController',
-	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal',
-	function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics,$modal) {
+	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal', '$timeout',
+	function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics,$modal,$timeout) {
 
 		// Initialize variables for the frontend
 		var preferenceList = Preference.getAll();
@@ -141,8 +141,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Basket.addOldRecommendation(res);
 						Basket.setUserSettingsKey(res);
 						$scope.products = Product.formatUI(res);
-						$location.hash('ng-app');
-						$anchorScroll();
+
+						// The product doesn't get display if we don't wrap those methods in a timeout function
+						$timeout(function(){
+							$location.hash('top');
+							$anchorScroll();
+						},1,false);
+
 					}
 				});
 			} else {

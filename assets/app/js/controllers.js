@@ -134,6 +134,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				$scope.basketMessage = false;
 				Basket.post(preferenceList, function(res){
 					$scope.loading = false;
+					$window.scrollTo(0,0);
 
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
@@ -141,14 +142,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						Basket.addOldRecommendation(res);
 						Basket.setUserSettingsKey(res);
 						$scope.products = Product.formatUI(res);
-
-						// The product doesn't get display if we don't wrap those methods in a timeout function
-						$timeout(function(){
-							$location.hash('top');
-							$anchorScroll();
-						},1,false);
-
 					}
+
 				});
 			} else {
 				Alert.add("Tell us what you like and we'll take care of your basket.","info");

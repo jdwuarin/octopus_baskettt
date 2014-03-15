@@ -63,7 +63,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.number = 8;
 	$scope.peopleIndex = 1;
 	$scope.preference.days = 7;
-	$scope.cookingValue = $scope.preference.price_sensitivity ? $scope.preference.price_sensitivity : 20;
+	$scope.cookingValue = 20;
 
 	// Generate empty array for ng-repeat to display the people icons
 	$scope.getNumber = function(num) {
@@ -323,7 +323,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, user_settings_hash, function(res) {
 				$scope.loading = false;
-
+				console.log(res);
 				var unsuccessfulItems = Tesco.getUnsuccessful(res);
 
 				if(unsuccessfulItems.length === 0){

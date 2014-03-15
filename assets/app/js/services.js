@@ -331,8 +331,8 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			getUnsuccessful: function(basket){
 				var false_list = [];
-				// console.log(basket);
-				angular.forEach(basket, function(value, key){
+				console.log(basket);
+				angular.forEach(basket.products, function(value, key){
 
 					if(value.success == "False") {
 						false_list.push(value);

@@ -17,6 +17,7 @@ from django.contrib.auth.views import password_reset, password_reset_confirm, pa
 from django import forms
 from octopus_user.models import *
 import helpers
+from django.conf import settings
 
 from django.contrib.auth.forms import  PasswordResetForm
 
@@ -78,17 +79,26 @@ class UserResource(ModelResource):
                 'django.contrib.auth.views.password_reset_complete', name='api_password_reset_complete'),
         ]
 
+    def password_reset_done_cb(self, request, **kwargs):
+        response = {}
+        response["status"] = "mail_sent"
+
+        data = json.dumps(response)
+        return HttpResponse(data, content_type="application/json")
+
     def password_reset_confirm_cb(self, request, **kwargs):
-        print "tttta mare"
-        print request
         return password_reset_confirm(request,
             post_reset_redirect='api/v1/user/password/reset/done/',
             uidb64=kwargs["uidb64"],
             token=kwargs["token"])
 
     def password_reset_cb(self, request, **kwargs):
+
+        http_string =  'http://' if settings.DEBUG  else 'https://'
+        redirect_url = http_string+request.META["HTTP_HOST"]+'/api/v1/user/password/reset/done?format=json'
+
         return password_reset(request,
-            post_reset_redirect='/done/',
+            post_reset_redirect=redirect_url,
             email_template_name='password_reset_email.html')
 
     def login(self, request, **kwargs):

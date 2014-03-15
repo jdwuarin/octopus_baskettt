@@ -15,7 +15,6 @@ from user_objects_only_authorization import UserObjectsOnlyAuthorization
 from octopus_user.models import UserGeneratedBasket, UserInvited, UserSettings
 from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done
 from django import forms
-from djangular.forms.angular_model import NgModelFormMixin
 from octopus_user.models import *
 import helpers
 

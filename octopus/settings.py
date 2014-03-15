@@ -156,7 +156,6 @@ INSTALLED_APPS = (
     'south', #brings migration to Django to have stable database-independent migration layer
     'registration',
     'haystack',
-    'djangular',
     # My apps
     'octopus_groceries',
     'octopus_user',

@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 from django.contrib.auth.models import User
 from octopus_groceries.models import *
 from django_hstore import hstore
@@ -23,6 +24,9 @@ class UserSettings(models.Model):
     banned_abstract_products = models.CommaSeparatedIntegerField(
         max_length=5000, default=[])  # id list of AbstractProducts
 
+    created_at = models.DateTimeField(auto_now=True,
+                                      default=datetime.datetime.now())
+
     def __unicode__(self):
         return str(self.user) + ", " + str(
             self.people) + ", " + str(
@@ -39,7 +43,7 @@ class UserSettings(models.Model):
 class UserRecommendedBasket(models.Model):
     user = models.ForeignKey(User, editable=False)
     product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
-    time = models.DateField(default=0, auto_now=True)
+    time = models.DateTimeField(default=datetime.datetime.now(), auto_now=True)
 
     objects = hstore.HStoreManager()
 
@@ -52,7 +56,7 @@ class UserGeneratedBasket(models.Model):
     user_recommended_basket = models.OneToOneField(UserRecommendedBasket,
                                                    primary_key=True)
     product_dict = hstore.DictionaryField()
-    time = models.DateField(default=0, auto_now=True)
+    time = models.DateTimeField(default=0, auto_now=True)
 
     objects = hstore.HStoreManager()
 
@@ -61,7 +65,8 @@ class UserProductSlack(models.Model):
     user = models.ForeignKey(User, editable=False)
     product = models.ForeignKey(Product, editable=False)
     slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
-    purchase_time = models.DateField(default=0, auto_now=True)
+    purchase_time = models.DateTimeField(default=datetime.datetime.now(),
+                                         auto_now=True)
 
 
 class UserInvited(models.Model):

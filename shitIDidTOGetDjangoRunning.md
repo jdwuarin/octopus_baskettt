@@ -3,7 +3,7 @@ First step, get django up and running using a tunmbleblog example:
 As I will be using mongodb, here it goes:
 
 ```shell
-$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 
+$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 $ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/10gen.list
 $ sudo apt-get update
 $ sudo apt-get install mongodb-10gen #this will start mongodb automatically.
@@ -28,6 +28,8 @@ $ apt-get install libxml2-dev libxslt-dev
 $ pip install Scrapy
 $ pip install ipython
 $ pip freeze > stable-req.txt #repeat whenever stable packages are udated
+
+then to install: pip install --allow-all-external -r stable-req.txt
 ```
 
 then actually getting started. Edit the settings.py file and add:
@@ -77,10 +79,10 @@ to INSTALLED_APPS in settings.py
 
 do a "python manage.py syncdb" #this runs south syncdb
 run a "python manage.py convert_to_south" on any app we have
-Then if, say, a column was added to a model just: 
+Then if, say, a column was added to a model just:
 
 ```
-    
+
 python manage.py migrate 'octopusProducts'
 ```
 Adding a model:
@@ -89,7 +91,7 @@ python manage.py schemamigration 'octopusProducts' --add-model 'yourModelToAdd'
 python manage.py migrate 'octopusProducts'
 ``
 
-Note: if we are creating a model we will need a first migration, we do that by: 
+Note: if we are creating a model we will need a first migration, we do that by:
 
 ```
 python manage.py schemamigration 'octopusProducts' --initial
@@ -105,7 +107,7 @@ For Django Users (and Auth...)
 
 create the superuser: yes
 username: django_auth_user
-email: 
+email:
 password: django_auth
 
 ```

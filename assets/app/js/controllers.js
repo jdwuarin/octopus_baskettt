@@ -4,20 +4,42 @@
 
 angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
-.controller('ResetController', ['$scope', '$http', function($scope, $http){
-	var xsrf = $.param({email: "arnaud@baskettt.co"});
+.controller('ResetController', ['$scope', '$http', 'Alert', 'User', function($scope, $http, Alert, User){
+
+	$scope.email = "";
 
 	$scope.passwordReset = function() {
-		return $http({
-					url: '/api/v1/user/password/reset/',
-					method: "POST",
-					data: xsrf,
-					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-				}).success(function(res){
-					console.log("tamere");
-					console.log(res);
-				});
+		if($scope.passwordResetForm.$valid){
+			User.resetPasswordEmail($scope.email, function(res){
+				if(res.status === "mail_sent") {
+					Alert.add("Check your email inbox for the reset password link.","success");
+				}
+			});
+		}
 	};
+}])
+
+.controller('ResetConfirmController', ['$scope', '$routeParams', 'User', '$http', 'Alert', function($scope, $routeParams, User, $http, Alert){
+
+	var token = $routeParams.token,
+		uidb64 = $routeParams.uidb64,
+		newPassword = 'test';
+
+	if(!!token && !!uidb64){
+		$scope.sendNewPassword = function() {
+			User.resetPasswordConfirm(uidb64, token, newPassword, function(res){
+				if(res.status === "success"){
+					Alert.add("Your password has been reset.","success");
+				}else{
+					Alert.add("This link has already been used.","danger");
+
+				}
+			});
+		}
+	} else {
+		User.redirect("/reset");
+	}
+
 }])
 
 .controller('HomeController',['$scope', '$sanitize', 'User','$analytics','$anchorScroll','$location',

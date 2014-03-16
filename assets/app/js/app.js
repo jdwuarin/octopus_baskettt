@@ -38,6 +38,11 @@ angular.module('App', [
 		controller: 'ResetController',
 		templateUrl: 'static/app/partials/reset.html'
 	})
+	.when('/reset/:uidb64/:token',
+	{
+		controller: 'ResetConfirmController',
+		templateUrl: 'static/app/partials/reset_confirm.html'
+	})
 	// .when('/signup',
 	// {
 	// 	controller: 'RegistrationController',

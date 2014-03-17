@@ -304,12 +304,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.signup = function(){
 			var user = $scope.user;
-			User.signup(user.email, user.password, function(data){
-				$scope.loggedin = true;
-			}, function(res,status){
-				if(status == 401){
+			User.signup(user.email, user.password, function(res){
+				if(res.success === false){
 					$scope.notInvited = true;
+				} else {
+					$scope.loggedin = true;
 				}
+			}, function(res,status){
+
 			});
 		};
 
@@ -343,23 +345,29 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			if(list.length === 0 || list === undefined){ return; }
 
-			Tesco.post(tescoCredential.email, tescoCredential.password, list, oldRecommendation, preference, user_settings_hash, function(res) {
-				$scope.loading = false;
-				console.log(res);
-				var unsuccessfulItems = Tesco.getUnsuccessful(res);
+			Tesco.post(tescoCredential.email,
+				tescoCredential.password,
+				list,
+				oldRecommendation,
+				preference,
+				user_settings_hash,
+				function(res) {
+					$scope.loading = false;
 
-				if(unsuccessfulItems.length === 0){
-					$analytics.eventTrack('SuccessfullyTransfered',
-						{  category: 'BasketPorting'});
-					$scope.unsuccessfulTransfer = false;
-				} else{
-					$analytics.eventTrack('UnsuccessfullyTransfered',
-						{  category: 'BasketPorting'});
-					$scope.unsuccessfulTransfer = true;
-					$scope.unsuccessfulItems = unsuccessfulItems;
-				}
+					var unsuccessfulItems = Tesco.getUnsuccessful(res);
 
-			});
+					if(unsuccessfulItems.length === 0){
+						$analytics.eventTrack('SuccessfullyTransfered',
+							{  category: 'BasketPorting'});
+						$scope.unsuccessfulTransfer = false;
+					} else{
+						$analytics.eventTrack('UnsuccessfullyTransfered',
+							{  category: 'BasketPorting'});
+						$scope.unsuccessfulTransfer = true;
+						$scope.unsuccessfulItems = unsuccessfulItems;
+					}
+
+				});
 		};
 
 	}])

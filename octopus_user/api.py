@@ -8,11 +8,9 @@ from django.conf.urls import url
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from tastypie.authentication import SessionAuthentication
-from octopus_recommendation_engine.basket_recommendation_engine import \
-    BasketRecommendationEngine
+from octopus_recommendation_engine import basket_recommendation_engine
 from django.http import HttpResponse
 from user_objects_only_authorization import UserObjectsOnlyAuthorization
-from octopus_user.models import UserGeneratedBasket, UserInvited, UserSettings
 from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done
 from django import forms
 from octopus_user.models import *
@@ -231,51 +229,48 @@ class UserResource(ModelResource):
         data = self.deserialize(request, request.body,
                                 format=request.META.get('CONTENT_TYPE',
                                                         'application/json'))
-        # get user_settings
-        user_settings = None
-        if request.user.is_authenticated():
-            try:
-                user_settings = UserSettings.objects.get(user=request.user)
-            except:
-                pass
-        else:
-            user_settings = helpers.save_anonymous_basket_user_settings(data)
 
-        if not user_settings:
+        # get basket from user_settings and data
+        basket, user_settings = (
+            basket_recommendation_engine.create_onboarding_basket(
+                request.user, data))
+
+        # if failure, say so
+        if not basket or not user_settings :
             no_success = json.dumps({'success': False})
             return HttpResponse(no_success,
                                 content_type="application/json")
 
-        # get basket from user_settings
-        basket = BasketRecommendationEngine.create_onboarding_basket(
-            user_settings)
-
         # create response from basket
-        response = helpers.get_json_basket(basket)
-
+        response = {}
+        response['recommended_basket'] = basket
         # add hash to response
-        user_settings_hash_json = {}
-        user_settings_hash_json[
-            'user_settings_hash'] = user_settings.pre_user_creation_hash
-        response.append(user_settings_hash_json)
+        response['user_settings_hash'] = user_settings.pre_user_creation_hash
 
-        data = json.dumps(response)
-        return HttpResponse(data, content_type="application/json")
+        response = json.dumps(response)
+        return HttpResponse(response, content_type="application/json")
 
 
     # get basket for someone who already has an account
     def get_later_basket(self, request, **kwargs):
         user = request.user
 
-        basket = BasketRecommendationEngine.create_following_basket(user)
+        # get the basket and the corresponding recommended_basket id used
+        # during the basket porting...
+        basket, urb_id = basket_recommendation_engine.get_or_create_later_basket(user)
 
         if basket:
-            response = helpers.get_json_basket(basket)
+            response = {}
+            response['recommended_basket'] = basket
+            response['recommended_basket_id'] = urb_id
+
             data = json.dumps(response)
             return HttpResponse(data, content_type="application/json")
 
         else:
-            return self.get_first_basket(request, **kwargs)
+            no_success = json.dumps({'success': False})
+            return HttpResponse(no_success,
+                                content_type="application/json")
 
     def beta_subscription(self, request, **kwargs):
         self.method_check(request, allowed=['post'])

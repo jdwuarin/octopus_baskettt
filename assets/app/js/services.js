@@ -333,13 +333,18 @@ angular.module('App.services', ['LocalStorageModule'])
 			getUserSettingsKey: function(){
 				return localStorage.get('user_settings_hash');
 			},
-			setUserSettingsKey: function(list){
-				var key = list.map(function(p){
-					return p["user_settings_hash"];
-				}).filter(function(p){
-					return !!p;
-				});
-				localStorage.add('user_settings_hash',key[0]);
+			setUserSettingsKey: function(user_settings_hash){
+				localStorage.add('user_settings_hash',user_settings_hash);
+			},
+			getRecommendedBasketId: function() {
+				var lsId = localStorage.get('recommended_basket_id');
+				if(typeof lsId === "undefined"){
+					lsId = "";
+				}
+				return lsId;
+			},
+			setRecommendedBasketId: function(id) {
+				localStorage.add('recommended_basket_id', id);
 			}
 		};
 
@@ -349,19 +354,26 @@ angular.module('App.services', ['LocalStorageModule'])
 
 		return {
 			// Populate tesco basket
-			post: function(email, password, list, recommendation, preference, user_settings_hash, callback) {
+			post: function(email, password, list, recommendation, preference, user_settings_hash, recommended_basket_id, callback) {
 
 				return $http({
 					url: 'port_basket/?format=json',
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
-					data: {email:email, password:password, products:list, recommendation: recommendation, settings: preference, user_settings_hash: user_settings_hash}
+					data: {
+						email:email,
+						password:password,
+						products:list,
+						recommended_basket: recommendation,
+						settings: preference,
+						user_settings_hash: user_settings_hash,
+						recommended_basket_id: recommended_basket_id
+					}
 				}).success(callback);
 			},
 			getUnsuccessful: function(basket){
 				var false_list = [];
-				console.log(basket);
-				angular.forEach(basket.products, function(value, key){
+				angular.forEach(basket.product_list, function(value, key){
 
 					if(value.success == "False") {
 						false_list.push(value);

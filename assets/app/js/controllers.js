@@ -161,9 +161,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
-						Basket.addOldRecommendation(res);
-						Basket.setUserSettingsKey(res);
-						$scope.products = Product.formatUI(res);
+						Basket.addOldRecommendation(res.recommended_basket);
+						if(!User.isLoggedIn()) {
+							Basket.setUserSettingsKey(res.user_settings_hash);
+						} else {
+							Basket.setRecommendedBasketId(res.recommended_basket_id);
+						}
+
+						$scope.products = Product.formatUI(res.recommended_basket);
 					}
 
 				});
@@ -335,7 +340,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			var oldRecommendation = Basket.getOldRecommendation(),
 			preference = Preference.getAll(),
-			user_settings_hash = Basket.getUserSettingsKey();
+			user_settings_hash = Basket.getUserSettingsKey(),
+			recommended_basket_id = Basket.getRecommendedBasketId();
 
 			$analytics.eventTrack('ClickToSend',
 				{  category: 'BasketPorting'});
@@ -351,6 +357,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				oldRecommendation,
 				preference,
 				user_settings_hash,
+				recommended_basket_id,
 				function(res) {
 					$scope.loading = false;
 

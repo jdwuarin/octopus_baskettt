@@ -191,6 +191,7 @@ def create_user_generated_basket_from_basket(basket,
                                                 user_recommended_basket=
                                                 user_recommended_basket)
 
+    return user_generated_basket
 
 def get_basket_from_user_recommended_basket(urb):
     basket = []

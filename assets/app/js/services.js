@@ -218,6 +218,14 @@ angular.module('App.services', ['LocalStorageModule'])
 					}),
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(callback);
+			},
+			updateEmail: function(email, callback) {
+				return $http({
+					url: getUrl('update_email'),
+					method: 'POST',
+					headers: {'Content-Type': 'application/json'},
+					data: {email:email}
+				}).success(callback);
 			}
 		};
 	}])

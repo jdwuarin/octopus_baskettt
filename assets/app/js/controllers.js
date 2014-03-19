@@ -35,7 +35,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 				}
 			});
-		}
+		};
 	} else {
 		User.redirect("/reset");
 	}
@@ -424,8 +424,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 }])
 
-.controller('ProfileController', ['$scope', function($scope){
-	$scope.selectedMenu = "1";
+.controller('ProfileController', ['$scope','User','Alert', function($scope, User,Alert){
+	$scope.updateEmail = function() {
+		if($scope.settingsForm.$valid) {
+			User.updateEmail($scope.email, function(res){
+				Alert.add("Your email has been updated.","success");
+			});
+		}
+	};
 }])
 
 .controller('AlertController', ['$scope', 'Alert', '$timeout', '$location', function($scope, Alert, $timeout, $location) {

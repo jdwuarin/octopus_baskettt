@@ -3,86 +3,25 @@
   <div class="container">
 
     <div class="profile">
-      <div class="col-md-3">
-        <div class="profile-menu" ng-model="selectedMenu">
-          <div class="profile-menu-title">
-            My profile
-          </div>
-          <ul>
-            <li ng-click="selectedMenu = 1">Personal informations</li>
-            <li ng-click="selectedMenu = 2">Preferences</li>
-          </ul>
-        </div>
 
-      </div>
-      <div class="col-md-9" ng-switch on="selectedMenu">
-        <div class="personal" ng-switch-when="1">
+      <div class="col-md-12">
+        <div class="personal">
           <h3>Personal informations</h3>
           <p>Feel free to change your email address or your password.</p>
-          <form class="form-horizontal" role="form">
+          <form class="form-horizontal" role="form" ng-submit="updateEmail()" name="settingsForm">
             <div class="form-group">
-              <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
-              <div class="col-sm-9">
-                <input type="email" class="text-input" id="inputEmail3" placeholder="Email">
+              <label for="inputEmail" class="col-sm-1 control-label">Email</label>
+              <div class="col-sm-11">
+                <input type="email" class="text-input" id="inputEmail" placeholder="Email" ng-model="email">
               </div>
             </div>
 
-            <h4>Update password</h4>
             <div class="form-group">
-              <label for="exampleInputPassword1" class="col-sm-3 control-label">Password</label>
-              <div class="col-sm-9">
-                <input type="password" class="text-input" id="exampleInputPassword1" placeholder="Password">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1" class="col-sm-3 control-label">Confirm Password</label>
-              <div class="col-sm-9">
-                <input type="password" class="text-input" id="exampleInputPassword1" placeholder="Password">
-              </div>
-
-            </div>
-
-
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9">
+              <div class="col-sm-12">
                 <button type="submit" class="btn-trans-orange">Update</button>
               </div>
             </div>
           </form>
-        </div>
-        <div class="preferences" ng-switch-when="2">
-          <h4>Favorite food</h4>
-          <div class="profile-tag">Italian</div>
-
-          <h4>Eating style</h4>
-
-          <div class="slider">
-            <div class="label-left">Minimal</div>
-            <div class="label-right">Gourmet</div>
-            <div ui-slider min="0" max="100" ng-model="cookingValue" class="slider-bar"></div>
-          </div>
-
-          <h4>Last baskets</h4>
-          <table class="table">
-            <tr>
-              <td>Time</td>
-              <td>Contains</td>
-              <td>Price</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Time</td>
-              <td>Contains</td>
-              <td>Price</td>
-              <td><div class="btn btn-orange">Buy the same thing</div> </td>
-            </tr>
-            <tr>
-              <td>Time</td>
-              <td>Contains</td>
-              <td>Price</td>
-              <td><div class="btn btn-orange">Buy the same thing</div> </td>
-            </tr>
-          </table>
         </div>
       </div>
     </div>

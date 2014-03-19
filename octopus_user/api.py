@@ -73,12 +73,39 @@ class UserResource(ModelResource):
                self.wrap_view('password_reset_confirm_cb'),
                 name='api_password_reset_confirm'),
 
+            url(r'^(?P<resource_name>%s)/update_email%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('update_email'),
+                 name='api_update_email'),
 
             url(r'^(?P<resource_name>%s)/password/done%s$' %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('password_done_cb'),
                  name='api_password_reset_complete'),
         ]
+
+    def update_email(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        data = self.deserialize(request, request.body,
+                                format=request.META.get('CONTENT_TYPE',
+                                                        'application/json'))
+
+        email = data.get('email', '')
+
+        response = {}
+
+        if request.user and request.user.is_authenticated() and email:
+            user = request.user
+            user.email = email
+            user.username = email
+            user.save(update_fields=["email", "username"])
+            response["success"] = True
+        else:
+            response["success"] = False
+
+
+        data = json.dumps(response)
+        return HttpResponse(data, content_type="application/json")
 
     def password_done_cb(self, request, **kwargs):
         response = {}

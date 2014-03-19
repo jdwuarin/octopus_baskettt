@@ -127,12 +127,12 @@ def filter_out_extra_condiments(abstract_products):
 
 # TODO, implement these two filters
 
-def filter_diet(cls, abstract_products, user_settings):
+def filter_diet(abstract_products, user_settings):
 
     pass
 
 
-def filter_banned_meats(cls, abstract_products, user_settings):
+def filter_banned_meats(abstract_products, user_settings):
 
     pass
 
@@ -226,8 +226,7 @@ def get_selected_product_rank(apsp, price_sensitivity):
 # determines what quantity should be purchased of a certain
 # product based on the basket requirements and the user
 # complexity: tbd
-def get_quantity_for_product(cls,
-                             product,
+def get_quantity_for_product(product,
                              user_settings,
                              abstract_product_unit,
                              abstract_product_quantity):

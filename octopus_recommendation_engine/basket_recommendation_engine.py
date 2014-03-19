@@ -8,6 +8,7 @@ import later_basket_helpers
 
 def create_onboarding_basket(user, data=None):
 
+    print data
     user_settings = helpers.get_user_settings_from_user(user, data)
 
     # get the tags id list from the user settings

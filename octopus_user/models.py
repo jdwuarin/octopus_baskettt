@@ -18,6 +18,9 @@ class UserSettings(models.Model):
         max_length=150, default='', editable=False, blank=True, null=True,
         db_index=True)
 
+    # email subscription bullshit stuff.
+
+
     diet = models.ForeignKey(Diet, blank=True, null=True)
     banned_meats = models.CommaSeparatedIntegerField(
         max_length=5000, default=[])  # id list of BannableMeats

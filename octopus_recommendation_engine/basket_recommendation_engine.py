@@ -1,342 +1,103 @@
-import random
-import json
-from django.http import HttpResponse
-from math import floor, ceil
-
+from octopus_user.models import UserRecommendedBasket, UserSettings
 from octopus_groceries.models import *
-from unit_helper import Unit_helper
 import octopus_user
+import helpers
+import onboarding_basket_helpers
+import later_basket_helpers
 
 
-#per person limit cost for single product
+def create_onboarding_basket(user, data=None):
 
-class BasketRecommendationEngine(object):
-    condiment_max_ratio = 0.2
-    num_condiment_abstract_product = 0.0
-    num_returned_prod_per_abstract_product = 20
+    print data
+    user_settings = helpers.get_user_settings_from_user(user, data)
 
+    # get the tags id list from the user settings
+    tags_id = octopus_user.helpers.get_list_from_comma_separated_string(
+        user_settings.tags)
 
-    @classmethod
-    def create_onboarding_basket(cls, user_settings):
-        #TODO, remove tesco hard-code
+    pre_tag_list = Tag.objects.filter(id__in=tags_id)
 
-        # get the tags id list from the user settings
-
-        tags_id = octopus_user.helpers.get_list_from_comma_separated_string(
-            user_settings.tags)
-
-        pre_tag_list = Tag.objects.filter(id__in=tags_id)
-
-        #this is a hot fix for the fact that
-        #the only tag for european type cuisines that exists is "European"
-        tag_list = []
-        for tag in pre_tag_list:
-            # id's 1 and 2 contain the Italian and French tags
-            # as per specified in the tag_fixtures.json file
-            if tag.id == 1 or tag.id == 2:
-                tag_list.append(Tag.objects.get(name="European"))
-            else:
-                tag_list.append(tag)
-
-        potential_recipe_list = []
-        for tag in tag_list:
-            tag_recipe_list = TagRecipe.objects.filter(tag=tag.id)
-            recipe_id_list = [tag_recipe.recipe_id for tag_recipe in
-                              tag_recipe_list]
-            recipe_list = Recipe.objects.filter(id__in=recipe_id_list).order_by(
-                '-review_count', '-rating')
-            potential_recipe_list.append(recipe_list)
-
-        product_list = []
-        if len(potential_recipe_list) > 0:
-            product_list = cls.get_product_matrix(potential_recipe_list,
-                                                  user_settings)
-        return product_list
-
-    @classmethod
-    def create_following_basket(cls, user):
-
-        # see if user has some baskets
-        ugb = octopus_user.models.UserGeneratedBasket.\
-            objects.filter(user=user).order_by('-time')
-        urb = octopus_user.models.UserRecommendedBasket.\
-            objects.filter(user=user).order_by('-time')
-
-        if ugb:
-            # if so, take last and just remove 20% switching them with similar
-            # in similar ailse (yes, this is sort of a shitty hack)
-            last_ugb = ugb[len(ugb)-1]
-            basket = []
-            for id, quantity in last_ugb.product_dict.iteritems():
-                try:
-                    product = Product.objects.get(id=id)
-                    basket.append([[product, quantity]])
-                except Product.DoesNotExist:
-                    pass
-
-            return basket
-
+    #this is a hot fix for the fact that
+    #the only tag for european type cuisines that exists is "European"
+    tag_list = []
+    for tag in pre_tag_list:
+        # id's 1 and 2 contain the Italian and French tags
+        # as per specified in the tag_fixtures.json file
+        if tag.id == 1 or tag.id == 2:
+            tag_list.append(Tag.objects.get(name="European"))
         else:
-            # no basket yet, just create an anonymous one.
-            return None
+            tag_list.append(tag)
 
-    @classmethod
-    def get_product_matrix(cls, potential_recipes, user_settings):
-        recipe_type_passed = 0
-        meals_per_day = 2  # should probably be in user_settings somehow
-        product_matrix = []
+    potential_recipe_list = []
+    for tag in tag_list:
+        tag_recipe_list = TagRecipe.objects.filter(tag=tag.id)
+        recipe_id_list = [tag_recipe.recipe_id for tag_recipe in
+                          tag_recipe_list]
+        recipe_list = Recipe.objects.filter(id__in=recipe_id_list).order_by(
+            '-review_count', '-rating')
+        potential_recipe_list.append(recipe_list)
 
-        # here I just generate a dict with all the indexes of
-        # the recipes that should be iterated over remember and the
-        # row the iteration is at, potential_recipes; we start at 0
-        # is a list of list (a sort of matrix, where columns height can differ)
-        recipe_column_indexes = {}
-        for ii in range(len(potential_recipes)):
-            recipe_column_indexes[ii] = 0
+    product_matrix = []
+    if len(potential_recipe_list) > 0:
+        product_matrix = onboarding_basket_helpers.get_product_matrix(
+            potential_recipe_list,
+            user_settings)
 
-        # a rough recipe_list is first gathered
-        recipe_list = []
-
-        num_wanted_recipes = meals_per_day * user_settings.days
-        while len(recipe_list) < num_wanted_recipes:
-
-            # if an index error occured, the recipe_column has been exhausted
-            # add it to this list and remove it from dict so as not to iterate
-            # over it anymore
-            column_indexes_to_delete = []
-
-            for column, row in recipe_column_indexes.iteritems():
-                try:
-                    recipe = potential_recipes[column][row]
-                    # if recipe was there, add it to recipe_list
-                    recipe_list.append(recipe)
-                    # then increment row
-                    recipe_column_indexes[column] = row + 1
-                    # break out if number of wanted recipes is reached
-                    if len(recipe_list) == num_wanted_recipes:
-                        break
-
-                except IndexError:
-                    column_indexes_to_delete.append(column)
-
-            for index in column_indexes_to_delete:
-                del recipe_column_indexes[index]
-
-            if not recipe_column_indexes:
-                break
-
-        # mappings to abstract_products are then obtained
-        recipe_abstract_product_list = RecipeAbstractProduct.objects.filter(
-            recipe__in=recipe_list).order_by('abstract_product')
-
-        # units are dealt with separating abstract_products in
-        # a list requiring grams and "each" of a certain abstract_product.
-        # returned dicts are or the form: my_dict[abstract_product] = quantity
-        abstract_products_grams, abstract_products_each =\
-            Unit_helper.get_abstract_products_by_unit(
-                recipe_abstract_product_list)
-        # we first filter out the "too many" condiments that we might have
-        cls.filter_out_extra_condiments(abstract_products_grams)
-        cls.filter_out_extra_condiments(abstract_products_each)
-
-        # we then filter out all the ingredients that do not
-        # respects the users diet or banned meats or products etc...
-        cls.filter_diet(abstract_products_grams, user_settings)
-        cls.filter_diet(abstract_products_each, user_settings)
-
-        cls.filter_banned_meats(abstract_products_grams, user_settings)
-        cls.filter_banned_meats(abstract_products_each, user_settings)
-
-        # a product matrix is then obtained for each unit type
-        # where the result looks like:
-        # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
-        product_matrix = cls.get_products_to_buy(
-            abstract_products_grams, user_settings, "grams")
-
-        product_matrix += cls.get_products_to_buy(
-            abstract_products_each, user_settings, "each")
-
-        # the lists are then merged. I.e same products quantities are just added
-        product_matrix = cls.merge_matrix(product_matrix)
-
-        return product_matrix
-
-    #check that condiment_ratio is not passed
-    # first obtain condiment ratio on list
-    @classmethod
-    def filter_out_extra_condiments(cls, abstract_products):
-        condiment_count = 0.0
-
-        if not abstract_products:
-            return None
-
-        for abstract_product in abstract_products:
-            if abstract_product.is_condiment:
-                condiment_count += 1.0
-
-        if condiment_count/float(len(abstract_products)) > (
-            cls.condiment_max_ratio):
-            # there are too many condiments here, remove a certain amount
-            # such that: (condiment_count - num_to_remove)/
-            # len(abstract_products - num_to_remove) < 0.3
-            num_to_remove = (condiment_count -
-                             cls.condiment_max_ratio *
-                             float(len(abstract_products))) / (
-                        1.0 - cls.condiment_max_ratio)
-            num_to_remove = ceil(num_to_remove)
-
-            num_removed = 0
-            aptd = []  # abstract_products to delete
-            for abstract_product in abstract_products:
-                if abstract_product.is_condiment:
-                    aptd.append(abstract_product)
-                    num_removed += 1
-                if num_removed >= num_to_remove:
-                    break
-
-            for abstract_product in aptd:
-                del abstract_products[abstract_product]
-
-    # TODO, implement these two filters
-    @classmethod
-    def filter_diet(cls, abstract_products, user_settings):
-
-        pass
-
-    @classmethod
-    def filter_banned_meats(cls, abstract_products, user_settings):
-
-        pass
-
-    @classmethod
-    def get_products_to_buy(cls,
-                            abstract_products,
-                            user_settings,
-                            abstract_product_unit):
-
-        # product_matrix[0] = [[selected_product, quantity], other_prod1, op2,...]
-        product_matrix = []
-        for abstract_product, quantity in abstract_products.iteritems():
-
-            # get list of products attached to abstract_product:
-            try:
-                apsp = AbstractProductSupermarketProduct.objects.get(
-                    abstract_product=abstract_product,
-                    supermarket=user_settings.default_supermarket)
-            except AbstractProductSupermarketProduct.DoesNotExist:
-                pass  # this should not happen in production, but if it does, just pass
-
-            my_prod_rank = cls.get_selected_product_rank(
-                apsp, user_settings.price_sensitivity)
-
-            if my_prod_rank is None:
-                continue  # deal with non existing objects
-
-            product_list = []
-            selected_product = apsp.product_dict[str(my_prod_rank)]
-            quantity_to_buy = cls.get_quantity_for_product(
-                                 selected_product,
-                                 user_settings,
-                                 abstract_product_unit,
-                                 quantity)
-            product_list.append([selected_product,
-                                 quantity_to_buy])
-
-            # populate with other similar products that can be selected
-
-            for rank, product in apsp.product_dict.iteritems():
-                if rank != my_prod_rank:
-                    product_list.append(
-                    apsp.product_dict[str(rank)])
-
-            if product_list:
-                product_matrix.append(product_list)
-
-        return product_matrix
-
-    # selects the most appropriate product in a list based
-    # solely on price_sensitivity of the user
-    # complexity: O(n) in min(num_products and selected_within_rank)
-    @classmethod
-    def get_selected_product_rank(cls, apsp, price_sensitivity):
-
-        select_within_rank = 5
-        num_prod = len(apsp.product_dict)
-
-        if num_prod < 1:
-            return None
-
-        loop_size = int(min(num_prod, select_within_rank))
-
-        considered_products = []
-        # starting at 1 because ranks start at 1 and not 0
-        running_index = 1 # keep track of rank in product_dict
-        loop_index = 1 # keep track of index in loop
-        while loop_index < loop_size+1:
-            try:
-                prod_to_add = apsp.product_dict[str(running_index)]
-                considered_products.append([prod_to_add, running_index])
-                # only increment loop_index when ranked item was found
-                loop_index += 1
-            except KeyError:
-                pass
-            # always increment the running index
-            running_index += 1
-
-        # just sort with respect to price/quantity
-        considered_products = sorted(considered_products,
-            key=lambda product:
-            float(product[0].price.replace("GBP", ""))/float(
-                product[0].quantity))
-
-        # we floor the value because as always, indexes start at 0
-        # the floor is done via the int() function
-
-        selected_rank = considered_products[
-            int(round(price_sensitivity * loop_size-1))][1]
-
-        return selected_rank
-
-    # determines what quantity should be purchased of a certain
-    # product based on the basket requirements and the user
-    # complexity: tbd
-    @classmethod
-    def get_quantity_for_product(cls,
-                                 product,
-                                 user_settings,
-                                 abstract_product_unit,
-                                 abstract_product_quantity):
+    basket = helpers.get_json_basket(product_matrix)
+    return basket, user_settings
 
 
-        prod_usage = Unit_helper.get_product_usage(abstract_product_unit,
-                                                   product.unit,
-                                                   abstract_product_quantity)
+def get_or_create_later_basket(user):
 
-        quantity_to_buy = ceil((float(
-            user_settings.people) * float(
-            prod_usage)) / float(
-            product.quantity))
+    # see if user has some baskets
+    ugb = octopus_user.models.UserGeneratedBasket.objects.filter(
+        user=user).order_by('-time')
+    urb = octopus_user.models.UserRecommendedBasket.objects.filter(
+        user=user).order_by('-time')
 
-        return quantity_to_buy
+     # no basket generated by user yet, just create an anonymous one.
+    if not ugb:
+        basket, __ = create_onboarding_basket(user)
+        #save it as a UserRecommendedBasket
+        user_recommended_basket = (
+            helpers.create_user_recommended_basket_from_basket(basket, user))
+        user_recommended_basket.save()
+        urb_id = user_recommended_basket.id
+        return basket, urb_id
 
-    @classmethod
-    def merge_matrix(cls, product_matrix):
 
-        product_matrix = sorted(product_matrix,
-                                key=lambda entry: entry[0][0].name)
+    # user has edited at least one basket
 
-        output_product_matrix = []
-        if len(product_matrix) > 0:
-            output_product_matrix.append(product_matrix[0])
+    # see when the last recommended basket was created compared
+    # to the last generated basket
+    last_urb = urb[len(urb)-1]
+    last_ugb = ugb[len(ugb)-1]
+    last_urb_created_after_last_ugb = last_urb > last_ugb
 
-        loop_range = len(product_matrix)
-        for ii in range(1, loop_range):
-            # essentially test the last product of the output.
-            # if it is the same as the one being iterated over, just
-            # add quantities instead of returning multiple products.
-            if output_product_matrix[-1][0][0] == product_matrix[ii][0][0]:
-                output_product_matrix[-1][0][1] += product_matrix[ii][0][1]
-            else:
-                output_product_matrix.append(product_matrix[ii])
+    if last_urb_created_after_last_ugb:
+        basket = helpers.get_basket_from_user_recommended_basket(last_urb)
+        return basket, last_urb.id
 
-        return output_product_matrix
+
+    #TODO actually write this algorithm or more hopefully a slightly better one in later_basket_helpers.
+    # if need for new recommendation,
+    # take last and just remove 20% switching them with similar
+    # in similar aisle (yes, this is sort of a shitty hack)
+    basket = []
+    #recommended_basket product_dict
+    rb_product_dict = {}
+    for id, quantity in last_ugb.product_dict.iteritems():
+        try:
+            rb_product_dict[str(id)] = str(quantity)
+            product = Product.objects.get(id=id)
+            basket.append([[product, quantity]])
+        except Product.DoesNotExist:
+            pass
+
+    # save the recommended basket
+    urb = UserRecommendedBasket(user=user,
+                              product_dict=rb_product_dict)
+    urb.save()
+
+    basket = helpers.get_json_basket(basket)
+    return basket, urb.id

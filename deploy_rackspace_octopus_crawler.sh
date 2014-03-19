@@ -38,9 +38,11 @@ python manage.py loaddata supermarket_fixture.json
 python manage.py loaddata invited_users_fixture.json
 python manage.py loaddata diet_fixture.json
 python manage.py loaddata bannable_meats_fixture.json
-python manage.py loaddata tag:fixtures.json # must be run before food_com spider
+python manage.py loaddata tag_fixtures.json # must be run before food_com spider
+python manage.py loaddata django_sites.json
 python manage.py loaddata fixtures/django_sites.json
 
+>>>>>>> 9519135da17331417a839ae2fce3cec050bae35c
 cd webScraper/
 scrapy crawl tesco
 scrapy crawl food_com

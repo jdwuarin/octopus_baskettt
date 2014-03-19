@@ -197,6 +197,27 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email}
 				}).success(callback);
+			},
+			resetPasswordEmail: function(emailAddress, callback) {
+
+				return $http({
+					url: '/api/v1/user/password/reset/',
+					method: "POST",
+					data: $.param({email: emailAddress}),
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).success(callback);
+
+			},
+			resetPasswordConfirm: function(uidb64, token, newPassword, callback) {
+				return $http({
+					url: '/api/v1/user/password/reset/' + uidb64 + '/' + token + '/',
+					method: 'POST',
+					data: $.param({
+						new_password1: newPassword,
+						new_password2: newPassword
+					}),
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).success(callback);
 			}
 		};
 	}])
@@ -331,8 +352,8 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			getUnsuccessful: function(basket){
 				var false_list = [];
-				// console.log(basket);
-				angular.forEach(basket, function(value, key){
+				console.log(basket);
+				angular.forEach(basket.products, function(value, key){
 
 					if(value.success == "False") {
 						false_list.push(value);

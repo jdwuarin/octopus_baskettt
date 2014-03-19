@@ -1,1 +1,15 @@
-<button ng-click="passwordReset()">YEAH</button>
+<div class="row">
+    <div class="container simple-form">
+        <h4>Reset your password</h4>
+        <form class="form-container" ng-submit="passwordReset()" name="passwordResetForm" novalidate>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" class="form-control" placeholder="Enter email" ng-model="email">
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn-orange" value="Send email" ng-disabled="passwordResetForm.$invalid">
+        </div>
+
+    </form>
+</div>
+</div>

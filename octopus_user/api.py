@@ -15,6 +15,7 @@ from django.contrib.auth.views import password_reset, password_reset_confirm, pa
 from django import forms
 from octopus_user.models import *
 import helpers
+from django.conf import settings
 
 from django.contrib.auth.forms import  PasswordResetForm
 
@@ -73,20 +74,35 @@ class UserResource(ModelResource):
 
             url(r'^(?P<resource_name>%s)/password/done%s$' %
                 (self._meta.resource_name, trailing_slash()),
-                'django.contrib.auth.views.password_reset_complete', name='api_password_reset_complete'),
+                self.wrap_view('password_done_cb'),
+                 name='api_password_reset_complete'),
         ]
 
+    def password_done_cb(self, request, **kwargs):
+        response = {}
+        response["status"] = "success"
+
+        data = json.dumps(response)
+        return HttpResponse(data, content_type="application/json")
+
+    def password_reset_done_cb(self, request, **kwargs):
+        response = {}
+        response["status"] = "mail_sent"
+
+        data = json.dumps(response)
+        return HttpResponse(data, content_type="application/json")
+
     def password_reset_confirm_cb(self, request, **kwargs):
-        print "tttta mare"
-        print request
+
         return password_reset_confirm(request,
-            post_reset_redirect='api/v1/user/password/reset/done/',
+            post_reset_redirect=helpers.get_client_url(request)+'api/v1/user/password/done?format=json',
             uidb64=kwargs["uidb64"],
             token=kwargs["token"])
 
     def password_reset_cb(self, request, **kwargs):
+
         return password_reset(request,
-            post_reset_redirect='/done/',
+            post_reset_redirect=helpers.get_client_url(request) + 'api/v1/user/password/reset/done?format=json',
             email_template_name='password_reset_email.html')
 
     def login(self, request, **kwargs):

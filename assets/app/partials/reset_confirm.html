@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="container simple-form">
+        <h4>Reset your password</h4>
+        <form class="form-container" ng-submit="sendNewPassword()" name="passwordResetConfirmForm" novalidate>
+            <div class="form-group">
+
+                <label>Password</label>
+                <input type="password" class="form-control" id="password1"  placeholder="Password" required="" ng-model="password1">
+            </div>
+            <div class="form-group">
+                <label>Password confirmation</label>
+                <input type="password" class="form-control" id="password2" placeholder="Password confirmation" required="" ng-model="password2" pw-check="password1">
+            </div>
+                <span ng-show="password1.length > 0 && password2.length > 0 && passwordResetConfirmForm.$invalid" >
+                    Passwords don't match.
+                </span>
+
+            <div class="form-group">
+                <input type="submit" class="btn-orange" value="Reset password" ng-disabled="passwordResetConfirmForm.$invalid">
+            </div>
+
+        </form>
+    </div>
+</div>

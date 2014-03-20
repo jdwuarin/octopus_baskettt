@@ -308,8 +308,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.signup = function(){
-			var user = $scope.user;
-			User.signup(user.email, user.password, function(res){
+			var user = $scope.user,
+			user_settings_hash = Basket.getUserSettingsKey();
+			
+			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
+
+			User.signup(user.email, user.password, user_settings_hash, function(res){
 				if(res.success === false){
 					$scope.notInvited = true;
 				} else {

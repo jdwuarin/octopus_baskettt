@@ -1,4 +1,4 @@
-from octopus_groceries.models import Products
+from octopus_groceries.models import Product
 from octopus_user.models import *
 from datetime import datetime
 from datetime import timedelta

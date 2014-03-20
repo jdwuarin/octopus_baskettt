@@ -158,7 +158,7 @@
             "is_invited": true
         },
         "model": "octopus_user.userinvited",
-        "pk": "Massimilianogritti@gmail.com"
+        "pk": "massimilianogritti@gmail.com"
     },
     {
         "fields": {

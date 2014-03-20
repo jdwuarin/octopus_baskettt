@@ -142,7 +142,7 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         password = data.get('password', '')
 
-        user = authenticate(username=email, password=password)
+        user = authenticate(username=email.lower(), password=password)
 
         #check if user already ported a basket in the past
         user_generated_basket = UserGeneratedBasket.objects.filter(
@@ -193,7 +193,7 @@ class UserResource(ModelResource):
         password = data.get('password', '')
 
         try:
-            user_invited = UserInvited.objects.get(email__iexact=email)
+            user_invited = UserInvited.objects.get(email=email.lower())
             if not user_invited.is_invited:
                 # user has already tried signing up but we have
                 # not allowed him to use our beta yet. I.e, user is
@@ -203,17 +203,17 @@ class UserResource(ModelResource):
             # user is not yet in the userInvited list
             # we add him with the is_invited flag set to False
             # we return a success false as user could not sign up
-            user_invited = UserInvited(email=email, is_invited=False)
+            user_invited = UserInvited(email=email.lower(), is_invited=False)
             user_invited.save()
             return self.create_response(request, {
-                'reason': 'added, but not_invited',
+                'reason': 'not_invited.',
                 'success': False
             })
 
         # make sure user doesn't already exist using
         # case insensitive email as username
         try:
-            User.objects.get(username__iexact=email)
+            User.objects.get(username=email.lower())
 
             return self.create_response(request, {
                 #user with same email address already exists
@@ -224,22 +224,32 @@ class UserResource(ModelResource):
         except User.DoesNotExist:
             try:
                 # then create user
-                User.objects.create_user(email, email, password)
+                User.objects.create_user(email.lower(), email.lower(), password)
 
             except IntegrityError:
                 # some error occured, return success False
                 return self.create_response(request, {
                     #some other error occured
-                    'reason': 'unindentified error',
+                    'reason': 'unidentified_error',
                     'success': False
                 })
 
 
-        # Login after registration
-        user = authenticate(username=email, password=password)
+        # Save settings after registration
+        user = authenticate(username=email.lower(), password=password)
+        user_settings = helpers.save_user_settings(
+            user, data['user_settings_hash'])
+        if not user_settings:
+            return self.create_response(request, {
+                #could not find user settings according to hash
+                'reason': 'user settings not found',
+                'success': False
+            })
+
+        # then login the user
         login(request, user)
 
-        # user successfully signup
+        # user successfully signed_up
         return self.create_response(request, {
             'success': True
         })
@@ -327,11 +337,11 @@ class UserResource(ModelResource):
         response_data = {}
 
         try:
-            user_invited = UserInvited.objects.get(email__iexact=email)
+            user_invited = UserInvited.objects.get(email=email.lower())
             response_data['success'] = False
             response_data['reason'] = "user already exists"
         except UserInvited.DoesNotExist:
-            user_invited = UserInvited(email=email, is_invited=False)
+            user_invited = UserInvited(email=email.lower(), is_invited=False)
             user_invited.save()
             response_data['success'] = True
 

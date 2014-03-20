@@ -78,7 +78,6 @@ def port_basket(request):
         helpers.create_user_generated_basket_from_basket(
         generated_basket, user_recommended_basket, user)
 
-    user_generated_basket.save()
 
     email = data['email']
     password = data['password']
@@ -101,7 +100,8 @@ def port_basket(request):
     user_generated_basket_after_porting = this_basket.thread_manager.get_response()
 
     # make sure user could login to tesco. if not, notify user.
-    if user_generated_basket_after_porting['good_login'] == "False":
+    if user_generated_basket_after_porting['server_timeout'] =='True' or \
+                    user_generated_basket_after_porting['good_login'] == "False":
        return HttpResponse(json.dumps(
            user_generated_basket_after_porting), content_type="application/json")
 
@@ -132,6 +132,9 @@ def port_basket(request):
 
     # the product list
     response['product_list'] = response_product_list
+
+    #only save user_generated basket once we know it has been ported
+    user_generated_basket.save()
 
     # frontend needs to check for "Response_status" == "server_timeout" and
     # "good_login" == "False" in that order before anything else

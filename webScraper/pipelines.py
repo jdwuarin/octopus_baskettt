@@ -7,6 +7,7 @@ from scrapy.exceptions import DropItem
 from octopus_groceries.models import *
 from django.db.models import Q
 from webScraper.spiders.initial_ingredients import determine_if_condiment
+import datetime
 
 import re
 
@@ -39,6 +40,7 @@ class TescoPostgresPipeline(object):
                 found_item.link = item['link']
                 found_item.promotion_flag = item['promotion_flag']
                 found_item.promotion_description = item['promotion_description']
+                found_item.in_stock = True  # suposedly...
                 try:
                     found_item.ingredients = item['ingredients']
                 except KeyError:

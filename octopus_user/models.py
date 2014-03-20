@@ -27,7 +27,7 @@ class UserSettings(models.Model):
     banned_abstract_products = models.CommaSeparatedIntegerField(
         max_length=5000, default=[])  # id list of AbstractProducts
 
-    created_at = models.DateTimeField(auto_now=True,
+    created_at = models.DateTimeField(auto_now_add=True,
                                       default=datetime.datetime.now())
 
     def __unicode__(self):
@@ -46,7 +46,8 @@ class UserSettings(models.Model):
 class UserRecommendedBasket(models.Model):
     user = models.ForeignKey(User, editable=False)
     product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
-    time = models.DateTimeField(default=datetime.datetime.now(), auto_now=True)
+    time = models.DateTimeField(default=datetime.datetime.now(),
+                                auto_now_add=True)
 
     objects = hstore.HStoreManager()
 
@@ -59,9 +60,16 @@ class UserGeneratedBasket(models.Model):
     user_recommended_basket = models.OneToOneField(UserRecommendedBasket,
                                                    primary_key=True)
     product_dict = hstore.DictionaryField()
-    time = models.DateTimeField(default=0, auto_now=True)
+    time = models.DateTimeField(default=datetime.datetime.now(),
+                                auto_now_add=True)
 
     objects = hstore.HStoreManager()
+
+    def __unicode__(self):
+        return str(self.user) + ", " + str(
+            self.user_recommended_basket.id) + ", " + str(
+            self.product_dict) + ", " + str(
+            self.time)
 
 
 class UserProductSlack(models.Model):
@@ -69,7 +77,7 @@ class UserProductSlack(models.Model):
     product = models.ForeignKey(Product, editable=False)
     slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
     purchase_time = models.DateTimeField(default=datetime.datetime.now(),
-                                         auto_now=True)
+                                         auto_now_add=True)
 
 
 class UserInvited(models.Model):

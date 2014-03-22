@@ -1,0 +1,2 @@
+CELERY_TIMEZONE='Europe/London'
+CELERY_ENABLE_UTC=True

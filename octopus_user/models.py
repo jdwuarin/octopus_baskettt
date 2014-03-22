@@ -19,7 +19,8 @@ class UserSettings(models.Model):
         db_index=True)
 
     # email subscription bullshit stuff.
-
+    recommendation_email_subscription = models.BooleanField(default=True)
+    news_email_subscription = models.BooleanField(default=True)
 
     diet = models.ForeignKey(Diet, blank=True, null=True)
     banned_meats = models.CommaSeparatedIntegerField(
@@ -46,7 +47,7 @@ class UserSettings(models.Model):
 class UserRecommendedBasket(models.Model):
     user = models.ForeignKey(User, editable=False)
     product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
-    time = models.DateTimeField(default=datetime.datetime.now(),
+    created_at = models.DateTimeField(default=datetime.datetime.now(),
                                 auto_now_add=True)
 
     objects = hstore.HStoreManager()
@@ -60,7 +61,7 @@ class UserGeneratedBasket(models.Model):
     user_recommended_basket = models.OneToOneField(UserRecommendedBasket,
                                                    primary_key=True)
     product_dict = hstore.DictionaryField()
-    time = models.DateTimeField(default=datetime.datetime.now(),
+    created_at = models.DateTimeField(default=datetime.datetime.now(),
                                 auto_now_add=True)
 
     objects = hstore.HStoreManager()

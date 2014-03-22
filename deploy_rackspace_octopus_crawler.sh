@@ -6,6 +6,7 @@ sudo apt-get -y upgrade
 
 #clone project
 sudo apt-get install -y git
+sudo apt-get install -y rabbitmq-server
 git config --global user.name "john-dwuarin"
 sudo mkdir /webapps
 cd /webapps
@@ -50,3 +51,23 @@ scrapy crawl abs_prod_prod_match
 #haystack
 #nothing to do really, all covered in code if not:
 #python manage.py update_index #to build the index (do after db population)
+
+#rabbitmq
+cd ../
+sudo apt-get install rabbitmq-server # this should also start the rabbitmq server
+sudo rabbitmqctl add_user octopus_rabbitmq_user octopus_rabbitmq_password
+sudo rabbitmqctl add_vhost octopus_rabbitmq_vhost
+sudo rabbitmqctl set_permissions -p octopus_rabbitmq_vhost octopus_rabbitmq_user ".*" ".*" ".*"
+
+# sudo rabbitmq-server -detached #if rabbitmq server not running
+
+#celery/
+
+sudo apt-get install -y supervisor
+mkdir -p /webapps/octopus/env/logs
+touch /webapps/octopus/env/logs/celery_supervisor.log
+sudo chown -R octopus:users /webapps/octopus/env/logs
+sudo cp ./octopus_automation.conf /etc/supervisor/conf.d
+sudo supervisorctl update
+#sudo supervisorctl stop|start|restart octopus_cron_jobs  #to do stuff to process
+

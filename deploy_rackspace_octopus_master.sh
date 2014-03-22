@@ -51,7 +51,6 @@ cp gunicorn_start.sh ./env/bin
 sudo chown octopus:users ./env/bin/gunicorn_start.sh
 sudo chmod u+x ./env/bin/gunicorn_start.sh
 sudo apt-get install python-dev
-pip install setproctitle
 
 #monitoring with supervisor
 sudo apt-get install -y supervisor

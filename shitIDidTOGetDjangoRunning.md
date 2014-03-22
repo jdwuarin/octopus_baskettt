@@ -132,3 +132,10 @@ INSTALLED_APPS = (
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 ```
 
+For RabbitMQ and Celery on OSX:
+
+brew install rabbitmq
+
+sudo rabbitmqctl add_user rabitmq_user some_password
+sudo rabbitmqctl add_vhost octopus_vhost
+sudo rabbitmqctl set_permissions -p octopus_vhost rabitmq_user ".*" ".*" ".*"

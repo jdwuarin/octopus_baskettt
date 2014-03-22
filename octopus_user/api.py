@@ -307,8 +307,8 @@ class UserResource(ModelResource):
             response['recommended_basket'] = basket
             response['recommended_basket_id'] = urb_id
 
-            data = json.dumps(response)
-            return HttpResponse(data, content_type="application/json")
+            response = json.dumps(response)
+            return HttpResponse(response, content_type="application/json")
 
         else:
             no_success = json.dumps({'success': False})

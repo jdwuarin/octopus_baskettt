@@ -12,7 +12,7 @@ class ThreadManager(object):
 
     def build_response(self, successful_item_list, failed_item_list):
         self.response = dict()
-        self.response['Response_status'] = 'no_timeout'
+        self.response['server_timeout'] = 'False'
         self.response['good_login'] = "True"
         for item in successful_item_list:
             self.response[item] = "True"
@@ -22,11 +22,11 @@ class ThreadManager(object):
     def build_bad_login_response(self):
         self.response = dict()
         self.response['good_login'] = "False"
-        self.response['Response_status'] = 'no_timeout'
+        self.response['server_timeout'] = 'False'
 
     def get_response(self):
         if self.response is None:
             self.response = dict()
-            self.response['Response_status'] = 'server_timeout'
+            self.response['server_timeout'] = 'True'
 
         return self.response

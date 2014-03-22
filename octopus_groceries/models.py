@@ -1,5 +1,6 @@
 from django.db import models
 from django_hstore import hstore
+import datetime
 
 
 class Supermarket(models.Model):
@@ -74,6 +75,10 @@ class Product(models.Model):
     external_id = models.CharField(max_length=150, default='', editable=False)
     ingredients = models.TextField(default='', editable=True)
     in_stock = models.NullBooleanField(editable=False)  # is product available
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      default=datetime.datetime.now())
+    updated_at = models.DateTimeField(auto_now=True,
+                                      default=datetime.datetime.now())
 
     def __unicode__(self):
         return str(self.name) + ", " + str(

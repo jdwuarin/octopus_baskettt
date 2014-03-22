@@ -96,11 +96,15 @@ class UserResource(ModelResource):
             user = request.user
             user.email = email
             user.username = email
-            user.save(update_fields=["email", "username"])
-            response["success"] = True
+            try:
+                user.save(update_fields=["email", "username"])
+                response["success"] = True
+            except IntegrityError:
+                response["success"] = False
+                response["message"] = "Email address already exist"
         else:
             response["success"] = False
-
+            response["message"] = "User not authenticated"
 
         data = json.dumps(response)
         return HttpResponse(data, content_type="application/json")

@@ -1,6 +1,6 @@
-<div ng-show="notInvited" class="modal-container">
+<div ng-show="toggleError" class="modal-container">
     <div class="alert alert-info">
-        You didn't get invited to the beta. You can ping us on <a href="https://twitter.com/basketttco">Twitter</a>.
+        {{errorMessage}}
     </div>
 </div>
 

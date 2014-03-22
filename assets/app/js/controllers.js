@@ -22,8 +22,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 .controller('ResetConfirmController', ['$scope', '$routeParams', 'User', '$http', 'Alert', function($scope, $routeParams, User, $http, Alert){
 
 	var token = $routeParams.token,
-		uidb64 = $routeParams.uidb64,
-		newPassword = 'test';
+	uidb64 = $routeParams.uidb64,
+	newPassword = 'test';
 
 	if(!!token && !!uidb64){
 		$scope.sendNewPassword = function() {
@@ -73,12 +73,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 .controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
 
 	$scope.cuisines = [
-		{ "name": "Italian", "image": "italy.png"},
-		{ "name": "Chinese", "image": "china.png"},
-		{ "name": "Indian", "image": "india.png"},
-		{ "name": "Spanish", "image": "spain.png"},
-		{ "name": "Thai",  "image": "thai.png"},
-		{ "name": "French",  "image": "france.png"}
+	{ "name": "Italian", "image": "italy.png"},
+	{ "name": "Chinese", "image": "china.png"},
+	{ "name": "Indian", "image": "india.png"},
+	{ "name": "Spanish", "image": "spain.png"},
+	{ "name": "Thai",  "image": "thai.png"},
+	{ "name": "French",  "image": "france.png"}
 	];
 
 	$scope.preference = Preference.getAll();
@@ -271,14 +271,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				if(parents[i].className.indexOf("product-search-result") != -1 ||
 					parents[i].className.indexOf("search-bar") != -1){
 					clickedOnTheSearchPanel = true;
-				}
 			}
+		}
 
-			if(!clickedOnTheSearchPanel){
-				$scope.clearResult();
-				$scope.$digest();
-			}
-		};
+		if(!clickedOnTheSearchPanel){
+			$scope.clearResult();
+			$scope.$digest();
+		}
+	};
 
 }])
 
@@ -310,17 +310,33 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.signup = function(){
 			var user = $scope.user,
 			user_settings_hash = Basket.getUserSettingsKey();
-			
+
 			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
 
 			User.signup(user.email, user.password, user_settings_hash, function(res){
 				if(res.success === false){
-					$scope.notInvited = true;
-				} else {
-					$scope.loggedin = true;
-				}
-			}, function(res,status){
+					$scope.toggleError = true;
 
+					if(res.reason === "already_exist"){
+						$scope.errorMessage = "This email has already been used.";
+					} else {
+						$scope.errorMessage = "You haven't been invited to the beta";
+					}
+				} else {
+					$scope.toggleError = false;
+
+					if(!User.isLoggedIn()) {
+						User.requestLoggedIn(function(res){
+							// The user is logged in in the backend
+							if(res.success){
+								User.setLoggedIn(true);
+								$scope.loggedin = true;
+							} else{
+								User.setLoggedIn(false);
+							}
+						});
+					}
+				}
 			});
 		};
 
@@ -336,11 +352,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.sendToTesco = function(){
 			var tescoCredential = $scope.tescoCredential,
-				list = products.map(function (v) {
-					return v.products;
-				}).reduce(function (a, b){
-					return a.concat(b);
-				});
+			list = products.map(function (v) {
+				return v.products;
+			}).reduce(function (a, b){
+				return a.concat(b);
+			});
 
 			var oldRecommendation = Basket.getOldRecommendation(),
 			preference = Preference.getAll(),
@@ -425,11 +441,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			User.login(user.email, user.password,
 				function(data){
-				User.setLoggedIn(true);
-				User.redirect("/basket");
-			},function(res, status){
-				Alert.add("Wrong credentials.", "danger");
-			});
+					User.setLoggedIn(true);
+					User.redirect("/basket");
+				},function(res, status){
+					Alert.add("Wrong credentials.", "danger");
+				});
 		}
 	};
 

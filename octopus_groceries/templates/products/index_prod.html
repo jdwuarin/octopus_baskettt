@@ -13,7 +13,7 @@
   <script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
   {% else %}
-  <link rel="stylesheet" href="static/styles/dccee864.style.css">
+  <link rel="stylesheet" href="static/styles/1b86466f.style.css">
 
   <script type="text/javascript">
 
@@ -35,8 +35,11 @@
       <script src=" {% static "respond/dest/respond.min.js" %}"></script>
   <![endif]-->
 
+    <script>
+      var activeUser = "{{email}}";
+    </script>
     </head>
-    <body id="ng-app" ng-app="App" ng-cloak>
+    <body id="ng-app top" ng-app="App" ng-cloak>
 
       {% csrf_token %}
 
@@ -64,7 +67,7 @@
             </p>
           </div>
           <div class="col-md-3 rackspace">
-            <img src="/static/img/rackspace.jpg" alt="">
+            <img src="/static/img/rackspace_black.png" alt="">
 
           </div>
           <div class="col-md-3">
@@ -104,9 +107,9 @@
         <script src="{% static "app/js/filters.js" %}"></script>
 
       {% else %}
-      <script src="static/scripts/82b649bd.vendor.js"></script>
+      <script src="static/scripts/d72ff45e.vendor.js"></script>
 
-      <script src="static/scripts/ad5bc006.scripts.js"></script>
+      <script src="static/scripts/696e16ae.scripts.js"></script>
 
       {% endif %}
 

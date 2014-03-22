@@ -226,6 +226,15 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/json'},
 					data: {email:email}
 				}).success(callback);
+			},
+			// Check if logged in in Django backend
+			// Avoid losing a session when a user reloads the page
+			requestLoggedIn: function(callback) {
+				return $http({
+					url: getUrl('current'),
+					method: "GET",
+					headers: {'Content-Type': 'application/json'},
+				}).success(callback);
 			}
 		};
 	}])

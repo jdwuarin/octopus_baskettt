@@ -9,7 +9,9 @@
     <div ng-show="sendTescoForm">
         <form class="modal-form" ng-submit="sendToTesco()" name="tescoForm" >
             <div class="form-group instruction">
-                Send your basket to Tesco
+                <h4>Send your basket to Tesco.</h4>
+                <p>If you don't have a Tesco account you can register <a href="https://secure.tesco.com/register/">here</a>.</p>
+
             </div>
             <div class="form-group">
                 <input type="email" class="form-control" placeholder="Enter email" ng-model="tescoCredential.email" required>
@@ -19,7 +21,7 @@
                 <input type="password" class="form-control" placeholder="Password" ng-model="tescoCredential.password" required>
             </div>
 
-            <button type="submit" class="btn-orange">Send</button>
+            <button type="submit" class="btn-trans-orange">Send</button>
         </form>
     </div>
 
@@ -62,25 +64,25 @@
     <div ng-show="signup">
         <form class="modal-form" ng-submit="signup()" name="signupForm">
             <div class="form-group instruction">
-                You need to sign up to transfer your basket
+                You need to sign up to transfer your basket.
             </div>
             <div class="form-group">
                 <input type="email" class="form-control" placeholder="Enter email" ng-model="user.email">
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" ng-model="user.password" minlength="8">
+                <input type="password" class="form-control" placeholder="Password (8 characters)" ng-model="password1" id="password1" minlength="8">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="user.passwordConfirmation"  minlength="8" >
+                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="password2" id="password2" minlength="8" pw-check="password1">
             </div>
-             <span ng-show="user.password.length > 0 && user.passwordConfirmation.length > 0 && signupForm.$invalid" >
+             <span ng-show="password1.length > 0 && password2.length > 0 && signupForm.$invalid" class="invalid-password">
                     Passwords don't match.
             </span>
 
             <div class="modal-action">
                 <a href="javascript:;" ng-click="signup = false">Already registred? Sign in.</a>
-                <button type="submit" class="btn-orange">Sign up</button>
+                <button type="submit" class="btn-trans-orange">Sign up</button>
             </div>
         </form>
     </div>
@@ -100,7 +102,7 @@
 
             <div class="modal-action">
                 <a href="javascript:;" ng-click="signup = true">Not a member yet? Register.</a>
-                <button type="submit" class="btn-orange">Sign in</button>
+                <button type="submit" class="btn-trans-orange">Sign in</button>
             </div>
         </form>
     </div>

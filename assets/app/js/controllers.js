@@ -154,6 +154,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.getOldBasket = function() {
 			$scope.products = Basket.getLocal();
 			$scope.basketMessage = false;
+			$window.scrollTo(0,0);
 		}
 
 		$scope.getBasket = function() {
@@ -233,8 +234,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.transferBasket = function(){
 			// When you open a form it will close the search
 			$scope.clearResult();
-
-			var modalInstance = $modal.open({
+			if(!$scope.products){
+				Alert.add("You need to add products to your basket to checkout.", "info")
+			} else {
+				var modalInstance = $modal.open({
 				templateUrl: 'static/app/partials/_modal.html',
 				controller: 'ModalCtrl',
 				resolve: {
@@ -242,7 +245,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						return $scope.products;
 					}
 				}
-			});
+				});
+			}
+
 		};
 
 		$scope.addProduct = function(new_product) {
@@ -327,7 +332,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
 
-			User.signup(user.email, user.password, user_settings_hash, function(res){
+			User.signup(user.email, $scope.password1, user_settings_hash, function(res){
 				if(res.success === false){
 					$scope.toggleError = true;
 

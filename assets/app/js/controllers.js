@@ -406,7 +406,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						$scope.errorMessage = "Wrong Tesco credentials.";
 						$scope.sendTescoForm = true;
 						$scope.toggleError = true;
-					} else if(res.server_timeout = "True"){
+					} else if(res.server_timeout === "True"){
 						$scope.errorMessage = "Something went wrong on our side. Please retry in a few minutes.";
 						$scope.sendTescoForm = true;
 						$scope.toggleError = true;

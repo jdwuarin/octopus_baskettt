@@ -252,8 +252,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.addProduct = function(new_product) {
-			Product.add($scope.products, new_product);
-			Basket.addLocal($scope.products);
+			if(new_product.quantity < 50){
+				Product.add($scope.products, new_product);
+				Basket.addLocal($scope.products);
+			}
 		};
 
 		$scope.removeProduct = function(product) {

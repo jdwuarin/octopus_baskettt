@@ -302,8 +302,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 }])
 
 .controller('ModalCtrl',
-	['$scope', '$modalInstance', 'products','User','$sanitize','Alert','Basket','Preference','Tesco', '$analytics',
-	function($scope, $modalInstance, products, User, $sanitize,Alert,Basket,Preference,Tesco,$analytics){
+	['$scope', '$modalInstance', 'products','User','$sanitize','Basket','Preference','Tesco', '$analytics',
+	function($scope, $modalInstance, products, User, $sanitize,Basket,Preference,Tesco,$analytics){
 
 		$scope.tescoCredential = {};
 		$scope.user = {};
@@ -313,6 +313,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.sendTescoForm = true;
 		$scope.loggedin = false;
 		$scope.notInvited = false;
+		$scope.good_login = true;
+
+		$scope.errorMessage = "";
+		$scope.toggleError = $scope.errorMessage.length > 0
 
 
 		if(User.isLoggedIn()){
@@ -334,7 +338,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 			User.signup(user.email, $scope.password1, user_settings_hash, function(res){
 				if(res.success === false){
-					$scope.toggleError = true;
 
 					if(res.reason === "already_exist"){
 						$scope.errorMessage = "This email has already been used.";
@@ -365,7 +368,6 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			User.login(user.email, user.password, function(data){
 				User.setLoggedIn(true);
 				$scope.loggedin = true;
-				// Alert.add("Successfully logged in.", "success");
 			});
 		};
 
@@ -400,20 +402,29 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				function(res) {
 					$scope.loading = false;
 
-					var unsuccessfulItems = Tesco.getUnsuccessful(res);
+					if(res.good_login === "False") {
+						$scope.errorMessage = "Wrong Tesco credentials.";
+						$scope.sendTescoForm = true;
+						$scope.toggleError = true;
+					} else if(res.server_timeout = "True"){
+						$scope.errorMessage = "Something went wrong on our side. Please retry in a few minutes.";
+						$scope.sendTescoForm = true;
+						$scope.toggleError = true;
+					} else {
+						var unsuccessfulItems = Tesco.getUnsuccessful(res);
 
-					if(unsuccessfulItems.length === 0){
-						$analytics.eventTrack('SuccessfullyTransfered',
-							{  category: 'BasketPorting'});
-						$scope.unsuccessfulTransfer = false;
-						Basket.addLocal([]);
-					} else{
-						$analytics.eventTrack('UnsuccessfullyTransfered',
-							{  category: 'BasketPorting'});
-						$scope.unsuccessfulTransfer = true;
-						$scope.unsuccessfulItems = unsuccessfulItems;
+						if(unsuccessfulItems.length === 0){
+							$analytics.eventTrack('SuccessfullyTransfered',
+								{  category: 'BasketPorting'});
+							$scope.unsuccessfulTransfer = false;
+							Basket.addLocal([]);
+						} else{
+							$analytics.eventTrack('UnsuccessfullyTransfered',
+								{  category: 'BasketPorting'});
+							$scope.unsuccessfulTransfer = true;
+							$scope.unsuccessfulItems = unsuccessfulItems;
+						}
 					}
-
 				});
 		};
 

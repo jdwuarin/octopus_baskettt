@@ -3,6 +3,7 @@ import random
 from haystack.query import SearchQuerySet
 from octopus_groceries.models import *
 from octopus_user.models import *
+from datetime import date, timedelta, datetime
 
 
 def get_user_settings_from_user(user, data):
@@ -205,3 +206,10 @@ def get_basket_from_user_recommended_basket(urb):
             pass
 
     return basket
+
+def apply_email_sending_date(user_settings):
+
+    user_settings.next_recommendation_email_date = \
+        date.today() + timedelta(days=user_settings.days)
+
+    user_settings.save()

@@ -22,12 +22,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 .controller('ResetConfirmController', ['$scope', '$routeParams', 'User', '$http', 'Alert', function($scope, $routeParams, User, $http, Alert){
 
 	var token = $routeParams.token,
-	uidb64 = $routeParams.uidb64,
-	newPassword = 'test';
+	uidb64 = $routeParams.uidb64;
 
 	if(!!token && !!uidb64){
 		$scope.sendNewPassword = function() {
-			User.resetPasswordConfirm(uidb64, token, newPassword, function(res){
+			User.resetPasswordConfirm(uidb64, token, $scope.password1, function(res){
 				if(res.status === "success"){
 					Alert.add("Your password has been reset.","success");
 				}else{
@@ -86,6 +85,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.peopleIndex = 1;
 	$scope.preference.days = 7;
 	$scope.cookingValue = 20;
+
+	$window.scrollTo(0,0);
 
 	// Generate empty array for ng-repeat to display the people icons
 	$scope.getNumber = function(num) {

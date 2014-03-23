@@ -363,6 +363,17 @@ angular.module('App.services', ['LocalStorageModule'])
 			},
 			setRecommendedBasketId: function(id) {
 				localStorage.add('recommended_basket_id', id);
+			},
+			addLocal: function(currentBasket){
+				console.log("remove");
+				localStorage.add('current_basket', currentBasket);
+			},
+			getLocal: function(){
+				var currentBasket = localStorage.get('current_basket');
+				if(currentBasket === null){
+					currentBasket = [];
+				}
+				return currentBasket;
 			}
 		};
 

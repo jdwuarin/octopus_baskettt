@@ -148,9 +148,17 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.autocompleteResult = [];
 		$scope.basketMessage = User.isLoggedIn();
 
-		$scope.getBasket = function() {
-			// First action on the page -> load the recommended basket
+		$scope.oldBasket = Basket.getLocal();
+		$scope.hasOldBasket = $scope.oldBasket.length !== 0;
 
+		$scope.getOldBasket = function() {
+			$scope.products = Basket.getLocal();
+			$scope.basketMessage = false;
+		}
+
+		$scope.getBasket = function() {
+
+			// First action on the page -> load the recommended basket
 			if(!Preference.isNotValid(preferenceList) || User.isLoggedIn()){
 				$scope.loading = true;
 				$scope.basketMessage = false;
@@ -161,6 +169,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 					if(res.success === false){
 						Alert.add("We couldn't create your basket.","danger");
 					} else {
+						// Flush temp basket
+						Basket.addLocal([]);
 						Basket.addOldRecommendation(res.recommended_basket);
 						if(!User.isLoggedIn()) {
 							Basket.setUserSettingsKey(res.user_settings_hash);
@@ -169,6 +179,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						}
 
 						$scope.products = Product.formatUI(res.recommended_basket);
+						Basket.addLocal($scope.products);
 					}
 
 				});
@@ -236,10 +247,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		$scope.addProduct = function(new_product) {
 			Product.add($scope.products, new_product);
+			Basket.addLocal($scope.products);
 		};
 
 		$scope.removeProduct = function(product) {
 			Product.remove($scope.products, product);
+			Basket.addLocal($scope.products);
 		};
 
 		$scope.getTotal = function(val1,val2) {
@@ -254,6 +267,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$rootScope.$on('deleteProduct', function(event, item){
 			$scope.products = Product.delete($scope.products, item);
 			$scope.$apply();
+			Basket.addLocal($scope.products);
 		});
 
 		$rootScope.$on('searchEnter', function(event, query){
@@ -387,6 +401,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						$analytics.eventTrack('SuccessfullyTransfered',
 							{  category: 'BasketPorting'});
 						$scope.unsuccessfulTransfer = false;
+						Basket.addLocal([]);
 					} else{
 						$analytics.eventTrack('UnsuccessfullyTransfered',
 							{  category: 'BasketPorting'});

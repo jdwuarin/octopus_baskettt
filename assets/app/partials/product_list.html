@@ -64,8 +64,11 @@
 					<p>
 						We have new groceries just for you!
 					</p>
-					<button ng-click="getBasket()">
-						Get my basket
+					<button ng-click="getBasket()" class="btn-new-basket">
+						Get my new basket
+					</button>
+					<button ng-click="getOldBasket()" ng-show="hasOldBasket" class="btn-pending">
+						Get my pending basket.
 					</button>
 				</div>
 

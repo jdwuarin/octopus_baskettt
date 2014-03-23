@@ -91,8 +91,16 @@ angular.module('App', [
 
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
+		var location = $location.path();
+
+		// No homepage and onboarding when loggedin
+		if(User.isLoggedIn() && (location === "/start" || location === "/")){
+			User.redirect("basket");
+		}
+
 		// help with the margin on the product list page
 		$rootScope.productListPage = false;
+
 		if ($location.path() === "/basket") {
 			$rootScope.productListPage = true;
 		}

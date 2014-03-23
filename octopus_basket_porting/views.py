@@ -121,6 +121,8 @@ def port_basket(request):
 
     #only save user_generated basket once we know it has been ported
     user_generated_basket.save()
+    octopus_recommendation_engine.\
+        helpers.apply_email_sending_date(user.user_settings)
 
     # frontend needs to check for "Response_status" == "server_timeout" and
     # "good_login" == "False" in that order before anything else

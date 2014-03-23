@@ -20,6 +20,8 @@ class UserSettings(models.Model):
 
     # email subscription bullshit stuff.
     recommendation_email_subscription = models.BooleanField(default=True)
+    next_recommendation_email_date = models.DateField(default=None, blank=True,
+                                                      null=True)
     news_email_subscription = models.BooleanField(default=True)
 
     diet = models.ForeignKey(Diet, blank=True, null=True)

@@ -71,7 +71,7 @@ def get_or_create_later_basket(user):
     # to the last generated basket
     last_urb = urb[len(urb)-1]
     last_ugb = ugb[len(ugb)-1]
-    last_urb_created_after_last_ugb = last_urb.time > last_ugb.time
+    last_urb_created_after_last_ugb = last_urb.created_at > last_ugb.created_at
 
     if last_urb_created_after_last_ugb:
         basket = helpers.get_basket_from_user_recommended_basket(last_urb)

@@ -1,6 +1,12 @@
 from octopus_user.models import UserSettings
+from django.conf import settings
 from datetime import *
 import octopus_user
+from octopus_recommendation_engine import basket_recommendation_engine
+from django.template import Context
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from humanize import naturaldate
 
 
 def create_recommendations_then_send_email():
@@ -21,14 +27,34 @@ def create_recommendations_then_send_email():
 
         if date.today() == user_settings.next_recommendation_email_date:
             #generate the recommendations
+            basket, __ = basket_recommendation_engine.get_or_create_later_basket(user)
+
+            if not basket:
+                # this is a bug, just return for now
+                return
+
+            else:
+                #send the email from new_basket_email.html
+                send_recommendation_mail_to([user.email])
 
             #send the email
 
-            # see if user has some baskets
-        ugb = octopus_user.models.UserGeneratedBasket.objects.filter(
-            user=user).order_by('created_at')
-        urb = octopus_user.models.UserRecommendedBasket.objects.filter(
-            user=user).order_by('created_at')
-        # find out if recommendation should be made
 
+def send_recommendation_mail_to(user):
+    template_html = get_template('new_basket_email.html')
+    template_text = get_template('new_basket_email.txt')
 
+    #from django.contrib.auth.models import User
+    #user = User.objects.get(id=17)
+    to = user.email
+    from_email = settings.DEFAULT_FROM_EMAIL
+    subject = u"Your basket from " + (
+        str(date.today()) + " is ready")
+    d = Context({'user': user})
+
+    html_content = template_html.render(d)
+    text_content = template_text.render(d)
+
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()

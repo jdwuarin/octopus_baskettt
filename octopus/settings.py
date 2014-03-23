@@ -31,6 +31,7 @@ EMAIL_HOST_USER = 'arnaud@baskettt.co'
 EMAIL_HOST_PASSWORD = 'octopusaf93c3457f'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'arnaud@baskettt.co'
 
 DATABASES = {
     'default': {

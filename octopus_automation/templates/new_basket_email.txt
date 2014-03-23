@@ -1,0 +1,4 @@
+Hi {{ user.first_name }},
+Seems like You'll be running out of food pretty soon. It's time to get that pantry and fridge full again.
+We have selected awesome products just for you. Login at https://baskettt.co/#/login to check out your latest list of products
+

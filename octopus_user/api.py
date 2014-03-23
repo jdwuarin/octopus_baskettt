@@ -76,11 +76,33 @@ class UserResource(ModelResource):
                 self.wrap_view('update_settings'),
                  name='api_update_settings'),
 
+            url(r'^(?P<resource_name>%s)/settings%s$' %
+                (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('settings'),
+                 name='api_settings'),
+
             url(r'^(?P<resource_name>%s)/password/done%s$' %
                 (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('password_done_cb'),
                  name='api_password_reset_complete'),
         ]
+
+
+    # Get the settings of the user
+    def settings(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+
+        response = {}
+
+        if request.user and request.user.is_authenticated():
+            user = request.user
+            user_settings = UserSettings.objects.get(user=user)
+            response["email"] = user.email
+            response["recommendation_email_subscription"] = user_settings.recommendation_email_subscription
+            response["news_email_subscription"] = user_settings.news_email_subscription
+
+        data = json.dumps(response)
+        return HttpResponse(data, content_type="application/json")
 
     def update_settings(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -89,17 +111,27 @@ class UserResource(ModelResource):
                                                         'application/json'))
 
         email = data.get('email', '')
-        email_subscription = data.get('email_subscription', '')
-
+        recommendation_email_subscription = data.get('recommendation_email_subscription', '')
+        news_email_subscription = data.get('news_email_subscription', '')
 
         response = {}
 
-        if request.user and request.user.is_authenticated() and email:
+        if len(email) == 0:
+            response["success"] = False
+            response["message"] = "Empty email"
+
+        elif request.user and request.user.is_authenticated():
             user = request.user
             user.email = email
             user.username = email
+
+            user_settings = UserSettings.objects.get(user=user)
+            user_settings.recommendation_email_subscription = recommendation_email_subscription
+            user_settings.news_email_subscription = news_email_subscription
+
             try:
                 user.save(update_fields=["email", "username"])
+                user_settings.save(update_fields=["recommendation_email_subscription","news_email_subscription"])
                 response["success"] = True
             except IntegrityError:
                 response["success"] = False

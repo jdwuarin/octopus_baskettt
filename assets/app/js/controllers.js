@@ -149,11 +149,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.basketMessage = User.isLoggedIn();
 
 		$scope.oldBasket = Basket.getLocal();
-		$scope.hasOldBasket = $scope.oldBasket.length !== 0;
+		var hasOldBasket = $scope.oldBasket.length !== 0;
 
-		$scope.getOldBasket = function() {
-			$scope.products = Basket.getLocal();
-			$scope.basketMessage = false;
+		if(hasOldBasket){
+			$scope.products = $scope.oldBasket;
+			$scope.basketMessage = false
 			$window.scrollTo(0,0);
 		}
 
@@ -190,7 +190,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
-		if(!User.isLoggedIn()) {
+		if(!User.isLoggedIn() && !hasOldBasket) {
 			$scope.getBasket();
 		}
 
@@ -484,14 +484,27 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 .controller('ProfileController', ['$scope','User','Alert', function($scope, User,Alert){
 
-	$scope.subscribeToEmail = User.subscribeToEmail(); // This is hardcoded to change SOON TODO
 	$scope.email = User.email();
 
+	User.getSettings(function(res){
+		$scope.email = res.email;
+		$scope.recommendationEmailSubscription = res.recommendation_email_subscription;
+		$scope.newsEmailSubscription = res.news_email_subscription;
+	});
+
 	$scope.updateInfos = function() {
-		if($scope.settingsForm.$valid) {
-			User.updateSettings($scope.email, $scope.subscribeToEmail, function(res){
-				Alert.add("Your settings have been updated.","success");
-			});
+		if($scope.settingsForm.$valid && $scope.email.length > 0) {
+			User.updateInfos(
+				$scope.email,
+				$scope.recommendationEmailSubscription,
+				$scope.newsEmailSubscription,
+				function(res){
+					if(res.success){
+						Alert.add("Your settings have been updated.","success");
+					} else{
+						Alert.add(res.message,"danger");
+					}
+				});
 		}
 	};
 }])

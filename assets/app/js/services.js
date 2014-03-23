@@ -219,16 +219,24 @@ angular.module('App.services', ['LocalStorageModule'])
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(callback);
 			},
-			updateSettings: function(email, emailSubscription, callback) {
+			updateInfos: function(email, recommendation_email_subscription, news_email_subscription, callback) {
 				return $http({
 					url: getUrl('update_settings'),
 					method: 'POST',
 					headers: {'Content-Type': 'application/json'},
 					data: {
 						email:email,
-						email_subscription: emailSubscription
+						recommendation_email_subscription: recommendation_email_subscription,
+						news_email_subscription: news_email_subscription
 					}
 				}).success(callback);
+			},
+			getSettings: function(callback){
+				return $http({
+					url: getUrl('settings'),
+					method: 'GET',
+					headers: {'Content-Type': 'application/json'}
+				}).success(callback)
 			},
 			// Check if logged in in Django backend
 			// Avoid losing a session when a user reloads the page
@@ -318,6 +326,9 @@ angular.module('App.services', ['LocalStorageModule'])
 
 			get: function(key) {
 				return localStorageService.get(key);
+			},
+			flush: function(){
+				localStorageService.clearAll();
 			}
 		};
 

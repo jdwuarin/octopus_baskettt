@@ -7,12 +7,18 @@
       <div class="col-md-12">
         <div class="personal">
           <h3>Personal informations</h3>
-          <p>Feel free to change your email address or your password.</p>
-          <form class="form-horizontal" role="form" ng-submit="updateEmail()" name="settingsForm">
+          <p>Feel free to change your email address and your email subscription.</p>
+
+          <form class="form-horizontal" role="form" ng-submit="updateInfos()" name="settingsForm">
             <div class="form-group">
               <label for="inputEmail" class="col-sm-1 control-label">Email</label>
               <div class="col-sm-11">
                 <input type="email" class="text-input" id="inputEmail" placeholder="Email" ng-model="email">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-1 col-sm-11">
+                <input type="checkbox" ng-model="subscribeToEmail"> Subscribe to email.
               </div>
             </div>
 
@@ -21,6 +27,7 @@
                 <button type="submit" class="btn-trans-orange">Update</button>
               </div>
             </div>
+
           </form>
         </div>
       </div>

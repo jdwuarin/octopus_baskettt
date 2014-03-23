@@ -452,10 +452,14 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 }])
 
 .controller('ProfileController', ['$scope','User','Alert', function($scope, User,Alert){
-	$scope.updateEmail = function() {
+
+	$scope.subscribeToEmail = User.subscribeToEmail(); // This is hardcoded to change SOON TODO
+	$scope.email = User.email();
+
+	$scope.updateInfos = function() {
 		if($scope.settingsForm.$valid) {
-			User.updateEmail($scope.email, function(res){
-				Alert.add("Your email has been updated.","success");
+			User.updateSettings($scope.email, $scope.subscribeToEmail, function(res){
+				Alert.add("Your settings have been updated.","success");
 			});
 		}
 	};

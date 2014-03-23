@@ -91,7 +91,7 @@ angular.module('App.directives', [])
 		};
 	}])
 
-	.directive('navbar',['$rootScope', 'User', '$location', function($rootScope, User, $location) {
+	.directive('navbar',['$rootScope', 'User', '$location','localStorage', function($rootScope, User, $location, localStorage) {
 
 		return {
 			link: function (scope, element, attrs) {
@@ -123,6 +123,7 @@ angular.module('App.directives', [])
 				scope.logout = function(){
 					User.logout(function(data){
 						User.setLoggedIn(false);
+						localStorage.flush();
 						// This callback is only called when return success
 						User.redirect("/");
 					});

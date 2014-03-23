@@ -22,12 +22,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 .controller('ResetConfirmController', ['$scope', '$routeParams', 'User', '$http', 'Alert', function($scope, $routeParams, User, $http, Alert){
 
 	var token = $routeParams.token,
-	uidb64 = $routeParams.uidb64,
-	newPassword = 'test';
+	uidb64 = $routeParams.uidb64;
 
 	if(!!token && !!uidb64){
 		$scope.sendNewPassword = function() {
-			User.resetPasswordConfirm(uidb64, token, newPassword, function(res){
+			User.resetPasswordConfirm(uidb64, token, $scope.password1, function(res){
 				if(res.status === "success"){
 					Alert.add("Your password has been reset.","success");
 				}else{
@@ -86,6 +85,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.peopleIndex = 1;
 	$scope.preference.days = 7;
 	$scope.cookingValue = 20;
+
+	$window.scrollTo(0,0);
 
 	// Generate empty array for ng-repeat to display the people icons
 	$scope.getNumber = function(num) {
@@ -149,11 +150,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.basketMessage = User.isLoggedIn();
 
 		$scope.oldBasket = Basket.getLocal();
-		$scope.hasOldBasket = $scope.oldBasket.length !== 0;
+		var hasOldBasket = $scope.oldBasket.length !== 0;
 
-		$scope.getOldBasket = function() {
-			$scope.products = Basket.getLocal();
-			$scope.basketMessage = false;
+		if(hasOldBasket){
+			$scope.products = $scope.oldBasket;
+			$scope.basketMessage = false
 			$window.scrollTo(0,0);
 		}
 
@@ -190,7 +191,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			}
 		};
 
-		if(!User.isLoggedIn()) {
+		if(!User.isLoggedIn() && !hasOldBasket) {
 			$scope.getBasket();
 		}
 
@@ -251,8 +252,10 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		};
 
 		$scope.addProduct = function(new_product) {
-			Product.add($scope.products, new_product);
-			Basket.addLocal($scope.products);
+			if(new_product.quantity < 50){
+				Product.add($scope.products, new_product);
+				Basket.addLocal($scope.products);
+			}
 		};
 
 		$scope.removeProduct = function(product) {
@@ -484,14 +487,27 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 .controller('ProfileController', ['$scope','User','Alert', function($scope, User,Alert){
 
-	$scope.subscribeToEmail = User.subscribeToEmail(); // This is hardcoded to change SOON TODO
 	$scope.email = User.email();
 
+	User.getSettings(function(res){
+		$scope.email = res.email;
+		$scope.recommendationEmailSubscription = res.recommendation_email_subscription;
+		$scope.newsEmailSubscription = res.news_email_subscription;
+	});
+
 	$scope.updateInfos = function() {
-		if($scope.settingsForm.$valid) {
-			User.updateSettings($scope.email, $scope.subscribeToEmail, function(res){
-				Alert.add("Your settings have been updated.","success");
-			});
+		if($scope.settingsForm.$valid && $scope.email.length > 0) {
+			User.updateInfos(
+				$scope.email,
+				$scope.recommendationEmailSubscription,
+				$scope.newsEmailSubscription,
+				function(res){
+					if(res.success){
+						Alert.add("Your settings have been updated.","success");
+					} else{
+						Alert.add(res.message,"danger");
+					}
+				});
 		}
 	};
 }])

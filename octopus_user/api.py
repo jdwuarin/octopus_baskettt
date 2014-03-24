@@ -130,8 +130,8 @@ class UserResource(ModelResource):
             user_settings.news_email_subscription = news_email_subscription
 
             try:
-                user.save(update_fields=["email", "username"])
-                user_settings.save(update_fields=["recommendation_email_subscription","news_email_subscription"])
+                user.save()
+                user_settings.save()
                 response["success"] = True
             except IntegrityError:
                 response["success"] = False

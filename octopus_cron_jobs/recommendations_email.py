@@ -6,7 +6,6 @@ from octopus_recommendation_engine import basket_recommendation_engine
 from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
-from humanize import naturaldate
 
 
 def create_recommendations_then_send_email():
@@ -27,25 +26,25 @@ def create_recommendations_then_send_email():
 
         if date.today() == user_settings.next_recommendation_email_date:
             #generate the recommendations
+            print "before"
             basket, __ = basket_recommendation_engine.get_or_create_later_basket(user)
+            print "after"
 
             if not basket:
                 # this is a bug, just return for now
                 return
 
             else:
-                #send the email from new_basket_email.html
-                send_recommendation_mail_to([user.email])
-
-            #send the email
+                if user_settings.recommendation_email_subscription:
+                    #send the email from new_basket_email.html
+                    send_recommendation_mail_to(user)
 
 
 def send_recommendation_mail_to(user):
     template_html = get_template('new_basket_email.html')
     template_text = get_template('new_basket_email.txt')
 
-    #from django.contrib.auth.models import User
-    #user = User.objects.get(id=17)
+
     to = user.email
     from_email = settings.DEFAULT_FROM_EMAIL
     subject = u"Your basket from " + (

@@ -1,8 +1,14 @@
 from django.db import models
 import datetime
+import re
 from django.contrib.auth.models import User
 from octopus_groceries.models import *
 from django_hstore import hstore
+from django.core.exceptions import ValidationError
+
+
+class OctopusUser(User):
+    username = models.EmailField(blank=False)
 
 
 class UserSettings(models.Model):
@@ -32,6 +38,7 @@ class UserSettings(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       default=datetime.datetime.now())
+
 
     def __unicode__(self):
         return str(self.user) + ", " + str(

@@ -1,5 +1,3 @@
-octopus_groceries/migrations
-octopus_user/migrations
 octopus_groceries/templates/products/index_prod.html
 env
 lib-cov

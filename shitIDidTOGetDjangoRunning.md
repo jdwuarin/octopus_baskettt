@@ -103,7 +103,7 @@ python manage.py migrate 'octopusProducts'
 For Django Users (and Auth...)
 
 ```
-#when creating the django superuser upon frist calling "python manage.py syncdb"
+#when creating the django superuser upon first calling "python manage.py syncdb"
 
 create the superuser: yes
 username: django_auth_user

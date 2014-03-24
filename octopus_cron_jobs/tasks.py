@@ -1,6 +1,6 @@
-from octopus_automation.celery import app
-from octopus_automation import sanitize_db
-from octopus_automation import recommendations_email
+from octopus_cron_jobs.celery import app
+from octopus_cron_jobs import sanitize_db
+from octopus_cron_jobs import recommendations_email
 
 @app.task
 def create_recommendations_then_send_email():

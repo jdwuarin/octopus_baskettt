@@ -41,7 +41,7 @@ def create_recommendations_then_send_email():
 
 
 def send_recommendation_mail_to(user):
-    template_html = get_template('new_basket_email.html')
+    template_html = get_template('new_basket_email_inline.html')
     template_text = get_template('new_basket_email.txt')
 
 

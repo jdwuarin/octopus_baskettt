@@ -127,7 +127,7 @@ class UserResource(ModelResource):
             user_settings.news_email_subscription = news_email_subscription
 
             try:
-                user.clean_fields()
+                user.clean()
                 user.save()
                 user_settings.save()
                 response["success"] = True
@@ -229,16 +229,15 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         password = data.get('password', '')
 
+
         try:
             # try saving the user
-            print "here"
             OctopusUser.objects.create_user(email, password)
-            print "not making it here"
 
         except ValidationError as e:
             try:
                 # this is where the custom validation error code is put
-                error_type = e.error_dict['email'][0]
+                error_type = e.code
 
                 if error_type == "already_exist":
                     return self.create_response(request, {
@@ -262,11 +261,8 @@ class UserResource(ModelResource):
                     'success': False
                 })
 
-        print "making it here too"
         # Save settings after registration
         user = authenticate(email=email.lower(), password=password)
-        print "and here"
-        print user
         user_settings = helpers.save_user_settings(
             user, data['user_settings_hash'])
         if not user_settings:
@@ -277,9 +273,8 @@ class UserResource(ModelResource):
             })
 
         # then login the user
-        print "here again"
         login(request, user)
-        print "whatup"
+        print "loggedin"
 
         # user successfully signed_up
         return self.create_response(request, {
@@ -370,11 +365,11 @@ class UserResource(ModelResource):
 
         try:
             user_invited = UserInvited(email=email)
-            user_invited.clean_fields()
+            user_invited.clean()
             user_invited.save()
             response_data['success'] = True
         except ValidationError as e:
-            error_type = e.error_dict['email'][0]
+            error_type = e.code
             if error_type == "already_subscribed":
                 response_data['success'] = False
                 response_data['reason'] = "user already exists"

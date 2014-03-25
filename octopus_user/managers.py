@@ -18,7 +18,7 @@ class OctopusUserManager(BaseUserManager):
                           last_login=now,
                           date_joined=now, **extra_fields)
         user.set_password(password)
-        user.clean_fields() #only perform those validations on user creation
+        user.clean() #only perform those validations on user creation
         user.save()
         return user
 

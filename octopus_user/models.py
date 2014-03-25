@@ -9,44 +9,8 @@ from django_hstore import hstore
 from octopus_user import managers
 
 
-def validate_unique_octopus_user_email(email):
-
-    try:
-        OctopusUser.objects.get(email=email.lower())
-        # email found, raise error
-        raise ValidationError(['already_exist',
-              '%s already has an account' % email])
-
-    except OctopusUser.DoesNotExist:
-        pass
-
-
-def validate_user_is_invited(email):
-    try:
-        user_invited = UserInvited.objects.get(email=email.lower())
-        if not user_invited.is_invited:
-            # user has already tried signing up but we have
-            # not allowed him to use our beta yet. I.e, user is
-            # not invited
-            raise ValidationError(['not_accepted',
-                                  '%s not accepted as beta user yet' % email])
-        else:
-            pass
-    except UserInvited.DoesNotExist:
-        # user is not yet in the userInvited list
-        # we add him with the is_invited flag set to False
-        # we return a success false as user could not sign up
-        user_invited = UserInvited(email=email.lower())
-        user_invited.clean_fields()
-        user_invited.save()
-        raise ValidationError(['not_invited',
-                              '%s not added to beta list yet' % email])
-
-
 class OctopusUser(AbstractBaseUser):
-    email = models.EmailField(max_length=254, unique=True,
-                              validators=[validate_unique_octopus_user_email,
-                                          validate_user_is_invited])
+    email = models.EmailField(max_length=254, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     is_staff = models.BooleanField(default=False,
@@ -61,6 +25,42 @@ class OctopusUser(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [] # USERNAME_FIELD and password will be prompted for by default
+
+    def clean(self):
+
+        self.validate_unique_email()
+        self.validate_user_is_invited()
+
+
+    def validate_unique_email(self):
+
+        user_exists = OctopusUser.objects.filter(
+            email=self.email.lower()).exclude(id=self.id)
+        if user_exists:
+            raise ValidationError('%s already has an account' % self.email,
+                                  code='already_exist')
+
+    def validate_user_is_invited(self):
+        try:
+            user_invited = UserInvited.objects.get(email=self.email.lower())
+            if not user_invited.is_invited:
+                # user has already tried signing up but we have
+                # not allowed him to use our beta yet. I.e, user is
+                # not invited
+                raise ValidationError(
+                    '%s not accepted as beta user yet' % self.email,
+                    code='not_accepted')
+            else:
+                pass
+        except UserInvited.DoesNotExist:
+            # user is not yet in the userInvited list
+            # we add him with the is_invited flag set to False
+            # we return a success false as user could not sign up
+            user_invited = UserInvited(email=self.email.lower())
+            user_invited.save()
+            raise ValidationError(
+                '%s not added to beta list yet' % self.email,
+                code='not_invited')
 
 
 class UserSettings(models.Model):
@@ -142,20 +142,21 @@ class UserProductSlack(models.Model):
                                          auto_now_add=True)
 
 
-def validate_unique_user_invited_email(email):
-
-    try:
-        UserInvited.objects.get(email=email.lower())
-        # email found, raise error
-        raise ValidationError(["already_subscribed",
-            '%s has already subscribed for an invitation' % email])
-
-    except UserInvited.DoesNotExist:
-        pass
-
-
 class UserInvited(models.Model):
     email = models.EmailField(max_length=254, editable=True,
-                              primary_key=True,
-                              validators=[validate_unique_user_invited_email])
+                              primary_key=True)
     is_invited = models.NullBooleanField(editable=True, default=False)
+
+    def clean(self):
+        self.validate_unique_user_invited_email()
+
+    def validate_unique_user_invited_email(self):
+        try:
+            UserInvited.objects.get(email=self.email.lower())
+            # email found, raise error
+            raise ValidationError(
+                '%s has already subscribed for an invitation' % self.email,
+                code='already_subscribed')
+
+        except UserInvited.DoesNotExist:
+            pass

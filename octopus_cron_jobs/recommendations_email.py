@@ -24,11 +24,14 @@ def create_recommendations_then_send_email():
 
         # now find out if I am on the wanted day for user.
 
-        if date.today() == user_settings.next_recommendation_email_date:
+        nred = user_settings.next_recommendation_email_date
+        today = date.today()
+        days_diff = (today - nred).days
+        email_sending_condition = days_diff % 3 == 0 and (
+                                  days_diff < 10)
+        if email_sending_condition:
             #generate the recommendations
-            print "before"
             basket, __ = basket_recommendation_engine.get_or_create_later_basket(user)
-            print "after"
 
             if not basket:
                 # this is a bug, just return for now
@@ -37,13 +40,19 @@ def create_recommendations_then_send_email():
             else:
                 if user_settings.recommendation_email_subscription:
                     #send the email from new_basket_email.html
-                    send_recommendation_mail_to(user)
+                    if days_diff == 0:
+                        send_recommendation_mail_to(user, False)
+                    else:
+                        send_recommendation_mail_to(user, True)
 
 
-def send_recommendation_mail_to(user):
-    template_html = get_template('new_basket_email_inline.html')
-    template_text = get_template('new_basket_email.txt')
-
+def send_recommendation_mail_to(user, reminder=False):
+    if reminder:
+        template_html = get_template('new_basket_email_reminder_inline.html')
+        template_text = get_template('new_basket_email_reminder.txt')
+    else:
+        template_html = get_template('new_basket_email_inline.html')
+        template_text = get_template('new_basket_email.txt')
 
     to = user.email
     from_email = settings.DEFAULT_FROM_EMAIL

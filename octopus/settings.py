@@ -233,6 +233,31 @@ ALLOWED_HOSTS = [
     'baskettt.net',
 ]
 
+#Celery stuff
+
+from .celery import crontab
+CELERY_IMPORTS = ('octopus_cron_jobs.tasks', ) # just add imports here
+
+BROKER_URL = 'amqp://octopus_rabbitmq_user:octopus_rabbitmq_password@octopus-crawler/octopus_rabbitmq_vhost'
+#CELERY_RESULT_BACKEND = 'db+postgresql://octopus@octopus-crawler/db1'
+
+CELERYBEAT_SCHEDULE = {
+    # Executes every Monday morning at 7:30 A.M
+    'create_recommendations_then_send_email': {
+        'task': 'octopus_cron_jobs.tasks.create_recommendations_then_send_email',
+        'schedule': crontab(minute=0, hour='17'),
+    },
+
+    'sanitize_db': {
+        'task': 'octopus_cron_jobs.tasks.sanitize_db',
+        'schedule': crontab(minute=0, hour='*/3'),
+    },
+}
+
+CELERY_TIMEZONE = 'Europe/London'
+CELERY_ENABLE_UTC = True
+
+
 try:
     from local_settings import *
 except ImportError:

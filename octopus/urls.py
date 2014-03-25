@@ -8,7 +8,7 @@ from django.conf import settings
 
 
 from django.contrib import admin
-admin.autodiscover()
+#admin.autodiscover()
 
 v1_api = Api(api_name='v1')
 v1_api.register(ProductResource())

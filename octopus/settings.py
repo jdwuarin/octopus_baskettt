@@ -25,6 +25,7 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+AUTH_USER_MODEL = 'octopus_user.OctopusUser'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'arnaud@baskettt.co'
@@ -133,6 +134,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
+
 
 INSTALLED_APPS = (
     'longerusername', #used in order to allow login with email.

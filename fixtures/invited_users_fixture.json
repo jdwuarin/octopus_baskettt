@@ -172,13 +172,6 @@
             "is_invited": true
         },
         "model": "octopus_user.userinvited",
-        "pk": "me@me.com"
-    },
-    {
-        "fields": {
-            "is_invited": true
-        },
-        "model": "octopus_user.userinvited",
         "pk": "mkusigerski@gmail.com"
     },
     {

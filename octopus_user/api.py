@@ -1,6 +1,5 @@
 import json
 
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from tastypie.http import HttpUnauthorized, HttpForbidden
@@ -17,11 +16,11 @@ from octopus_user.models import *
 import helpers
 from django.conf import settings
 
-from django.contrib.auth.forms import  PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm
 
 class UserResource(ModelResource):
     class Meta:
-        queryset = User.objects.all()
+        queryset = OctopusUser.objects.all()
         fields = ['username', 'email',
                   'date_joined']  # we can either whitelist like this or blacklist using exclude
         allowed_methods = ['get']
@@ -86,7 +85,6 @@ class UserResource(ModelResource):
                 self.wrap_view('password_done_cb'),
                  name='api_password_reset_complete'),
         ]
-
 
     # Get the settings of the user
     def settings(self, request, **kwargs):
@@ -231,50 +229,37 @@ class UserResource(ModelResource):
         password = data.get('password', '')
 
         try:
-            user_invited = UserInvited.objects.get(email=email.lower())
-            if not user_invited.is_invited:
-                # user has already tried signing up but we have
-                # not allowed him to use our beta yet. I.e, user is
-                # not invited
-                return HttpResponse('Unauthorized', status=401)
-        except UserInvited.DoesNotExist:
-            # user is not yet in the userInvited list
-            # we add him with the is_invited flag set to False
-            # we return a success false as user could not sign up
-            user_invited = UserInvited(email=email.lower(), is_invited=False)
-            user_invited.save()
-            return self.create_response(request, {
-                'reason': 'not_invited.',
-                'success': False
-            })
+            # try saving the user
+            OctopusUser.objects.create_user(email, password)
 
-        # make sure user doesn't already exist using
-        # case insensitive email as username
-        try:
-            User.objects.get(username=email.lower())
-
-            return self.create_response(request, {
-                #user with same email address already exists
-                'reason': 'already_exist',
-                'success': False
-            })
-
-        except User.DoesNotExist:
+        except ValidationError as e:
             try:
-                # then create user
-                User.objects.create_user(email.lower(), email.lower(), password)
+                # this is where the custom validation error code is put
+                error_type = e.error_dict['email'][0]
 
-            except IntegrityError:
+                if error_type == "already_exist":
+                    return self.create_response(request, {
+                        #user with same email address already exists
+                        'reason': 'already_exist',
+                        'success': False
+                    })
+                elif error_type == "not_accepted":
+                    return HttpResponse('Unauthorized', status=401)
+                elif error_type == "not_invited":
+                    return self.create_response(request, {
+                        'reason': 'not_invited.',
+                        'success': False
+                    })
+
+            except:
                 # some error occured, return success False
                 return self.create_response(request, {
                     #some other error occured
                     'reason': 'unidentified_error',
                     'success': False
                 })
-
-
         # Save settings after registration
-        user = authenticate(username=email.lower(), password=password)
+        user = authenticate(email=email.lower(), password=password)
         user_settings = helpers.save_user_settings(
             user, data['user_settings_hash'])
         if not user_settings:

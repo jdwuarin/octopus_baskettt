@@ -21,8 +21,7 @@ from django.contrib.auth.forms import PasswordResetForm
 class UserResource(ModelResource):
     class Meta:
         queryset = OctopusUser.objects.all()
-        fields = ['username', 'email',
-                  'date_joined']  # we can either whitelist like this or blacklist using exclude
+        fields = ['email', 'date_joined']  # we can either whitelist like this or blacklist using exclude
         allowed_methods = ['get']
         resource_name = 'user'
         #excludes = ['email', 'password', 'is_active', 'is_staff', 'is_superuser']
@@ -114,7 +113,7 @@ class UserResource(ModelResource):
 
         response = {}
 
-        if len(email) == 0:
+        if not email:
             response["success"] = False
             response["message"] = "Empty email"
 
@@ -128,12 +127,13 @@ class UserResource(ModelResource):
             user_settings.news_email_subscription = news_email_subscription
 
             try:
+                user.clean_fields()
                 user.save()
                 user_settings.save()
                 response["success"] = True
-            except IntegrityError:
+            except ValidationError:
                 response["success"] = False
-                response["message"] = "Email address already exist"
+                response["message"] = "Email address already exists"
         else:
             response["success"] = False
             response["message"] = "User not authenticated"
@@ -178,18 +178,19 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         password = data.get('password', '')
 
-        user = authenticate(username=email.lower(), password=password)
-
-        #check if user already ported a basket in the past
-        user_generated_basket = UserGeneratedBasket.objects.filter(
-            user=user)[:1]
-
-        if user_generated_basket:
-            has_history = True
-        else:
-            has_history = False
+        user = authenticate(email=email.lower(), password=password)
 
         if user:
+
+            #check if user already ported a basket in the past
+            user_generated_basket = UserGeneratedBasket.objects.filter(
+                user=user)[:1]
+
+            if user_generated_basket:
+                has_history = True
+            else:
+                has_history = False
+
             if user.is_active:
                 login(request, user)
 
@@ -230,7 +231,9 @@ class UserResource(ModelResource):
 
         try:
             # try saving the user
+            print "here"
             OctopusUser.objects.create_user(email, password)
+            print "not making it here"
 
         except ValidationError as e:
             try:
@@ -258,8 +261,12 @@ class UserResource(ModelResource):
                     'reason': 'unidentified_error',
                     'success': False
                 })
+
+        print "making it here too"
         # Save settings after registration
         user = authenticate(email=email.lower(), password=password)
+        print "and here"
+        print user
         user_settings = helpers.save_user_settings(
             user, data['user_settings_hash'])
         if not user_settings:
@@ -270,7 +277,9 @@ class UserResource(ModelResource):
             })
 
         # then login the user
+        print "here again"
         login(request, user)
+        print "whatup"
 
         # user successfully signed_up
         return self.create_response(request, {
@@ -360,13 +369,15 @@ class UserResource(ModelResource):
         response_data = {}
 
         try:
-            user_invited = UserInvited.objects.get(email=email.lower())
-            response_data['success'] = False
-            response_data['reason'] = "user already exists"
-        except UserInvited.DoesNotExist:
-            user_invited = UserInvited(email=email.lower(), is_invited=False)
+            user_invited = UserInvited(email=email)
+            user_invited.clean_fields()
             user_invited.save()
             response_data['success'] = True
+        except ValidationError as e:
+            error_type = e.error_dict['email'][0]
+            if error_type == "already_subscribed":
+                response_data['success'] = False
+                response_data['reason'] = "user already exists"
 
         response_data = json.dumps(response_data)
         return HttpResponse(response_data, content_type="application/json")

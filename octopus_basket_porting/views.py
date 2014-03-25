@@ -81,7 +81,7 @@ def port_basket(request):
 
     SpiderManagerController.add_basket_to_port(this_basket)
 
-    this_basket.thread_manager.wait(15)
+    this_basket.thread_manager.wait(20)
 
     user_generated_basket_after_porting = this_basket.thread_manager.get_response()
 
@@ -122,7 +122,7 @@ def port_basket(request):
     #only save user_generated basket once we know it has been ported
     user_generated_basket.save()
     octopus_recommendation_engine.\
-        helpers.apply_email_sending_date(user.user_settings)
+        helpers.apply_email_sending_date(UserSettings.objects.get(user=user))
 
     # frontend needs to check for "Response_status" == "server_timeout" and
     # "good_login" == "False" in that order before anything else

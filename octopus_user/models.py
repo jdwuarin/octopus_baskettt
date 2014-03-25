@@ -37,6 +37,7 @@ def validate_user_is_invited(email):
         # we add him with the is_invited flag set to False
         # we return a success false as user could not sign up
         user_invited = UserInvited(email=email.lower())
+        user_invited.clean_fields()
         user_invited.save()
         raise ValidationError(['not_invited',
                               '%s not added to beta list yet' % email])
@@ -60,16 +61,6 @@ class OctopusUser(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [] # USERNAME_FIELD and password will be prompted for by default
-
-    def save(self, force_insert=False, force_update=False, using=None,
-         update_fields=None):
-
-        try:
-            self.clean_fields()
-            super(OctopusUser, self).save(force_insert, force_update, using,
-                                      update_fields)
-        except ValidationError as e:
-            raise e
 
 
 class UserSettings(models.Model):
@@ -156,8 +147,8 @@ def validate_unique_user_invited_email(email):
     try:
         UserInvited.objects.get(email=email.lower())
         # email found, raise error
-        raise ValidationError(
-            '%s has already subscribed for an invitation' % email)
+        raise ValidationError(["already_subscribed",
+            '%s has already subscribed for an invitation' % email])
 
     except UserInvited.DoesNotExist:
         pass
@@ -168,13 +159,3 @@ class UserInvited(models.Model):
                               primary_key=True,
                               validators=[validate_unique_user_invited_email])
     is_invited = models.NullBooleanField(editable=True, default=False)
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-
-        try:
-            self.clean_fields()
-            super(UserInvited, self).save(force_insert, force_update, using,
-                                      update_fields)
-        except ValidationError as e:
-            raise e

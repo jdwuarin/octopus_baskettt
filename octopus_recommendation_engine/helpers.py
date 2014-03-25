@@ -194,6 +194,7 @@ def create_user_generated_basket_from_basket(basket,
 
     return user_generated_basket
 
+
 def get_basket_from_user_recommended_basket(urb):
     basket = []
     #recommended_basket product_dict
@@ -206,6 +207,7 @@ def get_basket_from_user_recommended_basket(urb):
             pass
 
     return basket
+
 
 def apply_email_sending_date(user_settings):
 

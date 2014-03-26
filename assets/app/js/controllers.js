@@ -337,12 +337,22 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			var user = $scope.user,
 			user_settings_hash = Basket.getUserSettingsKey();
 
-			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
-			User.signup(user.email, user.password, user_settings_hash, function(res){
+			if(typeof user_settings_hash === "undefined") {
+				user_settings_hash = "";
+			}
+
+			if(user.password !== user.passwordConfirmation){
+				$scope.errorMessage = "Passwords don't match.";
+				return;
+			}
+
+			User.signup(user.email, user.password, user.passwordConfirmation, user.user_settings_hash, function(res){
 				if(res.success === false){
 
 					if(res.reason === "already_exist"){
 						$scope.errorMessage = "This email has already been used.";
+					} else if (res.reason === "password_mismatch"){
+						$scope.errorMessage = "Passwords don't match.";
 					} else {
 						$scope.errorMessage = "You haven't been invited to the beta";
 					}

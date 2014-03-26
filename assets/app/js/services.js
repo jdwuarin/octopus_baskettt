@@ -381,7 +381,6 @@ angular.module('App.services', ['LocalStorageModule'])
 				localStorage.add('recommended_basket_id', id);
 			},
 			addLocal: function(currentBasket){
-				console.log("remove");
 				localStorage.add('current_basket', currentBasket);
 			},
 			getLocal: function(){
@@ -390,6 +389,9 @@ angular.module('App.services', ['LocalStorageModule'])
 					currentBasket = [];
 				}
 				return currentBasket;
+			},
+			clearLocal: function(){
+				localStorage.set('current_basket', []);
 			}
 		};
 

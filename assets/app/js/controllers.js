@@ -69,7 +69,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', 'Basket', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope, Basket) {
 
 	$scope.cuisines = [
 	{ "name": "Italian", "image": "italy.png"},
@@ -87,6 +87,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.cookingValue = 20;
 
 	$window.scrollTo(0,0);
+
+	Basket.clearLocal();
 
 	// Generate empty array for ng-repeat to display the people icons
 	$scope.getNumber = function(num) {

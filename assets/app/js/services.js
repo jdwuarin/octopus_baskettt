@@ -391,7 +391,7 @@ angular.module('App.services', ['LocalStorageModule'])
 				return currentBasket;
 			},
 			clearLocal: function(){
-				localStorage.set('current_basket', []);
+				localStorage.add('current_basket', []);
 			}
 		};
 

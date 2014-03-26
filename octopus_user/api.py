@@ -228,6 +228,14 @@ class UserResource(ModelResource):
 
         email = data.get('email', '')
         password = data.get('password', '')
+        password_confirm = data.get('password_confirm')
+
+        if password != password_confirm:
+            return self.create_response(request, {
+                        #passwrd confirm doesn't match password
+                        'reason': 'password_mismatch',
+                        'success': False
+            })
 
 
         try:

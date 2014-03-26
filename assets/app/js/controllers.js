@@ -319,7 +319,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.good_login = true;
 
 		$scope.errorMessage = "";
-		$scope.toggleError = $scope.errorMessage.length > 0
+		$scope.toggleError = $scope.errorMessage.length > 0;
 
 
 		if(User.isLoggedIn()){
@@ -338,8 +338,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			user_settings_hash = Basket.getUserSettingsKey();
 
 			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
-
-			User.signup(user.email, $scope.password1, user_settings_hash, function(res){
+			User.signup(user.email, user.password, user_settings_hash, function(res){
 				if(res.success === false){
 
 					if(res.reason === "already_exist"){

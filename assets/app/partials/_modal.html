@@ -10,7 +10,7 @@
         <form class="modal-form" ng-submit="sendToTesco()" name="tescoForm" >
             <div class="form-group instruction">
                 <h4>Send your basket to Tesco.</h4>
-                <p>If you don't have a Tesco account you can register <a href="https://secure.tesco.com/register/">here</a>.</p>
+                <p>If you don't have a Tesco account you can register <a href="https://secure.tesco.com/register/" target="_blank">here</a>.</p>
 
             </div>
             <div class="form-group">
@@ -39,7 +39,7 @@
                             <div class="title">
                                 <i class="glyphicon glyphicon-minus-sign"></i>
                                 <br>
-                                We couldn't transfer the following items. It usually means they aren't in stock anymore.
+                                Your basket was ported, however, the following items could not be sent:
                             </div>
                             <div ng-repeat="item in unsuccessfulItems" class="unsuccessful-item">
                                 <img ng-src="{{item.img}}"  alt="">
@@ -71,12 +71,12 @@
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password (8 characters)" ng-model="password1" id="password1" minlength="8">
+                <input type="password" class="form-control" placeholder="Password (8 characters)" ng-model="user.password" id="password1" minlength="8">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="password2" id="password2" minlength="8" pw-check="password1">
+                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" id="password2" minlength="8">
             </div>
-             <span ng-show="password1.length > 0 && password2.length > 0 && signupForm.$invalid" class="invalid-password">
+             <span ng-show="userpassword1.length > 0 && userpassword2.length > 0 && signupForm.$invalid" class="invalid-password">
                     Passwords don't match.
             </span>
 

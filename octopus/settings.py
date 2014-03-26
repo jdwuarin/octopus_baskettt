@@ -137,7 +137,6 @@ TEMPLATE_DIRS = (
 
 
 INSTALLED_APPS = (
-    'longerusername', #used in order to allow login with email.
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

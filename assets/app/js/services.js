@@ -182,12 +182,17 @@ angular.module('App.services', ['LocalStorageModule'])
 			setLoggedIn: function(val) {
 				LoggedIn = val;
 			},
-			signup: function(email, password, user_settings_hash, callback, errorcb) {
+			signup: function(email, password, passwordConfirmation, user_settings_hash, callback, errorcb) {
 				return $http({
 					url: getUrl('signup'),
 					method: "POST",
 					headers: {'Content-Type': 'application/json'},
-					data: {email:email, password:password, user_settings_hash:user_settings_hash}
+					data: {
+						email:email,
+						password:password,
+						password_confirm: passwordConfirmation,
+						user_settings_hash:user_settings_hash
+					}
 				}).success(callback).error(errorcb);
 			},
 			registerBeta: function(email, callback) {
@@ -376,7 +381,6 @@ angular.module('App.services', ['LocalStorageModule'])
 				localStorage.add('recommended_basket_id', id);
 			},
 			addLocal: function(currentBasket){
-				console.log("remove");
 				localStorage.add('current_basket', currentBasket);
 			},
 			getLocal: function(){
@@ -385,6 +389,9 @@ angular.module('App.services', ['LocalStorageModule'])
 					currentBasket = [];
 				}
 				return currentBasket;
+			},
+			clearLocal: function(){
+				localStorage.set('current_basket', []);
 			}
 		};
 

@@ -69,7 +69,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	}])
 
-.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope) {
+.controller('OnboardingController', ['$scope', '$routeParams', 'Preference','Alert','$location','$anchorScroll','$window', '$rootScope', 'Basket', function($scope, $routeParams, Preference, Alert, $location, $anchorScroll, $window, $rootScope, Basket) {
 
 	$scope.cuisines = [
 	{ "name": "Italian", "image": "italy.png"},
@@ -87,6 +87,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.cookingValue = 20;
 
 	$window.scrollTo(0,0);
+
+	Basket.clearLocal();
 
 	// Generate empty array for ng-repeat to display the people icons
 	$scope.getNumber = function(num) {
@@ -319,7 +321,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		$scope.good_login = true;
 
 		$scope.errorMessage = "";
-		$scope.toggleError = $scope.errorMessage.length > 0
+		$scope.toggleError = $scope.errorMessage.length > 0;
 
 
 		if(User.isLoggedIn()){
@@ -337,13 +339,22 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			var user = $scope.user,
 			user_settings_hash = Basket.getUserSettingsKey();
 
-			if(typeof user_settings_hash === "undefined") user_settings_hash = "";
+			if(typeof user_settings_hash === "undefined") {
+				user_settings_hash = "";
+			}
 
-			User.signup(user.email, $scope.password1, user_settings_hash, function(res){
+			if(user.password !== user.passwordConfirmation){
+				$scope.errorMessage = "Passwords don't match.";
+				return;
+			}
+
+			User.signup(user.email, user.password, user.passwordConfirmation, user.user_settings_hash, function(res){
 				if(res.success === false){
 
 					if(res.reason === "already_exist"){
 						$scope.errorMessage = "This email has already been used.";
+					} else if (res.reason === "password_mismatch"){
+						$scope.errorMessage = "Passwords don't match.";
 					} else {
 						$scope.errorMessage = "You haven't been invited to the beta";
 					}

@@ -29,12 +29,8 @@ sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
 pip install -r stable-req.txt
 
 #populating the db
-python manage.py schemamigration 'octopus_groceries' --initial
-python manage.py schemamigration 'octopus_user' --initial
-echo "no" | python manage.py syncdb #don't create superuser
-python manage.py createsuperuser --noinput --email webmaster@baskettt.co --username django_auth_user
-python manage.py migrate 'octopus_groceries'
-python manage.py migrate 'octopus_user'
+python manage.py syncdb
+python manage.py migrate
 python manage.py loaddata supermarket_fixture.json
 python manage.py loaddata invited_users_fixture.json
 python manage.py loaddata diet_fixture.json

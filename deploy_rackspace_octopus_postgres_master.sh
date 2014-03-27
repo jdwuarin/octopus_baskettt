@@ -15,6 +15,14 @@ sudo chown -R postgres:postgres /mnt/data
 sudo chmod -R 700 /mnt/data
 echo "/dev/xvde1          /mnt/data              ext4    defaults,noatime,barrier=0 1 1" | sudo tee -a /etc/fstab
 
+# be able to save data with rackspace backups
+sudo sh -c 'wget -q "http://agentrepo.drivesrvr.com/debian/agentrepo.key" -O- | apt-key add -'
+sudo sh -c 'echo "deb [arch=amd64] http://agentrepo.drivesrvr.com/debian/ serveragent main" > /etc/apt/sources.list.d/driveclient.list'
+sudo apt-get update; sudo apt-get install driveclient
+sudo /usr/local/bin/driveclient --configure # use key from rackspace
+sudo service driveclient start
+sudo update-rc.d driveclient defaults
+
 #postgres part
 sudo apt-get install -y postgresql postgresql-contrib postgresql-client
 

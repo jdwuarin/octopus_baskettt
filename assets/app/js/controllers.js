@@ -84,7 +84,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	$scope.number = 8;
 	$scope.peopleIndex = 1;
 	$scope.preference.days = 7;
-	$scope.cookingValue = 20;
+	$scope.cookingValue = 50;
 
 	$window.scrollTo(0,0);
 
@@ -348,15 +348,21 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 				return;
 			}
 
-			User.signup(user.email, user.password, user.passwordConfirmation, user.user_settings_hash, function(res){
+			User.signup(user.email, user.password, user.passwordConfirmation, user_settings_hash, function(res){
 				if(res.success === false){
-
-					if(res.reason === "already_exist"){
-						$scope.errorMessage = "This email has already been used.";
+					$scope.toggleError = true;
+					if(res.reason === "already_exists"){
+						$scope.errorMessage = "An accont using this email already exists.";
 					} else if (res.reason === "password_mismatch"){
 						$scope.errorMessage = "Passwords don't match.";
-					} else {
-						$scope.errorMessage = "You haven't been invited to the beta";
+					} else if (res.reason === "password_too_short"){
+						$scope.errorMessage = "Please enter a password with at least 8 characters.";
+					} else if (res.reason ==="not_accepted"){
+						$scope.errorMessage = "Your account isn't ready yet. We will inform you when you will have access to the baskettt goodness.";
+					} else if (res.reason ==="not_invited"){
+						$scope.errorMessage = "You haven't been invited to the beta. We have added you to our list and will inform you when your account is ready";
+					} else{
+						$scope.errorMessage = "Something went wrong on our end. Please try again";
 					}
 				} else {
 					$scope.toggleError = false;

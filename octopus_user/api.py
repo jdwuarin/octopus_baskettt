@@ -236,6 +236,12 @@ class UserResource(ModelResource):
                         'reason': 'password_mismatch',
                         'success': False
             })
+        elif len(password) < 8:
+            return self.create_response(request, {
+                        #passwrd confirm doesn't match password
+                        'reason': 'password_too_short',
+                        'success': False
+            })
 
 
         try:
@@ -247,17 +253,21 @@ class UserResource(ModelResource):
                 # this is where the custom validation error code is put
                 error_type = e.code
 
-                if error_type == "already_exist":
+                if error_type == "already_exists":
                     return self.create_response(request, {
                         #user with same email address already exists
-                        'reason': 'already_exist',
+                        'reason': 'already_exists',
                         'success': False
                     })
                 elif error_type == "not_accepted":
-                    return HttpResponse('Unauthorized', status=401)
+                    return self.create_response(request, {
+                        #user has not been accepted for the beta yet
+                        'reason': 'not_accepted',
+                        'success': False
+                    })
                 elif error_type == "not_invited":
                     return self.create_response(request, {
-                        'reason': 'not_invited.',
+                        'reason': 'not_invited',
                         'success': False
                     })
 
@@ -282,7 +292,6 @@ class UserResource(ModelResource):
 
         # then login the user
         login(request, user)
-        print "loggedin"
 
         # user successfully signed_up
         return self.create_response(request, {

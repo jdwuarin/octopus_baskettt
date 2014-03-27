@@ -28,11 +28,10 @@ MANAGERS = ADMINS
 AUTH_USER_MODEL = 'octopus_user.OctopusUser'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'arnaud@baskettt.co'
-EMAIL_HOST_PASSWORD = 'octopusaf93c3457f'
+EMAIL_HOST_USER = 'baskettt@baskettt.co'
+EMAIL_HOST_PASSWORD = 's@a46FW4Ak9=3Nig8'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'arnaud@baskettt.co'
 
 DATABASES = {
     'default': {

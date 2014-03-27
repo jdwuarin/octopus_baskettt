@@ -38,7 +38,7 @@ class OctopusUser(AbstractBaseUser):
             email=self.email.lower()).exclude(id=self.id)
         if user_exists:
             raise ValidationError('%s already has an account' % self.email,
-                                  code='already_exist')
+                                  code='already_exists')
 
     def validate_user_is_invited(self):
         try:

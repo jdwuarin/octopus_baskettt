@@ -27,7 +27,8 @@ def create_recommendations_then_send_email():
         nred = user_settings.next_recommendation_email_date
         today = date.today()
         days_diff = (today - nred).days
-        email_sending_condition = days_diff % 3 == 0 and (
+        email_sending_condition = days_diff >= 0 and(
+                                  days_diff % 3 == 0) and (
                                   days_diff < 10)
         if email_sending_condition:
             #generate the recommendations
@@ -55,7 +56,7 @@ def send_recommendation_mail_to(user, reminder=False):
         template_text = get_template('new_basket_email.txt')
 
     to = user.email
-    from_email = settings.DEFAULT_FROM_EMAIL
+    from_email = "baskettt"
     subject = u"Your basket from " + (
         str(date.today()) + " is ready")
     d = Context({'user': user})

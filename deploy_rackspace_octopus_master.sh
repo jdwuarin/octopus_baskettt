@@ -47,8 +47,7 @@ sudo su - octopus -c 'grunt production'
 
 #dealing with gunicorn
 sudo chown -R octopus:users ./ #just making sure the privileges are still acurate
-cp gunicorn_start.sh ./env/bin
-sudo chown octopus:users ./env/bin/gunicorn_start.sh
+ln gunicorn_start.sh ./env/bin # not a symbolic link
 sudo chmod u+x ./env/bin/gunicorn_start.sh
 sudo apt-get install python-dev
 

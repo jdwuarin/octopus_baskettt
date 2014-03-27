@@ -63,7 +63,7 @@ sudo apt-get install -y supervisor
 mkdir -p /webapps/octopus/env/logs/celery
 touch /webapps/octopus/env/logs/celery/beat.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
-sudo cp ./octopus_cron_jobs.conf /etc/supervisor/conf.d
+sudo cp ./octopus_cron_jobs.conf /etc/supervisor/conf.d/octopus_cron_jobs.conf
 sudo supervisorctl update
 #sudo supervisorctl stop|start|restart octopus_cron_jobs  #to do stuff to process
 

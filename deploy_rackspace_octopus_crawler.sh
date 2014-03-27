@@ -60,10 +60,12 @@ sudo rabbitmqctl set_permissions -p octopus_rabbitmq_vhost octopus_rabbitmq_user
 #celery/
 
 sudo apt-get install -y supervisor
+mkdir -p /webapps/octopus/env/logs/supervisord
+touch /webapps/octopus/env/logs/supervisord/supervisord.log
 mkdir -p /webapps/octopus/env/logs/celery
 touch /webapps/octopus/env/logs/celery/beat.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
-sudo cp ./octopus_cron_jobs.conf /etc/supervisor/conf.d/octopus_cron_jobs.conf
 sudo supervisorctl update
+# will run automatically
 #sudo supervisorctl stop|start|restart octopus_cron_jobs  #to do stuff to process
 

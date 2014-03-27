@@ -225,10 +225,10 @@ SOUTH_DATABASE_ADAPTERS = {'default': 'south.db.postgresql_psycopg2'}
 
 ALLOWED_HOSTS = [
     '127.0.0.1',  # localhost
-    'baskettt.co',
-    'baskettt.com',
-    'baskettt.co.uk',
-    'baskettt.net',
+    '.baskettt.co',
+    '.baskettt.com',
+    '.baskettt.co.uk',
+    '.baskettt.net',
 ]
 
 #Celery stuff

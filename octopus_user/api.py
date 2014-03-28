@@ -157,6 +157,14 @@ class UserResource(ModelResource):
 
     def password_reset_confirm_cb(self, request, **kwargs):
 
+        data = {}
+        data['password'] = request.POST['new_password1']
+        data['password_confirm'] = request.POST['new_password2']
+        not_valid = helpers.test_password_validation(request, data, self)
+
+        if not_valid:
+            return not_valid
+
         return password_reset_confirm(request,
             post_reset_redirect=helpers.get_client_url(request)+'api/v1/user/password/done?format=json',
             uidb64=kwargs["uidb64"],
@@ -228,20 +236,11 @@ class UserResource(ModelResource):
 
         email = data.get('email', '')
         password = data.get('password', '')
-        password_confirm = data.get('password_confirm')
 
-        if password != password_confirm:
-            return self.create_response(request, {
-                        #passwrd confirm doesn't match password
-                        'reason': 'password_mismatch',
-                        'success': False
-            })
-        elif len(password) < 8:
-            return self.create_response(request, {
-                        #passwrd confirm doesn't match password
-                        'reason': 'password_too_short',
-                        'success': False
-            })
+        not_valid = helpers.test_password_validation(request, data, self)
+
+        if not_valid:
+            return not_valid
 
 
         try:

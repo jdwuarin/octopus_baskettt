@@ -29,9 +29,12 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 			User.resetPasswordConfirm(uidb64, token, $scope.password1, function(res){
 				if(res.status === "success"){
 					Alert.add("Your password has been reset.","success");
-				}else{
+				} else if (res.reason === "password_mismatch"){
+						$scope.errorMessage = "Please try again, passwords don't match.";
+				} else if (res.reason === "password_too_short"){
+						$scope.errorMessage = "Please enter a password with at least 8 characters.";
+				} else{
 					Alert.add("This link has already been used.","danger");
-
 				}
 			});
 		};

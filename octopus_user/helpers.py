@@ -43,3 +43,24 @@ def save_user_settings(user, user_settings_hash):
         pass
 
     return user_settings #will be none if user_settings is not found
+
+
+def test_password_validation(request, data, ressource):
+
+    password = data['password']
+    password_confirm = data['password_confirm']
+
+    if password != password_confirm:
+        return ressource.create_response(request, {
+                    #passwrd confirm doesn't match password
+                    'reason': 'password_mismatch',
+                    'success': False
+        })
+    elif len(password) < 8:
+        return ressource.create_response(request, {
+                    #passwrd confirm doesn't match password
+                    'reason': 'password_too_short',
+                    'success': False
+        })
+    else:
+        return None

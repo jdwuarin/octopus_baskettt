@@ -120,6 +120,7 @@ module.exports = function(grunt) {
             'app/{,*/}*.html',
             '../bower_components/**/*',
             'img/*',
+            'img/favicons/*',
             'fonts/*'
           ]
         }, {

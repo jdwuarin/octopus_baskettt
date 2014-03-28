@@ -7,7 +7,7 @@ sudo apt-get -y upgrade
 #clone project
 sudo apt-get install -y git
 sudo apt-get install -y rabbitmq-server
-git config --global user.name "john-dwuarin"
+git config --global user.name "octopus_admin_server"
 sudo mkdir /webapps
 cd /webapps
 sudo git clone https://john-dwuarin:st4bV3rr3@github.com/arnaudbenard/octopus.git
@@ -21,13 +21,14 @@ newgrp users #making sure group is loaded for ubuntu user
 sudo chmod -R g+w /webapps/octopus
 
 #install virtualenv
-sudo apt-get install python-virtualenv
+sudo apt-get -y install python-virtualenv
+sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
+sudo su octopus
 cd /webapps/octopus
 virtualenv env
 source ./env/bin/activate
-sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
 pip install -r stable-req.txt
-
+exit
 #populating the db
 python manage.py syncdb
 python manage.py migrate

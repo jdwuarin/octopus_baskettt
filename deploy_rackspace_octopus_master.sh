@@ -23,15 +23,18 @@ sudo useradd --system --gid webapps --home /webapps/octopus octopus
 sudo chown -R octopus:users /webapps/octopus
 sudo usermod -a -G users ubuntu #just makes ubuntu have r/w access to octopus folder
 newgrp users #making sure group is loaded for ubuntu user
+sudo chsh -s /bin/bash octopus
 sudo chmod -R g+w /webapps/octopus
 
 #install virtualenv
 sudo apt-get -y install python-virtualenv
+sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
+sudo su octopus
 cd /webapps/octopus
 virtualenv env
 source ./env/bin/activate
-sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
 pip install -r stable-req.txt
+exit
 
 #static assets
 sudo apt-get update
@@ -57,13 +60,16 @@ mkdir -p /webapps/octopus/env/logs
 touch /webapps/octopus/env/logs/gunicorn_supervisor.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
 sudo cp ./octopus.conf /etc/supervisor/conf.d/octopus.conf
+cd ../ # can't run supervisorctl from octopus folder.
 sudo supervisorctl update
 #sudo supervisorctl stop|start|restart octopus  #to do stuff to process
 
 #nginx
+cd octopus
 sudo apt-get install -y nginx
 sudo cp ./octopus_nginx.conf /etc/nginx/sites-available
 sudo ln -s /etc/nginx/sites-available/octopus_nginx.conf /etc/nginx/sites-enabled
+sudo service nginx reload #reload config gile
 
 #ssl stuff
 #make sure the certificates are on the server, say in /home/ubuntu

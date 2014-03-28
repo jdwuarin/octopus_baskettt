@@ -146,6 +146,8 @@ class UserInvited(models.Model):
     email = models.EmailField(max_length=254, editable=True,
                               primary_key=True)
     is_invited = models.NullBooleanField(editable=True, default=False)
+    created_at = models.DateTimeField(default=datetime.datetime.now(),
+                                auto_now_add=True)
 
     def clean(self):
         self.validate_unique_user_invited_email()

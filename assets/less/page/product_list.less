@@ -61,15 +61,10 @@
 }
 
 .autocomplete input{
-    .form-control;
+    .text-input;
     .center;
     width: 250px;
     height: 40px;
-    border-radius: 5px;
-    border: 1px solid #DEDEDE;
-    font-family: Helvetica;
-    font-size: 14px;
-    color: #9B9B9B;
 }
 
 .autocomplete ul{
@@ -253,10 +248,11 @@
     .product-img{
         position: relative;
         width: @product-size;
+        background: rgba(0,0,0,0.3)!important;
 
         &:hover{
-            .product-remove{
-                display: inline;
+            .product-button-hover{
+                display: inline-block;
             }
         }
     }
@@ -293,23 +289,27 @@
         width:  @product-size;
     }
 
-    i.glyphicon{ //remove icon
-        .btn-round(50px);
+    .product-remove i.glyphicon{ //remove icon
         .btn-red;
         cursor: pointer;
-        margin-top: 50px!important;
-        margin-left: 50px;
-        padding-top: 11px;
         font-size: 20px;
     }
 
-    .product-remove{
+    .product-button-hover{
         display: none;
-        // display: none;
         position: absolute;
-        height: @product-size - 2px;
-        width: @product-size - 2px;
-        background: rgba(0,0,0,0.3);
+        margin-left: 30px;
+        margin-top: 53px;
+
+        & > *{
+            display: inline-block;
+        }
+    }
+
+    .product-source {
+        .btn-gray;
+        padding: 10px 13px;
+        cursor: pointer;
     }
 
     .product-price{

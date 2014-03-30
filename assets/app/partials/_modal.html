@@ -65,17 +65,18 @@
     <div ng-show="signup">
         <form class="modal-form" ng-submit="signup()" name="signupForm">
             <div class="form-group instruction">
-                You need to sign up to transfer your basket.
+                <h4>Sign up to baskettt.</h4>
+                <p>You need to sign up to transfer your basket. If you didn't get your beta invite, just fill in the following form and we'll send you an email when you're invited.</p>
             </div>
             <div class="form-group">
-                <input type="email" class="text-input" placeholder="Enter email" ng-model="user.email">
+                <input type="email" class="text-input" placeholder="Enter email" ng-model="user.email" required>
             </div>
 
             <div class="form-group">
-                <input type="password" class="text-input" placeholder="Password (8 characters)" ng-model="user.password" id="password1" minlength="8">
+                <input type="password" class="text-input" placeholder="Password (8 characters)" ng-model="user.password" id="password1" minlength="8" required>
             </div>
             <div class="form-group">
-                <input type="password" class="text-input"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" id="password2" minlength="8">
+                <input type="password" class="text-input"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" id="password2" minlength="8" required>
             </div>
 
             <div class="modal-action">
@@ -88,14 +89,14 @@
     <div ng-hide="signup">
         <form class="modal-form" ng-submit="login()" name="loginForm" >
             <div class="form-group instruction">
-                Please sign in.
+                <h4>Login to baskettt.</h4>
             </div>
             <div class="form-group">
-                <input type="email" class="text-input"placeholder="Enter email" ng-model="user.email">
+                <input type="email" class="text-input"placeholder="Enter email" ng-model="user.email" required>
             </div>
 
             <div class="form-group">
-                <input type="password" class="text-input" placeholder="Password" ng-model="user.password">
+                <input type="password" class="text-input" placeholder="Password" ng-model="user.password" required>
             </div>
 
             <div class="modal-action">

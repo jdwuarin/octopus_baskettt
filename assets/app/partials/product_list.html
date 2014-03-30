@@ -72,17 +72,26 @@
 				<div ng-repeat="department in products track by $index">
 				<h3 ng-class="{departmentpadding: $index !== 0}">{{ department.name }} </h3>
 				<div class="product-container fade-item" ng-repeat="product in department.products">
-					<div class="product-box" ng-class="{'selected_product':selectedStatus}" >
+					<div class="product-box" >
 						<div class="product-img">
-							<div class="product-remove">
-								<i remove></i>
+							<div class="product-button-hover">
+								<div class="product-remove">
+									<i remove></i>
+								</div>
+								<div class="product-source">
+									<a ng-href="http://www.tesco.com{{product.link}}" target="_blank">
+										<i class="glyphicon glyphicon-link"></i>
+									</a>
+								</div>
 							</div>
 							<img ng-src="{{product.img | imglarge}}" alt="" class="animated:hover bounce">
 						</div>
 
 						<div class="product-desc">
 							<div class="product-name">
-								<p>{{product.name}}</p>
+								<p>
+									{{product.name}}
+								</p>
 							</div>
 							<div class="product-price">
 								&pound;{{getTotal(product.price, product.quantity)}}

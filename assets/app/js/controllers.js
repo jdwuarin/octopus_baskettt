@@ -435,7 +435,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						$scope.toggleError = true;
 					} else {
 						var unsuccessfulItems = Tesco.getUnsuccessful(res);
-
+						Basket.clearLocal();
 						if(unsuccessfulItems.length === 0){
 							$analytics.eventTrack('SuccessfullyTransfered',
 								{  category: 'BasketPorting'});

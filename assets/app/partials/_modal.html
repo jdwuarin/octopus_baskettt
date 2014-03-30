@@ -14,11 +14,11 @@
 
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" placeholder="Enter email" ng-model="tescoCredential.email" required>
+                <input type="email" class="text-input" placeholder="Enter email" ng-model="tescoCredential.email" required>
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" ng-model="tescoCredential.password" required>
+                <input type="password" class="text-input" placeholder="Password" ng-model="tescoCredential.password" required>
             </div>
 
             <button type="submit" class="btn-trans-orange">Send</button>
@@ -37,9 +37,10 @@
                     <div class="col-md-12">
                         <div class="unsuccessful-list">
                             <div class="title">
-                                <i class="glyphicon glyphicon-ok-sign"></i> <br>
-                                <br>
-                                Your basket was ported, however, the following items could not be sent:
+                                <i class="glyphicon glyphicon-ok-sign"></i>
+                                <p>
+                                Your basket has been successfully transfered, however, the following items could not be sent. You can now login to <a href="https://secure.tesco.com/register/account.aspx" target="_blank">Tesco</a> to order your groceries.
+                                </p>
                             </div>
                             <div ng-repeat="item in unsuccessfulItems" class="unsuccessful-item">
                                 <img ng-src="{{item.img}}"  alt="">
@@ -52,8 +53,8 @@
             </div>
 
             <div ng-hide="unsuccessfulTransfer">
-                <i class="glyphicon glyphicon-ok-sign"></i> <br>
-                <p>Your basket has been successfully transfered. You can now login to <a href="https://secure.tesco.com/register/account.aspx" target="_blank">Tesco</a>.</p>
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                <p>Your basket has been successfully transfered. You can now login to <a href="https://secure.tesco.com/register/account.aspx" target="_blank">Tesco</a> to order your groceries.</p>
             </div>
         </div>
     </div>
@@ -67,18 +68,15 @@
                 You need to sign up to transfer your basket.
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" placeholder="Enter email" ng-model="user.email">
+                <input type="email" class="text-input" placeholder="Enter email" ng-model="user.email">
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password (8 characters)" ng-model="user.password" id="password1" minlength="8">
+                <input type="password" class="text-input" placeholder="Password (8 characters)" ng-model="user.password" id="password1" minlength="8">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" id="password2" minlength="8">
+                <input type="password" class="text-input"  placeholder="Confirm Password" ng-model="user.passwordConfirmation" id="password2" minlength="8">
             </div>
-             <span ng-show="userpassword1.length > 0 && userpassword2.length > 0 && signupForm.$invalid" class="invalid-password">
-                    Passwords don't match.
-            </span>
 
             <div class="modal-action">
                 <a href="javascript:;" ng-click="signup = false">Already registred? Sign in.</a>
@@ -93,11 +91,11 @@
                 Please sign in.
             </div>
             <div class="form-group">
-                <input type="email" class="form-control"placeholder="Enter email" ng-model="user.email">
+                <input type="email" class="text-input"placeholder="Enter email" ng-model="user.email">
             </div>
 
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
+                <input type="password" class="text-input" placeholder="Password" ng-model="user.password">
             </div>
 
             <div class="modal-action">

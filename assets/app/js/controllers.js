@@ -26,7 +26,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 	if(!!token && !!uidb64){
 		$scope.sendNewPassword = function() {
-			User.resetPasswordConfirm(uidb64, token, $scope.password1, function(res){
+			User.resetPasswordConfirm(uidb64, token, $scope.password1, $scope.password2, function(res){
 
 				if (res.reason === "password_mismatch"){
 					Alert.add("Please try again, passwords don't match.","danger");

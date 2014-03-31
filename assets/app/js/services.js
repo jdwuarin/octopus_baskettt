@@ -213,13 +213,13 @@ angular.module('App.services', ['LocalStorageModule'])
 				}).success(callback);
 
 			},
-			resetPasswordConfirm: function(uidb64, token, newPassword, callback) {
+			resetPasswordConfirm: function(uidb64, token, newPassword1, newPassword2, callback) {
 				return $http({
 					url: '/api/v1/user/password/reset/' + uidb64 + '/' + token + '/',
 					method: 'POST',
 					data: $.param({
-						new_password1: newPassword,
-						new_password2: newPassword
+						new_password1: newPassword1,
+						new_password2: newPassword2
 					}),
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(callback);

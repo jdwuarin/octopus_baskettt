@@ -27,12 +27,13 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 	if(!!token && !!uidb64){
 		$scope.sendNewPassword = function() {
 			User.resetPasswordConfirm(uidb64, token, $scope.password1, function(res){
-				if(res.status === "success"){
-					Alert.add("Your password has been reset.","success");
-				} else if (res.reason === "password_mismatch"){
-						$scope.errorMessage = "Please try again, passwords don't match.";
+
+				if (res.reason === "password_mismatch"){
+					Alert.add("Please try again, passwords don't match.","danger");
 				} else if (res.reason === "password_too_short"){
-						$scope.errorMessage = "Please enter a password with at least 8 characters.";
+					Alert.add("Please enter a password with at least 8 characters.","danger");
+				} else if(res.status === "success"){
+					Alert.add("Your password has been reset.","success");
 				} else{
 					Alert.add("This link has already been used.","danger");
 				}
@@ -206,11 +207,11 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// GET search
 		$scope.searchProducts = function(query){
-
+			console.log(query);
 			if(query) {
-				Product.search(query,
-					function(res){ // success
+				Product.search(query, function(res){ // success
 						$scope.search_result = Product.getQuantity(res, $scope.products);
+						console.log(res);
 						$window.onclick = function (event) {
 							closeSearchWhenClickingElsewhere(event);
 						};
@@ -284,6 +285,7 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 		});
 
 		$rootScope.$on('searchEnter', function(event, query){
+			console.log(query);
 			$scope.searchProducts(query);
 		});
 

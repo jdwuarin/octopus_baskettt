@@ -11,12 +11,9 @@
                 <label>Password confirmation</label>
                 <input type="password" class="text-input" id="password2" placeholder="Password confirmation" required="" ng-model="password2" pw-check="password1">
             </div>
-                <span ng-show="password1.length > 0 && password2.length > 0 && passwordResetConfirmForm.$invalid" class="invalid-password">
-                    Passwords don't match. <br><br>
-                </span>
 
             <div class="form-group">
-                <input type="submit" class="btn-trans-orange" value="Reset password" ng-disabled="passwordResetConfirmForm.$invalid">
+                <input type="submit" class="btn-trans-orange" value="Reset password">
             </div>
 
         </form>

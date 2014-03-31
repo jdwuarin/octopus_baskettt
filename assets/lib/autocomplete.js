@@ -98,6 +98,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			getIndex = scope.getIndex;
 
 			scope.search = function(query){
+				console.log(query);
 				$rootScope.$emit('searchEnter',query);
 				scope.completing = false;
 			};
@@ -163,7 +164,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						if(index !== -1){
 							select(angular.element(this).find('li')[index].innerText);
 						}
-
+						console.log(scope.searchParam);
 						setIndex(-1);
 						scope.search(scope.searchParam);
 						scope.$apply();

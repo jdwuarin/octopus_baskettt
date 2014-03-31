@@ -207,11 +207,9 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 
 		// GET search
 		$scope.searchProducts = function(query){
-			console.log(query);
 			if(query) {
 				Product.search(query, function(res){ // success
 						$scope.search_result = Product.getQuantity(res, $scope.products);
-						console.log(res);
 						$window.onclick = function (event) {
 							closeSearchWhenClickingElsewhere(event);
 						};

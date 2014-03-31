@@ -126,7 +126,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						setIndex(index);
 
 						if(index!==-1){
-							preSelect(angular.element(this).find('li')[index].innerHTML);
+							preSelect(angular.element(this).find('li')[index].textContent);
 						}
 
 						scope.$apply();
@@ -148,7 +148,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						setIndex(index);
 
 						if(index!==-1){
-							preSelect(angular.element(this).find('li')[index].innerHTML);
+							preSelect(angular.element(this).find('li')[index].textContent);
 						}
 
 						break;
@@ -161,7 +161,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						index = getIndex();
 						// preSelectOff();
 						if(index !== -1){
-							select(angular.element(this).find('li')[index].innerHTML);
+							select(angular.element(this).find('li')[index].textContent);
 						}
 						setIndex(-1);
 						scope.search(scope.searchParam);

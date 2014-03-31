@@ -98,7 +98,6 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 			getIndex = scope.getIndex;
 
 			scope.search = function(query){
-				console.log(query);
 				$rootScope.$emit('searchEnter',query);
 				scope.completing = false;
 			};
@@ -127,7 +126,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						setIndex(index);
 
 						if(index!==-1){
-							preSelect(angular.element(this).find('li')[index].innerText);
+							preSelect(angular.element(this).find('li')[index].innerHTML);
 						}
 
 						scope.$apply();
@@ -149,7 +148,7 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						setIndex(index);
 
 						if(index!==-1){
-							preSelect(angular.element(this).find('li')[index].innerText);
+							preSelect(angular.element(this).find('li')[index].innerHTML);
 						}
 
 						break;
@@ -162,9 +161,8 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 						index = getIndex();
 						// preSelectOff();
 						if(index !== -1){
-							select(angular.element(this).find('li')[index].innerText);
+							select(angular.element(this).find('li')[index].innerHTML);
 						}
-						console.log(scope.searchParam);
 						setIndex(-1);
 						scope.search(scope.searchParam);
 						scope.$apply();

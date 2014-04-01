@@ -283,9 +283,11 @@ class UserResource(ModelResource):
         user_settings = helpers.save_user_settings(
             user, data['user_settings_hash'])
         if not user_settings:
+            #remove user that was created without settings
+            user.delete()
             return self.create_response(request, {
                 #could not find user settings according to hash
-                'reason': 'user settings not found',
+                'reason': 'user_settings_not_found',
                 'success': False
             })
 

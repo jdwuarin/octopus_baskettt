@@ -16,6 +16,10 @@ sudo pg_dump db1 -U octopus_user --password -F t -h localhost > db_image.sql
 # copy it from master to to dev
 scp db_image.sql ubuntu@octopus_postgres_dev.baskettt.co:~
 
+# actually kept on local. Use this file as a base when doing master/slave replication
+# this command copies the dump_data from postgres_master to the local file
+# scp -i /Users/john-davidwuarin/Dropbox/Server_me/octopus/octopus_key ubuntu@octopus_postgres_master.baskettt.co:db_image.sql ~
+
 #actually get on postgres_dev and apply backup
 exit
 ssh -i /Users/john-davidwuarin/Dropbox/Server_me/octopus/octopus_key ubuntu@octopus_postgres_dev.baskettt.co

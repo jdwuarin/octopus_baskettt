@@ -52,7 +52,7 @@ def get_json_basket(basket):
             # "other" if category is None else category.name)
 
         product_json['main'] = product_json_main
-        product_json['quantity'] = entry[0][1]
+        product_json['quantity'] = int(entry[0][1])
         other_products = []
 
         for ii in range(1, len(entry)):

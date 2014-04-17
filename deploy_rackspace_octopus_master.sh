@@ -29,6 +29,7 @@ sudo chmod -R g+w /webapps/octopus
 #install virtualenv
 sudo apt-get -y install python-virtualenv
 sudo apt-get install -y libpq-dev python-dev libxml2-dev libxslt-dev gcc
+sudo apt-get install libatlas-base-dev gfortran
 sudo su octopus
 cd /webapps/octopus
 virtualenv env

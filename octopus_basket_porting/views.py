@@ -20,7 +20,6 @@ def port_basket(request):
     # first determine what user made this request
     user = request.user
 
-
     # then save the user settings if user is new
     try:
         # try seeing if user already has settings assigned to self

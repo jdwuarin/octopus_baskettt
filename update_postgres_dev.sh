@@ -33,3 +33,6 @@ exit
 #sometimes useful to restart server.
 #sudo service postgresql restart
 exit
+
+# creating an ssh tunnel through local port 5433 (as always via port 22 on server)
+# ssh -i /Users/john-davidwuarin/Dropbox/Server_me/octopus/octopus_key -f ubuntu@octopus_postgres_dev.baskettt.co -L 5433:octopus_postgres_dev.baskettt.co:5435 -N

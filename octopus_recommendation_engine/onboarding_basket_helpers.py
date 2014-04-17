@@ -16,8 +16,7 @@ def get_product_matrix(potential_recipes, user_settings):
     product_matrix = []
 
     # here I just generate a dict with all the indexes of
-    # the recipes that should be iterated over remember and the
-    # row the iteration is at, potential_recipes; we start at 0
+    # the recipes that should be iterated over. product_matrix
     # is a list of list (a sort of matrix, where columns height can differ)
     recipe_column_indexes = {}
     for ii in range(len(potential_recipes)):
@@ -127,6 +126,7 @@ def filter_out_extra_condiments(abstract_products):
 
 # TODO, implement these two filters
 
+
 def filter_diet(abstract_products, user_settings):
 
     pass
@@ -181,6 +181,7 @@ def get_products_to_buy(abstract_products,
 
     return product_matrix
 
+
 # selects the most appropriate product in a list based
 # solely on price_sensitivity of the user
 # complexity: O(n) in min(num_products and selected_within_rank)
@@ -223,6 +224,7 @@ def get_selected_product_rank(apsp, price_sensitivity):
 
     return selected_rank
 
+
 # determines what quantity should be purchased of a certain
 # product based on the basket requirements and the user
 # complexity: tbd
@@ -242,6 +244,7 @@ def get_quantity_for_product(product,
         product.quantity))
 
     return quantity_to_buy
+
 
 def merge_matrix(product_matrix):
 

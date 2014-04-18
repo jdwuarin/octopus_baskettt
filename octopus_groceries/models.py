@@ -65,7 +65,7 @@ class Product(models.Model):
     unit = models.CharField(max_length=50, default='none', editable=False)
     #max_length is defaulted to 100 for image.
     external_image_link = models.ImageField(
-        max_length=200,upload_to="images/" + str(
+        max_length=200, upload_to="images/" + str(
             supermarket.name) + "/", default='', editable=False)
     name = models.CharField(max_length=150, default='', editable=False)
     link = models.CharField(max_length=200, default='', editable=False)
@@ -132,6 +132,10 @@ class Recipe(models.Model):
     rating = models.DecimalField(max_digits=10, decimal_places=4,
                                  editable=False)
     review_count = models.IntegerField(editable=False)
+
+    external_image_link = models.ImageField(
+        max_length=200, upload_to="images/recipes/", default='', editable=False)
+    link = models.CharField(max_length=200, default='', editable=False)
 
     def __unicode__(self):
         return str(self.name) + ", " + str(

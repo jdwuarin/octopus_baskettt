@@ -68,5 +68,5 @@ touch /webapps/octopus/env/logs/celery/beat.log
 sudo chown -R octopus:users /webapps/octopus/env/logs
 sudo supervisorctl update
 # will run automatically
-#sudo supervisorctl stop|start|restart octopus_cron_jobs  #to do stuff to process
+#supervisorctl stop|start|restart octopus_cron_jobs  #to do stuff to process
 

@@ -364,6 +364,8 @@ angular.module('App.controllers', ['ngSanitize','ui.bootstrap'])
 						$scope.errorMessage = "Your account isn't ready yet. We will inform you when you will have access to the baskettt goodness.";
 					} else if (res.reason ==="not_invited"){
 						$scope.errorMessage = "You haven't been invited to the beta. We have added you to our list and will inform you when your account is ready";
+					} else if (res.reason ==="user_settings_not_found"){
+						$scope.errorMessage = "It seems you took more than 2 weeks to create your basket. We're sorry about that, but you will need to start again from the start";
 					} else{
 						$scope.errorMessage = "Something went wrong on our end. Please try again";
 					}

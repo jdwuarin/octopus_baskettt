@@ -38,3 +38,9 @@ static/*
 octopus/local_settings.py
 test_angular/coverage/
 local/
+
+.bash_history
+.ipython/
+.node-gyp/
+.npm/
+.viminfo

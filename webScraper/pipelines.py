@@ -76,6 +76,9 @@ class FoodComPostgresPipeline(object):
                 #let's update the ratings and comment count just in case though
                 pre_existing_item.rating = recipe.rating
                 pre_existing_item.review_count = recipe.review_count
+                pre_existing_item.link = recipe.link
+                pre_existing_item.external_image_link = recipe.external_image_link
+                pre_existing_item.save()
 
             except ObjectDoesNotExist:
                 #we have to save all the objects in the various dbs.
@@ -95,8 +98,7 @@ class FoodComPostgresPipeline(object):
 
             try:
                 tag = Tag.objects.get(name=tag_string)
-                #if the abstract_product is already in the list, don't add
-                #it again
+                #if the tag is already in the list, don't add it again
             except ObjectDoesNotExist:
                 tag.name = tag_string
                 tag.save()
@@ -112,7 +114,6 @@ class FoodComPostgresPipeline(object):
         for abstract_product_item in abstract_product_items:
 
             abstract_product = AbstractProduct()
-            recipe_abstract_product = RecipeAbstractProduct()
             name = abstract_product_item['name']
             try:
                 quantity = abstract_product_item['quantity']

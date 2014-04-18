@@ -23,9 +23,10 @@ class FoodComSpider(BaseSpider):
                                formdata={
                                    'callbackUrl': '//www.food.com/static_files/communitytools/empty.html',
                                    'password': 'Test123456',
-                                   'username': "octopus.hydra@gmail.com", },  # Test account
+                                   'username': "octopus.hydra@gmail.com", },
+                               # Test account
                                callback=self.after_login
-                               )]
+        )]
 
         return request
 
@@ -34,24 +35,28 @@ class FoodComSpider(BaseSpider):
         if "FAILURE" in response.body:
             self.log("Login failed", level=log.ERROR)
             return
-        else: 
-            return Request(FoodComSpider.real_start_url, callback=self.parse_listing_page)
+        else:
+            return Request(FoodComSpider.real_start_url,
+                           callback=self.parse_listing_page)
 
     def parse_listing_page(self, response):
 
         sel = Selector(response)
-        recipe_links = sel.xpath('//a[contains(@class, "recipe-main-title")]/@href').extract()
+        recipe_links = sel.xpath(
+            '//a[contains(@class, "recipe-main-title")]/@href').extract()
 
         #for the recipes on the page
         for link in recipe_links:
             link += u'?mode=metric'
             recipe_request = Request(link, callback=self.parse_recipe_page)
+            recipe_request.meta['link'] = link
             yield recipe_request
 
-        #to go to the next page    
+        # to go to the next page
         # next_link_tail = sel.xpath('//a[(@rel="next")]/@href').extract()
         FoodComSpider.next_page_num += 1
-        next_link = FoodComSpider.real_start_url + str(FoodComSpider.next_page_num)
+        next_link = FoodComSpider.real_start_url + str(
+            FoodComSpider.next_page_num)
         next_request = Request(next_link, callback=self.parse_listing_page)
         yield next_request
 
@@ -61,23 +66,31 @@ class FoodComSpider(BaseSpider):
         skip = False
 
         #first identifying num servings if it exists
-        if len(sel.xpath('//p[contains(@class, "yield")]/text()').extract()) > 0:
+        if len(sel.xpath(
+                '//p[contains(@class, "yield")]/text()').extract()) > 0:
             skip = True
 
         serves = self.get_cleaned_serves(sel)
-        if serves is False:
+        if not serves:
             skip = True
 
-        if skip is False:
+        if not skip:
             recipe_name = sel.xpath('//h1[contains(@class, "fn")]/text()').extract()[0]
-            tags = sel.xpath('//span[contains(@itemprop, "recipeCategory")]/text()').extract()
-            rating = sel.xpath('//li[contains(@class, "current-rating")]/@style').extract()[0]
+            tags = sel.xpath(
+                '//span[contains(@itemprop, "recipeCategory")]/text()').extract()
+            rating = sel.xpath(
+                '//li[contains(@class, "current-rating")]/@style').extract()[0]
             rating = float(re.sub("[^0-9.]", "", rating))
-            review_count = str(sel.xpath('//a[contains(@id, "readthereview")]/text()').extract()[0])
+            review_count = str(sel.xpath(
+                '//a[contains(@id, "readthereview")]/text()').extract()[0])
             review_count = int(re.sub("[^0-9]", "", review_count))
+            external_image_link = str(sel.xpath(
+                '//img[contains(@class, "smallPageImage")]/@src').extract()[0])
+
             abstract_product_items = []
 
-            abstract_product_information_selectors = sel.xpath('//li[contains(@class, "ingredient")]')
+            abstract_product_information_selectors = sel.xpath(
+                '//li[contains(@class, "ingredient")]')
             for selector in abstract_product_information_selectors:
                 abstract_product_item = AbstractProductItem()
 
@@ -95,7 +108,9 @@ class FoodComSpider(BaseSpider):
 
                     quantity = self.get_cleaned_quantity(selector)
                     if not quantity is False:
-                        abstract_product_item['quantity'] = str(float(quantity) / float(serves))  # to get quantities for one person
+                        abstract_product_item['quantity'] = str(
+                            float(quantity) / float(
+                                serves))  # to get quantities for one person
 
                     unit = self.get_cleaned_unit(selector)
                     if len(unit) > 0:
@@ -107,8 +122,10 @@ class FoodComSpider(BaseSpider):
             item['name'] = recipe_name
             item['rating'] = rating
             item['review_count'] = review_count
+            item['link'] = response.meta['link']
             item['tags'] = tags
             item['abstract_product_items'] = abstract_product_items
+            item['external_image_link'] = external_image_link
 
             if review_count < 20:
                 raise CloseSpider('done here')
@@ -117,10 +134,11 @@ class FoodComSpider(BaseSpider):
 
     @staticmethod
     def get_cleaned_serves(sel):
-        serves = sel.xpath('//option[contains(@selected, "selected")]/@value').extract()
+        serves = sel.xpath(
+            '//option[contains(@selected, "selected")]/@value').extract()
         if "-" in serves:
             left, sep, right = serves.rpartition("-")
-            serves = (float(left) + float(right))/2.0
+            serves = (float(left) + float(right)) / 2.0
             return serves
         try:
             serves = int(serves[0])
@@ -134,13 +152,14 @@ class FoodComSpider(BaseSpider):
     @staticmethod
     def get_cleaned_quantity(selector):
 
-        quantity = selector.xpath('.//span[contains(@class, "value")]/text()').extract()
+        quantity = selector.xpath(
+            './/span[contains(@class, "value")]/text()').extract()
 
         if len(quantity) is 1:
             quantity = quantity[0]
             if "-" in quantity:
                 left, sep, right = quantity.rpartition("-")
-                quantity = (float(left) + float(right))/2.0
+                quantity = (float(left) + float(right)) / 2.0
                 return str(quantity)
             else:
                 try:

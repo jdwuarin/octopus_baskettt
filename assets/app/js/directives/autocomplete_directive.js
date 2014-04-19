@@ -1,8 +1,4 @@
-/* --- Made by justgoscha and licensed under MIT license --- */
-
-var app = angular.module('autocomplete', []);
-
-app.directive('autocomplete', ['$rootScope',function($rootScope){
+angular.module('App.directives').directive('autocomplete', ['$rootScope',function($rootScope){
 	var index = -1;
 
 	return {
@@ -195,22 +191,22 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		'</li>'+
 		'</ul>'+
 		'</div>'
-		}
+		};
 	}]);
 
-app.directive('suggestion', function(){
+angular.module('App.directives').directive('suggestion', function(){
 	return {
 		restrict: 'A',
-	require: '^autocomplete', // ^look on controller on parents element
-	link: function(scope, element, attrs, autoCtrl){
-		element.bind('mouseenter', function() {
-			autoCtrl.preSelect(attrs['val']);
-			autoCtrl.setIndex(attrs['index']);
-		});
+		require: '^autocomplete', // ^look on controller on parents element
+		link: function(scope, element, attrs, autoCtrl){
+			element.bind('mouseenter', function() {
+				autoCtrl.preSelect(attrs['val']);
+				autoCtrl.setIndex(attrs['index']);
+			});
 
-		element.bind('mouseleave', function() {
-			autoCtrl.preSelectOff();
-		});
-	}
-}
+			element.bind('mouseleave', function() {
+				autoCtrl.preSelectOff();
+			});
+		}
+	};
 });

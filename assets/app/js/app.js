@@ -11,9 +11,23 @@ angular.module('App', [
 	'App.controllers',
 	'angulartics',
 	'angulartics.google.analytics',
-	'autocomplete',
 	'ui.slider'
-])
+]);
+
+angular.module('App.controllers', [
+	'ngSanitize',
+	'ui.bootstrap'
+]);
+
+angular.module('App.services', [
+	'LocalStorageModule'
+]);
+
+angular.module('App.directives', []);
+angular.module('App.filters', []);
+
+
+angular.module('App')
 
 .config(['$httpProvider', function($httpProvider) {
 

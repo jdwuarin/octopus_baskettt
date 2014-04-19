@@ -79,6 +79,12 @@ angular.module('App', [
 		templateUrl: 'static/app/partials/profile.html',
 		requireLogin: true
 	})
+	.when('/profile/basket',
+	{
+		controller: 'ProfileBasketController',
+		templateUrl: 'static/app/partials/profile_basket.html',
+		requireLogin: true
+	})
 	.otherwise({ redirectTo: '/' });
 }])
 

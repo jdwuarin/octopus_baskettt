@@ -121,7 +121,9 @@ module.exports = function(grunt) {
             '../bower_components/**/*',
             'img/*',
             'img/favicons/*',
-            'fonts/*'
+            'fonts/*',
+            'lib/*.js',
+            'app/js/*.js'
           ]
         }, {
           expand: true,

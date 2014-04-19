@@ -11,8 +11,6 @@ angular.module('App.controllers').controller('ResetController', ['$scope', '$htt
 			});
 		}
 	};
-
-
 }]);
 
 

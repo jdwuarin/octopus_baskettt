@@ -1,8 +1,12 @@
-
-
 .profile{
 
-    padding-top: 30px;
+    .make-md-column(12);
+    padding-top: 50px;
+
+    h3{
+        color: @dark-gray;
+        padding-bottom: 30px
+    }
 
     input{
         max-width: 300px;
@@ -32,4 +36,92 @@
             margin-top: 20px;
         }
     }
+
+    .profile-title{
+
+        position: relative;
+
+        h3, .btn-basket-new{
+            display: inline-block;
+        }
+
+        .btn-basket-new{
+            position: absolute;
+            top: 15px;
+            right: 0px;
+        }
+    }
+
+
+    .basket-list{
+
+        ul{
+            padding-left: 0px;
+
+            & div {
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+
+        li{
+            border: 3px solid @light-gray;
+            list-style-type: none;
+            height: 106px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+    }
+
+    .btn-basket-new{
+        .btn-trans-orange;
+    }
+
+    .btn-basket-checkout{
+        .btn-trans-orange;
+        position: absolute;
+        right: 50px;
+        top: 30px;
+    }
+
+    .basket-avatar{
+        width: 50px;
+        img{
+            width: 50px;
+            height: 50px;
+        }
+
+    }
+
+    .basket-title{
+        font-family: @montserrat;
+        font-size: 20px;
+        color: @dark-gray;
+        padding-left: 50px;
+        padding-top: 35px;
+    }
+
+    .basket-stats{
+        font-size: 20px;
+        padding-top: 35px;
+        padding-left: 30px;
+        color: @dark-gray;
+
+        .glyphicon-calendar{
+            padding-left: 14px;
+        }
+    }
+
+    .basket-links{
+        font-size: 18px;
+        color:@normal-gray;
+        //padding-top: 37px;
+        //padding-left: 30px;
+        position: absolute;
+        top: 37px;
+        right: 200px;
+    }
+
+    .basket-stats{}
+
 }

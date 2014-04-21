@@ -3,10 +3,16 @@
     <div class="container">
       <div class="profile-title">
         <h3>My baskets</h3>
-        <div class="btn-basket-new">New</div>
+        <!-- <div class="btn-basket-new">Create new</div> -->
       </div>
       <div class="basket-list">
         <ul>
+          <li>
+            <div class="basket-title">No basket? Time to create your first one!</div>
+            <a href="#/basket">
+              <div class="btn-basket-checkout">Create</div>
+            </a>
+          </li>
           <li ng-repeat="basket in baskets">
             <div class="basket-avatar">
               <img ng-src="{{ basket.avatar[0]}}" alt="">

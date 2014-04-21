@@ -1,8 +1,70 @@
-<div class="loading-basket" ng-show="loading">
-	<div class="spinner"></div>
-	<p>Building your basket.</p>
+<div class="basket-create">
+
+  <div class="sidebar">
+
+    <div class="search-bar">
+      <div class="search-input">
+        <autocomplete data="autocompleteResults" on-type="autoComplete" clear="clearResult"></autocomplete>
+      </div>
+      <div class="search-filter">baskets</div>
+      <div class="search-filter">products</div>
+    </div>
+
+    <div class="search-results">
+      <div class="search-title">
+        products
+      </div>
+      <ul class="search-list">
+          <li class="search-item" ng-repeat="product in searchResults">
+            <img src="" alt="">
+            <div class="search-item-title">{{ product.name }}</div>
+            <div class="search-item-price">&pound;{{ product.price | price}}</div>
+            <div class="search-item-quantity">{{ product.quantity }}</div>
+            <button class="btn-add-search-item" ng-click="addProduct(product)">
+              Add
+            </button>
+            <select ng-model="selectedbasketName" ng-options="b for b in basketNameList"></select>
+          </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="main-panel">
+    <div class="basket" ng-repeat="basket in cart">
+
+      <div class="basket-title">
+        <div class="basket-title-icon"></div>
+        <div class="basket-title-name">{{ basket.name }}</div>
+        <div class="basket-title-price">{{ basket.total}}</div>
+      </div>
+
+      <ul class="basket-list">
+          <li class="basket-item" ng-repeat="product in basket.products">
+            <img src="" alt="">
+            <div class="basket-item-title">{{ product.name }}</div>
+            <div class="basket-item-price">{{ product.price }}</div>
+            <div class="basket-item-quantity">{{ product.quantity }}</div>
+          </li>
+      </ul>
+
+    </div>
+    <form ng-submit="addBasket()">
+      New basket
+      <input type="text" ng-model="newBasketName">
+      <input type="submit"value="Submit">
+    </form>
+  </div>
+
 </div>
 
+
+
+<!-- <div class="loading-basket" ng-show="loading">
+	<div class="spinner"></div>
+	<p>Building your basket.</p>
+</div> -->
+<!--
 <div class="row hidden-xs hidden-sm">
 	<div class="col-md-12 basket-bar">
 		<div class="row">
@@ -31,8 +93,12 @@
 		</div>
 	</div>
 </div>
+ -->
 
-<div class="row">
+
+
+
+<!-- <div class="row">
 	<div class="product-list-container">
 		<div class="product-search-result col-md-6 col-md-offset-3">
 			<li class="search-item no-result">
@@ -117,3 +183,4 @@
 		</div>
 	</div>
 </div>
+ -->

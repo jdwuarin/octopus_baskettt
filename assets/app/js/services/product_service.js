@@ -1,6 +1,8 @@
 angular.module('App.services').factory('Product',
-	['$http',
-	function($http) {
+	['$http', '$q', 'Alert',
+	function($http, $q, Alert) {
+
+		var self = this;
 
 		function getUrl(id) {
 			id = typeof id !== 'undefined' ? id : ''; //if no id put empty string i.e. for get all products
@@ -8,11 +10,32 @@ angular.module('App.services').factory('Product',
 		}
 
 		return {
-			search: function(term, callback, errorcb) {
-				return $http.get(getUrl("search/") + "&term=" + term).success(callback).error(errorcb);
+			search: function(term) {
+
+				if(term && term.length === 0){ return []; }
+
+				return $http.get(getUrl("search/") + "&term=" + term)
+				.then(function(res) {
+					if(res.data.length === 0) {
+						Alert.add("Could not find this product","danger");
+						return $q.reject(res);
+					}
+					return res.data;
+				}, function(res) {
+					return $q.reject(res);
+				});
 			},
-			autocomplete: function(term, callback) {
-				return $http.get(getUrl('autocomplete')+ "&term=" + term).then(callback);
+			autocomplete: function(term) {
+				if(term && term.length === 0){ return []; }
+
+				return $http.get(getUrl('autocomplete')+ "&term=" + term)
+				.then(function(res) {
+					return res.data.map(function(product) {
+						return product.name;
+					});
+				}, function(res) {
+					return $q.reject(res);
+				});
 			},
 			getQuantity: function(searchItems, basketItems){
 				// Oh lord that's ugly
@@ -91,38 +114,40 @@ angular.module('App.services').factory('Product',
 
 				return $products;
 			},
-			add: function($products, item){
+			add: function(newProduct){
 
-				var isPresent = false,
-				index = -1;
 
-				$products.map(function (d, i) {
-					if(d.name === item.department) { index = i; }
-				});
 
-				// If new department
-				if (index === -1) {
-					$products.push({
-						name: item.department,
-						products: [item]
-					});
-				} else {
+				// var isPresent = false,
+				// index = -1;
 
-					$products[index]["products"] = $products[index]["products"].map(function (p) {
-						if(p.name === item.name){
-							p.quantity += 1;
-							isPresent = true;
-						}
-						return p;
-					});
+				// $products.map(function (d, i) {
+				// 	if(d.name === item.department) { index = i; }
+				// });
 
-					// If new product in existing department
-					if(!isPresent) {
-						item.quantity = 1;
-						$products[index]["products"].push(item);
-					}
-				}
-				return $products;
+				// // If new department
+				// if (index === -1) {
+				// 	$products.push({
+				// 		name: item.department,
+				// 		products: [item]
+				// 	});
+				// } else {
+
+				// 	$products[index]["products"] = $products[index]["products"].map(function (p) {
+				// 		if(p.name === item.name){
+				// 			p.quantity += 1;
+				// 			isPresent = true;
+				// 		}
+				// 		return p;
+				// 	});
+
+				// 	// If new product in existing department
+				// 	if(!isPresent) {
+				// 		item.quantity = 1;
+				// 		$products[index]["products"].push(item);
+				// 	}
+				// }
+				// return $products;
 			},
 			remove: function($products, item) {
 

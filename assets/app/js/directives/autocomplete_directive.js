@@ -182,7 +182,7 @@ angular.module('App.directives').directive('autocomplete', ['$rootScope',functio
 		'<div class="input-container">'+
 		'<input type="text" ng-model="searchParam" placeholder="Search for products"/>' +
 		'</div>' +
-		'<button class="btn-black" type="submit" ng-click="search(searchParam)">Search</button>'+
+		'<button type="submit" ng-click="search(searchParam)">Search</button>'+
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+
 		'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+

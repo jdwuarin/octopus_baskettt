@@ -31,7 +31,6 @@ class OctopusUser(AbstractBaseUser):
         self.validate_unique_email()
         self.validate_user_is_invited()
 
-
     def validate_unique_email(self):
 
         user_exists = OctopusUser.objects.filter(
@@ -64,82 +63,87 @@ class OctopusUser(AbstractBaseUser):
 
 
 class UserSettings(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, blank=True, null=True)
-    people = models.IntegerField(default=0)
-    days = models.IntegerField(default=0)
-    # value from 0 to 1. 0 completely insensitive, 1 extremely sensitive
-    price_sensitivity = models.DecimalField(max_digits=10, decimal_places=4)
-    tags = models.CommaSeparatedIntegerField(max_length=5000, default=[])
-    default_supermarket = models.ForeignKey(
-        Supermarket,default=None, blank=True, null=True, editable=False)
-    pre_user_creation_hash = models.CharField(
-        max_length=150, default='', editable=False, blank=True, null=True,
-        db_index=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                blank=True, null=True, primary_key=True)
 
     # email subscription bullshit stuff.
     recommendation_email_subscription = models.BooleanField(default=True)
     next_recommendation_email_date = models.DateField(default=None, blank=True,
                                                       null=True)
     news_email_subscription = models.BooleanField(default=True)
-
-    diet = models.ForeignKey(Diet, blank=True, null=True)
-    banned_meats = models.CommaSeparatedIntegerField(
-        max_length=5000, default=[])  # id list of BannableMeats
-    banned_abstract_products = models.CommaSeparatedIntegerField(
-        max_length=5000, default=[])  # id list of AbstractProducts
+    profile_is_open = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       default=datetime.datetime.now())
 
+    def __unicode__(self):
+        return "user_settings_of: " + str(self.user)
+
+
+class UserRelationship(models.Model):
+    user_followed = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
+    user_following = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
+
+
+class AvailableTag(models.Model):  # for recipes
+    name = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
-        return str(self.user) + ", " + str(
-            self.people) + ", " + str(
-            self.days) + ", " + str(
-            self.price_sensitivity) + ", " + str(
-            self.tags) + ", " + str(
-            self.diet) + ", " + str(
-            self.default_supermarket) + ", " + str(
-            self.banned_meats) + ", " + str(
-            self.banned_abstract_products)
+        return str(self.name)
 
 
-# basket that was recommended to our user by our algorithm
-class UserRecommendedBasket(models.Model):
+class UserBasket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
+    name = models.CharField(max_length=250, blank=True, default='')
+    description = models.TextField(blank=True, default='')
     product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
+    people = models.IntegerField(default=1)
     created_at = models.DateTimeField(default=datetime.datetime.now(),
-                                auto_now_add=True)
-
-    objects = hstore.HStoreManager()
-
-
-# basket that was finally transferred to the supermarket
-# (before items failed being transferred etc)
-# saving commaSeperatedValues: user_generated_basket =
-class UserGeneratedBasket(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
-    user_recommended_basket = models.OneToOneField(UserRecommendedBasket,
-                                                   primary_key=True)
-    product_dict = hstore.DictionaryField()
-    created_at = models.DateTimeField(default=datetime.datetime.now(),
-                                auto_now_add=True)
+                                      auto_now_add=True)
+    updated_at = models.DateTimeField(default=datetime.datetime.now(),
+                                      auto_now=True)
 
     objects = hstore.HStoreManager()
 
     def __unicode__(self):
         return str(self.user) + ", " + str(
-            self.user_recommended_basket.id) + ", " + str(
-            self.product_dict) + ", " + str(
-            self.time)
+            self.name) + ", " + str(
+            self.description) + ", " + str(
+            self.created_at)
 
 
-class UserProductSlack(models.Model):
+class UserBasketTag(models.Model):
+    tag = models.ForeignKey(AvailableTag, blank=False)
+    user_basket = models.ForeignKey(UserBasket)
+
+    def __unicode__(self):
+        return str(self.tag) + ", " + str(self.user_basket)
+
+
+class UserCart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
-    product = models.ForeignKey(Product, editable=False)
-    slack = models.DecimalField(max_digits=10, decimal_places=4, editable=True)
-    purchase_time = models.DateTimeField(default=datetime.datetime.now(),
-                                         auto_now_add=True)
+    name = models.CharField(max_length=250, blank=True, default='')
+    description = models.TextField(blank=True, default='')
+    basket_list = models.CommaSeparatedIntegerField(max_length=60)
+    people = models.IntegerField(default=1)
+    created_at = models.DateTimeField(default=datetime.datetime.now(),
+                                      auto_now_add=True)
+    updated_at = models.DateTimeField(default=datetime.datetime.now(),
+                                      auto_now=True)
+
+    def __unicode__(self):
+        return str(self.user) + ", " + str(
+            self.name) + ", " + str(
+            self.description) + ", " + str(
+            self.created_at)
+
+
+class UserCartTag(models.Model):
+    tag = models.ForeignKey(AvailableTag, blank=False)
+    user_cart = models.ForeignKey(UserCart)
+
+    def __unicode__(self):
+        return str(self.tag) + ", " + str(self.user_cart)
 
 
 class UserInvited(models.Model):

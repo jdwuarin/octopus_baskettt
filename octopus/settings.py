@@ -161,7 +161,7 @@ INSTALLED_APPS = (
     # My apps
     'octopus_groceries',
     'octopus_user',
-    'octopus_basket_porting',
+    'octopus_basket',
     'octopus_middleware',
     'octopus_recommendation_engine',
     'octopus_search_engine',

@@ -189,17 +189,3 @@ class AbstractProductSupermarketProduct(models.Model):
     def __unicode__(self):
         return str(self.abstract_product.name) + ", " + str(
             self.supermarket)
-
-
-class BannableMeats(models.Model):
-    name = models.CharField(max_length=150, editable=False, primary_key=True)
-
-    def __unicode__(self):
-        return str(self.name)
-
-
-class Diet(models.Model):
-    name = models.CharField(max_length=150, editable=False, primary_key=True)
-
-    def __unicode__(self):
-        return str(self.name)

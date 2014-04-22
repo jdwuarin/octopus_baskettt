@@ -1,13 +1,13 @@
 import json
 from django.http import HttpResponse
-from octopus_basket_porting.basket_to_port import BasketToPort
-from octopus_basket_porting.spider_manager import SpiderManagerController
-from octopus_basket_porting.thread_manager import ThreadManager
+from octopus_basket.basket_to_port import BasketToPort
+from octopus_basket.spider_manager import SpiderManagerController
+from octopus_basket.thread_manager import ThreadManager
 from django.contrib.auth.decorators import login_required
 from octopus_groceries.models import Product, Tag
 from octopus_user.models import UserRecommendedBasket, UserGeneratedBasket, \
     UserSettings
-from octopus_basket_porting.pipelines import BadLoginException
+from octopus_basket.pipelines import BadLoginException
 import octopus_recommendation_engine.helpers
 
 

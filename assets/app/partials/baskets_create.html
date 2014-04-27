@@ -18,18 +18,19 @@
     </div>
     <div class="search-results">
       <div class="search-title" ng-hide="!searchResults.length">
-        products
+        basket
       </div>
       <ul class="search-list">
-          <li class="search-item" ng-repeat="product in searchResults">
+          <li class="search-item" ng-repeat="product in searchResults" drag-and-drop>
             <img ng-src="{{product.img}}"  alt="">
             <div class="search-item-title">{{ product.name }}</div>
             <div class="search-item-price">&pound;{{ product.price | price}}</div>
-            <div class="search-item-quantity">{{ product.quantity }}</div>
+    <!--         <div class="search-item-quantity">{{ product.quantity }}</div>
             <button class="btn-add-search-item" ng-click="addProduct(product)">
               Add
-            </button>
-            <select ng-model="product.selectedbasketName" ng-options="b for b in basketNameList"></select>
+            </button> -->
+            <div class="btn-trans-orange">Learn More</div>
+            <!-- <select ng-model="product.selectedbasketName" ng-options="b for b in basketNameList"></select> -->
           </li>
       </ul>
     </div>
@@ -37,6 +38,7 @@
   </div>
 
   <div class="main-panel">
+
     <div class="basket" ng-show="!cart.length">
 
       <div class="basket-title">
@@ -46,12 +48,8 @@
         </form>
       </div>
 
-      <p>
-        ^ <br>
-        | <br>
-        | <br>
-
-        Add a name to your basket. Ex:"Weekly groceries, healthy snacks, BBQ with friend..."
+      <p class="empty-basket">
+        Add a name to your basket. <br> Ex:"Weekly groceries, healthy snacks, BBQ with friend..."
       </p>
 
     </div>
@@ -73,7 +71,7 @@
 
       <ul class="basket-list">
           <div class="empty-basket" ng-show="!basket.products.length">
-            Your basket is empty. You can add products or a pre-existing basket with the search bar on the left
+            Your basket is empty. <br> You can add products or a pre-existing basket with the search bar on the left
           </div>
           <li class="basket-item" ng-repeat="product in basket.products">
             <img ng-src="{{product.img}}"  alt="">

@@ -10,7 +10,14 @@ angular.module('App.controllers').controller('BasketsCreateController',
 
 		console.log($scope.cart);
 		$scope.searchProducts = function(query){
-			$scope.searchResults = Product.search(query);
+			$scope.searchResults = [
+			{
+				name: "Vegan diet for one week",
+				price: "GBP52.50",
+				img: "http://0.tqn.com/d/celiacdisease/1/0/I/G/-/-/Vegetables-Stockbyte.jpg"
+			},
+			];
+			// $scope.searchResults = Product.search(query);
 		};
 
 		$scope.autoComplete = function(query) {
@@ -32,7 +39,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 
 		$scope.$watch('cart', function(newValue, oldValue) {
 			if(angular.isUndefined(newValue)){return;}
-			if(angular.isObject(newValue)){ newValue = [newValue]; }
+			// if(angular.isObject(newValue)){ newValue = [newValue]; }
 			// $scope.basketNameList = newValue.map(function(basket) {
 			// 	console.log(basket);
 			// 	return basket.name;

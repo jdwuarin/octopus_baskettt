@@ -6,8 +6,9 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		$scope.cart = Cart.init();
 		$scope.newBasketName = "";
 		$scope.basketNameList = [];
+		$scope.cartTotal = 0;
 
-
+		console.log($scope.cart);
 		$scope.searchProducts = function(query){
 			$scope.searchResults = Product.search(query);
 		};
@@ -21,7 +22,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		});
 
 		$scope.addProduct = function(newProduct) {
-			$scope.cart = Cart.add(newProduct, $scope.selectedbasketName);
+			$scope.cart = Cart.add(newProduct);
 		};
 
 		$scope.addBasket = function() {
@@ -29,11 +30,29 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		};
 
 
-		$scope.$watchCollection('cart', function(newValue, oldValue) {
-			$scope.basketNameList = newValue.map(function(basket) {
-				return basket.name;
-			});
-		});
+		$scope.$watch('cart', function(newValue, oldValue) {
+			if(angular.isUndefined(newValue)){return;}
+			if(angular.isObject(newValue)){ newValue = [newValue]; }
+			// $scope.basketNameList = newValue.map(function(basket) {
+			// 	console.log(basket);
+			// 	return basket.name;
+			// });
+			console.log("change", newValue);
+			$scope.cartTotal = Cart.computeTotal();
+		}, true); //deep watching
+
+
+		angular.element('#new-basket-input').focus();
+
+
+		$scope.startEditing = function(basket) {
+			basket.editing = true;
+		}
+
+		$scope.doneEditing = function(basket){
+			basket.editing=false;
+			// $scope.editedItem = null;
+		}
 
 		// Initialize variables for the frontend
 	// 	var preferenceList = Preference.getAll();

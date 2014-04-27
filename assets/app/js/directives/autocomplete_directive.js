@@ -180,9 +180,11 @@ angular.module('App.directives').directive('autocomplete', ['$rootScope',functio
 		},
 		template: '<div class="autocomplete">'+
 		'<div class="input-container">'+
-		'<input type="text" ng-model="searchParam" placeholder="Search for products"/>' +
+		'<input type="text" ng-model="searchParam" placeholder="Search"/>' +
 		'</div>' +
-		'<button type="submit" ng-click="search(searchParam)">Search</button>'+
+		'<button type="submit" ng-click="search(searchParam)">'+
+        '<i class="glyphicon glyphicon-search"></i>'+
+		'</button>'+
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+
 		'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+

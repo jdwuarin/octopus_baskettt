@@ -2,14 +2,111 @@
 .basket-create{
 
   .make-row();
-  // .container-fixed();
 
   .sidebar{
+
     .make-md-column(5);
+    padding-right: 0;
 
     .search-bar{
-      & .search-input, & .search-filter, & button{
+      .make-row();
+      background: @very-light-gray;
+      height: 62px;
+
+      .sidebar-max{
+        .sidebar-container;
+      }
+
+      & .search-input, & .search-filter, & .input-container{
         display: inline-block;
+      }
+
+      input{
+        .text-input;
+        width: 160px;
+        height: 40px;
+        border-color: @normal-gray;
+      }
+
+      button{
+        .btn-search;
+        position: absolute;
+        left: 155px;
+        i{
+          color: @dark-orange;
+        }
+      }
+
+      .search-filter{
+        .make-md-column(5);
+        margin-top: 18px;
+
+        li{
+          font-family: @nunito;
+          font-size: 16px;
+          color: @normal-gray;
+          font-weight: 300;
+          list-style-type: none;
+          display: inline;
+          padding: 0 9px;
+        }
+
+      }
+
+      .search-input{
+        .make-md-column(7);
+        position: relative;
+        margin-top: 10px;
+      }
+
+    }
+
+    .search-title{
+      background: @dark-gray;
+      color:white;
+      font-family: @nunito;
+      font-size: 14px;
+      height: 30px;
+      line-height: 30px;
+      .sidebar-container;
+    }
+
+    .search-results{
+      .sidebar-container;
+      padding-right: 0;
+    }
+
+    .search-list{
+      padding: 0;
+      // display: table;
+
+      .search-item{
+        list-style-type: none;
+        border: 3px solid @light-gray;
+        border-top: 0;
+        // display: table-row;
+
+        img{
+          width: 100px;
+          height: 100px;
+        }
+
+        & *{
+          display: inline-block;
+          vertical-align: top;
+          vertical-align: middle;
+        }
+
+        .search-item-title{
+          max-width: 150px;
+          color:@dark-gray;
+          font-family: @nunito;
+          font-size: 15px;
+          font-weight: 300;
+          padding-left: 20px;
+        }
+
+
       }
     }
 
@@ -17,8 +114,115 @@
 
   .main-panel{
     .make-md-column(7);
+    padding-left: 0;
+    .basket{
+
+
+      ul.basket-list{
+        padding-left: 0;
+      }
+
+      .basket-title{
+        background: @very-light-gray;
+        height: 62px;
+        font-family: @montserrat;
+        font-size: 18px;
+        color: @dark-gray;
+        padding-top: 17px;
+        padding-left: 25px;
+        border-left: 2px solid @light-gray;
+
+        .glyphicon-floppy-disk, .basket-title-name{
+          display: inline-block;
+        }
+
+        .glypicon-floppy-disk{
+          vertical-align: middle;
+          padding-left: 10px;
+        }
+
+        input[type="text"]{
+          background: none;
+          border: 0;
+        }
+
+        input[type="submit"]{
+          display: none;
+        }
+      }
+
+      .basket-item{
+        display: inline-block;
+        width: @product-size+4px;
+        margin: 10px;
+
+        text-align: justify;
+        border: 2px solid @light-gray;
+
+        img{
+          width: @product-size;
+        }
+
+        .basket-item-name{
+          font-family: @nunito;
+          font-size: 15px;
+          font-weight: 100;
+
+          text-align: center;
+
+          padding: 10px;
+
+          border-top: 2px solid @light-gray;
+        }
+
+        .basket-item-price{
+          font-family: Helvetica;
+          font-weight: 400;
+          font-size: 20px;
+          text-align: center;
+
+          width: @product-size;
+          padding: 10px 0px;
+        }
+      }
+
+
+    }
+
   }
 
+}
+
+
+// Leave outside because it is also used in the search results
+.quantity{
+    width: @product-size;
+    padding-bottom: 10px;
+
+    .input-group{
+        width: 100px;
+        .center;
+    }
+
+    .form-control{
+        width: 43px;
+    }
+
+    input{
+
+        text-align: center;
+        cursor: default;
+        color: @gray;
+        background: @light-gray;
+    }
+
+    span{
+        cursor: pointer;
+        background: @orange;
+        border-color: @dark-orange;
+        border-radius: 0;
+        color:white
+    }
 }
 
 

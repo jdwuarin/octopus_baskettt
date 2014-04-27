@@ -3,25 +3,40 @@ angular.module('App.services').factory('Cart',
 	function($http) {
 
 		var self = this;
-		self.cart = [];
+		self.cart = [
+		// {
+		// 	name: "My weekly groceries",
+		// 	products: [
+		// 	{
+		// 		department: "Food Cupboard",
+		// 		id: 3884,
+		// 		img: "http://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_225x225.jpg",
+		// 		link: "/groceries/Product/Details/?id=252004443",
+		// 		name: "Heinz Baked Beans In Tomato Sauce 415G X 4 Pack",
+		// 		price: "GBP2.50",
+		// 		quantity: 1
+		// 	},
+		// 	// {
+		// // 		department: "Food Cupboard",
+		// // 		id: 3884,
+		// // 		img: "http://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_225x225.jpg",
+		// // 		link: "/groceries/Product/Details/?id=252004443",
+		// // 		name: "Heinz Baked Beans In Tomato Sauce 415G X 4 Pack",
+		// // 		price: "GBP2.50",
+		// // 		quantity: 1
+		// // 	}
+		// 	]
+		// }
+		];
 
 		return {
 			init: function(){
-				self.cart.push({
-					name: "BBQ with friends",
-					products: [
-						{
-							name: "Tesco courgette",
-							price: "2.00"
-						}
-					]
-				});
 				return self.cart;
 			},
-			add: function(newProduct, basketName) {
-				console.log(newProduct, basketName);
+			add: function(newProduct) {
 				var isPresent = false;
 				var index = -1;
+				var basketName = newProduct.selectedbasketName;
 
 				if(newProduct.quantity > 50) { return self.cart; }
 
@@ -68,6 +83,19 @@ angular.module('App.services').factory('Cart',
 
 				return self.cart;
 
+			},
+
+			computeTotal: function() {
+				var total = 0;
+
+				self.cart.forEach(function(basket) {
+					basket.products.forEach(function(product) {
+						total += parseFloat(product.price.replace("GBP","")) * parseInt(product.quantity,10);
+					});
+				});
+				console.log(total, self.cart);
+
+				return total;
 			}
 		};
 

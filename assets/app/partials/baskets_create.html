@@ -1,29 +1,35 @@
 <div class="basket-create">
-
+<!--  Total {{ cartTotal }}
+ -->
   <div class="sidebar">
-
     <div class="search-bar">
+    <div class="sidebar-max">
+
       <div class="search-input">
         <autocomplete data="autocompleteResults" on-type="autoComplete" clear="clearResult"></autocomplete>
       </div>
-      <div class="search-filter">baskets</div>
-      <div class="search-filter">products</div>
+      <ul class="search-filter">
+          <li>
+            <u>baskets</u>
+          </li>
+        <li>products</li>
+      </ul>
     </div>
-
+    </div>
     <div class="search-results">
-      <div class="search-title">
+      <div class="search-title" ng-hide="!searchResults.length">
         products
       </div>
       <ul class="search-list">
           <li class="search-item" ng-repeat="product in searchResults">
-            <img src="" alt="">
+            <img ng-src="{{product.img}}"  alt="">
             <div class="search-item-title">{{ product.name }}</div>
             <div class="search-item-price">&pound;{{ product.price | price}}</div>
             <div class="search-item-quantity">{{ product.quantity }}</div>
             <button class="btn-add-search-item" ng-click="addProduct(product)">
               Add
             </button>
-            <select ng-model="selectedbasketName" ng-options="b for b in basketNameList"></select>
+            <select ng-model="product.selectedbasketName" ng-options="b for b in basketNameList"></select>
           </li>
       </ul>
     </div>
@@ -31,29 +37,60 @@
   </div>
 
   <div class="main-panel">
+    <div class="basket" ng-show="!cart.length">
+
+      <div class="basket-title">
+        <form ng-submit="addBasket()" >
+          <input type="text" ng-model="newBasketName" placeholder="Type new basket name" id="new-basket-input">
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+
+      <p>
+        ^ <br>
+        | <br>
+        | <br>
+
+        Add a name to your basket. Ex:"Weekly groceries, healthy snacks, BBQ with friend..."
+      </p>
+
+    </div>
+
     <div class="basket" ng-repeat="basket in cart">
 
       <div class="basket-title">
         <div class="basket-title-icon"></div>
-        <div class="basket-title-name">{{ basket.name }}</div>
+
+        <form ng-submit="doneEditing(basket)" ng-show="basket.editing">
+          <input type="text" ng-model="basket.name" ng-blur="doneEditing(basket)">
+          <input type="submit"value="Submit">
+        </form>
+
+        <div class="basket-title-name" ng-dblclick="startEditing(basket)" ng-hide="basket.editing">{{ basket.name }}</div>
+        <i class="glyphicon glyphicon-floppy-disk"></i>
         <div class="basket-title-price">{{ basket.total}}</div>
       </div>
 
       <ul class="basket-list">
+          <div class="empty-basket" ng-show="!basket.products.length">
+            Your basket is empty. You can add products or a pre-existing basket with the search bar on the left
+          </div>
           <li class="basket-item" ng-repeat="product in basket.products">
-            <img src="" alt="">
-            <div class="basket-item-title">{{ product.name }}</div>
+            <img ng-src="{{product.img}}"  alt="">
+            <div class="basket-item-name">{{ product.name }}</div>
             <div class="basket-item-price">{{ product.price }}</div>
-            <div class="basket-item-quantity">{{ product.quantity }}</div>
+            <div class="basket-item-quantity quantity">
+              <div class="input-group">
+                <span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+                <input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+                <span class="input-group-addon" ng-click="addProduct(product)">+</span>
+              </div>
+            </div>
           </li>
       </ul>
 
     </div>
-    <form ng-submit="addBasket()">
-      New basket
-      <input type="text" ng-model="newBasketName">
-      <input type="submit"value="Submit">
-    </form>
+
   </div>
 
 </div>

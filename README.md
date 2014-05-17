@@ -71,3 +71,7 @@ HAYSTACK_CONNECTIONS = {
         'TIMEOUT': 120,
     },
 }
+
+Installing fortran compiler
+
+brew install gfortran

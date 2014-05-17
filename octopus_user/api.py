@@ -13,7 +13,7 @@ from user_objects_only_authorization import UserObjectsOnlyAuthorization
 from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done
 from django import forms
 from octopus_user.models import *
-import helpers
+import utils
 from django.conf import settings
 
 from django.contrib.auth.forms import PasswordResetForm
@@ -163,20 +163,20 @@ class UserResource(ModelResource):
         data = {}
         data['password'] = request.POST['new_password1']
         data['password_confirm'] = request.POST['new_password2']
-        not_valid = helpers.test_password_validation(request, data, self)
+        not_valid = utils.test_password_validation(request, data, self)
 
         if not_valid:
             return not_valid
 
         return password_reset_confirm(request,
-            post_reset_redirect=helpers.get_client_url(request)+'api/v1/user/password/done?format=json',
+            post_reset_redirect=utils.get_client_url(request)+'api/v1/user/password/done?format=json',
             uidb64=kwargs["uidb64"],
             token=kwargs["token"])
 
     def password_reset_cb(self, request, **kwargs):
 
         return password_reset(request,
-            post_reset_redirect=helpers.get_client_url(request) + 'api/v1/user/password/reset/done?format=json',
+            post_reset_redirect=utils.get_client_url(request) + 'api/v1/user/password/reset/done?format=json',
             email_template_name='password_reset_email.html')
 
     def login(self, request, **kwargs):
@@ -229,7 +229,7 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         password = data.get('password', '')
 
-        not_valid = helpers.test_password_validation(request, data, self)
+        not_valid = utils.test_password_validation(request, data, self)
 
         if not_valid:
             return not_valid
@@ -261,7 +261,7 @@ class UserResource(ModelResource):
 
         # Save settings after registration
         user = authenticate(email=email.lower(), password=password)
-        user_settings = helpers.save_uer_settings(user)
+        user_settings = utils.save_user_settings(user)
         if not user_settings:
             #remove user that was created without settings
             user.delete()
@@ -301,6 +301,7 @@ class UserResource(ModelResource):
             return self.get_later_basket(request, **kwargs)
         else:
             return self.get_first_basket(request, **kwargs)
+
 
     #get basket for someone who has no account yet.
     def get_first_basket(self, request, **kwargs):

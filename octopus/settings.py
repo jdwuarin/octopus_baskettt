@@ -48,7 +48,7 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://162.13.177.216:9201/',  # currently running locally
+        'URL': 'http://162.13.177.216:9201/',
         'INDEX_NAME': 'haystack',
         'INCLUDE_SPELLING': True,
         'TIMEOUT': 120,

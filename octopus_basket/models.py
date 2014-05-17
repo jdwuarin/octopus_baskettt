@@ -4,7 +4,7 @@ from django_hstore import hstore
 import datetime
 
 
-class AvailableTag(models.Model):  # for recipes
+class AvailableTag(models.Model):  # for baskets (like recipe, vegan, vegetarian etc...)
     name = models.CharField(max_length=150, default='', editable=False)
 
     def __unicode__(self):
@@ -18,7 +18,8 @@ class UserBasket(models.Model):
     description = models.TextField(blank=True, default='')
     product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
     people = models.IntegerField(default=1)
-    hash = models.CharField(max_length=60, blank=True, default=None)
+    hash = models.CharField(max_length=60, blank=True, default=None,
+                            db_index=True)
     # to generate it:
     # user_hash = ''.join(random.choice(
     #     string.ascii_letters + string.digits) for x in range(60))
@@ -52,7 +53,8 @@ class UserCart(models.Model):
     description = models.TextField(blank=True, default='')
     basket_list = models.CommaSeparatedIntegerField(max_length=60)
     people = models.IntegerField(default=1)
-    hash = models.CharField(max_length=60, blank=True, default=None)
+    hash = models.CharField(max_length=60, blank=True, default=None,
+                            db_index=True)
     created_at = models.DateTimeField(default=datetime.datetime.now(),
                                       auto_now_add=True)
     updated_at = models.DateTimeField(default=datetime.datetime.now(),

@@ -5,14 +5,46 @@ from octopus_basket.spider_manager import SpiderManagerController
 from octopus_basket.thread_manager import ThreadManager
 from django.contrib.auth.decorators import login_required
 from octopus_groceries.models import Product, Tag
-from octopus_user.models import UserRecommendedBasket, UserGeneratedBasket, \
-    UserSettings
+from octopus_user.models import UserSettings
 from octopus_basket.pipelines import BadLoginException
 import octopus_recommendation_engine.helpers
+import utils
+
+
+def save_cart(request):
+
+    data = json.loads(request.body)
+    json_cart = data['cart']
+    user = request.user
+
+    response = dict()
+    response["success"] = utils.save_cart(json_cart, user)
+
+    return HttpResponse(response, content_type="application/json")
+
+
+def save_basket(request):
+    pass
+
+
+def get_cart(request):
+    pass
+
+
+def get_basket(request):
+    pass
+
+
+def delete_cart(request):
+    pass
+
+
+def delete_basket(request):
+    pass
 
 
 @login_required
-def port_basket(request):
+def port_cart(request):
     SpiderManagerController.create_if_none()
     data = json.loads(request.body)
     user_settings_hash = data['user_settings_hash']

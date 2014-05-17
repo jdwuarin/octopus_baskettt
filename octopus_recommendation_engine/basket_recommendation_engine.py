@@ -1,6 +1,6 @@
 from octopus_user.models import *
 from octopus_groceries.models import *
-from octopus_user.helpers import get_list_from_comma_separated_string
+from octopus_user.utils import get_list_from_comma_separated_string
 import helpers
 import onboarding_basket_helpers
 import later_basket_helpers

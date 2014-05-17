@@ -14,7 +14,7 @@ v1_api.register(UserResource())
 urlpatterns = patterns('',
     url(r'^$', 'octopus_groceries.views.index'),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^port_basket/', 'octopus_basket_porting.views.port_basket'),
+    url(r'^port_cart/', 'octopus_basket_porting.views.port_cart'),
 )
 
 if settings.DEBUG:

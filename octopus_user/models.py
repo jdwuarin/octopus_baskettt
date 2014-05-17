@@ -53,6 +53,8 @@ class UserSettings(models.Model):
     is_private = models.BooleanField(default=False)
     default_supermarket = models.ForeignKey(Supermarket,
                                             default=Supermarket.objects.get(name='tesco'))
+    zip_code = models.CharField(max_lenght=100, default='',
+                                null=True, blank=True)
     current_country = CountryField(default=dict(countries)['GB']) # use ugettext to get name
 
     created_at = models.DateTimeField(auto_now_add=True,

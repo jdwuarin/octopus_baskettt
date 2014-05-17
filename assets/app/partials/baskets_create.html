@@ -19,6 +19,7 @@
     </div>
 
   </div>
+
   <div class="main-panel" id="dropzone">
 
     <div class="main-panel-bar">
@@ -28,7 +29,17 @@
     <div class="basket" ng-repeat="basket in cart">
       <ul class="basket-list" >
         <li class="basket-item" ng-repeat="product in basket.products">
-            <div class="basket-item-name">{{ product.name }}</div>
+         <img ng-src="{{product.img}}"  alt="">
+         <div class="basket-item-name">{{ product.name }}</div>
+         <div class="basket-item-price">{{ product.price }}</div>
+
+         <div class="basket-item-quantity quantity">
+          <div class="input-group">
+            <span class="input-group-addon" ng-click="removeProduct(product)">-</span>
+            <input type="text" class="form-control" ng-model="product.quantity" disabled="disabled">
+            <span class="input-group-addon" ng-click="addProduct(product)">+</span>
+          </div>
+        </div>
 
 
         </li>
@@ -73,7 +84,7 @@
 
     </div>
   -->
-</div>
+  </div>
 
 
 

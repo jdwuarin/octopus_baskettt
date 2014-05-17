@@ -5,7 +5,11 @@ angular.module('App.directives').directive('dragAndDrop',
 		return {
 			link: function (scope, element, attrs) {
 				var posX=0, posY=0,
-				lastPosX=0, lastPosY=0;
+				lastPosX=0, lastPosY=0,
+				animationID;
+
+				window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+					window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 				var translateTo = function(position) {
 					var transform = "translate3d("+position.x+"px,"+position.y+"px, 0)";
@@ -29,7 +33,10 @@ angular.module('App.directives').directive('dragAndDrop',
 
 						posX = ev.gesture.deltaX + lastPosX;
 						posY = ev.gesture.deltaY + lastPosY;
-						translateTo({x: posX, y: posY});
+
+						if(angular.isUndefined(animationID)){
+							animationID = requestAnimationFrame(translationAnimation);
+						}
 
 						if(isOnDropzone(ev)){
 							ev.gesture.target.style.borderColor = "purple";
@@ -56,13 +63,20 @@ angular.module('App.directives').directive('dragAndDrop',
 						} else{
 							lastPosX=0;
 							lastPosY=0;
-							translateTo({x:0, y:0});
 						}
+
+						cancelAnimationFrame(animationID);
+
 						break;
 
 					}
 
 				});
+
+				var translationAnimation = function() {
+					translateTo({x: posX, y: posY});
+					animationID = requestAnimationFrame(translationAnimation);
+				};
 
 			},
 		};

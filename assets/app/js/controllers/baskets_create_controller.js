@@ -8,16 +8,8 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		$scope.basketNameList = [];
 		$scope.cartTotal = 0;
 
-		console.log($scope.cart);
 		$scope.searchProducts = function(query){
-			$scope.searchResults = [
-			{
-				name: "Vegan diet for one week",
-				price: "GBP52.50",
-				img: "http://0.tqn.com/d/celiacdisease/1/0/I/G/-/-/Vegetables-Stockbyte.jpg"
-			},
-			];
-			// $scope.searchResults = Product.search(query);
+			$scope.searchResults = Product.search(query);
 		};
 
 		$scope.autoComplete = function(query) {
@@ -39,27 +31,11 @@ angular.module('App.controllers').controller('BasketsCreateController',
 
 		$scope.$watch('cart', function(newValue, oldValue) {
 			if(angular.isUndefined(newValue)){return;}
-			// if(angular.isObject(newValue)){ newValue = [newValue]; }
-			// $scope.basketNameList = newValue.map(function(basket) {
-			// 	console.log(basket);
-			// 	return basket.name;
-			// });
+
 			console.log("change", newValue);
 			$scope.cartTotal = Cart.computeTotal();
 		}, true); //deep watching
 
-
-		angular.element('#new-basket-input').focus();
-
-
-		$scope.startEditing = function(basket) {
-			basket.editing = true;
-		}
-
-		$scope.doneEditing = function(basket){
-			basket.editing=false;
-			// $scope.editedItem = null;
-		}
 
 		// Initialize variables for the frontend
 	// 	var preferenceList = Preference.getAll();

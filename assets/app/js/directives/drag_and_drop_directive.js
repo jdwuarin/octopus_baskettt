@@ -8,6 +8,8 @@ angular.module('App.directives').directive('dragAndDrop',
 				lastPosX=0, lastPosY=0,
 				animationID;
 
+				var $dropzone = $('#dropzone');
+
 				window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 					window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
@@ -22,7 +24,9 @@ angular.module('App.directives').directive('dragAndDrop',
 				};
 
 				var isOnDropzone = function(ev) {
-					return ev.gesture.target.className === "empty-basket";
+					console.log('dropzone',ev);
+					var target = ev.gesture.target;
+					return target.className === "empty-basket" || target.id === "dropzone";
 				};
 
 				Gesture.drag(element[0], function(ev){
@@ -33,14 +37,13 @@ angular.module('App.directives').directive('dragAndDrop',
 
 						posX = ev.gesture.deltaX + lastPosX;
 						posY = ev.gesture.deltaY + lastPosY;
-
+						console.log('drag', animationID);
 						if(angular.isUndefined(animationID)){
 							animationID = requestAnimationFrame(translationAnimation);
 						}
 
 						if(isOnDropzone(ev)){
-							ev.gesture.target.style.borderColor = "purple";
-							ev.gesture.target.style.color = "purple";
+							$dropzone.css("background-color","red");
 						}
 
 						break;
@@ -56,13 +59,18 @@ angular.module('App.directives').directive('dragAndDrop',
 						lastPosY = posY;
 
 						if(isOnDropzone(ev)){
+							console.log('dropzon');
 							scope.$apply(function(){
 								Cart.add(scope.product);
-								translateTo({x:0, y:0});
+								// translateTo({x:0, y:0});
+								element[0].style.display = "none";
+								$dropzone.css("background-color","white");
+
 							});
 						} else{
 							lastPosX=0;
 							lastPosY=0;
+							translateTo({x:0, y:0});
 						}
 
 						cancelAnimationFrame(animationID);
@@ -74,6 +82,7 @@ angular.module('App.directives').directive('dragAndDrop',
 				});
 
 				var translationAnimation = function() {
+					console.log('animation frame');
 					translateTo({x: posX, y: posY});
 					animationID = requestAnimationFrame(translationAnimation);
 				};

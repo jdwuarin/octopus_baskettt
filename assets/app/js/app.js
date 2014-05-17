@@ -77,30 +77,30 @@ angular.module('App')
 		templateUrl: 'static/app/partials/baskets_create.html',
 		requireLogin: false
 	})
-	.when('/baskets/browse',
-	{
-		controller: 'BasketsBrowseController',
-		templateUrl: 'static/app/partials/baskets_browse.html',
-		requireLogin: false
-	})
-	.when('/start',
-	{
-		controller: 'OnboardingController',
-		templateUrl: 'static/app/partials/onboarding.html',
-		requireLogin: false
-	})
+	// .when('/baskets/browse',
+	// {
+	// 	controller: 'BasketsBrowseController',
+	// 	templateUrl: 'static/app/partials/baskets_browse.html',
+	// 	requireLogin: false
+	// })
+	// .when('/start',
+	// {
+	// 	controller: 'OnboardingController',
+	// 	templateUrl: 'static/app/partials/onboarding.html',
+	// 	requireLogin: false
+	// })
 	.when('/profile',
 	{
 		controller: 'ProfileController',
 		templateUrl: 'static/app/partials/profile.html',
 		requireLogin: true
 	})
-	.when('/profile/basket',
-	{
-		controller: 'ProfileBasketController',
-		templateUrl: 'static/app/partials/profile_basket.html',
-		requireLogin: true
-	})
+	// .when('/profile/basket',
+	// {
+	// 	controller: 'ProfileBasketController',
+	// 	templateUrl: 'static/app/partials/profile_basket.html',
+	// 	requireLogin: true
+	// })
 	.otherwise({ redirectTo: '/' });
 }])
 

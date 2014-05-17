@@ -1,82 +1,66 @@
 <div class="basket-create">
-<!--  Total {{ cartTotal }}
- -->
+
   <div class="sidebar">
     <div class="search-bar">
-    <div class="sidebar-max">
-
       <div class="search-input">
         <autocomplete data="autocompleteResults" on-type="autoComplete" clear="clearResult"></autocomplete>
       </div>
-      <ul class="search-filter">
-          <li>
-            <u>baskets</u>
-          </li>
-        <li>products</li>
-      </ul>
     </div>
-    </div>
-    <div class="search-results">
-      <div class="search-title" ng-hide="!searchResults.length">
-        basket
-      </div>
-      <ul class="search-list">
-          <li class="search-item" ng-repeat="product in searchResults" drag-and-drop>
-            <img ng-src="{{product.img}}"  alt="">
-            <div class="search-item-title">{{ product.name }}</div>
-            <div class="search-item-price">&pound;{{ product.price | price}}</div>
-    <!--         <div class="search-item-quantity">{{ product.quantity }}</div>
-            <button class="btn-add-search-item" ng-click="addProduct(product)">
-              Add
-            </button> -->
-            <div class="btn-trans-orange">Learn More</div>
-            <!-- <select ng-model="product.selectedbasketName" ng-options="b for b in basketNameList"></select> -->
-          </li>
-      </ul>
+    <ul class="search-list">
+      <li class="search-item" ng-repeat="product in searchResults" drag-and-drop>
+        <img ng-src="{{product.img}}"  alt="">
+        <div class="search-item-title">{{ product.name }}</div>
+        <div class="search-item-price">&pound;{{ product.price | price}}</div>
+      </li>
+    </ul>
+
+    <div class="empty-search" ng-show="!searchResults.length">
+      Look for the products you love
     </div>
 
   </div>
+  <div class="main-panel" id="dropzone">
 
-  <div class="main-panel">
-
-    <div class="basket" ng-show="!cart.length">
-
-      <div class="basket-title">
-        <form ng-submit="addBasket()" >
-          <input type="text" ng-model="newBasketName" placeholder="Type new basket name" id="new-basket-input">
-          <input type="submit" value="Submit">
-        </form>
-      </div>
-
-      <p class="empty-basket">
-        Add a name to your basket. <br> Ex:"Weekly groceries, healthy snacks, BBQ with friend..."
-      </p>
-
+    <div class="main-panel-bar">
+      Your basket ({{ cartTotal}})
     </div>
 
+    <div class="basket" ng-repeat="basket in cart">
+      <ul class="basket-list" >
+        <li class="basket-item" ng-repeat="product in basket.products">
+            <div class="basket-item-name">{{ product.name }}</div>
+
+
+        </li>
+      </ul>
+      <div class="empty-basket" ng-show="!basket.products.length">
+        add some stuff
+      </div>
+    </div>
+
+
+
+
+<!--
     <div class="basket" ng-repeat="basket in cart">
 
       <div class="basket-title">
         <div class="basket-title-icon"></div>
 
-        <form ng-submit="doneEditing(basket)" ng-show="basket.editing">
-          <input type="text" ng-model="basket.name" ng-blur="doneEditing(basket)">
-          <input type="submit"value="Submit">
-        </form>
-
-        <div class="basket-title-name" ng-dblclick="startEditing(basket)" ng-hide="basket.editing">{{ basket.name }}</div>
-        <i class="glyphicon glyphicon-floppy-disk"></i>
+        <div class="basket-title-name">Your basket</div>
         <div class="basket-title-price">{{ basket.total}}</div>
       </div>
 
-      <ul class="basket-list">
+      <ul class="basket-list" id="dropzone">
           <div class="empty-basket" ng-show="!basket.products.length">
             Your basket is empty. <br> You can add products or a pre-existing basket with the search bar on the left
           </div>
+
           <li class="basket-item" ng-repeat="product in basket.products">
             <img ng-src="{{product.img}}"  alt="">
             <div class="basket-item-name">{{ product.name }}</div>
             <div class="basket-item-price">{{ product.price }}</div>
+
             <div class="basket-item-quantity quantity">
               <div class="input-group">
                 <span class="input-group-addon" ng-click="removeProduct(product)">-</span>
@@ -88,8 +72,10 @@
       </ul>
 
     </div>
+  -->
+</div>
 
-  </div>
+
 
 </div>
 
@@ -128,7 +114,7 @@
 		</div>
 	</div>
 </div>
- -->
+-->
 
 
 
@@ -218,4 +204,4 @@
 		</div>
 	</div>
 </div>
- -->
+-->

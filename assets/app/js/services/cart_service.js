@@ -105,7 +105,7 @@ angular.module('App.services').factory('Cart',
 				});
 				console.log(total, self.cart);
 
-				return total;
+				return 'GBP'+total;
 			}
 		};
 

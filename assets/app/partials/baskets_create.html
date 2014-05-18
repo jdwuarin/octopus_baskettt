@@ -10,7 +10,7 @@
       <li class="search-item" ng-repeat="product in searchResults" drag-and-drop>
         <img ng-src="{{product.img}}"  alt="">
         <div class="search-item-title">{{ product.name }}</div>
-        <div class="search-item-price">&pound;{{ product.price | price}}</div>
+        <div class="search-item-price">{{ product.price | price}}</div>
       </li>
     </ul>
 
@@ -23,7 +23,7 @@
   <div class="main-panel" id="dropzone">
 
     <div class="main-panel-bar">
-      Your basket ({{ cartTotal}})
+      Your basket<span ng-show="cartTotal > 0">:{{cartTotal}}</span>
     </div>
 
     <div class="basket" ng-repeat="basket in cart">
@@ -31,7 +31,9 @@
         <li class="basket-item" ng-repeat="product in basket.products">
          <img ng-src="{{product.img}}"  alt="">
          <div class="basket-item-name">{{ product.name }}</div>
-         <div class="basket-item-price">{{ product.price }}</div>
+         <div class="basket-item-price">
+          <span class='price-bubble'>{{ product.price | price}}</span>
+         </div>
 
          <div class="basket-item-quantity quantity">
           <div class="input-group">
@@ -45,7 +47,7 @@
         </li>
       </ul>
       <div class="empty-basket" ng-show="!basket.products.length">
-        add some stuff
+        Your basket is empty. <br>You can look for products on the left.
       </div>
     </div>
 

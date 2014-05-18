@@ -24,6 +24,10 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			$scope.cart = Cart.add(newProduct);
 		};
 
+		$scope.removeProduct = function(product) {
+			$scope.cart = Cart.remove(product);
+		};
+
 		$scope.addBasket = function() {
 			$scope.cart = Cart.addBasket($scope.newBasketName);
 		};

@@ -34,7 +34,6 @@ angular.module('App.directives').directive('dragAndDrop',
 					var isInside = parents.filter(function(key, value){
 						return value.id === 'dropzone';
 					});
-					// console.log('dropzone',ev, parents, isInside, onSideBar);
 
 					var target = ev.gesture.target;
 					return (target.className === "empty-basket" || target.id === "dropzone" || isInside) && lastPosX > 281;
@@ -48,7 +47,7 @@ angular.module('App.directives').directive('dragAndDrop',
 
 						posX = ev.gesture.deltaX + lastPosX;
 						posY = ev.gesture.deltaY + lastPosY;
-						console.log('drag', animationID);
+
 						if(angular.isUndefined(animationID)){
 							animationID = requestAnimationFrame(translationAnimation);
 						}
@@ -73,10 +72,9 @@ angular.module('App.directives').directive('dragAndDrop',
 
 
 						if(isOnDropzone(ev)){
-							console.log('dropzon', lastPosX);
 							scope.$apply(function(){
 								Cart.add(scope.product);
-								// translateTo({x:0, y:0});
+								console.log('dropzon', scope.product);
 								element[0].style.display = "none";
 								$dropzone.removeClass("ondropzone");
 							});

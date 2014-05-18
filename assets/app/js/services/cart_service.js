@@ -5,27 +5,8 @@ angular.module('App.services').factory('Cart',
 		var self = this;
 		self.cart = [
 		{
-			name: "My weekly groceries",
-			products: [
-			// {
-			// 	department: "Food Cupboard",
-			// 	id: 3884,
-			// 	img: "http://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_225x225.jpg",
-			// 	link: "/groceries/Product/Details/?id=252004443",
-			// 	name: "Heinz Baked Beans In Tomato Sauce 415G X 4 Pack",
-			// 	price: "GBP2.50",
-			// 	quantity: 1
-			// },
-			// {
-		// 		department: "Food Cupboard",
-		// 		id: 3884,
-		// 		img: "http://img.tesco.com/Groceries/pi/886/5000157024886/IDShot_225x225.jpg",
-		// 		link: "/groceries/Product/Details/?id=252004443",
-		// 		name: "Heinz Baked Beans In Tomato Sauce 415G X 4 Pack",
-		// 		price: "GBP2.50",
-		// 		quantity: 1
-		// 	}
-			]
+			name: "My basket",
+			products: []
 		}
 		];
 
@@ -33,11 +14,12 @@ angular.module('App.services').factory('Cart',
 			init: function(){
 				return self.cart;
 			},
+
 			add: function(newProduct) {
 				var isPresent = false;
 				var index = -1;
 				// var basketName = newProduct.selectedbasketName;
-				var basketName = "My weekly groceries";
+				var basketName = "My basket";
 
 				console.log("add that shit", newProduct);
 				if(newProduct.quantity > 50) { return self.cart; }
@@ -66,6 +48,30 @@ angular.module('App.services').factory('Cart',
 				return self.cart;
 			},
 
+			remove: function(productToRemove){
+				var basketName = "My basket";
+				var index = -1;
+
+				if(productToRemove.quantity < 1) { return self.cart; }
+
+				angular.forEach(self.cart, function(basket, i) {
+					if(basket.name === basketName) { index = i; }
+				});
+
+				self.cart[index]["products"] = self.cart[index]["products"].map(function(product){
+					if ((product.name === productToRemove.name) &&
+						(product.price === productToRemove.price)) {
+						product.quantity -= 1;
+					}
+
+					return product.quantity === 0 ? {} : product;
+				}).filter(function(p){ return !!p.price; });
+
+				return self.cart;
+
+
+			},
+
 			updateBasketTotal: function(basketName) {
 
 			},
@@ -85,7 +91,6 @@ angular.module('App.services').factory('Cart',
 				}
 
 				return self.cart;
-
 			},
 
 			computeTotal: function() {
@@ -93,7 +98,9 @@ angular.module('App.services').factory('Cart',
 
 				self.cart.forEach(function(basket) {
 					basket.products.forEach(function(product) {
-						total += parseFloat(product.price.replace("GBP","")) * parseInt(product.quantity,10);
+						if(product.price && product.quantity){
+							total += parseFloat(product.price.replace("GBP","")) * parseInt(product.quantity,10);
+						}
 					});
 				});
 				console.log(total, self.cart);

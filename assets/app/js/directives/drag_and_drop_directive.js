@@ -43,7 +43,7 @@ angular.module('App.directives').directive('dragAndDrop',
 						}
 
 						if(isOnDropzone(ev)){
-							$dropzone.css("background-color","red");
+							$dropzone.addClass("ondropzone");
 						}
 
 						break;
@@ -58,14 +58,14 @@ angular.module('App.directives').directive('dragAndDrop',
 						lastPosX = posX;
 						lastPosY = posY;
 
+
 						if(isOnDropzone(ev)){
 							console.log('dropzon');
 							scope.$apply(function(){
 								Cart.add(scope.product);
 								// translateTo({x:0, y:0});
 								element[0].style.display = "none";
-								$dropzone.css("background-color","white");
-
+								$dropzone.removeClass("ondropzone");
 							});
 						} else{
 							lastPosX=0;

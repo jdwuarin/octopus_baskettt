@@ -3,7 +3,8 @@
 
   .sidebar, .main-panel{ height:100%; position: absolute; }
   .sidebar{ left:0; width: 350px; overflow: hidden;}
-  .main-panel{left:350px; right: 0px; z-index: 1; background: @very-light-gray;  border-left: 2px solid @light-gray;}
+  .main-panel{left:350px; right: 0px; z-index: 1; background: @very-light-gray;  }
+
 
   .search-bar, .main-panel-bar{background: @light-gray; height:60px; padding: 10px; border-bottom: 1px solid @light-gray;}
 
@@ -16,8 +17,8 @@
   }
   .price-bubble{font-size: 14px; color: @dark-orange; padding: 3px 10px; border-radius: 11px; border: 1px solid @dark-orange;}
 
-  .search-list{ overflow: scroll; padding-left: 0; margin: 0; width:200%; height: 200%;}
-  .search-item{ list-style-type: none; border: 1px solid @light-gray; border-top: 0; cursor: move; z-index: 100; background: white;
+  .search-list{ overflow: scroll; padding-left: 0; margin: 0; width:200%; height: 100%;}
+  .search-item{ list-style-type: none; border: 1px solid @light-gray; border-top: 0; cursor: move; z-index: 100; background: white; position: relative;
     img, .search-item-title , .search-item-price{ display: inline-block; vertical-align: top;}
 
     img{ width: 70px; height: 70px;  padding: 5px;}
@@ -28,12 +29,12 @@
 
   .main-panel-bar{font-family: @montserrat; font-size: 15px; font-weight: 100; padding-left: 20px; line-height: 41px;}
 
-  .basket-list{padding-left: 0;}
+  .basket-list{padding-left: 0; background: @very-light-gray; border-left: 2px solid @light-gray; margin-bottom: 0;}
 
-  .basket-item{ display: inline-block; width: @product-size+4px; margin: 20px;border: 1px solid @light-gray;background: white;
+  .basket-item{ display: inline-block; vertical-align: top; width: @product-size+4px; margin: 20px;border: 1px solid @light-gray;background: white;
     img{width: @product-size;}
     .basket-item-name{ font-family: @nunito;font-size: 14px;font-weight: 100;
-      padding: 10px; border-top: 1px solid @light-gray;}
+      padding: 10px; border-top: 1px solid @light-gray; min-height: 80px;}
     .basket-item-price{ padding-bottom: 10px;  text-align: center;}
   }
 
@@ -48,6 +49,10 @@
     span{ cursor: pointer; background: @orange; border-color: @dark-orange; border-radius: 0; color:white}
   }
 
+  .sidebar-active{
+    & , & .search-list{overflow: visible!important;}
+    .search-list{width: 100%;}
+  }
 
 }
 // .basket-create{

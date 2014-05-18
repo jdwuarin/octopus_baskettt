@@ -9,13 +9,14 @@ angular.module('App.directives').directive('dragAndDrop',
 				animationID;
 
 				var $dropzone = $('#dropzone');
+				var $sidebar = $('#sidebar');
+
 
 				window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 					window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 				var translateTo = function(position) {
 					var transform = "translate3d("+position.x+"px,"+position.y+"px, 0)";
-					console.log(transform);
 					element[0].style.transform = transform;
 					element[0].style.oTransform = transform;
 					element[0].style.msTransform = transform;
@@ -24,9 +25,19 @@ angular.module('App.directives').directive('dragAndDrop',
 				};
 
 				var isOnDropzone = function(ev) {
-					console.log('dropzone',ev);
+					var parents = angular.element(ev.gesture.target).parents();
+
+					var onSideBar = parents.filter(function(key, value){
+						return value.className ==='sidebar';
+					});
+
+					var isInside = parents.filter(function(key, value){
+						return value.id === 'dropzone';
+					});
+					// console.log('dropzone',ev, parents, isInside, onSideBar);
+
 					var target = ev.gesture.target;
-					return target.className === "empty-basket" || target.id === "dropzone";
+					return (target.className === "empty-basket" || target.id === "dropzone" || isInside) && lastPosX > 281;
 				};
 
 				Gesture.drag(element[0], function(ev){
@@ -41,6 +52,8 @@ angular.module('App.directives').directive('dragAndDrop',
 						if(angular.isUndefined(animationID)){
 							animationID = requestAnimationFrame(translationAnimation);
 						}
+
+						$sidebar.addClass('sidebar-active');
 
 						if(isOnDropzone(ev)){
 							$dropzone.addClass("ondropzone");
@@ -60,7 +73,7 @@ angular.module('App.directives').directive('dragAndDrop',
 
 
 						if(isOnDropzone(ev)){
-							console.log('dropzon');
+							console.log('dropzon', lastPosX);
 							scope.$apply(function(){
 								Cart.add(scope.product);
 								// translateTo({x:0, y:0});
@@ -70,11 +83,15 @@ angular.module('App.directives').directive('dragAndDrop',
 						} else{
 							lastPosX=0;
 							lastPosY=0;
+							posX=0;
+							posY=0;
 							translateTo({x:0, y:0});
 						}
 
-						cancelAnimationFrame(animationID);
+						$sidebar.removeClass('sidebar-active');
 
+						cancelAnimationFrame(animationID);
+						animationID = undefined;
 						break;
 
 					}
@@ -82,7 +99,7 @@ angular.module('App.directives').directive('dragAndDrop',
 				});
 
 				var translationAnimation = function() {
-					console.log('animation frame');
+					console.log('animation frame', posX, posY);
 					translateTo({x: posX, y: posY});
 					animationID = requestAnimationFrame(translationAnimation);
 				};

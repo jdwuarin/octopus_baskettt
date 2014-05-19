@@ -11,15 +11,16 @@ class AvailableTag(models.Model):  # for baskets (like recipe, vegan, vegetarian
         return str(self.name)
 
 
-class UserBasket(models.Model):
+class Basket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
     name = models.CharField(max_length=250, blank=True, default='')
     parent = models.ForeignKey('self', blank=True, default=None)
     description = models.TextField(blank=True, default='')
-    product_dict = hstore.DictionaryField()  # product_id's mapped to quantities
-    people = models.IntegerField(default=1)
+    product_dict = hstore.DictionaryField()  # product_id's mapped to query term and quantities
     hash = models.CharField(max_length=60, blank=True, default=None,
-                            db_index=True)
+                            primary_key=True, db_index=True)
+    is_public = models.BooleanField(null=False, blank=False, default=False)
+    is_browsable = models.BooleanField(null=False, blank=False, default=False)
     # to generate it:
     # user_hash = ''.join(random.choice(
     #     string.ascii_letters + string.digits) for x in range(60))
@@ -38,21 +39,20 @@ class UserBasket(models.Model):
             self.created_at)
 
 
-class UserBasketTag(models.Model):
+class BasketTag(models.Model):
     tag = models.ForeignKey(AvailableTag, blank=False)
-    user_basket = models.ForeignKey(UserBasket)
+    basket = models.ForeignKey(Basket)
 
     def __unicode__(self):
         return str(self.tag) + ", " + str(self.user_basket)
 
 
-class UserCart(models.Model):
+class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
     name = models.CharField(max_length=250, blank=True, default='')
     parent = models.ForeignKey('self', blank=True, default=None)
     description = models.TextField(blank=True, default='')
     basket_list = models.CommaSeparatedIntegerField(max_length=60)
-    people = models.IntegerField(default=1)
     hash = models.CharField(max_length=60, blank=True, default=None,
                             db_index=True)
     created_at = models.DateTimeField(default=datetime.datetime.now(),
@@ -69,7 +69,7 @@ class UserCart(models.Model):
 
 class UserCartTag(models.Model):
     tag = models.ForeignKey(AvailableTag, blank=False)
-    user_cart = models.ForeignKey(UserCart)
+    user_cart = models.ForeignKey(Cart)
 
     def __unicode__(self):
         return str(self.tag) + ", " + str(self.user_cart)

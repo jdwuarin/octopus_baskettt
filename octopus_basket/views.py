@@ -9,45 +9,38 @@ from octopus_user.models import UserSettings
 from octopus_basket.pipelines import BadLoginException
 import octopus_recommendation_engine.helpers
 import utils
+from rest_framework import generics, permissions
+from octopus_basket.models import Basket, Cart
+from octopus_basket.serializers import BasketSerializer
+from octopus_basket.permissions import IsOwner, IsOwnerOrPublic
+
+class BasketList(generics.ListCreateAPIView):
+    serializer_class = BasketSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwner, )
+
+    def pre_save(self, obj):
+        obj.user = self.request.user
+
+    def get_queryset(self):
+        queryset = Basket.objects.filter(user=self.request.user)
+        return queryset
 
 
-def save_cart(request):
+class BasketDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Basket.objects.all()
+    serializer_class = BasketSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrPublic, )
 
-    data = json.loads(request.body)
-    json_cart = data['cart']
-    user = request.user
-
-    response = dict()
-    response["success"] = utils.save_cart(json_cart, user)
-
-    return HttpResponse(response, content_type="application/json")
-
-
-def save_basket(request):
-    pass
-
-
-def get_cart(request):
-    pass
-
-
-def get_basket(request):
-    pass
-
-
-def delete_cart(request):
-    pass
-
-
-def delete_basket(request):
-    pass
+    def pre_save(self, obj):
+        obj.user = self.request.user
 
 
 @login_required
 def port_cart(request):
     SpiderManagerController.create_if_none()
     data = json.loads(request.body)
-    user_settings_hash = data['user_settings_hash']
 
     # first determine what user made this request
     user = request.user

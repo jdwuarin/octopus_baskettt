@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 
+
 def index(request):
 
     if request.user.is_authenticated():

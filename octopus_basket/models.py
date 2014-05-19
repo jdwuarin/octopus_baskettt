@@ -21,6 +21,7 @@ class Basket(models.Model):
                             primary_key=True, db_index=True)
     is_public = models.BooleanField(null=False, blank=False, default=False)
     is_browsable = models.BooleanField(null=False, blank=False, default=False)
+    purchase_count = models.IntegerField(null=False, blank=False, default=0)
     # to generate it:
     # user_hash = ''.join(random.choice(
     #     string.ascii_letters + string.digits) for x in range(60))

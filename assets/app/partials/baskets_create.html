@@ -23,7 +23,7 @@
   <div class="main-panel" id="dropzone">
 
     <div class="main-panel-bar">
-      My basket<span>: {{cartTotal | price}}</span>
+      My basket<span> {{cartTotal | price}}</span>
     </div>
 
     <div class="basket" ng-repeat="basket in cart">
@@ -47,7 +47,13 @@
         </li>
       </ul>
       <div class="empty-basket" ng-show="!basket.products.length">
-        Your basket is empty. <br>You can look for products on the left and drag-and-drop them here! :D
+        <img ng-src="static/img/smallbasket.png"  alt="">
+
+        <h4>Your basket is empty.</h4>
+        <p>
+            You can look for products on the left and<br> drag-and-drop them here!
+        </p>
+
       </div>
     </div>
 

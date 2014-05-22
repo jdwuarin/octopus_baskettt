@@ -106,6 +106,20 @@ angular.module('App.services').factory('Cart',
 				console.log(total, self.cart);
 
 				return 'GBP'+total;
+			},
+
+			getProducts: function(){
+
+				var allProducts=[];
+
+				self.cart.forEach(function(basket){
+					basket.products.forEach(function(product){
+						allProducts.push(product);
+					});
+				});
+
+
+				return allProducts;
 			}
 		};
 

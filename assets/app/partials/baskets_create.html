@@ -12,9 +12,16 @@
         <div class="search-item-title">{{ product.name }}</div>
         <div class="search-item-price"><span class="price-bubble">{{ product.price | price}}</span></div>
       </li>
+      <li class="search-more" ng-show="searchResults.length">
+        <div class="pagination">
+            <div ng-click='getPreviousSearch()' class='pagination-previous'>Previous</div>
+            <div class='pagination-total'>{{searchPage}}/{{searchPageTotal()}}</div>
+            <div ng-click='getNextSearch()' class='pagination-next'>Next</div>
+        </div>
+      </li>
     </ul>
 
-    <div class="empty-search" ng-show="!searchResults.length">
+    <div class="empty-search" ng-show="searchResults.length">
       Look for the products you love
     </div>
 
@@ -24,11 +31,12 @@
 
     <div class="main-panel-bar">
       My basket<span> {{cartTotal | price}}</span>
+      <button class='btn-trans-orange' ng-click='transferBasket()'>Checkout</button>
     </div>
 
     <div class="basket" ng-repeat="basket in cart">
       <ul class="basket-list" >
-        <li class="basket-item" ng-repeat="product in basket.products">
+        <li class="basket-item fade-item" ng-repeat="product in basket.products">
          <img ng-src="{{product.img}}"  alt="">
          <div class="basket-item-name">{{ product.name }}</div>
          <div class="basket-item-price">

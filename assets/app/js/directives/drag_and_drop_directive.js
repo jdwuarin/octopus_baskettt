@@ -56,6 +56,7 @@ angular.module('App.directives').directive('dragAndDrop',
 
 						if(isOnDropzone(ev)){
 							$dropzone.addClass("ondropzone");
+							console.log('addClass');
 						}
 
 						break;
@@ -79,15 +80,15 @@ angular.module('App.directives').directive('dragAndDrop',
 								$dropzone.removeClass("ondropzone");
 							});
 						} else{
-							lastPosX=0;
-							lastPosY=0;
-							posX=0;
-							posY=0;
+
 							translateTo({x:0, y:0});
 						}
 
 						$sidebar.removeClass('sidebar-active');
-
+						lastPosX=0;
+						lastPosY=0;
+						posX=0;
+						posY=0;
 						cancelAnimationFrame(animationID);
 						animationID = undefined;
 						break;

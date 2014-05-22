@@ -87,11 +87,7 @@ angular.module('App.controllers').controller('ModalCtrl',
 
 		$scope.sendToTesco = function(){
 			var tescoCredential = $scope.tescoCredential,
-			list = products.map(function (v) {
-				return v.products;
-			}).reduce(function (a, b){
-				return a.concat(b);
-			});
+			list = products;
 
 			var oldRecommendation = Basket.getOldRecommendation(),
 			preference = Preference.getAll(),

@@ -7,9 +7,45 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		$scope.newBasketName = "";
 		$scope.basketNameList = [];
 		$scope.cartTotal = 0;
+		$scope.searchPage = 0;
+		$scope.searchAll = [];
+
+
+		var itemsPerPage = 8;
+
+		$scope.searchPageTotal = function(){
+			return Math.floor($scope.searchAll.length / itemsPerPage) - 1;
+		};
+
+		var getSearchPage = function(page){
+			if($scope.searchAll.length > 0 && page >= 0){
+				var arr = $scope.searchAll.slice(itemsPerPage * page, (page + 1) * itemsPerPage - 1);
+				return arr;
+			}
+		};
 
 		$scope.searchProducts = function(query){
-			$scope.searchResults = Product.search(query);
+			Product.search(query)
+			.then(function(res){
+				$scope.searchAll = res;
+				$scope.searchResults = getSearchPage(0);
+			});
+		};
+
+		$scope.getNextSearch = function() {
+			if($scope.searchPage >= $scope.searchPageTotal()) return;
+			$scope.searchPage += 1;
+
+			var newSearch = getSearchPage($scope.searchPage);
+			if(newSearch.length > 0) $scope.searchResults = newSearch;
+		};
+
+		$scope.getPreviousSearch = function() {
+			if($scope.searchPage <= 0) return;
+
+			$scope.searchPage -= 1;
+			var newSearch = getSearchPage($scope.searchPage);
+			if(newSearch.length > 0) $scope.searchResults = newSearch;
 		};
 
 		$scope.autoComplete = function(query) {
@@ -32,7 +68,6 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			$scope.cart = Cart.addBasket($scope.newBasketName);
 		};
 
-
 		$scope.$watch('cart', function(newValue, oldValue) {
 			if(angular.isUndefined(newValue)){return;}
 
@@ -40,6 +75,26 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			$scope.cartTotal = Cart.computeTotal();
 		}, true); //deep watching
 
+		$scope.transferBasket = function(){
+
+			var allProducts = Cart.getProducts();
+			console.log('allProducts', allProducts);
+			// When you open a form it will close the search
+			if(allProducts && allProducts.length === 0){
+				Alert.add("You need to add products to your basket to checkout.", "info");
+			} else {
+				var modalInstance = $modal.open({
+				templateUrl: 'static/app/partials/_modal.html',
+				controller: 'ModalCtrl',
+				resolve: {
+					products: function () {
+						return Cart.getProducts();
+					}
+				}
+				});
+			}
+
+		};
 
 		// Initialize variables for the frontend
 	// 	var preferenceList = Preference.getAll();

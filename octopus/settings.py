@@ -21,7 +21,8 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('JD', 'jd@baskettt.co'),
+    ('Arnaud', 'arnaud@baskettt.co'),
 )
 
 MANAGERS = ADMINS
@@ -48,7 +49,7 @@ DATABASES = {
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://162.13.177.216:9201/',  # currently running locally
+        'URL': 'http://162.13.177.216:9201/',
         'INDEX_NAME': 'haystack',
         'INCLUDE_SPELLING': True,
         'TIMEOUT': 120,
@@ -158,10 +159,11 @@ INSTALLED_APPS = (
     'registration',
     'haystack',
     'celery',
+    'rest_framework',
     # My apps
     'octopus_groceries',
     'octopus_user',
-    'octopus_basket_porting',
+    'octopus_basket',
     'octopus_middleware',
     'octopus_recommendation_engine',
     'octopus_search_engine',

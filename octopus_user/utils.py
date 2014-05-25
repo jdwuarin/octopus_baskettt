@@ -27,20 +27,11 @@ def get_list_from_comma_separated_string(comma_separated_string):
     return return_list
 
 
-def save_user_settings(user, user_settings_hash):
+def save_user_settings(user):
 
-    user_settings = None
-    try:
-        user_settings = UserSettings.objects.get(
-            pre_user_creation_hash=user_settings_hash)
-        user_settings.user = user
-        user_settings.pre_user_creation_hash = None
-        user_settings.save()
-
-    # if there is no user_settings for this hash, this is a problem
-    # deal with it in except block
-    except UserSettings.DoesNotExist:
-        pass
+    user_settings = UserSettings()
+    user_settings.user = user
+    user_settings.save()
 
     return user_settings #will be none if user_settings is not found
 

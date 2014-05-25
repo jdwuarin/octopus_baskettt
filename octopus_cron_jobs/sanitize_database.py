@@ -18,6 +18,7 @@ def clean_user_settings():
 # TODO still need to deal with what happens if producer site is down during crawl
 # and all products get set to out of stock...
 
+
 def set_in_stock_flag():
     pass
     #products = Product.objects.all()

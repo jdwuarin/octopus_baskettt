@@ -13,7 +13,7 @@ from user_objects_only_authorization import UserObjectsOnlyAuthorization
 from django.contrib.auth.views import password_reset, password_reset_confirm, password_reset_done
 from django import forms
 from octopus_user.models import *
-import helpers
+import utils
 from django.conf import settings
 
 from django.contrib.auth.forms import PasswordResetForm
@@ -97,6 +97,7 @@ class UserResource(ModelResource):
             response["email"] = user.email
             response["recommendation_email_subscription"] = user_settings.recommendation_email_subscription
             response["news_email_subscription"] = user_settings.news_email_subscription
+            response["is_private"] = user_settings.is_private
 
         data = json.dumps(response)
         return HttpResponse(data, content_type="application/json")
@@ -110,6 +111,7 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         recommendation_email_subscription = data.get('recommendation_email_subscription', '')
         news_email_subscription = data.get('news_email_subscription', '')
+        is_private = data.get('is_private')
 
         response = {}
 
@@ -125,6 +127,7 @@ class UserResource(ModelResource):
             user_settings = UserSettings.objects.get(user=user)
             user_settings.recommendation_email_subscription = recommendation_email_subscription
             user_settings.news_email_subscription = news_email_subscription
+            user_settings.is_private = is_private
 
             try:
                 user.clean()
@@ -160,20 +163,20 @@ class UserResource(ModelResource):
         data = {}
         data['password'] = request.POST['new_password1']
         data['password_confirm'] = request.POST['new_password2']
-        not_valid = helpers.test_password_validation(request, data, self)
+        not_valid = utils.test_password_validation(request, data, self)
 
         if not_valid:
             return not_valid
 
         return password_reset_confirm(request,
-            post_reset_redirect=helpers.get_client_url(request)+'api/v1/user/password/done?format=json',
+            post_reset_redirect=utils.get_client_url(request)+'api/v1/user/password/done?format=json',
             uidb64=kwargs["uidb64"],
             token=kwargs["token"])
 
     def password_reset_cb(self, request, **kwargs):
 
         return password_reset(request,
-            post_reset_redirect=helpers.get_client_url(request) + 'api/v1/user/password/reset/done?format=json',
+            post_reset_redirect=utils.get_client_url(request) + 'api/v1/user/password/reset/done?format=json',
             email_template_name='password_reset_email.html')
 
     def login(self, request, **kwargs):
@@ -189,23 +192,12 @@ class UserResource(ModelResource):
         user = authenticate(email=email.lower(), password=password)
 
         if user:
-
-            #check if user already ported a basket in the past
-            user_generated_basket = UserGeneratedBasket.objects.filter(
-                user=user)[:1]
-
-            if user_generated_basket:
-                has_history = True
-            else:
-                has_history = False
-
             if user.is_active:
                 login(request, user)
 
                 return self.create_response(request, {
                     #redirect to a success page
                     'success': True,
-                    'has_history': has_history
                 })
             else:
                 return self.create_response(request, {
@@ -237,7 +229,7 @@ class UserResource(ModelResource):
         email = data.get('email', '')
         password = data.get('password', '')
 
-        not_valid = helpers.test_password_validation(request, data, self)
+        not_valid = utils.test_password_validation(request, data, self)
 
         if not_valid:
             return not_valid
@@ -258,17 +250,6 @@ class UserResource(ModelResource):
                         'reason': 'already_exists',
                         'success': False
                     })
-                elif error_type == "not_accepted":
-                    return self.create_response(request, {
-                        #user has not been accepted for the beta yet
-                        'reason': 'not_accepted',
-                        'success': False
-                    })
-                elif error_type == "not_invited":
-                    return self.create_response(request, {
-                        'reason': 'not_invited',
-                        'success': False
-                    })
 
             except:
                 # some error occured, return success False
@@ -280,8 +261,7 @@ class UserResource(ModelResource):
 
         # Save settings after registration
         user = authenticate(email=email.lower(), password=password)
-        user_settings = helpers.save_user_settings(
-            user, data['user_settings_hash'])
+        user_settings = utils.save_user_settings(user)
         if not user_settings:
             #remove user that was created without settings
             user.delete()
@@ -322,7 +302,8 @@ class UserResource(ModelResource):
         else:
             return self.get_first_basket(request, **kwargs)
 
-    #get basket for someone who has no ccount yet.
+
+    #get basket for someone who has no account yet.
     def get_first_basket(self, request, **kwargs):
         data = self.deserialize(request, request.body,
                                 format=request.META.get('CONTENT_TYPE',
@@ -369,28 +350,3 @@ class UserResource(ModelResource):
             no_success = json.dumps({'success': False})
             return HttpResponse(no_success,
                                 content_type="application/json")
-
-    def beta_subscription(self, request, **kwargs):
-        self.method_check(request, allowed=['post'])
-
-        data = self.deserialize(request, request.body,
-                                format=request.META.get('CONTENT_TYPE',
-                                                        'application/json'))
-
-        email = data['email']
-
-        response_data = {}
-
-        try:
-            user_invited = UserInvited(email=email)
-            user_invited.clean()
-            user_invited.save()
-            response_data['success'] = True
-        except ValidationError as e:
-            error_type = e.code
-            if error_type == "already_subscribed":
-                response_data['success'] = False
-                response_data['reason'] = "user already exists"
-
-        response_data = json.dumps(response_data)
-        return HttpResponse(response_data, content_type="application/json")

@@ -2,8 +2,8 @@ from twisted.python.failure import Failure
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import FormRequest, Request
 from scrapy.selector import Selector
-from octopus_basket_porting.items import TescoBasketPortingItem
-from octopus_basket_porting.pipelines import BadLoginException
+from octopus_basket.items import TescoBasketPortingItem
+from octopus_basket.pipelines import BadLoginException
 
 
 class TescoBasketSpider(CrawlSpider):

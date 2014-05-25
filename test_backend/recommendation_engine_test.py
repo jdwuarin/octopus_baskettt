@@ -2,9 +2,9 @@ from octopus_recommendation_engine.basket_recommendation_engine import \
     BasketRecommendationEngine
 from octopus_user.models import UserSettings
 from octopus_groceries.models import *
-from octopus_basket_porting.basket_to_port import BasketToPort
-from octopus_basket_porting.spider_manager import SpiderManagerController
-from octopus_basket_porting.thread_manager import ThreadManager
+from octopus_basket.basket_to_port import BasketToPort
+from octopus_basket.spider_manager import SpiderManagerController
+from octopus_basket.thread_manager import ThreadManager
 from django.http import HttpResponse
 import json
 
@@ -66,7 +66,6 @@ def create_basket_test():
                     tags=["Thai", "French"],
                     default_supermarket=Supermarket.objects.get(name="tesco"),
                     pre_user_creation_hash="dummy",
-                    diet=Diet.objects.get(name="Vegan"),
                     banned_meats=[1, 3],
                     banned_abstract_products=[])
 

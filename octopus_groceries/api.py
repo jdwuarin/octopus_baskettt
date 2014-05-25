@@ -11,7 +11,6 @@ from octopus_groceries.models import AbstractProduct
 from octopus_search_engine.octopus_search_engine import perform_search
 
 
-
 class ProductResource(ModelResource):
     class Meta:
         queryset = Product.objects.all()
@@ -58,6 +57,7 @@ class ProductResource(ModelResource):
     def autocomplete(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
         query = request.GET.get('term', '')
+        #add department, aisle and category here also in general search
         sqs = SearchQuerySet().autocomplete(
             content_auto=query).models(AbstractProduct)
         # sqs = SearchQuerySet().autocomplete(
@@ -75,11 +75,3 @@ class ProductResource(ModelResource):
 
         mimetype = 'application/json'
         return HttpResponse(data, mimetype)
-
-
-
-class RecipeResource(ModelResource):
-    class Meta:
-        queryset = Recipe.objects.all()
-        allowed_methods = ['get']
-        resource_name = 'recipe'

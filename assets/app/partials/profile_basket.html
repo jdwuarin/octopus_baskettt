@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="profile">
+    <div class="container">
+      <div class="profile-title">
+        <h3>My baskets</h3>
+        <!-- <div class="btn-basket-new">Create new</div> -->
+      </div>
+      <div class="basket-list">
+        <ul>
+          <li>
+            <div class="basket-title">No basket? Time to create your first one!</div>
+            <a href="#/basket">
+              <div class="btn-basket-checkout">Create</div>
+            </a>
+          </li>
+          <li ng-repeat="basket in baskets">
+            <div class="basket-avatar">
+              <img ng-src="{{ basket.avatar[0]}}" alt="">
+              <img ng-src="{{ basket.avatar[1]}}" alt="">
+            </div>
+            <div class="basket-title">{{ basket.title }}</div>
+            <div class="basket-stats">
+              <i class="glyphicon glyphicon-user"></i> {{ basket.stats.people }}
+              <i class="glyphicon glyphicon-calendar"></i> {{ basket.stats.days }}
+            </div>
+            <div class="basket-links"> {{ basket.shortlink }} </div>
+            <div class="btn-basket-checkout">Checkout</div>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,13 +14,15 @@
   <link rel="icon" type="image/png" href="/static/img/favicons/favicon-16x16.png" sizes="16x16">
   <link rel="icon" type="image/png" href="/static/img/favicons/favicon-32x32.png" sizes="32x32">
   <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="description" content="Baskettt is the simplest way get your groceries done. It recommends you which groceries to buy and learns from your habits.">
+  <meta name="keywords" content="grocery, groceries, shopping, shop, food, quick, fast, simple, easy, tesco, london, uk, delivery">
 
   {% if debug %}
   <link rel="stylesheet/less" href="{% static "less/style.less" %}" media="screen">
   <script type="text/javascript" src="{% static "lib/less.js" %}"></script>
 
   {% else %}
-  <link rel="stylesheet" href="static/styles/4ee5e157.style.css">
+  <link rel="stylesheet" href="static/styles/868824c1.style.css">
 
   <script type="text/javascript">
 
@@ -33,6 +35,14 @@
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 
+  </script>
+  <script>
+  !function(g,s,q,r,d){r=g[r]=g[r]||function(){(r.q=r.q||[]).push(
+  arguments)};d=s.createElement(q);q=s.getElementsByTagName(q)[0];
+  d.src='//d1l6p2sc9645hc.cloudfront.net/tracker.js';q.parentNode.
+  insertBefore(d,q)}(window,document,'script','_gs');
+
+  _gs('GSN-226456-D');
   </script>
   {% endif %}
 
@@ -86,39 +96,9 @@
         </div>
       </footer>
 
-      {% if debug %}
-        <script src="{% static "jquery/jquery.min.js" %}"></script>
-        <script src="{% static "angular/angular.min.js" %}"></script>
-        <script src="{% static "angular-route/angular-route.min.js" %}"></script>
-        <script src="{% static "angular-sanitize/angular-sanitize.min.js" %}"></script>
-        <script src="{% static "angular-cookies/angular-cookies.min.js" %}"></script>
-        <script src="{% static "angular-local-storage/angular-local-storage.min.js" %}"></script>
-        <script src="{% static "angular-bootstrap/ui-bootstrap-tpls.js" %}"></script>
-        <script src="{% static "angular-animate/angular-animate.min.js" %}"></script>
-        <script src="{% static "angulartics/dist/angulartics.min.js" %}"></script>
-        <script src="{% static "angulartics/dist/angulartics-ga.min.js" %}"></script>
-        <script src="{% static "jquery-ui/ui/jquery.ui.core.js" %}"></script>
-        <script src="{% static "jquery-ui/ui/jquery.ui.widget.js" %}"></script>
-        <script src="{% static "jquery-ui/ui/jquery.ui.mouse.js" %}"></script>
-        <script src="{% static "jquery-ui/ui/jquery.ui.slider.js" %}"></script>
-        <script src="{% static "angular-ui-slider/src/slider.js" %}"></script>
+      <script src="static/scripts/447dc73c.vendor.js"></script>
 
-
-        <script src="{% static "lib/autocomplete.js" %}"></script>
-        <script src="{% static "fastclick/lib/fastclick.js" %}"></script>
-        <script src="{% static "json3/lib/json3.min.js" %}"></script>
-        <script src="{% static "app/js/app.js" %}"></script>
-        <script src="{% static "app/js/controllers.js" %}"></script>
-        <script src="{% static "app/js/services.js" %}"></script>
-        <script src="{% static "app/js/directives.js" %}"></script>
-        <script src="{% static "app/js/filters.js" %}"></script>
-
-      {% else %}
-      <script src="static/scripts/85219a07.vendor.js"></script>
-
-      <script src="static/scripts/78756a2f.scripts.js"></script>
-
-      {% endif %}
+      <script src="static/scripts/c59429d0.scripts.js"></script>
 
     </body>
     </html>

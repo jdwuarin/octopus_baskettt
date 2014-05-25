@@ -11,17 +11,33 @@ angular.module('App', [
 	'App.controllers',
 	'angulartics',
 	'angulartics.google.analytics',
-	'autocomplete',
 	'ui.slider'
-])
+]);
 
-.config(['$httpProvider', function($httpProvider) {
+angular.module('App.controllers', [
+	'ngSanitize',
+	'ui.bootstrap'
+]);
+
+angular.module('App.services', [
+	'LocalStorageModule'
+]);
+
+angular.module('App.directives', []);
+angular.module('App.filters', []);
+
+
+angular.module('App')
+
+.config(['$httpProvider', '$parseProvider', function($httpProvider, $parseProvider) {
 
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+    $parseProvider.unwrapPromises(true);
 }])
 
 .config(['$routeProvider','$analyticsProvider', function($routeProvider,$analyticsProvider) {
@@ -43,42 +59,48 @@ angular.module('App', [
 		controller: 'ResetConfirmController',
 		templateUrl: 'static/app/partials/reset_confirm.html'
 	})
-	// .when('/signup',
-	// {
-	// 	controller: 'RegistrationController',
-	// 	templateUrl: 'static/app/partials/signup.html',
-	// 	requireLogin: false
-	// })
+	.when('/signup',
+	{
+		controller: 'RegistrationController',
+		templateUrl: 'static/app/partials/signup.html',
+		requireLogin: false
+	})
 	.when('/login',
 	{
 		controller: 'LoginController',
 		templateUrl: 'static/app/partials/login.html',
 		requireLogin: false
 	})
-	.when('/basket',
+	.when('/baskets/create',
 	{
-		controller: 'ProductListController',
-		templateUrl: 'static/app/partials/product_list.html',
+		controller: 'BasketsCreateController',
+		templateUrl: 'static/app/partials/baskets_create.html',
 		requireLogin: false
 	})
-	.when('/start',
-	{
-		controller: 'OnboardingController',
-		templateUrl: 'static/app/partials/onboarding.html',
-		requireLogin: false
-	})
-	.when('/transfer',
-	{
-		controller: 'TransferController',
-		templateUrl: 'static/app/partials/transfer.html',
-		requireLogin: true
-	})
+	// .when('/baskets/browse',
+	// {
+	// 	controller: 'BasketsBrowseController',
+	// 	templateUrl: 'static/app/partials/baskets_browse.html',
+	// 	requireLogin: false
+	// })
+	// .when('/start',
+	// {
+	// 	controller: 'OnboardingController',
+	// 	templateUrl: 'static/app/partials/onboarding.html',
+	// 	requireLogin: false
+	// })
 	.when('/profile',
 	{
 		controller: 'ProfileController',
 		templateUrl: 'static/app/partials/profile.html',
 		requireLogin: true
 	})
+	// .when('/profile/basket',
+	// {
+	// 	controller: 'ProfileBasketController',
+	// 	templateUrl: 'static/app/partials/profile_basket.html',
+	// 	requireLogin: true
+	// })
 	.otherwise({ redirectTo: '/' });
 }])
 
@@ -95,7 +117,7 @@ angular.module('App', [
 
 		// No homepage and onboarding when loggedin
 		if(User.isLoggedIn() && (location === "/start" || location === "/")){
-			User.redirect("basket");
+			User.redirect("baskets/create");
 		}
 
 		// help with the margin on the product list page

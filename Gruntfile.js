@@ -121,7 +121,9 @@ module.exports = function(grunt) {
             '../bower_components/**/*',
             'img/*',
             'img/favicons/*',
-            'fonts/*'
+            'fonts/*',
+            'lib/*.js',
+            'app/js/*.js'
           ]
         }, {
           expand: true,
@@ -157,8 +159,11 @@ module.exports = function(grunt) {
       }
     },
     watch: {
+      options: {
+        livereload: 8000,
+      },
       scripts: {
-        files: ['**/*.js','**/*.less'],
+        files: ['assets/app/**/*.js','assets/less/**/*.less','assets/app/partials/*.html'],
         tasks: ['reload'],
         options: {
           spawn: false,
@@ -166,9 +171,9 @@ module.exports = function(grunt) {
       },
     },
     reload: {
-        port: 6001,
+        port: 8000,
         proxy: {
-            host: 'localhost'
+            host: '127.0.0.1'
         }
     }
 

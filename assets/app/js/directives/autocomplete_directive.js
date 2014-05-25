@@ -1,8 +1,4 @@
-/* --- Made by justgoscha and licensed under MIT license --- */
-
-var app = angular.module('autocomplete', []);
-
-app.directive('autocomplete', ['$rootScope',function($rootScope){
+angular.module('App.directives').directive('autocomplete', ['$rootScope',function($rootScope){
 	var index = -1;
 
 	return {
@@ -184,9 +180,11 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		},
 		template: '<div class="autocomplete">'+
 		'<div class="input-container">'+
-		'<input type="text" ng-model="searchParam" placeholder="Search for products"/>' +
+		'<input type="text" ng-model="searchParam" placeholder="Search"/>' +
 		'</div>' +
-		'<button class="btn-black" type="submit" ng-click="search(searchParam)">Search</button>'+
+		'<button type="submit" ng-click="search(searchParam)">'+
+        '<i class="glyphicon glyphicon-search"></i>'+
+		'</button>'+
 		'<ul ng-show="searchParam && completing">' +
 		'<li suggestion ng-repeat="suggestion in suggestions | filter:searchFilter | orderBy:\'toString()\'" '+
 		'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+
@@ -195,22 +193,22 @@ app.directive('autocomplete', ['$rootScope',function($rootScope){
 		'</li>'+
 		'</ul>'+
 		'</div>'
-		}
+		};
 	}]);
 
-app.directive('suggestion', function(){
+angular.module('App.directives').directive('suggestion', function(){
 	return {
 		restrict: 'A',
-	require: '^autocomplete', // ^look on controller on parents element
-	link: function(scope, element, attrs, autoCtrl){
-		element.bind('mouseenter', function() {
-			autoCtrl.preSelect(attrs['val']);
-			autoCtrl.setIndex(attrs['index']);
-		});
+		require: '^autocomplete', // ^look on controller on parents element
+		link: function(scope, element, attrs, autoCtrl){
+			element.bind('mouseenter', function() {
+				autoCtrl.preSelect(attrs['val']);
+				autoCtrl.setIndex(attrs['index']);
+			});
 
-		element.bind('mouseleave', function() {
-			autoCtrl.preSelectOff();
-		});
-	}
-}
+			element.bind('mouseleave', function() {
+				autoCtrl.preSelectOff();
+			});
+		}
+	};
 });

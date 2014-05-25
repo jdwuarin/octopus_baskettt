@@ -3,8 +3,8 @@ from scrapy.crawler import Crawler
 from scrapy.utils.project import get_project_settings
 from scrapy import signals
 
-from octopus_basket_porting.spiders.tesco_basket_spider import TescoBasketSpider
-from octopus_basket_porting.pipelines import BadLoginException
+from octopus_basket.spiders.tesco_basket_spider import TescoBasketSpider
+from octopus_basket.pipelines import BadLoginException
 
 
 

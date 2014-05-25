@@ -25,10 +25,10 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'octopus.settings'
 
 BOT_NAME = 'basket_porter'
 
-SPIDER_MODULES = ['octopus_basket_porting.spiders.tesco_basket_spider']
+SPIDER_MODULES = ['octopus_basket.spiders.tesco_basket_spider']
 
 ITEM_PIPELINES = {
-    'octopus_basket_porting.pipelines.TescoBasketPortingPipeline': 4,
+    'octopus_basket.pipelines.TescoBasketPortingPipeline': 4,
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

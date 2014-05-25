@@ -2,9 +2,9 @@ from octopus_recommendation_engine.basket_recommendation_engine import \
     BasketRecommendationEngine
 from octopus_user.models import UserSettings
 from octopus_groceries.models import *
-from octopus_basket_porting.basket_to_port import BasketToPort
-from octopus_basket_porting.spider_manager import SpiderManagerController
-from octopus_basket_porting.thread_manager import ThreadManager
+from octopus_basket.basket_to_port import BasketToPort
+from octopus_basket.spider_manager import SpiderManagerController
+from octopus_basket.thread_manager import ThreadManager
 from django.http import HttpResponse
 import json
 

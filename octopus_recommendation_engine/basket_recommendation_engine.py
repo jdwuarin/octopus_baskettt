@@ -3,7 +3,6 @@ from octopus_groceries.models import *
 from octopus_user.utils import get_list_from_comma_separated_string
 import helpers
 import onboarding_basket_helpers
-import later_basket_helpers
 
 
 def create_onboarding_basket(user, data=None):

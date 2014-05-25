@@ -87,10 +87,10 @@ def create_user_recommended_basket_from_basket(basket, user):
         if len(entry) > 1:
             rb_product_dict[str(entry['main']['id'])] = str(entry['quantity'])
 
-    user_recommended_basket = UserRecommendedBasket(user=user,
-                                                    product_dict=
-                                                    rb_product_dict)
-    return user_recommended_basket
+    # user_recommended_basket = UserRecommendedBasket(user=user,
+    #                                                 product_dict=
+    #                                                 rb_product_dict)
+    # return user_recommended_basket
 
 
 def create_user_generated_basket_from_basket(basket,
@@ -99,12 +99,12 @@ def create_user_generated_basket_from_basket(basket,
     for product in basket:
         ugb_product_dict[str(product['id'])] = str(product['quantity'])
 
-    user_generated_basket = UserGeneratedBasket(user=user,
-                                                product_dict=ugb_product_dict,
-                                                user_recommended_basket=
-                                                user_recommended_basket)
+    # user_generated_basket = UserGeneratedBasket(user=user,
+    #                                             product_dict=ugb_product_dict,
+    #                                             user_recommended_basket=
+    #                                             user_recommended_basket)
 
-    return user_generated_basket
+    # return user_generated_basket
 
 
 def get_basket_from_user_recommended_basket(urb):

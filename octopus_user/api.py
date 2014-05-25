@@ -18,6 +18,7 @@ from django.conf import settings
 
 from django.contrib.auth.forms import PasswordResetForm
 
+
 class UserResource(ModelResource):
     class Meta:
         queryset = OctopusUser.objects.all()

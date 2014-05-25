@@ -34,7 +34,6 @@ python manage.py syncdb
 python manage.py migrate
 python manage.py loaddata supermarket_fixture.json
 python manage.py loaddata invited_users_fixture.json
-python manage.py loaddata diet_fixture.json
 python manage.py loaddata bannable_meats_fixture.json
 python manage.py loaddata tag_fixtures.json # must be run before food_com spider
 python manage.py loaddata django_sites.json

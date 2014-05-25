@@ -41,8 +41,9 @@ class OctopusUser(AbstractBaseUser):
 
 
 class UserSettings(models.Model):
+    # make primary soon
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                blank=True, null=True, primary_key=True)
+                                blank=True, null=True)
 
     # email subscription bullshit stuff.
     recommendation_email_subscription = models.BooleanField(default=True)
@@ -51,11 +52,10 @@ class UserSettings(models.Model):
     news_email_subscription = models.BooleanField(default=True)
     # allows all users basket to be browsed
     is_private = models.BooleanField(default=False)
-    default_supermarket = models.ForeignKey(Supermarket,
-                                            default=Supermarket.objects.get(name='tesco'))
-    zip_code = models.CharField(max_lenght=100, default='',
+    default_supermarket = models.ForeignKey(Supermarket)
+    zip_code = models.CharField(max_length=100, default='',
                                 null=True, blank=True)
-    current_country = CountryField(default=dict(countries)['GB']) # use ugettext to get name
+    current_country = CountryField(default='GB') # use ugettext to get name
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       default=datetime.datetime.now())
@@ -65,8 +65,12 @@ class UserSettings(models.Model):
 
 
 class UserRelationship(models.Model):
-    user_followed = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
-    user_following = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
+    user_followed = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                      editable=False,
+                                      related_name='user_followed')
+    user_following = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                       editable=False,
+                                       related_name='user_following')
 
 
 class UserInvited(models.Model):

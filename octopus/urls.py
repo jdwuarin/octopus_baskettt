@@ -20,11 +20,17 @@ def api_root(request, format=None):
         'baskets': reverse('basket-list', request=request, format=format)
     })
 
+
+api_urls = patterns('',
+    url(r'^$', 'api_root'),
+    url(r'^', include('octopus_basket.urls', namespace='basket')),
+
+)
+
 urlpatterns = patterns('',
     url(r'^$', 'octopus_groceries.views.index'),
     url(r'^api/', include(v1_api.urls)),
-    url(r'^api/v2/$', 'api_root'),
-    url(r'^', include('octopus_basket.urls')),
+    url(r'^api/v2/', include(api_urls, namespace='api')),
     url(r'^port_cart/', 'octopus_basket.views.port_cart'),
 )
 

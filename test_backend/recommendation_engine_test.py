@@ -66,7 +66,6 @@ def create_basket_test():
                     tags=["Thai", "French"],
                     default_supermarket=Supermarket.objects.get(name="tesco"),
                     pre_user_creation_hash="dummy",
-                    diet=Diet.objects.get(name="Vegan"),
                     banned_meats=[1, 3],
                     banned_abstract_products=[])
 

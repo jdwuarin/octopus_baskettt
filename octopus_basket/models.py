@@ -14,7 +14,8 @@ class AvailableTag(models.Model):  # for baskets (like recipe, vegan, vegetarian
 class Basket(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
     name = models.CharField(max_length=250, blank=True, default='')
-    parent = models.ForeignKey('self', blank=True, default=None)
+    parent = models.ForeignKey('self', blank=True, default=None,
+        null=True)
     description = models.TextField(blank=True, default='')
     product_dict = hstore.DictionaryField()  # product_id's mapped to query term and quantities
     hash = models.CharField(max_length=60, blank=True, default=None,
@@ -51,7 +52,8 @@ class BasketTag(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False)
     name = models.CharField(max_length=250, blank=True, default='')
-    parent = models.ForeignKey('self', blank=True, default=None)
+    parent = models.ForeignKey('self', blank=True, default=None,
+        null=True)
     description = models.TextField(blank=True, default='')
     basket_list = models.CommaSeparatedIntegerField(max_length=60)
     hash = models.CharField(max_length=60, blank=True, default=None,

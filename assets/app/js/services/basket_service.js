@@ -54,6 +54,14 @@ angular.module('App.services').factory('Basket',
 			},
 			clearLocal: function(){
 				localStorage.add('current_basket', []);
+			},
+			create: function(params){
+				return $http({
+					url: 'api/v2/baskets/?format=json',
+					method: "POST",
+					headers: {'Content-Type': 'application/json'},
+					data: params
+				});
 			}
 		};
 

@@ -68,10 +68,9 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			$scope.cart = Cart.addBasket($scope.newBasketName);
 		};
 
-		$scope.$watch('cart', function(newValue, oldValue) {
+		$scope.$watch('cart', function(newValue) {
 			if(angular.isUndefined(newValue)){return;}
 
-			console.log("change", newValue);
 			$scope.cartTotal = Cart.computeTotal();
 		}, true); //deep watching
 
@@ -82,7 +81,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			// When you open a form it will close the search
 			if(allProducts && allProducts.length === 0){
 				Alert.add("You need to add products to your basket to checkout.", "info");
-			} else {
+			}else {
 				var modalInstance = $modal.open({
 				templateUrl: 'static/app/partials/_modal.html',
 				controller: 'ModalCtrl',
@@ -93,6 +92,28 @@ angular.module('App.controllers').controller('BasketsCreateController',
 				}
 				});
 			}
+
+		};
+
+		$scope.createBasket = function(){
+			var createBasketParams = {};
+			createBasketParams.name = 'Basket';
+
+			createBasketParams.product_dict = Cart.getProducts()
+				.map(function(p){
+					return {
+						query_term: 'test',
+						quantity: p.quantity,
+						id: p.id
+					};
+			});
+
+			createBasketParams.is_browsable = true;
+			createBasketParams.is_public = true;
+
+			Basket.create(createBasketParams).then(function(res){
+				console.log('basket created', res);
+			});
 
 		};
 

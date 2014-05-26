@@ -19,7 +19,7 @@ angular.module('App.services').factory('Alert',
 
 				$timeout(function(){
 					$this.close(randomId);
-				}, 5000);
+				}, 3000);
 
 				alertList.push({msg: message, type: type, id: randomId});
 			},

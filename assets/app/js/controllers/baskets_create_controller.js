@@ -80,7 +80,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			console.log('allProducts', allProducts);
 			// When you open a form it will close the search
 			if(allProducts && allProducts.length === 0){
-				Alert.add("You need to add products to your basket to checkout.", "info");
+				Alert.add('You need to add products to your basket to checkout.', 'info');
 			}else {
 				var modalInstance = $modal.open({
 				templateUrl: 'static/app/partials/_modal.html',
@@ -108,11 +108,17 @@ angular.module('App.controllers').controller('BasketsCreateController',
 					};
 			});
 
+			if(createBasketParams.product_dict.length === 0){
+				return Alert.add("You didn't add any product.","danger");
+			}
+
 			createBasketParams.is_browsable = true;
 			createBasketParams.is_public = true;
 
 			Basket.create(createBasketParams).then(function(res){
-				console.log('basket created', res);
+				if(res.status === 201){
+					return Alert.add("New basket created","success");
+				}
 			});
 
 		};

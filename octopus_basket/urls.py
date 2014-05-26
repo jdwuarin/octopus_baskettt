@@ -9,7 +9,7 @@ urlpatterns = format_suffix_patterns(patterns('octopus_basket.views',
     url(r'^baskets/$',
         views.BasketList.as_view(),
         name='basket-list'),
-    url(r'^baskets/(?P<hash>[0-9]+)/$',
+    url(r'^baskets/(?P<hash>[0-9A-Za-z])/$',
         views.BasketDetail.as_view(),
         name='basket-detail'),
 ))

@@ -34,6 +34,14 @@ class Basket(models.Model):
 
     objects = hstore.HStoreManager()
 
+    def get_product_dict(self):
+        import ast
+
+        def get(key):
+            return ast.literal_eval(self.product_dict[key])
+
+        return self.product_dict
+
     def __unicode__(self):
         return str(self.user) + ", " + str(
             self.name) + ", " + str(

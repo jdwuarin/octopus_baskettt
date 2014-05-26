@@ -29,6 +29,16 @@ class ProductDictField(serializers.WritableField):
 
         return product_list
 
+    def from_native(self, obj):
+        product_dict = {}
+        for product in obj.product_dict:
+            product_id = product.product_id
+            query_term = product.query_term
+            quantity = product.quantity
+            product_dict[product_id] = [query_term, quantity]
+
+        return product_dict
+
 
 class BasketSerializer(serializers.Serializer):
     user = serializers.Field(source='user.id')
@@ -36,7 +46,7 @@ class BasketSerializer(serializers.Serializer):
     parent = serializers.Field(source='parent.hash')
     description = serializers.CharField(required=False)
     product_dict = ProductDictField()
-    hash = serializers.CharField(max_length=60)
+    hash = serializers.CharField(max_length=60, required=False)
     is_public = serializers.BooleanField()
     is_browsable = serializers.BooleanField()
     ordering_fields = ('name',)
@@ -56,8 +66,8 @@ class BasketSerializer(serializers.Serializer):
             return instance
 
         attrs['user'] = settings.AUTH_USER_MODEL.objetcs.get(id=attrs['user'])
-        attrs['parent'] = Basket.objects.get(hash0attrs['parent'])
+        attrs['parent'] = Basket.objects.get(hash=attrs['parent'])
         attrs['hash'] = ''.join(random.choice(
-            string.ascii_letters + string.digits) for x in range(60))
+            string.ascii_letters + string.digits) for x in range(22))
 
         return Basket(**attrs)

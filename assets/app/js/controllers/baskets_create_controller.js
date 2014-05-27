@@ -38,6 +38,11 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			return Math.floor($scope.searchAll.length / itemsPerPage) - 1;
 		};
 
+		$scope.makeEditable = function(){
+			$rootScope.showOnly = false;
+			$('body').removeClass('hide-search');
+		};
+
 		var getSearchPage = function(page){
 			if($scope.searchAll.length > 0 && page >= 0){
 				var arr = $scope.searchAll.slice(itemsPerPage * page, (page + 1) * itemsPerPage - 1);

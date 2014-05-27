@@ -37,7 +37,8 @@
         </form>
         <div class="basket-title-name" ng-dblclick="startEditing(basket)" ng-hide="basket.editing">{{ basket.name }}</div>
         <span> {{cartTotal | price}}</span>
-        <button class='btn-trans-orange' ng-click='createBasket()'>Save</button>
+        <button class='btn-trans-orange btn-edit' ng-click='makeEditable()'>Edit</button>
+        <button class='btn-trans-orange btn-save' ng-click='createBasket()'>Save</button>
 
     </div>
       <ul class="basket-list" >

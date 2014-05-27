@@ -19,7 +19,6 @@ angular.module('App.services').factory('Cart',
 				return self.cart;
 			},
 			setCart: function(newCart){
-				console.log('new', newCart)
 				self.cart = newCart;
 			},
 			add: function(newProduct) {
@@ -56,7 +55,7 @@ angular.module('App.services').factory('Cart',
 			},
 
 			remove: function(productToRemove){
-				var basketName = "My basket";
+				var basketName = self.cart[0].name;
 				var index = -1;
 
 				if(productToRemove.quantity < 1) { return self.cart; }

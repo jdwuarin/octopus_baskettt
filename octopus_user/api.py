@@ -262,15 +262,15 @@ class UserResource(ModelResource):
 
         # Save settings after registration
         user = authenticate(email=email.lower(), password=password)
-        # user_settings = utils.save_user_settings(user)
-        # if not user_settings:
-        #     #remove user that was created without settings
-        #     user.delete()
-        #     return self.create_response(request, {
-        #         #could not find user settings according to hash
-        #         'reason': 'user_settings_not_found',
-        #         'success': False
-        #     })
+        user_settings = utils.save_user_settings(user)
+        if not user_settings:
+            #remove user that was created without settings
+            user.delete()
+            return self.create_response(request, {
+                #could not find user settings according to hash
+                'reason': 'user_settings_not_found',
+                'success': False
+            })
 
         # then login the user
         login(request, user)

@@ -27,13 +27,14 @@ def get_list_from_comma_separated_string(comma_separated_string):
     return return_list
 
 
-def save_user_settings(user):
-
-    user_settings = UserSettings()
-    user_settings.user = user
-    user_settings.save()
-
-    return user_settings #will be none if user_settings is not found
+# def save_user_settings(user):
+#
+#     user_settings = UserSettings()
+#     user_settings.user = user
+#     user_settings.supermarket = Supermarket.objects.get(name='tesco')
+#     user_settings.save()
+#
+#     return user_settings #will be none if user_settings is not found
 
 
 def test_password_validation(request, data, ressource):

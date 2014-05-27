@@ -45,8 +45,8 @@ angular.module('App')
 	$routeProvider
 	.when('/',
 	{
-		controller: 'HomeController',
-		templateUrl: 'static/app/partials/home.html',
+		controller: 'RegistrationController',
+		templateUrl: 'static/app/partials/signup.html',
 		requireLogin: false,
 	})
 	.when('/reset',
@@ -75,7 +75,7 @@ angular.module('App')
 	{
 		controller: 'BasketsCreateController',
 		templateUrl: 'static/app/partials/baskets_create.html',
-		requireLogin: false,
+		requireLogin: true,
 		showOnly: false,
 	})
 	.when('/baskets/:slug',
@@ -118,7 +118,7 @@ angular.module('App')
 		var location = $location.path();
 
 		// No homepage and onboarding when loggedin
-		if(User.isLoggedIn() && (location === "/start" || location === "/")){
+		if(User.isLoggedIn() && (currRoute === "/start" || currRoute === "/")){
 			User.redirect("baskets/create");
 		}
 
@@ -126,6 +126,7 @@ angular.module('App')
 		if(!User.isLoggedIn() && currRoute.requireLogin){
 			User.redirect("/login");
 		}
+
 
 		$rootScope.showOnly = false;
 

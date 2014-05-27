@@ -34,7 +34,7 @@ angular.module('App.services').factory('User',
 			setLoggedIn: function(val) {
 				LoggedIn = val;
 			},
-			signup: function(email, password, passwordConfirmation, user_settings_hash, callback, errorcb) {
+			signup: function(email, password, passwordConfirmation) {
 				return $http({
 					url: getUrl('signup'),
 					method: "POST",
@@ -43,9 +43,8 @@ angular.module('App.services').factory('User',
 						email:email,
 						password:password,
 						password_confirm: passwordConfirmation,
-						user_settings_hash:user_settings_hash
 					}
-				}).success(callback).error(errorcb);
+				});
 			},
 			registerBeta: function(email, callback) {
 				return $http({

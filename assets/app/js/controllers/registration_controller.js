@@ -6,21 +6,30 @@ angular.module('App.controllers').controller('RegistrationController',
 
 	$scope.signup = function(){
 		var user = $scope.user;
-		if($scope.signupForm.$valid){
 
-			User.signup(user.email, user.password, function(data){
-				// This callback is only called when return success
-				// User.redirect("/");
-				if(data.reason == "not_invited"){
-					Alert.add("You haven't been invited to the beta. You'll get an invite in your inbox in the next few weeks.", "info");
-				} else if(data.reason == "already_exist"){
-					Alert.add("You already have an account associated with this email address.", "info");
-				}
-			},function(res, status){
-				if(status == 401){
-					Alert.add("You haven't been authorized to use the beta. Stay tuned!", "info");
-				}
-			});
+		if(user.password !== user.passwordConfirmation){
+			return Alert.add("Passwords don't match", 'danger');
 		}
+
+		User.signup(user.email, user.password, user.passwordConfirmation).then(function(res){
+			if(res.data.success === false){
+				if(res.data.reason === "already_exists") return Alert.add('This email address is already registered', 'danger');
+				else return Alert.add('Something went wrong', 'danger');
+			} else {
+
+				if(!User.isLoggedIn()) {
+					User.requestLoggedIn(function(res){
+						// The user is logged in in the backend
+						if(res.success){
+							User.setLoggedIn(true);
+							User.redirectTo('baskets/create');
+						} else{
+							User.setLoggedIn(false);
+						}
+					});
+				}
+			}
+		});
 	};
+
 }]);

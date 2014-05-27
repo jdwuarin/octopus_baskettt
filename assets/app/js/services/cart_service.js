@@ -19,7 +19,7 @@ angular.module('App.services').factory('Cart',
 				var isPresent = false;
 				var index = -1;
 				// var basketName = newProduct.selectedbasketName;
-				var basketName = "My basket";
+				var basketName = self.cart[0].name;
 
 				console.log("add that shit", newProduct);
 				if(newProduct.quantity > 50) { return self.cart; }

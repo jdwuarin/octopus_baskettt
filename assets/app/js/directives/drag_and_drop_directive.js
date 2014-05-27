@@ -71,8 +71,8 @@ angular.module('App.directives').directive('dragAndDrop',
 						lastPosX = posX;
 						lastPosY = posY;
 
-
 						if(isOnDropzone(ev)){
+
 							scope.$apply(function(){
 								Cart.add(scope.product);
 								console.log('dropzon', scope.product);

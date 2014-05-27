@@ -9,6 +9,18 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		$scope.searchPage = 0;
 		$scope.searchAll = [];
 
+		var oldBasketName = '';
+
+		$scope.startEditing = function(basket) {
+			basket.editing = true;
+			oldBasketName = basket.name;
+		};
+
+		$scope.doneEditing = function(basket){
+			if(basket.name.length === 0) basket.name = oldBasketName;
+			basket.editing=false;
+		};
+
 		if($rootScope.showOnly){
 			Basket.query({
 				hash: $routeParams.slug
@@ -17,6 +29,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			});
 		} else{
 			$scope.cart = Cart.init();
+			$scope.startEditing($scope.cart[0]);
 		}
 
 		var itemsPerPage = 8;
@@ -133,19 +146,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 
 		};
 
-		angular.element('#new-basket-input').focus();
 
-		var oldBasketName = '';
-
-		$scope.startEditing = function(basket) {
-			basket.editing = true;
-			oldBasketName = basket.name;
-		};
-
-		$scope.doneEditing = function(basket){
-			if(basket.name.length === 0) basket.name = oldBasketName;
-			basket.editing=false;
-		};
 
 		// Initialize variables for the frontend
 	// 	var preferenceList = Preference.getAll();

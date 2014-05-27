@@ -13,9 +13,9 @@
                 </div>
                 <div class="basket-title">{{basket.name}}</div>
                 <div class="basket-link">{{basket | link}}</div>
-                <div class="btn-basket-more">See more</div>
+                <a class="btn-basket-more" href="#/baskets/{{basket.hash}}">See more</a>
               </div>
-              <div class="no-basket" ng-show="!basket.length">
+              <div class="no-basket" ng-show="!baskets.length">
                 <h5>No basket. Create one?</h5>
                 <a href="#/baskets/create" class='btn-trans-orange'>Create a basket</a>
               </div>

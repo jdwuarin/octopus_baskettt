@@ -15,6 +15,13 @@ angular.module('App.services').factory('Cart',
 				return self.cart;
 			},
 
+			getCart: function(){
+				return self.cart;
+			},
+			setCart: function(newCart){
+				console.log('new', newCart)
+				self.cart = newCart;
+			},
 			add: function(newProduct) {
 				var isPresent = false;
 				var index = -1;

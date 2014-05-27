@@ -1,6 +1,6 @@
 angular.module('App.services').factory('Basket',
-	['$http','localStorage',
-	function($http,localStorage) {
+	['$http','localStorage','Cart',
+	function($http, localStorage, Cart){
 
 		var productList = {};
 
@@ -71,18 +71,22 @@ angular.module('App.services').factory('Basket',
 				});
 			},
 			query: function(params){
+				var self = this;
 				return $http({
-					url: 'api/v2/baskets/?format=json&hash=' + params.hash ,
+					url: 'api/v2/baskets/' + params.hash + '?format=json',
 					method: "GET",
 					headers: {'Content-Type': 'application/json'},
 				}).then(function(res){
 
-					var basket = res.data[0];
+					var basket = res.data;
 					basket.products = basket.product_dict.map(function(b){
 						b.quantity = 1;
 						return b;
 					});
-					return [basket];
+					var cart = [];
+					cart.push(basket);
+					Cart.setCart(cart);
+					return cart;
 				});
 			}
 		};

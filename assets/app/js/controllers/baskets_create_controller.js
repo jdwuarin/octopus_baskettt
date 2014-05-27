@@ -13,7 +13,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			Basket.query({
 				hash: $routeParams.slug
 			}).then(function(res){
-				$scope.cart = res;console.log('putan de basket', res);
+				$scope.cart = res;
 			});
 		} else{
 			$scope.cart = Cart.init();
@@ -78,7 +78,6 @@ angular.module('App.controllers').controller('BasketsCreateController',
 
 		$scope.$watch('cart', function(newValue) {
 			if(angular.isUndefined(newValue)){return;}
-
 			$scope.cartTotal = Cart.computeTotal();
 		}, true); //deep watching
 
@@ -107,7 +106,7 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			if(!User.isLoggedIn()) return Alert.add('You need to be logged in', 'danger');
 
 			var createBasketParams = {};
-			createBasketParams.name = Cart[0].name;
+			createBasketParams.name = Cart.getCart()[0].name;
 
 			createBasketParams.product_dict = Cart.getProducts()
 				.map(function(p){

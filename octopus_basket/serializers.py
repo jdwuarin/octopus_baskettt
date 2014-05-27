@@ -45,6 +45,7 @@ class ProductDictField(serializers.WritableField):
 
 
 class BasketSerializer(serializers.Serializer):
+
     name = serializers.CharField(max_length=250)
     parent = serializers.Field(source='parent.hash')
     description = serializers.CharField(required=False)
@@ -55,39 +56,18 @@ class BasketSerializer(serializers.Serializer):
     ordering_fields = ('name',)
     ordering = 'name'
 
-    # def from_native(self, data, files=None):
-    #     """
-    #     Deserialize primitives -> objects.
-    #     """
-    #     self._errors = {}
-    #
-    #     if data is not None or files is not None:
-    #         attrs = self.restore_fields(data, files)
-    #         if attrs is not None:
-    #             attrs = self.perform_validation(attrs)
-    #     else:
-    #         self._errors['non_field_errors'] = ['No input provided']
-    #
-    #     if not self._errors:
-    #         return self.restore_object(attrs, instance=getattr(self, 'object', None))
-
-
     def restore_object(self, attrs, instance=None):
         """
         Given a dictionary of deserialized field values, either update
         an existing model instance, or create a new model instance.
         """
-
-        print attrs
+        print instance
         if instance is not None:
             instance.name = attrs['name']
-            instance.description = attrs['description']
+            instance.description = attrs.get('description', '')
             instance.product_dict = attrs['product_dict']
-            instance.content = attrs.get('content', instance.content)
-            instance.created = attrs.get('created', instance.created)
             return instance
 
-        #attrs['user'] = OctopusUser.objects.get(id=attrs['user'])
         try:
             attrs['parent'] = Basket.objects.get(hash=attrs['parent'])
         except KeyError:

@@ -10,6 +10,9 @@ from octopus_basket.pipelines import BadLoginException
 import octopus_recommendation_engine.helpers
 import utils
 from rest_framework import generics, permissions
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
 from octopus_basket.models import Basket, Cart
 from octopus_basket.serializers import BasketSerializer
 from octopus_basket.permissions import IsOwner, IsOwnerOrPublic
@@ -20,22 +23,50 @@ class BasketList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwner, )
 
+    def create(self, request, *args, **kwargs):
+        """
+        Have had to override the create method to make sure
+        we only update a basket whose name adn user combination
+        already exists
+        """
+        try:
+            instance = Basket.objects.get(user=request.user,
+                                        name=request.DATA['name'])
+        except Basket.DoesNotExist:
+            instance = None
+        serializer = self.get_serializer(data=request.DATA,
+                                         files=request.FILES,
+                                         instance=instance)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=False)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def pre_save(self, obj):
         obj.user = self.request.user
 
     def get_queryset(self):
-        queryset = Basket.objects.filter(user=self.request.user)
+
+        if self.request.user.is_authenticated():
+            queryset = Basket.objects.filter(user=self.request.user)
+        else:
+            queryset = Basket.objects.filter(is_public=True,
+                                             is_browsable=True)
         return queryset
 
 
 class BasketDetail(generics.RetrieveUpdateDestroyAPIView):
+
     queryset = Basket.objects.all()
     serializer_class = BasketSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrPublic, )
-
-    def pre_save(self, obj):
-        obj.user = self.request.user
+                           IsOwnerOrPublic)
 
 
 @login_required

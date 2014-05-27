@@ -34,19 +34,15 @@ class Basket(models.Model):
 
     objects = hstore.HStoreManager()
 
-    def get_product_dict(self):
-        import ast
-
-        def get(key):
-            return ast.literal_eval(self.product_dict[key])
-
-        return self.product_dict
 
     def __unicode__(self):
         return str(self.user) + ", " + str(
             self.name) + ", " + str(
             self.description) + ", " + str(
             self.created_at)
+
+    class Meta:
+        unique_together = ("name", "user")
 
 
 class BasketTag(models.Model):
@@ -76,6 +72,9 @@ class Cart(models.Model):
             self.name) + ", " + str(
             self.description) + ", " + str(
             self.created_at)
+
+    class Meta:
+        unique_together = ("name", "user")
 
 
 class UserCartTag(models.Model):

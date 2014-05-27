@@ -6,10 +6,11 @@ from octopus_basket import views
 
 # API endpoints
 urlpatterns = format_suffix_patterns(patterns('octopus_basket.views',
+    url(r'^$', 'api_root'),
     url(r'^baskets/$',
         views.BasketList.as_view(),
         name='basket-list'),
-    url(r'^baskets/(?P<hash>[0-9A-Za-z])/$',
+    url(r'^baskets/(?P<pk>[^/]+)/$',
         views.BasketDetail.as_view(),
-        name='basket-detail'),
+        name='basket-detail')
 ))

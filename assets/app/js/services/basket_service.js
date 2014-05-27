@@ -62,6 +62,28 @@ angular.module('App.services').factory('Basket',
 					headers: {'Content-Type': 'application/json'},
 					data: params
 				});
+			},
+			fetchAll: function(){
+				return $http({
+					url: 'api/v2/baskets/?format=json',
+					method: "GET",
+					headers: {'Content-Type': 'application/json'},
+				});
+			},
+			query: function(params){
+				return $http({
+					url: 'api/v2/baskets/?format=json&hash=' + params.hash ,
+					method: "GET",
+					headers: {'Content-Type': 'application/json'},
+				}).then(function(res){
+
+					var basket = res.data[0];
+					basket.products = basket.product_dict.map(function(b){
+						b.quantity = 1;
+						return b;
+					});
+					return [basket];
+				});
 			}
 		};
 

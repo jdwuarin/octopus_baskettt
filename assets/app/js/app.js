@@ -75,14 +75,16 @@ angular.module('App')
 	{
 		controller: 'BasketsCreateController',
 		templateUrl: 'static/app/partials/baskets_create.html',
-		requireLogin: false
+		requireLogin: false,
+		showOnly: false,
 	})
-	// .when('/baskets/browse',
-	// {
-	// 	controller: 'BasketsBrowseController',
-	// 	templateUrl: 'static/app/partials/baskets_browse.html',
-	// 	requireLogin: false
-	// })
+	.when('/baskets/:slug',
+	{
+		controller: 'BasketsCreateController',
+		templateUrl: 'static/app/partials/baskets_create.html',
+		requireLogin: false,
+		showOnly: true,
+	})
 	// .when('/start',
 	// {
 	// 	controller: 'OnboardingController',
@@ -120,16 +122,18 @@ angular.module('App')
 			User.redirect("baskets/create");
 		}
 
-		// help with the margin on the product list page
-		$rootScope.productListPage = false;
-
-		if ($location.path() === "/basket") {
-			$rootScope.productListPage = true;
-		}
-
 		// Force user to log in on required pages
 		if(!User.isLoggedIn() && currRoute.requireLogin){
 			User.redirect("/login");
+		}
+
+		$rootScope.showOnly = false;
+
+		if(!angular.isUndefined(currRoute.showOnly) && currRoute.showOnly){
+			$rootScope.showOnly = true;
+			$('body').addClass('hide-search');
+		} else {
+			$('body').removeClass('hide-search');
 		}
 
 	});

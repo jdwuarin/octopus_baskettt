@@ -1,15 +1,23 @@
 angular.module('App.controllers').controller('BasketsCreateController',
-	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal', '$timeout','Cart',
-	function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics,$modal,$timeout, Cart) {
+	['$rootScope','$scope','Preference','Basket', 'Product', 'User','Tesco','Alert','$location','$anchorScroll', '$window', '$analytics','$modal', '$timeout','Cart', '$routeParams',
+	function($rootScope, $scope, Preference, Basket, Product, User, Tesco, Alert,$location,$anchorScroll,$window,$analytics,$modal,$timeout, Cart, $routeParams) {
 
 		$scope.searchResults = [];
-		$scope.cart = Cart.init();
 		$scope.newBasketName = "";
 		$scope.basketNameList = [];
 		$scope.cartTotal = 0;
 		$scope.searchPage = 0;
 		$scope.searchAll = [];
 
+		if($rootScope.showOnly){
+			Basket.query({
+				hash: $routeParams.slug
+			}).then(function(res){
+				$scope.cart = res;console.log('putan de basket', res);
+			});
+		} else{
+			$scope.cart = Cart.init();
+		}
 
 		var itemsPerPage = 8;
 
@@ -96,8 +104,10 @@ angular.module('App.controllers').controller('BasketsCreateController',
 		};
 
 		$scope.createBasket = function(){
+			if(!User.isLoggedIn()) return Alert.add('You need to be logged in', 'danger');
+
 			var createBasketParams = {};
-			createBasketParams.name = 'Basket';
+			createBasketParams.name = Cart[0].name;
 
 			createBasketParams.product_dict = Cart.getProducts()
 				.map(function(p){
@@ -116,11 +126,26 @@ angular.module('App.controllers').controller('BasketsCreateController',
 			createBasketParams.is_public = true;
 
 			Basket.create(createBasketParams).then(function(res){
+
 				if(res.status === 201){
 					return Alert.add("New basket created","success");
 				}
 			});
 
+		};
+
+		angular.element('#new-basket-input').focus();
+
+		var oldBasketName = '';
+
+		$scope.startEditing = function(basket) {
+			basket.editing = true;
+			oldBasketName = basket.name;
+		};
+
+		$scope.doneEditing = function(basket){
+			if(basket.name.length === 0) basket.name = oldBasketName;
+			basket.editing=false;
 		};
 
 		// Initialize variables for the frontend

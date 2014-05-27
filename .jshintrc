@@ -1,6 +1,6 @@
 {
   "strict": false,
-
+  "quotmark": false,
   "globals": {
     "angular": true
   }

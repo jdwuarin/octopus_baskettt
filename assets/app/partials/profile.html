@@ -3,8 +3,22 @@
   <div class="container">
 
 
-      <div class="col-md-12">
+      <div class="col-md-12 profile">
         <div class="personal">
+            <h3>My baskets</h3>
+            <div class="my-basket-list">
+              <div class="my-basket" ng-repeat='basket in baskets'>
+                <div class="thumbnail">
+                  <div class="thumbnail-image"></div>
+                </div>
+                <div class="basket-title">{{basket.name}}</div>
+                <div class="basket-link">{{basket | link}}</div>
+                <div class="btn-basket-more">See more</div>
+              </div>
+            </div>
+
+        </div>
+<!--         <div class="personal">
           <h3>Personal informations</h3>
           <p>Feel free to change your email address and your email subscription.</p>
 
@@ -34,8 +48,9 @@
             </div>
 
           </form>
-        </div>
+        </div> -->
+
       </div>
+
     </div>
   </div>
-</div>

@@ -53,18 +53,15 @@
     }
 
 
-    .basket-list{
+    .my-basket-list{
 
-        ul{
-            padding-left: 0px;
 
-            & div {
-                display: inline-block;
-                vertical-align: top;
-            }
+        .my-basket div{
+            display: inline-block;
+            vertical-align: top;
         }
 
-        li{
+        .my-basket{
             border: 3px solid @light-gray;
             list-style-type: none;
             height: 106px;
@@ -73,11 +70,7 @@
         }
     }
 
-    .btn-basket-new{
-        .btn-trans-orange;
-    }
-
-    .btn-basket-checkout{
+    .btn-basket-more{
         .btn-trans-orange;
         position: absolute;
         right: 50px;
@@ -101,27 +94,12 @@
         padding-top: 35px;
     }
 
-    .basket-stats{
-        font-size: 20px;
-        padding-top: 35px;
+    .basket-link{
+        color: @normal-gray;
+        font-family: @montserrat;
+        line-height: 100px;
         padding-left: 30px;
-        color: @dark-gray;
-
-        .glyphicon-calendar{
-            padding-left: 14px;
-        }
     }
 
-    .basket-links{
-        font-size: 18px;
-        color:@normal-gray;
-        //padding-top: 37px;
-        //padding-left: 30px;
-        position: absolute;
-        top: 37px;
-        right: 200px;
-    }
-
-    .basket-stats{}
 
 }

@@ -29,13 +29,17 @@
 
   <div class="main-panel" id="dropzone">
 
-    <div class="main-panel-bar">
-      My basket<span> {{cartTotal | price}}</span>
-    <button class='btn-trans-orange' ng-click='createBasket()'>Save</button>
+    <div class="basket" ng-repeat="basket in cart">
+      <div class="main-panel-bar">
+        <form ng-submit="doneEditing(basket)" ng-show="basket.editing">
+            <input type="text" ng-model="basket.name" ng-blur="doneEditing(basket)">
+          <input type="submit"value="Submit">
+        </form>
+        <div class="basket-title-name" ng-dblclick="startEditing(basket)" ng-hide="basket.editing">{{ basket.name }}</div>
+        <span> {{cartTotal | price}}</span>
+        <button class='btn-trans-orange' ng-click='createBasket()'>Save</button>
 
     </div>
-
-    <div class="basket" ng-repeat="basket in cart">
       <ul class="basket-list" >
         <li class="basket-item fade-item" ng-repeat="product in basket.products">
          <img ng-src="{{product.img}}"  alt="">

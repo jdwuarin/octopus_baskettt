@@ -22,7 +22,7 @@ angular.module('App.controllers').controller('RegistrationController',
 						// The user is logged in in the backend
 						if(res.success){
 							User.setLoggedIn(true);
-							User.redirectTo('baskets/create');
+							User.redirect('/baskets/create');
 						} else{
 							User.setLoggedIn(false);
 						}

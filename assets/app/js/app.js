@@ -116,10 +116,11 @@ angular.module('App')
 	$rootScope.$on("$routeChangeStart", function(event, currRoute, prevRoute) {
 
 		var location = $location.path();
+			console.log('redirect',currRoute);
 
 		// No homepage and onboarding when loggedin
-		if(User.isLoggedIn() && (currRoute === "/start" || currRoute === "/")){
-			User.redirect("baskets/create");
+		if(User.isLoggedIn() && (currRoute.$$route.originalPath === "/")){
+			User.redirect("/baskets/create");
 		}
 
 		// Force user to log in on required pages

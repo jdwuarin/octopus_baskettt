@@ -15,40 +15,14 @@
                 <div class="basket-link">{{basket | link}}</div>
                 <div class="btn-basket-more">See more</div>
               </div>
+              <div class="no-basket" ng-show="!basket.length">
+                <h5>No basket. Create one?</h5>
+                <a href="#/baskets/create" class='btn-trans-orange'>Create a basket</a>
+              </div>
             </div>
 
         </div>
-<!--         <div class="personal">
-          <h3>Personal informations</h3>
-          <p>Feel free to change your email address and your email subscription.</p>
 
-          <form class="form-horizontal" role="form" ng-submit="updateInfos()" name="settingsForm" novalidate>
-            <div class="form-group">
-              <label for="inputEmail" class="col-sm-1 control-label">Email</label>
-              <div class="col-sm-11">
-                <input type="email" name="email" class="text-input" id="inputEmail" placeholder="Email" ng-model="email">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-1 control-label newsletter">Notifications</label>
-              <div class="col-sm-11">
-                <input type="checkbox" ng-model="recommendationEmailSubscription"> Subscribe to the email to get recommendations from baskettt.
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-offset-1 col-sm-11">
-                <input type="checkbox" ng-model="newsEmailSubscription"> Subscribe to our newsletter.
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-offset-1 col-sm-11">
-                <button type="submit" class="btn-trans-orange" ng-disabled="settingsForm.$invalid">Update</button>
-              </div>
-            </div>
-
-          </form>
-        </div> -->
 
       </div>
 

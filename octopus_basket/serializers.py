@@ -47,7 +47,7 @@ class ProductDictField(serializers.WritableField):
 class BasketSerializer(serializers.Serializer):
 
     name = serializers.CharField(max_length=250)
-    parent = serializers.Field(source='parent.hash')
+    parent = serializers.PrimaryKeyRelatedField(required=False)
     description = serializers.CharField(required=False)
     product_dict = ProductDictField()
     hash = serializers.CharField(max_length=60, required=False)

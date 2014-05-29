@@ -22,6 +22,7 @@ django-hstore==1.1.1
 django-registration==1.0
 django-tastypie==0.10.0
 django-verbatim==0.1
+djangorestframework==2.3.13
 djangotoolbox==0.9.2
 djorm-ext-pgfulltext==0.9
 docutils==0.11

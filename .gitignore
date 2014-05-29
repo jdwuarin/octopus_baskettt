@@ -46,3 +46,4 @@ local/
 .node-gyp/
 .npm/
 .viminfo
+.ssh/

@@ -26,7 +26,7 @@ class BasketList(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         """
         Have had to override the create method to make sure
-        we only update a basket whose name adn user combination
+        we only update a basket whose name and user combination
         already exists
         """
         try:

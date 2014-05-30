@@ -47,7 +47,7 @@ class ProductDictField(serializers.WritableField):
 class BasketSerializer(serializers.Serializer):
 
     name = serializers.CharField(max_length=250)
-    parent = serializers.PrimaryKeyRelatedField(required=False)
+    parent = serializers.CharField(max_length=22, required=False)
     description = serializers.CharField(required=False)
     product_dict = ProductDictField()
     hash = serializers.CharField(max_length=60, required=False)
@@ -61,7 +61,7 @@ class BasketSerializer(serializers.Serializer):
         Given a dictionary of deserialized field values, either update
         an existing model instance, or create a new model instance.
         """
-        print instance
+
         if instance is not None:
             instance.name = attrs['name']
             instance.description = attrs.get('description', '')

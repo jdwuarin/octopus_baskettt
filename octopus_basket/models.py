@@ -3,6 +3,7 @@ from django.conf import settings
 from django_hstore import hstore
 import datetime
 
+from rest_framework import relations
 
 class AvailableTag(models.Model):  # for baskets (like recipe, vegan, vegetarian etc...)
     name = models.CharField(max_length=150, default='', editable=False)

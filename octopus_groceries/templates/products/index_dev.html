@@ -73,32 +73,9 @@
         <div ng-view></div>
 
       </div>
-<!--
-      <footer>
-        <div class="row">
-          <div class="container">
-          <div class="col-md-6">
-            <img class="baskettt" src="/static/img/logob.svg" alt="">
-            <p>
-            The simplest way to get your groceries done.
-            </p>
-          </div>
-          <div class="col-md-3 rackspace">
-            <img src="/static/img/rackspace_black.png" alt="">
 
-          </div>
-          <div class="col-md-3">
-            <a href="https://twitter.com/basketttco">
-              <img class="twitter" src="/static/img/twitter.svg" alt="">
-            </a>
-          </div>
-          </div>
-        </div>
-      </footer>
- -->
       <!-- build:js static/scripts/vendor.js -->
       <!-- bower:js -->
-
       <script src="static/lib/jquery.min.js"></script>
       <script src="static/lib/angular.min.js"></script>
       <script src="static/lib/angular-route.min.js"></script>
@@ -109,11 +86,6 @@
       <script src="static/lib/angular-animate.min.js"></script>
       <script src="static/lib/angulartics.min.js"></script>
       <script src="static/lib/angulartics-ga.min.js"></script>
-      <script src="static/lib/jquery.ui.core.js"></script>
-      <script src="static/lib/jquery.ui.widget.js"></script>
-      <script src="static/lib/jquery.ui.mouse.js"></script>
-      <script src="static/lib/jquery.ui.slider.js"></script>
-      <script src="static/lib/slider.js"></script>
       <script src="static/lib/json3.min.js"></script>
       <script src="static/lib/fastclick.js"></script>
       <script src="static/lib/lodash.min.js"></script>
@@ -122,10 +94,9 @@
       <!-- endbuild -->
 
       <!-- build:js static/scripts/scripts.js -->
+      <!-- bower:js -->
       <script src="static/app/js/app.js"></script>
-
       <script src="static/app/js/controllers/alert_controller.js"></script>
-      <!-- <script src="static/app/js/controllers/home_controller.js"></script>-->
       <script src="static/app/js/controllers/login_controller.js"></script>
       <script src="static/app/js/controllers/modal_controller.js"></script>
       <script src="static/app/js/controllers/onboarding_controller.js"></script>
@@ -135,8 +106,6 @@
       <script src="static/app/js/controllers/registration_controller.js"></script>
       <script src="static/app/js/controllers/reset_controller.js"></script>
       <script src="static/app/js/controllers/reset_confirm_controller.js"></script>
-      <!-- <script src="static/app/js/controllers/profile_basket_controller.js"></script>-->
-
       <script src="static/app/js/services/alert_service.js"></script>
       <script src="static/app/js/services/basket_service.js"></script>
       <script src="static/app/js/services/local_storage_service.js"></script>
@@ -146,7 +115,6 @@
       <script src="static/app/js/services/user_service.js"></script>
       <script src="static/app/js/services/cart_service.js"></script>
       <script src="static/app/js/services/gesture_service.js"></script>
-
       <script src="static/app/js/directives/autocomplete_directive.js"></script>
       <script src="static/app/js/directives/click_directive.js"></script>
       <script src="static/app/js/directives/navbar_directive.js"></script>
@@ -158,13 +126,11 @@
       <script src="static/app/js/directives/signup_directive.js"></script>
       <script src="static/app/js/directives/ng_blur_directive.js"></script>
       <script src="static/app/js/directives/drag_and_drop_directive.js"></script>
-
       <script src="static/app/js/filters/imglarge_filter.js"></script>
       <script src="static/app/js/filters/order_object_by_filter.js"></script>
       <script src="static/app/js/filters/price_filter.js"></script>
       <script src="static/app/js/filters/link_filter.js"></script>
-
-
+      <!-- endbower -->
       <!-- endbuild -->
 
     </body>

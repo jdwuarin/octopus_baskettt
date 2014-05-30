@@ -123,7 +123,8 @@ module.exports = function(grunt) {
             'img/favicons/*',
             'fonts/*',
             'lib/*.js',
-            'app/js/*.js'
+            'app/js/*.js',
+            'app/js/**/*.js'
           ]
         }, {
           expand: true,

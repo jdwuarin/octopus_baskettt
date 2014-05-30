@@ -47,3 +47,5 @@ local/
 .npm/
 .viminfo
 .ssh/
+
+octopus_groceries/templates/products/index_prod.html

@@ -11,7 +11,6 @@ angular.module('App', [
 	'App.controllers',
 	'angulartics',
 	'angulartics.google.analytics',
-	'ui.slider'
 ]);
 
 angular.module('App.controllers', [

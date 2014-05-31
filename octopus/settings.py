@@ -36,11 +36,12 @@ EMAIL_USE_TLS = True
 DATABASES = {
     'default': {
         'ENGINE': 'django_hstore.postgresql_psycopg2',  # Add 'postgresql_psycopg2'
-        'NAME': 'db1',
-
+        # 'NAME': 'db1',
+        'NAME': 'dev',
         'USER': 'octopus_user',
-        'PASSWORD': 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l',
-        'HOST': '162.13.177.180', # as of writing this was the adress of octopus_postgres_master
+        # 'PASSWORD': 'e9IKyjFIRbDgGPumhyvOOKvGWuV8CPp1xkABMS8abV4p9bKUnO5g7WfCkdk4s1l',
+        'PASSWORD': 'kABMS8abV4p9bKUnOFIRPp1x5g7WfCkdk4s1le9IKyjbDgGPumhyvOOKvGWuV8C',
+        'HOST': '162.13.156.124', # as of writing this was the adress of octopus_postgres_master
         'PORT': '5435',           # Set to empty string for default.
     }
 }
